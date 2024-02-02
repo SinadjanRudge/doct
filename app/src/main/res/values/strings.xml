@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">DocTrack2</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="click_to_register">Click To Register</string>
+    <string name="click_to_login">Click To Login</string>
+    <string name="doctrack2">DocTrack2</string>
+    <string name="logout">Logout</string>
+    <string name="patient_home">Patient Home</string>
+    <string name="welcome_to">Welcome to\nDoctrack!</string>
+</resources>
