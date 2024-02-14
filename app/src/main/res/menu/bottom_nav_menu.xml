@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/appointment_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/appointment_icon"
+        android:title="Appointment" />
+    <item
+        android:id="@+id/device_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/device_icon"
+        android:title="Device" />
+    <item
+        android:id="@+id/patient_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/patient_icon"
+        android:title="Patient" />
+    <item
+        android:id="@+id/record_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/record_icon"
+        android:title="Record" />
+    <item
+        android:id="@+id/home_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/record_icon"
+        android:title="Home" />
+</menu>
