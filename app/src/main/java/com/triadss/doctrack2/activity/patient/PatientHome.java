@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
 public class PatientHome extends AppCompatActivity {
 
@@ -18,6 +19,8 @@ public class PatientHome extends AppCompatActivity {
     Button button;
 
     FirebaseUser user;
+
+    ActivityPatientHomeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,19 @@ public class PatientHome extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
             finish();
+        });
+
+        binding = ActivityPatientHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.temp_logout) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            return true;
         });
 
     }

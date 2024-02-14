@@ -43,8 +43,11 @@ public class RegisterActivity extends AppCompatActivity {
     /**
      * Lifecycle method called when the activity is starting.
      * Checks if there is a currently authenticated user. If so, redirects the user to the main activity and finishes the current activity.
+     *
+     * @Deprecated - for testing only
      */
     @Override
+    @Deprecated
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();

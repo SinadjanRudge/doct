@@ -6,33 +6,34 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.admin.AdminHome;
 import com.triadss.doctrack2.activity.healthprof.HealthProfHome;
 import com.triadss.doctrack2.activity.patient.PatientHome;
 import com.triadss.doctrack2.config.enums.UserRole;
 
 public class LoginActivity extends AppCompatActivity {
 
-    TextInputEditText editTextEmail, editTextPassword;
+    TextInputEditText editTextEmail;
+
+    TextInputEditText editTextPassword;
 
     Button buttonLogin;
 
     FirebaseAuth mAuth;
 
     ProgressBar progressBar;
-
-    TextView textView;
 
     @Override
     public void onStart() {
@@ -41,9 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             fetchUserRole(currentUser.getUid());
-//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//            startActivity(intent);
-//            finish();
         }
     }
 
@@ -57,13 +55,6 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.password);
         buttonLogin = findViewById(R.id.btn_login);
         progressBar = findViewById(R.id.progressBar);
-        textView = findViewById(R.id.registerNow);
-
-        textView.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-            startActivity(intent);
-            finish();
-        });
 
         buttonLogin.setOnClickListener(v -> {
             progressBar.setVisibility(View.VISIBLE);
@@ -73,11 +64,13 @@ public class LoginActivity extends AppCompatActivity {
 
             if (TextUtils.isEmpty(email)) {
                 Toast.makeText(LoginActivity.this, "Enter Email", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
                 return;
             }
 
             if (TextUtils.isEmpty(password)) {
                 Toast.makeText(LoginActivity.this, "Enter Password", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
                 return;
             }
 
@@ -95,12 +88,12 @@ public class LoginActivity extends AppCompatActivity {
 
                             finish();
                         } else {
-                            Toast.makeText(LoginActivity.this, "User does not exist.",
-                                    Toast.LENGTH_SHORT).show();
+                            FirebaseAuthException e = (FirebaseAuthException) task.getException();
+                            Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
 
-            });
+        });
 
     }
 
@@ -132,9 +125,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void redirectBasedOnUserRole(UserRole userRole) {
         switch (userRole) {
-            case PROF:
-                Intent adminIntent = new Intent(getApplicationContext(), HealthProfHome.class);
+            case ADMIN:
+                Intent adminIntent = new Intent(getApplicationContext(), AdminHome.class);
                 startActivity(adminIntent);
+            case PROF:
+                Intent profIntent = new Intent(getApplicationContext(), HealthProfHome.class);
+                startActivity(profIntent);
                 break;
             case PATIENT:
                 Intent userIntent = new Intent(getApplicationContext(), PatientHome.class);

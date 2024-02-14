@@ -7,8 +7,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.FireStoreCollection;
+import com.triadss.doctrack2.config.model.UserModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +34,10 @@ public class AppointmentFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    FirebaseAuth mAuth;
+
+    TextView userType;
 
     public AppointmentFragment() {
         // Required empty public constructor
@@ -61,6 +74,26 @@ public class AppointmentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_appointment, container, false);
+        View view = inflater.inflate(R.layout.fragment_appointment, container, false);
+
+        userType = view.findViewById(R.id.user_type_temp);
+
+        // Inside your activity or fragment
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            DocumentReference userRef = db.collection(FireStoreCollection.USERS_TABLE).document(uid);
+            userRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    // Get user role
+                    String userRole = documentSnapshot.getString(UserModel.role);
+                    userType.setText(userRole);
+                }
+            });
+        }
+        return view;
     }
 }
