@@ -15,6 +15,9 @@
         android:theme="@style/Theme.DocTrack2"
         tools:targetApi="31">
         <activity
+            android:name=".PatientAppointment"
+            android:exported="false" />
+        <activity
             android:name=".activity.admin.AdminHome"
             android:exported="false" />
         <activity
@@ -39,13 +42,7 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>
