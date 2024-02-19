@@ -6,10 +6,86 @@
     tools:context=".activity.patient.fragment.RecordVitalSigns">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Vital Signs" />
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:stretchColumns="1">
+        <TableRow>
+            <TextView
+                android:padding="3dip"
+                android:text="Blood Pressure" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="120/80mm Hg" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:padding="3dip"
+                android:text="Temperature" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="30" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:padding="3dip"
+                android:text="Pulse Rate" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="90bpm" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:padding="3dip"
+                android:text="Oxygen Level" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="80mm Hg" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:padding="3dip"
+                android:text="Weight" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="55 kg" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:padding="3dip"
+                android:text="Height" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="172cm" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:padding="3dip"
+                android:text="BMI" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="22.2" />
+        </TableRow>
+    </TableLayout>
 
 </FrameLayout>
