@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.patient.fragment.RecordPersonalInfo">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:stretchColumns="1">
+
+        <TableRow>
+
+            <TextView
+                android:padding="3dip"
+                android:text="Name" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="Test Name" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:padding="3dip"
+                android:text="Age" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="23" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:padding="3dip"
+                android:text="Gender" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="Male" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:padding="3dip"
+                android:text="Address" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="Lahug, Cebu City" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:padding="3dip"
+                android:text="Status" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="Sample Status" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:padding="3dip"
+                android:text="Cel/Tel No." />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="09000000000" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:padding="3dip"
+                android:text="Course" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="BSIT" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:padding="3dip"
+                android:text="Year" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="2" />
+        </TableRow>
+
+    </TableLayout>
+
+</FrameLayout>

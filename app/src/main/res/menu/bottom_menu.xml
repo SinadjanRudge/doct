@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/upcoming"
-        android:title="UPCOMING"
-        android:icon="@drawable/baseline_123_24" />
+        android:id="@+id/request"
+        android:title="Request"
+         />
 
     <item
         android:id="@+id/pending"
         android:title="PENDING"
-        android:icon="@drawable/baseline_123_24" />
+         />
     <item
         android:id="@+id/status"
-        android:icon="@drawable/baseline_123_24"
+
         android:title="STATUS" />
 
 </menu>
