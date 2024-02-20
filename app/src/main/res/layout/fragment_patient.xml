@@ -1,29 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.healthprof.fragment.PatientFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center">
 
         <!-- TODO: Update blank fragment layout -->
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="143dp"
             android:layout_height="wrap_content"
-            android:text="@string/patient_list" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="31dp"
+            android:layout_marginEnd="123dp"
+            android:layout_marginBottom="668dp"
+            android:text="@string/patient_list"
+            android:textColor="#1D7844"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/patient_add_btn"
+        <SearchView
+            android:id="@+id/search_record_src"
+            android:layout_width="291dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="74dp"
+            android:layout_marginEnd="94dp"
+            android:layout_marginBottom="614dp"
+            android:width="1dp"
+            android:background="@drawable/stroke"
+            android:color="@color/black"
+            android:radius="8dp"
+            android:shape="rectangle"
+            android:textColorHint="@color/black" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_patient" />
+            android:layout_height="573dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="157dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/bg_color"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp" />
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="69dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="326dp"
+            android:layout_marginTop="74dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="615dp"
+            android:orientation="horizontal"
+            android:paddingRight="10dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/patient_add_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:background="@drawable/green_stroke"
+                android:gravity="center"
+                android:text="+"
+                android:textColor="@color/green"
+                android:textSize="24sp"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="27dp"
+            android:layout_height="22dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="31dp"
+            android:layout_marginTop="31dp"
+            android:orientation="horizontal"
+            android:paddingRight="10dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="25dp"
+                android:layout_height="23dp"
+                android:background="@drawable/btn_back" />
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
 
 </FrameLayout>
