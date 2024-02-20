@@ -8,11 +8,6 @@
         android:icon="@drawable/appointment_icon"
         android:title="Appointment" />
 
-    <!-- MEDICATION IS FOR PATIENT ONLY    -->
-    <item
-        android:id="@+id/medication_menu"
-        android:icon="@drawable/pill"
-        android:title="Medication"/>
     <item
         android:id="@+id/device_menu"
         android:layout_width="wrap_content"
@@ -34,7 +29,7 @@
 
     <!-- TODO:: THIS LOGOUT IS TEMPORARY FOR TESTING ONLY    -->
     <item
-        android:id="@+id/temp_logout"
+    android:id="@+id/temp_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/logout_icon"
