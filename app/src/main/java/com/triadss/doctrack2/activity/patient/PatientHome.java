@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +51,17 @@ public class PatientHome extends AppCompatActivity {
 
         binding = ActivityPatientHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+//        boolean shouldHideMenuItem = true;
+//
+//        if (shouldHideMenuItem) {
+//            // Hide the menu item directly by accessing the view and setting visibility
+//            View menuItemView = binding.bottomNavigationView.findViewById(R.id.patient_menu);
+//
+//            if (menuItemView != null) {
+//                menuItemView.setVisibility(View.GONE);
+//            }
+//        }
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.record_menu) {
