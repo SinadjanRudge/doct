@@ -16,7 +16,7 @@ import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
 import com.triadss.doctrack2.activity.healthprof.fragment.AppointmentFragment;
 import com.triadss.doctrack2.activity.healthprof.fragment.DeviceFragment;
 import com.triadss.doctrack2.activity.healthprof.fragment.PatientFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.RecordFragment;
+import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
 
 public class HealthProfHome extends AppCompatActivity {
 
@@ -38,7 +38,8 @@ public class HealthProfHome extends AppCompatActivity {
                 .commit();
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.appointment_menu) {
-                replaceFragment(new AppointmentFragment());
+               // replaceFragment(new AppointmentFragment());
+                replaceFragment(new HealthProfessionalUpcoming());
             } else if (item.getItemId() == R.id.device_menu) {
                 replaceFragment(new DeviceFragment());
             } else if (item.getItemId() == R.id.patient_menu) {
