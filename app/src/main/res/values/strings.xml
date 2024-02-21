@@ -20,8 +20,10 @@
     <string name="address">Address</string>
     <string name="full_name">Full Name</string>
     <string name="kindly_provide_your_patient_personal_details">Kindly provide your patient personal details.</string>
+    <string name="kindly_provide_your_updated_personal_details">Kindly provide your updated personal details.</string>
     <string name="id_number">ID Number</string>
     <string name="patient_list">Patient List</string>
     <string name="device">Device</string>
+    <string name="update_record">Update Record</string>
 
 </resources>
