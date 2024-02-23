@@ -25,5 +25,7 @@
     <string name="patient_list">Patient List</string>
     <string name="device">Device</string>
     <string name="update_record">Update Record</string>
+    <string name="view_record">View Record</string>
+    <string name="view_patient_record">Patient Personal Information</string>
 
 </resources>
