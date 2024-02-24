@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Pending"
+    tools:ignore="HardcodedText">
+
+    <!--make sure to give the appropriate IDs to textView
+        and the button to handle them in MainActivity.java-->
+
+    <!--simple text view to show the selected date by the user-->
+    <TextView
+        android:id="@+id/showselecteddate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="128dp"
+        android:text="Selected Date is : "
+        android:textSize="18sp" />
+
+
+    <Button
+        android:id="@+id/datebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:text="Select Date"
+        android:textSize="18sp"
+        app:icon="@drawable/baseline_aod_24" />
+
+    <TextView
+        android:id="@+id/idTVSelectedTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/idBtnPickTime"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Time"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!--on below line we are creating a
+        button for date picker-->
+    <Button
+        android:id="@+id/idBtnPickTime"
+        android:layout_width="186dp"
+        android:layout_height="61dp"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:text="Pick Time"
+        android:textAllCaps="false" />
+
+    <Spinner
+        android:id="@+id/coursesspinner"
+        android:layout_width="210dp"
+        android:layout_height="85dp"
+        android:layout_gravity="center" />
+
+</LinearLayout>
