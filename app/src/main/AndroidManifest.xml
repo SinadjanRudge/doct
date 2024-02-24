@@ -15,15 +15,15 @@
         android:theme="@style/Theme.DocTrack2"
         tools:targetApi="34">
         <activity
-            android:name=".activity.patient.PatientRequest"
+            android:name=".activity.patient.AppointmentRequest"
 
             android:exported="false" />
         <activity
-            android:name=".activity.patient.PatientStatus"
+            android:name=".activity.patient.AppointmentStatus"
             android:exported="false" />
 
         <activity
-            android:name=".activity.patient.PatientAppointment"
+            android:name=".activity.patient.AppointmentPending"
             android:exported="false" />
 
         <activity

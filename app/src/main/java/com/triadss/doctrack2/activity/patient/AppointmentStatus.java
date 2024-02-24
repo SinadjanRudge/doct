@@ -1,11 +1,9 @@
 package com.triadss.doctrack2.activity.patient;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,29 +11,25 @@ import android.view.ViewGroup;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.activity.healthprof.fragment.AddPatientFragment;
 
-
-public class PatientAppointment extends Fragment {
-
+public class AppointmentStatus extends Fragment {
     private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View rootView = inflater.inflate(R.layout.activity_patient_appointment, container, false);
+        View rootView = inflater.inflate(R.layout.activity_patient_status, container, false);
 
         bottomNavigationView = rootView.findViewById(R.id.bottomNavigationView);
         PatientbottomNavigationView = rootView.findViewById(R.id.PatientbottomNavigationView);
 
-        PatientbottomNavigationView.setSelectedItemId(R.id.pending);
         PatientbottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.request) {
                 @SuppressLint("CommitTransaction")
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
                         .beginTransaction();
-                transaction.replace(R.id.frame_layout, new PatientRequest());
+                transaction.replace(R.id.frame_layout, new AppointmentRequest());
                 // Add HomeFragment to the back stack with a tag
                 transaction.addToBackStack("tag_for_home_fragment");
 
@@ -44,7 +38,7 @@ public class PatientAppointment extends Fragment {
                 @SuppressLint("CommitTransaction")
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
                         .beginTransaction();
-                transaction.replace(R.id.frame_layout, new PatientAppointment());
+                transaction.replace(R.id.frame_layout, new AppointmentPending());
                 // Add HomeFragment to the back stack with a tag
                 transaction.addToBackStack("tag_for_home_fragment");
 
@@ -53,7 +47,7 @@ public class PatientAppointment extends Fragment {
                 @SuppressLint("CommitTransaction")
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
                         .beginTransaction();
-                transaction.replace(R.id.frame_layout, new PatientStatus());
+                transaction.replace(R.id.frame_layout, new AppointmentStatus());
                 // Add HomeFragment to the back stack with a tag
                 transaction.addToBackStack("tag_for_home_fragment");
 
