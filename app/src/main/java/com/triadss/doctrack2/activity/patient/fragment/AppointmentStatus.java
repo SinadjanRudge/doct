@@ -19,44 +19,6 @@ public class AppointmentStatus extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_patient_status, container, false);
-
-        System.out.println("APPOINTMENT STATUS");
-//        bottomNavigationView = rootView.findViewById(R.id.bottomNavigationView);
-//        PatientbottomNavigationView = rootView.findViewById(R.id.PatientbottomNavigationView);
-
-//        PatientbottomNavigationView.setOnItemSelectedListener(item -> {
-//            int itemId = item.getItemId();
-//            if (itemId == R.id.request) {
-//                @SuppressLint("CommitTransaction")
-//                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-//                        .beginTransaction();
-//                transaction.replace(R.id.frame_layout, new AppointmentRequest());
-//                // Add HomeFragment to the back stack with a tag
-//                transaction.addToBackStack("tag_for_home_fragment");
-//
-//                transaction.commit();
-//            } else if (itemId == R.id.pending) {
-//                @SuppressLint("CommitTransaction")
-//                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-//                        .beginTransaction();
-//                transaction.replace(R.id.frame_layout, new AppointmentPending());
-//                // Add HomeFragment to the back stack with a tag
-//                transaction.addToBackStack("tag_for_home_fragment");
-//
-//                transaction.commit();
-//            } else if (itemId == R.id.status) {
-//                @SuppressLint("CommitTransaction")
-//                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-//                        .beginTransaction();
-//                transaction.replace(R.id.frame_layout, new AppointmentStatus());
-//                // Add HomeFragment to the back stack with a tag
-//                transaction.addToBackStack("tag_for_home_fragment");
-//
-//                transaction.commit();
-//            }
-//            return true;
-//        });
-//
         return rootView;
     }
 }

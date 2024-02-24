@@ -74,9 +74,6 @@ public class PatientAppointmentFragment extends Fragment {
 
         viewPager.setAdapter(pageAdapter);
 
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_patient_appointment, container, false);
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
