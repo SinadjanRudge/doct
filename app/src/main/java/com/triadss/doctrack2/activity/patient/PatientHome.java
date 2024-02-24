@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.patient.PatientRequest;
 import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
 import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
@@ -72,6 +73,9 @@ public class PatientHome extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
+            }
+            else if (item.getItemId() == R.id.appointment_menu) {
+                replaceFragment(new PatientRequest());
             }
             return true;
         });
