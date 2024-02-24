@@ -13,6 +13,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.patient.fragment.AppointmentRequest;
+import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
 import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
 import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
@@ -73,7 +75,7 @@ public class PatientHome extends AppCompatActivity {
                 finish();
             }
             else if (item.getItemId() == R.id.appointment_menu) {
-                replaceFragment(new AppointmentRequest());
+                replaceFragment(new PatientAppointmentFragment());
             }
             return true;
         });

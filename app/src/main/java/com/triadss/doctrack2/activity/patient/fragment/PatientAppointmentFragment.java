@@ -3,11 +3,13 @@ package com.triadss.doctrack2.activity.patient.fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
 
 /**
@@ -26,6 +28,9 @@ public class PatientAppointmentFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager;
+    private PatientAppointmentFragmentPageAdapter pageAdapter;
 
     public PatientAppointmentFragment() {
         // Required empty public constructor
@@ -61,7 +66,47 @@ public class PatientAppointmentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_patient_appointment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_patient_appointment, container, false);
+        tabLayout = rootView.findViewById(R.id.tabLayout);
+        viewPager = rootView.findViewById(R.id.viewPager);
+
+        pageAdapter = new PatientAppointmentFragmentPageAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
+
+        viewPager.setAdapter(pageAdapter);
+
+//        // Inflate the layout for this fragment
+//        return inflater.inflate(R.layout.fragment_patient_appointment, container, false);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                // Tab selected logic here
+                if(tab != null)
+                {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // Tab unselected logic here
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // Tab reselected logic here
+            }
+        });
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public  void onPageSelected(int position)
+            {
+                super.onPageSelected(position);
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+        });
+
+        return rootView;
     }
 }
