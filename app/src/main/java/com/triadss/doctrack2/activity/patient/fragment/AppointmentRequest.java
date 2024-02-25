@@ -13,6 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -109,6 +110,7 @@ public class AppointmentRequest extends Fragment {
                 // at last we are calling show to
                 // display our time picker dialog.
                 timePickerDialog.show();
+
             }
         });
 
