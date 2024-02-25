@@ -1,12 +1,14 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
@@ -33,6 +35,7 @@ public class AppointmentRequest extends Fragment {
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;
+    private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,12 +56,70 @@ public class AppointmentRequest extends Fragment {
     }
 
     private void setupDatePicker() {
-        // Your date picker setup code
+        // Set up Date Picker Dialog
+        pickDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the current date
+                final Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                // Create and show the Date Picker Dialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // Store the selected date
+                                selectedYear = year;
+                                selectedMonth = monthOfYear;
+                                selectedDay = dayOfMonth;
+
+                                // Update the text on the button
+                                pickDateButton.setText(
+                                        String.format(Locale.getDefault(), "%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay));
+                            }
+                        }, year, month, day);
+
+                // Show the Date Picker Dialog
+                datePickerDialog.show();
+            }
+        });
     }
 
     private void setupTimePicker() {
-        // Your time picker setup code
+        // Set up Time Picker Dialog
+        pickTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the current time
+                final Calendar c = Calendar.getInstance();
+                int hour = c.get(Calendar.HOUR_OF_DAY);
+                int minute = c.get(Calendar.MINUTE);
+
+                // Create and show the Time Picker Dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                // Store the selected time
+                                selectedHour = hourOfDay;
+                                selectedMinute = minute;
+
+                                // Update the text on the button
+                                pickTimeBtn.setText(
+                                        String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
+                            }
+                        }, hour, minute, false);
+
+                // Show the Time Picker Dialog
+                timePickerDialog.show();
+            }
+        });
     }
+
 
     private void setupConfirmationButton() {
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -72,16 +133,17 @@ public class AppointmentRequest extends Fragment {
 
     private void handleConfirmationButtonClick() {
         // Sample values for AppointmentDto
-        String purpose = textInputPurpose.getText().toString();;
+        String purpose = textInputPurpose.getText().toString();
+        ;
 
-        // Sample Timestamp for date and time of appointment
-        Timestamp dateTimeOfAppointment = new Timestamp(new Date(2024 - 1900, 2, 15));
+        Timestamp dateTimeOfAppointment = new Timestamp(
+                new Date(selectedYear - 1900, selectedMonth, selectedDay, selectedHour, selectedMinute));
         // Sample Time - Assuming the Time class is represented as milliseconds
         long timeOfAppointment = System.currentTimeMillis();
 
         String status = "Pending";
 
-        AppointmentDto appointment = new AppointmentDto("asdaasfasfasf",
+        AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, timeOfAppointment, status);
 
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
