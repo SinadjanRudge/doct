@@ -3,6 +3,8 @@ package com.triadss.doctrack2.repoositories;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
@@ -58,25 +60,53 @@ public class AppointmentRepository {
 //    }
     private static final String TAG = "AppointmentRepository";
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private final CollectionReference appointmentCollection = firestore.collection(FireStoreCollection.APPOINTMENTS_TABLE);
+    private final CollectionReference appointmentsCollection = firestore.collection(FireStoreCollection.APPOINTMENTS_TABLE);
 
-    public void addAppointment(AppointmentDto appointment){
-        appointmentCollection.add(appointment).addOnSuccessListener(documentReference -> {
-            Log.d(TAG, "Appointment added with ID: " + documentReference.getId());
-        }).addOnFailureListener(e -> {
-            Log.e(TAG, "Error adding appointment", e);
-        });
+    public void addAppointment(AppointmentDto appointment, AppointmentAddCallback callback){
+        appointmentsCollection
+                .add(appointment)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Appointment added with ID: " + documentReference.getId());
+                    callback.onSuccess(documentReference.getId());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error adding appointment", e);
+                    callback.onError(e.getMessage());
+                });
+
 
     }
 
-    interface AppointmentAddCallback{
+    public void getAllAppointments(AppointmentFetchCallback callback){
+        appointmentsCollection.orderBy("dateTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<AppointmentDto> appointments = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                            appointments.add(appointment);
+                        }
+                        callback.onSuccess(appointments);
+                    } else {
+                        Log.e(TAG, "Error getting appointments", task.getException());
+                        callback.onError(task.getException().getMessage());
+                    }
+                });
+
+    }
+
+    interface AppointmentAddCallback {
         void onSuccess(String appointmentId);
+
         void onError(String errorMessage);
     }
 
-    interface AppointmentFetchCallback{
+    interface AppointmentFetchCallback {
         void onSuccess(List<AppointmentDto> appointments);
+
         void onError(String errorMessage);
     }
+
 
 }
