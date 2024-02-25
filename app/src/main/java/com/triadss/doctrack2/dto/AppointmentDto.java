@@ -3,7 +3,9 @@ package com.triadss.doctrack2.dto;
 import com.google.firebase.Timestamp;
 
 public class AppointmentDto {
-
+    public AppointmentDto() {
+        // required for Firestore deserialization
+    }
     public AppointmentDto(String patientId, String nameOfRequester, String purpose,
             Timestamp dateOfAppointment, String status) {
         this.patientId = patientId;

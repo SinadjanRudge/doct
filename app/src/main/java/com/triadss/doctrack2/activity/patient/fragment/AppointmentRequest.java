@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import com.google.firebase.Timestamp;
@@ -154,6 +156,21 @@ public class AppointmentRequest extends Fragment {
             @Override
             public void onError(String errorMessage) {
                 // Handle error, if needed
+            }
+        });
+
+        //! FOR TESTING
+        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+            @Override
+            public void onSuccess(List<AppointmentDto> appointments) {
+                for (AppointmentDto a : appointments) {
+                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
             }
         });
     }

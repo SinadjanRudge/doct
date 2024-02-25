@@ -76,13 +76,14 @@ public class AppointmentRepository {
     }
 
     public void getAllAppointments(AppointmentFetchCallback callback) {
-        appointmentsCollection.orderBy("dateTime", Query.Direction.DESCENDING)
+        appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         List<AppointmentDto> appointments = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             AppointmentDto appointment = document.toObject(AppointmentDto.class);
+
                             appointments.add(appointment);
                         }
                         callback.onSuccess(appointments);
