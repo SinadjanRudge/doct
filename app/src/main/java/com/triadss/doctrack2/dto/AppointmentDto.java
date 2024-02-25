@@ -54,8 +54,11 @@ public class AppointmentDto {
         this.status = status;
     }
 
-    public String getPatientId() { return patientId; }
-    public void setPatientId(String userId){
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String userId) {
         this.patientId = userId;
     }
 

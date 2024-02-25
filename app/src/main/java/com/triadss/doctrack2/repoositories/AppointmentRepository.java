@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.repoositories;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,19 +37,47 @@ public class AppointmentRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference appointmentsCollection = firestore
             .collection(FireStoreCollection.APPOINTMENTS_TABLE);
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
 
     public void addAppointment(AppointmentDto appointment, AppointmentAddCallback callback) {
-        appointmentsCollection
-                .add(appointment)
-                .addOnSuccessListener(documentReference -> {
-                    Log.d(TAG, "Appointment added with ID: " + documentReference.getId());
-                    callback.onSuccess(documentReference.getId());
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error adding appointment", e);
-                    callback.onError(e.getMessage());
-                });
+        if (user != null) {
+            appointment.setPatientId(user.getUid());
 
+            // Query Firestore to get the user's full name based on UID
+            FirebaseFirestore.getInstance()
+                    .collection("users") // Change to your users collection name
+                    .document(appointment.getPatientId())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // User document found, retrieve full name
+                            String fullName = documentSnapshot.getString("fullName");
+                            appointment.setNameOfRequester(fullName);
+
+                            // Proceed with adding the appointment
+                            appointmentsCollection
+                                    .add(appointment)
+                                    .addOnSuccessListener(documentReference -> {
+                                        Log.d(TAG, "Appointment added with ID: " + documentReference.getId());
+                                        callback.onSuccess(documentReference.getId());
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Error adding appointment", e);
+                                        callback.onError(e.getMessage());
+                                    });
+                        } else {
+                            // User document not found, handle this case
+                            Log.e(TAG, "User document not found in Firestore");
+                            callback.onError("User document not found");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // Error fetching user document from Firestore
+                        Log.e(TAG, "Error fetching user document from Firestore", e);
+                        callback.onError(e.getMessage());
+                    });
+        }
     }
 
     public void getAllAppointments(AppointmentFetchCallback callback) {

@@ -130,7 +130,7 @@ public class AppointmentRequest extends Fragment {
 
                 // Sample Timestamp for date and time of appointment
                 Timestamp dateTimeOfAppointment = new Timestamp(new Date(2024 - 1900, 2, 15));
-// Sample Time - Assuming the Time class is represented as milliseconds
+                // Sample Time - Assuming the Time class is represented as milliseconds
                 long timeOfAppointment = System.currentTimeMillis();
 
                 String status = "Pending";
@@ -152,14 +152,13 @@ public class AppointmentRequest extends Fragment {
             }
         });
 
-
         return rootView;
     }
     // Add a helper method to convert Date to String
-//    private String formatDateToString(Date date) {
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-//        return sdf.format(new Date(date.getYear(), date.getMonth(), date.getDay()));
-//    }
-
+    // private String formatDateToString(Date date) {
+    // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd",
+    // Locale.getDefault());
+    // return sdf.format(new Date(date.getYear(), date.getMonth(), date.getDay()));
+    // }
 
 }
