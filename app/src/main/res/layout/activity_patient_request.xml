@@ -29,7 +29,7 @@
             app:layout_constraintVertical_bias="0.045" />
 
         <EditText
-            android:id="@+id/editTextTextMultiLine"
+            android:id="@+id/textInputPurpose"
             android:layout_width="380dp"
             android:layout_height="278dp"
             android:ems="10"
