@@ -1,17 +1,15 @@
 package com.triadss.doctrack2.dto;
 
-import com.google.type.DateTime;
-
 import java.sql.Time;
 import java.util.Date;
 
 public class MedicationDto {
-    public int getMediID() {
-        return mediID;
+    public int getMediId() {
+        return mediId;
     }
 
-    public void setMediID(int mediID) {
-        this.mediID = mediID;
+    public void setMediId(int mediId) {
+        this.mediId = mediId;
     }
 
     public int getPatientId() {
@@ -54,7 +52,7 @@ public class MedicationDto {
         this.medTime = medTime;
     }
 
-    private int mediID;
+    private int mediId;
     private int patientId;
     private String medicine;
     private String note;

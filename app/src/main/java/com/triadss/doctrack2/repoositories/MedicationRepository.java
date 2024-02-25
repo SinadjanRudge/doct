@@ -7,7 +7,6 @@ import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.MedicationModel;
 import com.triadss.doctrack2.dto.MedicationDto;
-import com.triadss.doctrack2.dto.WearableDeviceDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,7 +33,7 @@ public class MedicationRepository {
             String dateNow = currentDate.format(formatter);
 
             Map<String, Object> medications = new HashMap<>();
-            medications.put(MedicationModel.mediID, 0);
+            medications.put(MedicationModel.mediId, 0);
             medications.put(MedicationModel.patientID, medicationDto.getPatientId());
             medications.put(MedicationModel.medicine, medicationDto.getMedicine());
             medications.put(MedicationModel.note, medicationDto.getNote());

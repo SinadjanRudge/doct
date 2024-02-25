@@ -6,7 +6,6 @@ import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.AppointmentsModel;
-import com.triadss.doctrack2.config.model.WearableDeviceModel;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
 import java.time.LocalDateTime;
@@ -34,7 +33,7 @@ public class AppointmentRepository {
             String dateNow = currentDate.format(formatter);
 
             Map<String, Object> appointmentData = new HashMap<>();
-            appointmentData.put(AppointmentsModel.appointmentID, appointmentDto.getAppointmentId());
+            appointmentData.put(AppointmentsModel.appointmentId, appointmentDto.getAppointmentId());
             appointmentData.put(AppointmentsModel.nameOfRequester, appointmentDto.getNameOfRequester());
             appointmentData.put(AppointmentsModel.purpose, appointmentDto.getPurpose());
             appointmentData.put(AppointmentsModel.dateOfAppointment, appointmentDto.getDateOfAppointment());
