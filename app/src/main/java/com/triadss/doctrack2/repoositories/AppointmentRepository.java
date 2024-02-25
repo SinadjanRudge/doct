@@ -8,10 +8,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
-import com.triadss.doctrack2.config.enums.UserRole;
-import com.triadss.doctrack2.config.model.UserModel;
 import com.triadss.doctrack2.config.model.AppointmentsModel;
-import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
 import java.time.LocalDateTime;
@@ -28,41 +25,48 @@ public class AppointmentRepository {
     /**
      * Saves user information to Firestore.
      *
-     * @param userId     The ID of the user.
-     * @param appointmentDto The DTO (Data Transfer Object) containing patient information.
+     * @param userId         The ID of the user.
+     * @param appointmentDto The DTO (Data Transfer Object) containing patient
+     *                       information.
      */
-//    public boolean AddAppointment(String userId, AppointmentDto appointmentDto)
-//    {
-//        try
-//        {
-//            FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//            // TODO: EDIT THIS
-//            DocumentReference userRef = db.collection(FireStoreCollection.USERS_TABLE).document(userId);
-//            LocalDateTime currentDate = LocalDateTime.now();
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DocTrackConstant.AUDIT_DATE_FORMAT);
-//            String dateNow = currentDate.format(formatter);
-//
-//            Map<String, Object> appointmentData = new HashMap<>();
-//            appointmentData.put(AppointmentsModel.nameOfRequester, appointmentDto.getNameOfRequester());
-//            appointmentData.put(AppointmentsModel.purpose, appointmentDto.getPurpose());
-//            appointmentData.put(AppointmentsModel.dateOfAppointment, appointmentDto.getDateOfAppointment());
-//            appointmentData.put(AppointmentsModel.timeOfAppointment, appointmentDto.getTimeOfAppointment());
-//            appointmentData.put(AppointmentsModel.status, appointmentDto.getStatus());
-//            // TODO: EDIT THIS
-//            userRef.set(appointmentData, SetOptions.merge());
-//        } catch(Exception ex)
-//        {
-//            return false;
-//        }
-//
-//        return true;
-//    }
+    // public boolean AddAppointment(String userId, AppointmentDto appointmentDto)
+    // {
+    // try
+    // {
+    // FirebaseFirestore db = FirebaseFirestore.getInstance();
+    //
+    // // TODO: EDIT THIS
+    // DocumentReference userRef =
+    // db.collection(FireStoreCollection.USERS_TABLE).document(userId);
+    // LocalDateTime currentDate = LocalDateTime.now();
+    // DateTimeFormatter formatter =
+    // DateTimeFormatter.ofPattern(DocTrackConstant.AUDIT_DATE_FORMAT);
+    // String dateNow = currentDate.format(formatter);
+    //
+    // Map<String, Object> appointmentData = new HashMap<>();
+    // appointmentData.put(AppointmentsModel.nameOfRequester,
+    // appointmentDto.getNameOfRequester());
+    // appointmentData.put(AppointmentsModel.purpose, appointmentDto.getPurpose());
+    // appointmentData.put(AppointmentsModel.dateOfAppointment,
+    // appointmentDto.getDateOfAppointment());
+    // appointmentData.put(AppointmentsModel.timeOfAppointment,
+    // appointmentDto.getTimeOfAppointment());
+    // appointmentData.put(AppointmentsModel.status, appointmentDto.getStatus());
+    // // TODO: EDIT THIS
+    // userRef.set(appointmentData, SetOptions.merge());
+    // } catch(Exception ex)
+    // {
+    // return false;
+    // }
+    //
+    // return true;
+    // }
     private static final String TAG = "AppointmentRepository";
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private final CollectionReference appointmentsCollection = firestore.collection(FireStoreCollection.APPOINTMENTS_TABLE);
+    private final CollectionReference appointmentsCollection = firestore
+            .collection(FireStoreCollection.APPOINTMENTS_TABLE);
 
-    public void addAppointment(AppointmentDto appointment, AppointmentAddCallback callback){
+    public void addAppointment(AppointmentDto appointment, AppointmentAddCallback callback) {
         appointmentsCollection
                 .add(appointment)
                 .addOnSuccessListener(documentReference -> {
@@ -74,10 +78,9 @@ public class AppointmentRepository {
                     callback.onError(e.getMessage());
                 });
 
-
     }
 
-    public void getAllAppointments(AppointmentFetchCallback callback){
+    public void getAllAppointments(AppointmentFetchCallback callback) {
         appointmentsCollection.orderBy("dateTime", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -107,6 +110,5 @@ public class AppointmentRepository {
 
         void onError(String errorMessage);
     }
-
 
 }

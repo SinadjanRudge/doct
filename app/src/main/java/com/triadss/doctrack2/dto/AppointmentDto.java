@@ -46,11 +46,20 @@ public class AppointmentDto {
         this.status = status;
     }
 
+    public int getAppointmentId() {
+        return appointmentId;
+    }
+
+    public void setAppointmentId(int appointmentId) {
+        this.appointmentId = appointmentId;
+    }
+
+    private int appointmentId;
     private String nameOfRequester;
     private String purpose;
     private Date dateOfAppointment;
     private Time timeOfAppointment;
     private String status;
 
-    
+
 }
