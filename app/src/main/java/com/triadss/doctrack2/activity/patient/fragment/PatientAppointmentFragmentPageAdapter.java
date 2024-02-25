@@ -21,6 +21,8 @@ public class PatientAppointmentFragmentPageAdapter extends FragmentStateAdapter 
                 return new AppointmentRequest();
             case 1:
                 return new AppointmentPending();
+            case 2:
+                return new AppointmentStatus();
             default:
                 return new AppointmentStatus();
         }

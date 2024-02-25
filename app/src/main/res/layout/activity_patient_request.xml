@@ -19,18 +19,19 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputEditText"
             android:layout_width="379dp"
             android:layout_height="63dp"
             android:hint="Name:"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.531"
+            app:layout_constraintHorizontal_bias="0.468"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bottomAppBar"
-            app:layout_constraintVertical_bias="0.045" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.073" />
 
         <EditText
-            android:id="@+id/editTextTextMultiLine"
+            android:id="@+id/textInputPurpose"
             android:layout_width="380dp"
             android:layout_height="278dp"
             android:ems="10"
@@ -39,10 +40,10 @@
             android:inputType="textMultiLine"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintHorizontal_bias="0.516"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.399" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputEditText"
+            app:layout_constraintVertical_bias="0.073" />
 
         <Button
             android:id="@+id/datebutton"
@@ -56,8 +57,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.065"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.688" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputPurpose"
+            app:layout_constraintVertical_bias="0.089" />
 
         <Button
             android:id="@+id/confirmbutton"
@@ -70,8 +71,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.841" />
+            app:layout_constraintTop_toBottomOf="@+id/idBtnPickTime"
+            app:layout_constraintVertical_bias="0.162" />
 
         <Button
             android:id="@+id/idBtnPickTime"
@@ -84,10 +85,10 @@
             app:icon="@drawable/baseline_access_time_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.937"
+            app:layout_constraintHorizontal_bias="0.933"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.688" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputPurpose"
+            app:layout_constraintVertical_bias="0.089" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
