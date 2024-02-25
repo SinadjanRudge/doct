@@ -1,15 +1,12 @@
 package com.triadss.doctrack2.dto;
 
-import com.google.type.Date;
-import com.google.type.DateTime;
-
-import java.sql.Time;
+import com.google.firebase.Timestamp;
 
 public class AppointmentDto {
 
-    public AppointmentDto(int appointmentId, String nameOfRequester, String purpose,
-            String dateOfAppointment, long timeOfAppointment, String status) {
-        this.appointmentId = appointmentId;
+    public AppointmentDto(String patientId, String nameOfRequester, String purpose,
+            Timestamp dateOfAppointment, long timeOfAppointment, String status) {
+        this.patientId = patientId;
         this.nameOfRequester = nameOfRequester;
         this.purpose = purpose;
         this.dateOfAppointment = dateOfAppointment;
@@ -33,11 +30,11 @@ public class AppointmentDto {
         this.purpose = purpose;
     }
 
-    public String getDateOfAppointment() {
+    public Timestamp getDateOfAppointment() {
         return dateOfAppointment;
     }
 
-    public void setDateOfAppointment(String dateOfAppointment) {
+    public void setDateOfAppointment(Timestamp dateOfAppointment) {
         this.dateOfAppointment = dateOfAppointment;
     }
 
@@ -57,19 +54,16 @@ public class AppointmentDto {
         this.status = status;
     }
 
-    public int getAppointmentId() {
-        return appointmentId;
+    public String getPatientId() { return patientId; }
+    public void setPatientId(String userId){
+        this.patientId = userId;
     }
 
-    public void setAppointmentId(int appointmentId) {
-        this.appointmentId = appointmentId;
-    }
-
-    private int appointmentId;
     private String nameOfRequester;
     private String purpose;
-    private String dateOfAppointment;
+    private Timestamp dateOfAppointment;
     private long timeOfAppointment;
     private String status;
+    private String patientId;
 
 }

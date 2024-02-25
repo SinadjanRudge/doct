@@ -31,62 +31,14 @@ public class AppointmentRepository {
      * @param appointmentDto The DTO (Data Transfer Object) containing patient
      *                       information.
      */
-    // public boolean AddAppointment(String userId, AppointmentDto appointmentDto)
-    // {
-    // try
-    // {
-    // FirebaseFirestore db = FirebaseFirestore.getInstance();
-    //
-    // // TODO: EDIT THIS
-    // DocumentReference userRef =
-    // db.collection(FireStoreCollection.USERS_TABLE).document(userId);
-    // LocalDateTime currentDate = LocalDateTime.now();
-    // DateTimeFormatter formatter =
-    // DateTimeFormatter.ofPattern(DocTrackConstant.AUDIT_DATE_FORMAT);
-    // String dateNow = currentDate.format(formatter);
-    //
-    // Map<String, Object> appointmentData = new HashMap<>();
-    // appointmentData.put(AppointmentsModel.nameOfRequester,
-    // appointmentDto.getNameOfRequester());
-    // appointmentData.put(AppointmentsModel.purpose, appointmentDto.getPurpose());
-    // appointmentData.put(AppointmentsModel.dateOfAppointment,
-    // appointmentDto.getDateOfAppointment());
-    // appointmentData.put(AppointmentsModel.timeOfAppointment,
-    // appointmentDto.getTimeOfAppointment());
-    // appointmentData.put(AppointmentsModel.status, appointmentDto.getStatus());
-    // // TODO: EDIT THIS
-    // userRef.set(appointmentData, SetOptions.merge());
-    // } catch(Exception ex)
-    // {
-    // return false;
-    // }
-    //
-    // return true;
-    // }
     private static final String TAG = "AppointmentRepository";
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference appointmentsCollection = firestore
             .collection(FireStoreCollection.APPOINTMENTS_TABLE);
 
     public void addAppointment(AppointmentDto appointment, AppointmentAddCallback callback) {
-        System.out.println("Add Appointment Fucntion called");
-        // sample appointments
-//        AppointmentDto sampleAppointment = new AppointmentDto(
-//                1, // appointmentId
-//                "John Doe", // nameOfRequester
-//                "General Checkup", // purpose
-//                Date.newBuilder()
-//                        .setYear(2024)
-//                        .setMonth(2) // Note: Months are 0-indexed, so 2 represents March
-//                        .setDay(15)
-//                        .build(), // dateOfAppointment
-//                new Time(System.currentTimeMillis()), // Using current time as a sample
-//                "Pending" // status
-//        );
-
         appointmentsCollection
-                 .add(appointment)
-//                .add(sampleAppointment)
+                .add(appointment)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Appointment added with ID: " + documentReference.getId());
                     callback.onSuccess(documentReference.getId());

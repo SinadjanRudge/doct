@@ -19,13 +19,13 @@ import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.type.Date;
 import java.sql.Time;
-
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+
+import com.google.firebase.Timestamp;
 
 public class AppointmentRequest extends Fragment {
     private Button mPickDateButton, pickTimeBtn, confirmButton;
@@ -124,30 +124,19 @@ public class AppointmentRequest extends Fragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                System.out.println("Request Button Clicked");
-
                 // Sample values for AppointmentDto
-                int appointmentId = 1;
                 String nameOfRequester = "John Doe";
                 String purpose = "General Checkup";
 
-// Sample Date - Assuming the Date class has a constructor that takes year, month, and day
-                Date dateOfAppointment = Date.newBuilder()
-                        .setYear(2024)
-                        .setMonth(2) // Months are 0-indexed, so 2 represents March
-                        .setDay(15)
-                        .build();
-
+                // Sample Timestamp for date and time of appointment
+                Timestamp dateTimeOfAppointment = new Timestamp(new Date(2024 - 1900, 2, 15));
 // Sample Time - Assuming the Time class is represented as milliseconds
                 long timeOfAppointment = System.currentTimeMillis();
 
-                // Format the Date as a String
-                String formattedDate = formatDateToString(dateOfAppointment);
-
                 String status = "Pending";
 
-                AppointmentDto appointment = new AppointmentDto(appointmentId, nameOfRequester, purpose, formattedDate, timeOfAppointment, status);
+                AppointmentDto appointment = new AppointmentDto("asdaasfasfasf",
+                        nameOfRequester, purpose, dateTimeOfAppointment, timeOfAppointment, status);
 
                 appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
                     @Override
@@ -167,10 +156,10 @@ public class AppointmentRequest extends Fragment {
         return rootView;
     }
     // Add a helper method to convert Date to String
-    private String formatDateToString(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        return sdf.format(new java.util.Date(date.getYear(), date.getMonth(), date.getDay()));
-    }
+//    private String formatDateToString(Date date) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+//        return sdf.format(new Date(date.getYear(), date.getMonth(), date.getDay()));
+//    }
 
 
 }
