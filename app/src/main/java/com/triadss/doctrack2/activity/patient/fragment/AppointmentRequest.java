@@ -13,33 +13,39 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.type.Date;
+import java.sql.Time;
+
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class AppointmentRequest extends Fragment {
-    private Button mPickDateButton, pickTimeBtn;
+    private Button mPickDateButton, pickTimeBtn, confirmButton;
+    private AppointmentRepository appointmentRepository;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_patient_request, container, false);
+
+        appointmentRepository = new AppointmentRepository();
 
         // now register the text view and the button with
         // their appropriate IDs
         mPickDateButton = (Button) rootView.findViewById(R.id.datebutton);
-      //  mShowSelectedDateText = (TextView) findViewById(R.id.showselecteddate);
+        // mShowSelectedDateText = (TextView) findViewById(R.id.showselecteddate);
         pickTimeBtn = (Button) rootView.findViewById(R.id.idBtnPickTime);
-      //  selectedTimeTV = (TextView) findViewById(R.id.idTVSelectedTime);
-        // now create instance of the material date picker
-        // builder make sure to add the "datePicker" which
-        // is normal material date picker which is the first
-        // type of the date picker in material design date
-        // picker
+        confirmButton = rootView.findViewById(R.id.confirmbutton);
+
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
 
         // now define the properties of the
@@ -68,21 +74,22 @@ public class AppointmentRequest extends Fragment {
         // now handle the positive button click from the
         // material design date picker
         materialDatePicker.addOnPositiveButtonClickListener(
-            new MaterialPickerOnPositiveButtonClickListener() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onPositiveButtonClick(Object selection) {
+                new MaterialPickerOnPositiveButtonClickListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onPositiveButtonClick(Object selection) {
 
-                    // if the user clicks on the positive
-                    // button that is ok button update the
-                    // selected date
-                   // mShowSelectedDateText.setText("Selected Date is : " + materialDatePicker.getHeaderText());
-                    mPickDateButton.setText(materialDatePicker.getHeaderText());
-                    // in the above statement, getHeaderText
-                    // is the selected date preview from the
-                    // dialog
-                }
-            });
+                        // if the user clicks on the positive
+                        // button that is ok button update the
+                        // selected date
+                        // mShowSelectedDateText.setText("Selected Date is : " +
+                        // materialDatePicker.getHeaderText());
+                        mPickDateButton.setText(materialDatePicker.getHeaderText());
+                        // in the above statement, getHeaderText
+                        // is the selected date preview from the
+                        // dialog
+                    }
+                });
 
         pickTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,10 +107,10 @@ public class AppointmentRequest extends Fragment {
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay,
-                                                  int minute) {
+                                    int minute) {
                                 // on below line we are setting selected time
                                 // in our text view.
-                              //  selectedTimeTV.setText(hourOfDay + ":" + minute);
+                                // selectedTimeTV.setText(hourOfDay + ":" + minute);
                                 pickTimeBtn.setText("  " + hourOfDay + ":" + minute + "  ");
                             }
                         }, hour, minute, false);
@@ -114,6 +121,56 @@ public class AppointmentRequest extends Fragment {
             }
         });
 
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                System.out.println("Request Button Clicked");
+
+                // Sample values for AppointmentDto
+                int appointmentId = 1;
+                String nameOfRequester = "John Doe";
+                String purpose = "General Checkup";
+
+// Sample Date - Assuming the Date class has a constructor that takes year, month, and day
+                Date dateOfAppointment = Date.newBuilder()
+                        .setYear(2024)
+                        .setMonth(2) // Months are 0-indexed, so 2 represents March
+                        .setDay(15)
+                        .build();
+
+// Sample Time - Assuming the Time class is represented as milliseconds
+                long timeOfAppointment = System.currentTimeMillis();
+
+                // Format the Date as a String
+                String formattedDate = formatDateToString(dateOfAppointment);
+
+                String status = "Pending";
+
+                AppointmentDto appointment = new AppointmentDto(appointmentId, nameOfRequester, purpose, formattedDate, timeOfAppointment, status);
+
+                appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
+                    @Override
+                    public void onSuccess(String appointmentId) {
+                        // Handle success, if needed
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Handle error, if needed
+                    }
+                });
+            }
+        });
+
+
         return rootView;
     }
+    // Add a helper method to convert Date to String
+    private String formatDateToString(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(new java.util.Date(date.getYear(), date.getMonth(), date.getDay()));
+    }
+
+
 }

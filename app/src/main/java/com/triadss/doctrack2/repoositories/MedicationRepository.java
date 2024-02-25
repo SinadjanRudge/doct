@@ -34,7 +34,7 @@ public class MedicationRepository {
 
             Map<String, Object> medications = new HashMap<>();
             medications.put(MedicationModel.mediId, 0);
-            medications.put(MedicationModel.patientID, medicationDto.getPatientId());
+            medications.put(MedicationModel.patientId, medicationDto.getPatientId());
             medications.put(MedicationModel.medicine, medicationDto.getMedicine());
             medications.put(MedicationModel.note, medicationDto.getNote());
             medications.put(MedicationModel.medDate, medicationDto.getMedDate());

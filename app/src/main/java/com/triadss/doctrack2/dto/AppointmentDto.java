@@ -6,6 +6,17 @@ import com.google.type.DateTime;
 import java.sql.Time;
 
 public class AppointmentDto {
+
+    public AppointmentDto(int appointmentId, String nameOfRequester, String purpose,
+            String dateOfAppointment, long timeOfAppointment, String status) {
+        this.appointmentId = appointmentId;
+        this.nameOfRequester = nameOfRequester;
+        this.purpose = purpose;
+        this.dateOfAppointment = dateOfAppointment;
+        this.timeOfAppointment = timeOfAppointment;
+        this.status = status;
+    }
+
     public String getNameOfRequester() {
         return nameOfRequester;
     }
@@ -22,19 +33,19 @@ public class AppointmentDto {
         this.purpose = purpose;
     }
 
-    public Date getDateOfAppointment() {
+    public String getDateOfAppointment() {
         return dateOfAppointment;
     }
 
-    public void setDateOfAppointment(Date dateOfAppointment) {
+    public void setDateOfAppointment(String dateOfAppointment) {
         this.dateOfAppointment = dateOfAppointment;
     }
 
-    public Time getTimeOfAppointment() {
+    public long getTimeOfAppointment() {
         return timeOfAppointment;
     }
 
-    public void setTimeOfAppointment(Time timeOfAppointment) {
+    public void setTimeOfAppointment(long timeOfAppointment) {
         this.timeOfAppointment = timeOfAppointment;
     }
 
@@ -57,9 +68,8 @@ public class AppointmentDto {
     private int appointmentId;
     private String nameOfRequester;
     private String purpose;
-    private Date dateOfAppointment;
-    private Time timeOfAppointment;
+    private String dateOfAppointment;
+    private long timeOfAppointment;
     private String status;
-
 
 }

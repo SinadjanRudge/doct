@@ -6,11 +6,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.type.Date;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.AppointmentsModel;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -67,8 +69,24 @@ public class AppointmentRepository {
             .collection(FireStoreCollection.APPOINTMENTS_TABLE);
 
     public void addAppointment(AppointmentDto appointment, AppointmentAddCallback callback) {
+        System.out.println("Add Appointment Fucntion called");
+        // sample appointments
+//        AppointmentDto sampleAppointment = new AppointmentDto(
+//                1, // appointmentId
+//                "John Doe", // nameOfRequester
+//                "General Checkup", // purpose
+//                Date.newBuilder()
+//                        .setYear(2024)
+//                        .setMonth(2) // Note: Months are 0-indexed, so 2 represents March
+//                        .setDay(15)
+//                        .build(), // dateOfAppointment
+//                new Time(System.currentTimeMillis()), // Using current time as a sample
+//                "Pending" // status
+//        );
+
         appointmentsCollection
-                .add(appointment)
+                 .add(appointment)
+//                .add(sampleAppointment)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Appointment added with ID: " + documentReference.getId());
                     callback.onSuccess(documentReference.getId());
@@ -99,13 +117,13 @@ public class AppointmentRepository {
 
     }
 
-    interface AppointmentAddCallback {
+    public interface AppointmentAddCallback {
         void onSuccess(String appointmentId);
 
         void onError(String errorMessage);
     }
 
-    interface AppointmentFetchCallback {
+    public interface AppointmentFetchCallback {
         void onSuccess(List<AppointmentDto> appointments);
 
         void onError(String errorMessage);
