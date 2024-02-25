@@ -46,6 +46,15 @@ public class WearableDeviceDto {
         this.remainingBattery = remainingBattery;
     }
 
+    public int getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(int deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    private int deviceId;
     private String deviceName;
     private DateTime timeSynced;
     private String firmwareVersion;

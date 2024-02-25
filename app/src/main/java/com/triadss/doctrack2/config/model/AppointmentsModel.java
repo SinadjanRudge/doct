@@ -7,6 +7,7 @@ import java.util.Date;
  * It contains constants for the property names to avoid misspelling when interacting with FireStore.
  */
 public class AppointmentsModel extends AuditModel {
+    public static final String appointmentID = "appointmentID";
     public static final String nameOfRequester = "nameOfRequester";
     public static final String purpose = "purpose";
     public static final String dateOfAppointment = "dateOfAppointment";

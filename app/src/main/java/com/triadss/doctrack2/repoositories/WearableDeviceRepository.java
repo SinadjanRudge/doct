@@ -35,6 +35,7 @@ public class WearableDeviceRepository {
             String dateNow = currentDate.format(formatter);
 
             Map<String, Object> wearableDevices = new HashMap<>();
+            wearableDevices.put(WearableDeviceModel.deviceID, 0);
             wearableDevices.put(WearableDeviceModel.deviceName, wearableDeviceDto.getDeviceName());
             wearableDevices.put(WearableDeviceModel.timeSynced, wearableDeviceDto.getTimeSynced());
             wearableDevices.put(WearableDeviceModel.firmwareVersion, wearableDeviceDto.getFirmwareVersion());

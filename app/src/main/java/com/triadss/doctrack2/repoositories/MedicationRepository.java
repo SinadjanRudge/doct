@@ -5,23 +5,23 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
-import com.triadss.doctrack2.config.model.AppointmentsModel;
-import com.triadss.doctrack2.config.model.WearableDeviceModel;
-import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.config.model.MedicationModel;
+import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.dto.WearableDeviceDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AppointmentRepository {
+public class MedicationRepository {
     /**
      * Saves user information to Firestore.
      *
      * @param userId     The ID of the user.
-     * @param appointmentDto The DTO (Data Transfer Object) containing patient information.
+     * @param medicationDto The DTO (Data Transfer Object) containing patient information.
      */
-    public boolean AddAppointment(String userId, AppointmentDto appointmentDto)
+    public boolean AddMedication(String userId, MedicationDto medicationDto)
     {
         try
         {
@@ -33,15 +33,15 @@ public class AppointmentRepository {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DocTrackConstant.AUDIT_DATE_FORMAT);
             String dateNow = currentDate.format(formatter);
 
-            Map<String, Object> appointmentData = new HashMap<>();
-            appointmentData.put(AppointmentsModel.appointmentID, appointmentDto.getAppointmentId());
-            appointmentData.put(AppointmentsModel.nameOfRequester, appointmentDto.getNameOfRequester());
-            appointmentData.put(AppointmentsModel.purpose, appointmentDto.getPurpose());
-            appointmentData.put(AppointmentsModel.dateOfAppointment, appointmentDto.getDateOfAppointment());
-            appointmentData.put(AppointmentsModel.timeOfAppointment, appointmentDto.getTimeOfAppointment());
-            appointmentData.put(AppointmentsModel.status, appointmentDto.getStatus());
+            Map<String, Object> medications = new HashMap<>();
+            medications.put(MedicationModel.mediID, 0);
+            medications.put(MedicationModel.patientID, medicationDto.getPatientId());
+            medications.put(MedicationModel.medicine, medicationDto.getMedicine());
+            medications.put(MedicationModel.note, medicationDto.getNote());
+            medications.put(MedicationModel.medDate, medicationDto.getMedDate());
+            medications.put(MedicationModel.medTime, medicationDto.getMedTime());
             // TODO: EDIT THIS
-            userRef.set(appointmentData, SetOptions.merge());
+            userRef.set(medications, SetOptions.merge());
         } catch(Exception ex)
         {
             return false;
