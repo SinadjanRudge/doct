@@ -8,22 +8,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.google.type.Date;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.AppointmentsModel;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
-import java.sql.Time;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-
 import java.util.ArrayList;
 import java.util.List;
 import android.util.Log;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.Timestamp;
+import java.util.Date;
 
 public class AppointmentRepository {
     /**
@@ -44,18 +38,19 @@ public class AppointmentRepository {
         if (user != null) {
             appointment.setPatientId(user.getUid());
 
-            // Query Firestore to get the user's full name based on UID
             FirebaseFirestore.getInstance()
                     .collection("users") // Change to your users collection name
                     .document(appointment.getPatientId())
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
-                            // User document found, retrieve full name
+                            // * User document found, retrieve full name
                             String fullName = documentSnapshot.getString("fullName");
                             appointment.setNameOfRequester(fullName);
 
-                            // Proceed with adding the appointment
+                            appointment.setCreatedAt(new Timestamp(new Date()));
+
+                            // * Proceed with adding the appointment
                             appointmentsCollection
                                     .add(appointment)
                                     .addOnSuccessListener(documentReference -> {

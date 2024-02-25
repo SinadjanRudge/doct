@@ -53,10 +53,19 @@ public class AppointmentDto {
         this.patientId = userId;
     }
 
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
     private String nameOfRequester;
     private String purpose;
     private Timestamp dateOfAppointment;
     private String status;
     private String patientId;
+    private Timestamp createdAt;
 
 }

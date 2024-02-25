@@ -17,6 +17,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
@@ -71,7 +72,7 @@ public class AppointmentRequest extends Fragment {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
+                                    int monthOfYear, int dayOfMonth) {
                                 // Store the selected date
                                 selectedYear = year;
                                 selectedMonth = monthOfYear;
@@ -79,7 +80,8 @@ public class AppointmentRequest extends Fragment {
 
                                 // Update the text on the button
                                 pickDateButton.setText(
-                                        String.format(Locale.getDefault(), "%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay));
+                                        String.format(Locale.getDefault(), "%04d-%02d-%02d", selectedYear,
+                                                selectedMonth + 1, selectedDay));
                             }
                         }, year, month, day);
 
@@ -120,7 +122,6 @@ public class AppointmentRequest extends Fragment {
         });
     }
 
-
     private void setupConfirmationButton() {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,10 +139,8 @@ public class AppointmentRequest extends Fragment {
 
         Timestamp dateTimeOfAppointment = new Timestamp(
                 new Date(selectedYear - 1900, selectedMonth, selectedDay, selectedHour, selectedMinute));
-        // Sample Time - Assuming the Time class is represented as milliseconds
-        long timeOfAppointment = System.currentTimeMillis();
 
-        String status = "Pending";
+        final String status = AppointmentTypeConstants.PENDING;
 
         AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, status);
