@@ -144,7 +144,7 @@ public class AppointmentRequest extends Fragment {
         String status = "Pending";
 
         AppointmentDto appointment = new AppointmentDto("",
-                "", purpose, dateTimeOfAppointment, timeOfAppointment, status);
+                "", purpose, dateTimeOfAppointment, status);
 
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
             @Override
