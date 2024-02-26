@@ -5,13 +5,19 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.adapters.PatientFragmentAdapter;
+import com.triadss.doctrack2.dto.AddPatientDto;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +36,11 @@ public class PatientFragment extends Fragment {
     private String mParam2;
 
     private Button addPatient;
+
+    RecyclerView recyclerView;
+    FirebaseFirestore db;
+    PatientFragmentAdapter adapter;
+    List<AddPatientDto> addPatientDtoList;
 
     public PatientFragment() {
         // Required empty public constructor
@@ -83,4 +94,5 @@ public class PatientFragment extends Fragment {
 
         return rootView;
     }
+
 }
