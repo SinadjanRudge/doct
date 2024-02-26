@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,6 +25,12 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragment.AddPatientFragment;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.repoositories.AppointmentRepository;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,12 +81,20 @@ public class HealthProfessionalPending extends Fragment {
         }
     }
 
+    RecyclerView recyclerView;
+    private AppointmentRepository appointmentRepository;
+   // private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
+
+    ArrayList<String> courseName = new ArrayList<>(Arrays.asList("Data Structure"));
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        appointmentRepository = new AppointmentRepository();
         View rootView = inflater.inflate(R.layout.fragment_health_professional_pending, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+
         bottomNavigationView = rootView.findViewById(R.id.bottomNavigationView);
         HealthProfbottomNavigationView = rootView.findViewById(R.id.HealthProfbottomNavigationView);
 
@@ -116,6 +132,29 @@ public class HealthProfessionalPending extends Fragment {
             }
             return true;
         });
+        CallPending();
         return rootView;
+    }
+    public void CallPending() {
+        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+            @Override
+            public void onSuccess(List<AppointmentDto> appointments) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(linearLayoutManager);
+
+                HealthProfAppointmentAdapter adapter = new  HealthProfAppointmentAdapter(getContext(), courseName);
+
+                for (AppointmentDto a : appointments) {
+                  //  Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+                    courseName.add(a.getPurpose());
+                }
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
     }
 }
