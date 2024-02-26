@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.patient.fragment.RecordFragment">
+    tools:context=".activity.patient.fragment.PatientAppointmentFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -20,22 +20,17 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Personal Information" />
+                android:text="Request" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Medical History" />
+                android:text="Pending" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Medication" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vital Signs" />
+                android:text="Status" />
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager2.widget.ViewPager2
@@ -44,5 +39,6 @@
             android:id="@+id/viewPager" />
 
     </LinearLayout>
+
 
 </FrameLayout>
