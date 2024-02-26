@@ -1,6 +1,9 @@
 package com.triadss.doctrack2.activity.patient;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +13,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.patient.fragment.AppointmentRequest;
+import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
+import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
 import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
 public class PatientHome extends AppCompatActivity {
@@ -47,15 +53,38 @@ public class PatientHome extends AppCompatActivity {
         binding = ActivityPatientHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+//        boolean shouldHideMenuItem = true;
+//
+//        if (shouldHideMenuItem) {
+//            // Hide the menu item directly by accessing the view and setting visibility
+//            View menuItemView = binding.bottomNavigationView.findViewById(R.id.patient_menu);
+//
+//            if (menuItemView != null) {
+//                menuItemView.setVisibility(View.GONE);
+//            }
+//        }
+
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.temp_logout) {
+            if (item.getItemId() == R.id.record_menu) {
+                replaceFragment(new RecordFragment());
+            }
+            else if (item.getItemId() == R.id.temp_logout) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
             }
+            else if (item.getItemId() == R.id.appointment_menu) {
+                replaceFragment(new PatientAppointmentFragment());
+            }
             return true;
         });
+    }
 
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
     }
 }
