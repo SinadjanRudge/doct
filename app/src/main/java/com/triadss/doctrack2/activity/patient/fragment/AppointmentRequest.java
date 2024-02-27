@@ -17,8 +17,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
@@ -136,9 +140,9 @@ public class AppointmentRequest extends Fragment {
 
     private void handleConfirmationButtonClick() {
         // Sample values for AppointmentDto
-        String purpose = textInputPurpose.getText().toString();
-        ;
+        String purpose = textInputPurpose.getText().toString();;
 
+        // THE DATE AND TIME PICKER MUST HAVE VALUES IN THE UI TO MAKE THE ADD APPOINTMENT WORKED!!!
         Timestamp dateTimeOfAppointment = new Timestamp(
                 new Date(selectedYear - 1900, selectedMonth, selectedDay, selectedHour, selectedMinute));
 
@@ -159,19 +163,76 @@ public class AppointmentRequest extends Fragment {
             }
         });
 
-        //! FOR TESTING
-        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
-            @Override
-            public void onSuccess(List<AppointmentDto> appointments) {
-                for (AppointmentDto a : appointments) {
-                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                }
-            }
+        //*********************************************************************************************//
+        //! FOR TESTING ADD APPOINTMENT USING THIS SAMPLE APPOINTMENT DTO OBJECT
+//        AppointmentDto sampleAddAppointment = new AppointmentDto(
+//                "samplePatientId",
+//                "John Doe",
+//                "Regular Checkup",
+//                Timestamp.now(), // Use the current timestamp for testing
+//                "Scheduled"
+//        );
+//
+//        appointmentRepository.addAppointment(sampleAddAppointment, new AppointmentRepository.AppointmentAddCallback() {
+//            @Override
+//            public void onSuccess(String appointmentId) {
+//                // Handle success, if needed
+//            }
+//
+//            @Override
+//            public void onError(String errorMessage) {
+//                // Handle error, if needed
+//            }
+//        });
 
-            @Override
-            public void onError(String errorMessage) {
+        //*********************************************************************************************//
+        //! FOR TESTING GET ALL APPOINTMENTS
+//        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+//            @Override
+//            public void onSuccess(List<AppointmentDto> appointments) {
+//                for (AppointmentDto a : appointments) {
+//                //! YOU CAN GET THE APPOINTMENTS HERE!!!!
+//                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+//                }
+//            }
+//
+//            @Override
+//            public void onError(String errorMessage) {
+//
+//            }
+//        });
 
-            }
-        });
+
+        //****************************************************************************************//
+        //! SAMPLE DATA TO TEST UPDATE APPOINTMENT
+//        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+//
+//        String sampleAppointmentId = "1pGPWAZ0wxXaET8YuswQ";    // the doc id must exists in the firestore
+//        AppointmentDto sampleAppointment = new AppointmentDto(
+//                "samplePatientId",
+//                "John Doe",
+//                "Regular Checkup",
+//                Timestamp.now(), // Use the current timestamp for testinupdatedAppointmentg
+//                "Scheduled"
+//        );
+//
+//        CollectionReference appointmentsCollection = firestore
+//                .collection(FireStoreCollection.APPOINTMENTS_TABLE);
+//
+//        DocumentReference appointmentRef = appointmentsCollection.document(sampleAppointmentId);
+//
+//        appointmentRepository.updateAppointment(sampleAppointmentId, sampleAppointment, new AppointmentRepository.UpdateAppointmentCallback() {
+//            @Override
+//            public void onSuccess() {
+//                // Handle success
+//                System.out.println("Appointment updated successfully!");
+//            }
+//
+//            @Override
+//            public void onError(String errorMessage) {
+//                // Handle error
+//                System.out.println("Error updating appointment: " + errorMessage);
+//            }
+//        });
     }
 }
