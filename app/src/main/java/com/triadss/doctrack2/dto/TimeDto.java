@@ -12,6 +12,13 @@ public class TimeDto {
     private int hour;
     private int minute;
 
+    public int getHour() {
+        return hour;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
 
     public String ToString()
     {

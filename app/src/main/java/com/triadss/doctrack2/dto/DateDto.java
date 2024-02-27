@@ -14,6 +14,18 @@ public class DateDto {
     private int month;
     private int day;
 
+    public int getYear() {
+        return year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
     public String ToString()
     {
         return String.format(Locale.getDefault(), "%04d-%02d-%02d", year,

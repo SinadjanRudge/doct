@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,20 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
+import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.dto.TimeDto;
+import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -31,14 +41,16 @@ public class PatientMedicationAddFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private DateDto selectedDate;
-    private TimeDto selectedTime;
+
+    private DateTimeDto selectedDateTime;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     public PatientMedicationAddFragment() {
         // Required empty public constructor
+        selectedDateTime = new DateTimeDto();
     }
 
     /**
@@ -72,7 +84,9 @@ public class PatientMedicationAddFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_patient_medication_add, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_patient_medication_add, container, false);
+
+        return rootView;
     }
 
     private void setupDatePicker(Button pickDateButton) {
@@ -93,10 +107,10 @@ public class PatientMedicationAddFragment extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // Store the selected date
-                                selectedDate = new DateDto(year, monthOfYear, dayOfMonth);
+                                selectedDateTime.setDate(new DateDto(year, monthOfYear, dayOfMonth));
 
                                 // Update the text on the button
-                                pickDateButton.setText(selectedDate.ToString());
+                                pickDateButton.setText(selectedDateTime.getDate().ToString());
                             }
                         }, year, month, day);
 
@@ -122,10 +136,10 @@ public class PatientMedicationAddFragment extends Fragment {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 // Store the selected time
-                                selectedTime = new TimeDto(hourOfDay, minute);
+                                selectedDateTime.setTime(new TimeDto(hourOfDay, minute));
 
                                 // Update the text on the button
-                                pickTimeBtn.setText(selectedTime.ToString());
+                                pickTimeBtn.setText(selectedDateTime.getTime().ToString());
                             }
                         }, hour, minute, false);
 
@@ -133,5 +147,20 @@ public class PatientMedicationAddFragment extends Fragment {
                 timePickerDialog.show();
             }
         });
+    }
+
+    private void handleConfirmationButtonClick(TextInputEditText medicineInput, TextInputEditText noteInput) {
+        // Sample values for MedicationDto
+        String medicine = medicineInput.getText().toString();
+        String note = noteInput.getText().toString();
+
+        Timestamp dateTimeOfAppointment = selectedDateTime.ToTimestamp();
+
+        final String status = AppointmentTypeConstants.PENDING;
+
+        MedicationDto appointment = new MedicationDto(0,
+                0, medicine, note, dateTimeOfAppointment);
+
+        // TODO: Complete Backend
     }
 }
