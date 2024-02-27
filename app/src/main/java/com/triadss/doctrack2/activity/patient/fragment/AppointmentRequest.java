@@ -190,10 +190,19 @@ public class AppointmentRequest extends Fragment {
         //! FOR TESTING GET ALL APPOINTMENTS
 //        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
 //            @Override
-//            public void onSuccess(List<AppointmentDto> appointments) {
-//                for (AppointmentDto a : appointments) {
-//                //! YOU CAN GET THE APPOINTMENTS HERE!!!!
-//                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+//            public void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds) {
+//                //! VIEW THE VALUES IN THE LOGCAT
+//                for (int i = 0; i < appointments.size(); i++) {
+//                    AppointmentDto appointment = appointments.get(i);
+//                    String appointmentId = appointmentIds.get(i);
+//
+//                    Log.d("AppointRequest Fragment", "Appointment ID: " + appointmentId);
+//                    Log.d("AppointRequest Fragment", "Requester's ID: " + appointment.getPatientId());
+//                    Log.d("AppointRequest Fragment", "Name of Requester: " + appointment.getNameOfRequester());
+//                    Log.d("AppointRequest Fragment", "Purpose: " + appointment.getPurpose());
+//                    Log.d("AppointRequest Fragment", "Date of Appointment: " + appointment.getDateOfAppointment());
+//                    Log.d("AppointRequest Fragment", "Status: " + appointment.getStatus());
+//                    Log.d("AppointRequest Fragment", "Created At: " + appointment.getCreatedAt());
 //                }
 //            }
 //
@@ -242,6 +251,7 @@ public class AppointmentRequest extends Fragment {
 //            @Override
 //            public void onSuccess(List<AppointmentDto> appointments) {
 //                // Process the fetched appointments
+            //! VIEW THE VALUES IN THE LOGCAT
 //                for (AppointmentDto appointment : appointments) {
 //                    Log.d(TAG, "Appointment ID: " + sampleAppointmentId);
 //                    Log.d(TAG, "Patient ID: " + appointment.getPatientId());

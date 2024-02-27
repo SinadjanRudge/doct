@@ -80,12 +80,14 @@ public class AppointmentRepository {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         List<AppointmentDto> appointments = new ArrayList<>();
+                        List<String> appointmentIds = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             AppointmentDto appointment = document.toObject(AppointmentDto.class);
 
                             appointments.add(appointment);
+                            appointmentIds.add(document.getId());
                         }
-                        callback.onSuccess(appointments);
+                        callback.onSuccess(appointments, appointmentIds);
                     } else {
                         Log.e(TAG, "Error getting appointments", task.getException());
                         callback.onError(task.getException().getMessage());
@@ -156,7 +158,7 @@ public class AppointmentRepository {
                 });
     }
 
-    public void getAppointment(String appointmentId, AppointmentFetchCallback callback) {
+    public void getAppointment(String appointmentId, AppointmentFetchOneCallback callback) {
         DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
 
         appointmentRef.get()
@@ -197,6 +199,12 @@ public class AppointmentRepository {
     }
 
     public interface AppointmentFetchCallback {
+        void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds);
+
+        void onError(String errorMessage);
+    }
+
+    public interface AppointmentFetchOneCallback {
         void onSuccess(List<AppointmentDto> appointments);
 
         void onError(String errorMessage);
