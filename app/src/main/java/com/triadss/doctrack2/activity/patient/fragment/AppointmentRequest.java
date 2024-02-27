@@ -247,7 +247,7 @@ public class AppointmentRequest extends Fragment {
         //****************************************************************************************//
         //! SAMPLE DATA TO TEST GET APPOINTMENT
 //        String sampleAppointmentId = "0RD49B906MYchHOzSAW9";  // must exists in the firestore
-//        appointmentRepository.getAppointment(sampleAppointmentId, new AppointmentRepository.AppointmentFetchCallback() {
+//        appointmentRepository.getAppointment(sampleAppointmentId, new AppointmentRepository.AppointmentFetchOneCallback() {
 //            @Override
 //            public void onSuccess(List<AppointmentDto> appointments) {
 //                // Process the fetched appointments
