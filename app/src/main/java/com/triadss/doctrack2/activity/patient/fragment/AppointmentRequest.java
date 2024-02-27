@@ -39,6 +39,7 @@ import java.util.Locale;
 import com.google.firebase.Timestamp;
 
 public class AppointmentRequest extends Fragment {
+    private static final String TAG = "AppointmentRequest";
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;
@@ -234,5 +235,46 @@ public class AppointmentRequest extends Fragment {
 //                System.out.println("Error updating appointment: " + errorMessage);
 //            }
 //        });
+        //****************************************************************************************//
+        //! SAMPLE DATA TO TEST GET APPOINTMENT
+//        String sampleAppointmentId = "0RD49B906MYchHOzSAW9";  // must exists in the firestore
+//        appointmentRepository.getAppointment(sampleAppointmentId, new AppointmentRepository.AppointmentFetchCallback() {
+//            @Override
+//            public void onSuccess(List<AppointmentDto> appointments) {
+//                // Process the fetched appointments
+//                for (AppointmentDto appointment : appointments) {
+//                    Log.d(TAG, "Appointment ID: " + sampleAppointmentId);
+//                    Log.d(TAG, "Patient ID: " + appointment.getPatientId());
+//                    Log.d(TAG, "Name of Requester: " + appointment.getNameOfRequester());
+//                    Log.d(TAG, "Purpose: " + appointment.getPurpose());
+//                    Log.d(TAG, "Date of Appointment: " + appointment.getDateOfAppointment());
+//                    Log.d(TAG, "Status: " + appointment.getStatus());
+//                    Log.d(TAG, "Created At: " + appointment.getCreatedAt());
+//                    Log.d(TAG, "------------------------");
+//                }
+//            }
+//
+//            @Override
+//            public void onError(String errorMessage) {
+//                // Handle the error
+//            }
+//        });
+
+        //****************************************************************************************//
+        //! SAMPLE DATA TO TEST DELETE APPOINTMENT
+//        String sampleAppointmentId = "0RD49B906MYchHOzSAW9"; // must exists in the firestore
+//        appointmentRepository.deleteAppointment(sampleAppointmentId, new AppointmentRepository.DeleteAppointmentCallback() {
+//            @Override
+//            public void onSuccess() {
+//                // Handle success
+//            }
+//
+//            @Override
+//            public void onError(String errorMessage) {
+//                // Handle the error
+//            }
+//        });
+
+
     }
 }

@@ -14,6 +14,7 @@ import com.triadss.doctrack2.config.model.AppointmentsModel;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import android.util.Log;
 import com.google.firebase.Timestamp;
@@ -26,6 +27,9 @@ public class AppointmentRepository {
             .collection(FireStoreCollection.APPOINTMENTS_TABLE);
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
+
+    //! SAMPLE CODE ON HOW TO USE THESE FUNCTIONS, PLEASE REFER TO THE AppointmentRequest.java fragment
+    //! located in the patient/fragment folder
 
     //* Saves patient's appointment to the database using the values exist in the AppointmentDto type
     public void addAppointment(AppointmentDto appointment, AppointmentAddCallback callback) {
@@ -90,6 +94,7 @@ public class AppointmentRepository {
 
     }
 
+
     // will update the patient's appointment details
     public void updateAppointment(String appointmentId, AppointmentDto updatedAppointment, UpdateAppointmentCallback callback) {
         DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
@@ -151,6 +156,40 @@ public class AppointmentRepository {
                 });
     }
 
+    public void getAppointment(String appointmentId, AppointmentFetchCallback callback) {
+        DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
+
+        appointmentRef.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        AppointmentDto appointment = documentSnapshot.toObject(AppointmentDto.class);
+                        callback.onSuccess(Collections.singletonList(appointment));
+                    } else {
+                        Log.e(TAG, "Appointment document not found");
+                        callback.onError("Appointment document not found");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching appointment data", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
+    public void deleteAppointment(String appointmentId, DeleteAppointmentCallback callback) {
+        DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
+
+        appointmentRef.delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Appointment deleted successfully");
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error deleting appointment", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
+
     public interface AppointmentAddCallback {
         void onSuccess(String appointmentId);
 
@@ -168,5 +207,11 @@ public class AppointmentRepository {
 
         void onError(String errorMessage);
     }
+    public interface DeleteAppointmentCallback {
+        void onSuccess();
+
+        void onError(String errorMessage);
+    }
+
 
 }
