@@ -16,7 +16,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="Update Medication" />
 
-    <!-- patient list here   -->
+    <!-- list here   -->
     <TextView
         android:id="@+id/add_patient_header"
         android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
         android:textSize="20sp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailInputLayout"
+        android:id="@+id/medicineInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_patient_header"
@@ -46,7 +46,7 @@
         android:id="@+id/nameInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/emailInputLayout"
+        android:layout_below="@+id/medicineInputLayout"
         android:layout_marginHorizontal="20sp"
         android:layout_marginTop="5sp">
 
@@ -123,5 +123,7 @@
         android:layout_marginEnd="35dp"
         android:layout_marginBottom="185dp"
         android:text="Update" />
+
+
 
 </RelativeLayout>

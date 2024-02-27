@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:orientation="vertical">
 
-    <!-- Toolbar -->
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/add_patient_toolbar"
         android:layout_width="match_parent"
@@ -16,28 +19,26 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="Add Medication" />
 
-    <!-- patient list here   -->
     <TextView
         android:id="@+id/add_patient_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/add_patient_toolbar"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="20sp"
         android:text="Add Medication"
+        android:layout_gravity="center"
         android:textSize="20sp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailInputLayout"
+        android:id="@+id/medicineInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/add_patient_header"
         android:layout_marginHorizontal="20sp"
         android:layout_marginTop="5sp">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="top"
             android:hint="Medicine:"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -46,7 +47,6 @@
         android:id="@+id/nameInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/emailInputLayout"
         android:layout_marginHorizontal="20sp"
         android:layout_marginTop="5sp">
 
@@ -55,73 +55,68 @@
             android:layout_width="match_parent"
             android:layout_height="123dp"
             android:hint="Note:"
+            android:gravity="top"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+        android:id="@+id/dateInputLayout"
+        android:layout_width="292dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="670dp">
+        android:layout_marginHorizontal="20sp"
+        android:layout_marginTop="5sp">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/date"
+            android:layout_width="292dp"
+            android:layout_height="49dp"
+            android:hint="Date:"
+            android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="50dp"
+        android:id="@+id/imageView3"
+        android:layout_width="84dp"
         android:layout_height="37dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="337dp"
-        android:layout_marginBottom="345dp"
-        android:src="@drawable/calendar" />
+        android:layout_gravity=""
+        app:srcCompat="@drawable/calendar" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/timeInputLayout"
+        android:layout_width="292dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20sp"
+        android:layout_marginTop="5sp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/time"
+            android:layout_width="292dp"
+            android:layout_height="49dp"
+            android:hint="Time:"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <ImageView
-        android:id="@+id/imageView55"
-        android:layout_width="34dp"
+        android:id="@+id/imageView7"
+        android:layout_width="81dp"
         android:layout_height="35dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="343dp"
-        android:layout_marginBottom="284dp"
-        android:src="@drawable/time" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:layout_width="306dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="342dp"
-        android:hint="Select Date" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:layout_width="306dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="279dp"
-        android:hint="Select Time" />
-
-    <Button
-        android:id="@+id/button22"
-        android:layout_width="122dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="234dp"
-        android:layout_marginBottom="187dp"
-        android:text="Cacel" />
+        app:srcCompat="@drawable/time" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="122dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="185dp"
+        android:layout_gravity="end"
+        android:layout_marginBottom="25dp"
+        android:text="cancel" />
+
+    <Button
+        android:id="@+id/button22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:text="Add" />
 
-</RelativeLayout>
+
+</LinearLayout>
