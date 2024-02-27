@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +9,16 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.DateDto;
+import com.triadss.doctrack2.dto.TimeDto;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,7 +31,8 @@ public class PatientMedicationAddFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private DateDto selectedDate;
+    private TimeDto selectedTime;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -62,5 +73,65 @@ public class PatientMedicationAddFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_patient_medication_add, container, false);
+    }
+
+    private void setupDatePicker(Button pickDateButton) {
+        // Set up Date Picker Dialog
+        pickDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the current date
+                final Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                // Create and show the Date Picker Dialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // Store the selected date
+                                selectedDate = new DateDto(year, monthOfYear, dayOfMonth);
+
+                                // Update the text on the button
+                                pickDateButton.setText(selectedDate.ToString());
+                            }
+                        }, year, month, day);
+
+                // Show the Date Picker Dialog
+                datePickerDialog.show();
+            }
+        });
+    }
+
+    private void setupTimePicker(Button pickTimeBtn) {
+        // Set up Time Picker Dialog
+        pickTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the current time
+                final Calendar c = Calendar.getInstance();
+                int hour = c.get(Calendar.HOUR_OF_DAY);
+                int minute = c.get(Calendar.MINUTE);
+
+                // Create and show the Time Picker Dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                // Store the selected time
+                                selectedTime = new TimeDto(hourOfDay, minute);
+
+                                // Update the text on the button
+                                pickTimeBtn.setText(selectedTime.ToString());
+                            }
+                        }, hour, minute, false);
+
+                // Show the Time Picker Dialog
+                timePickerDialog.show();
+            }
+        });
     }
 }
