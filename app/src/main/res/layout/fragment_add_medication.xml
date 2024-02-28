@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:orientation="vertical">
+    android:paddingRight="0dp">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -23,9 +23,9 @@
         android:id="@+id/add_patient_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="20sp"
         android:text="Add Medication"
-        android:layout_gravity="center"
         android:textSize="20sp" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20sp"
         android:layout_marginTop="5sp">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email"
             android:layout_width="match_parent"
@@ -54,54 +55,43 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="123dp"
-            android:hint="Note:"
             android:gravity="top"
+            android:hint="Note:"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dateInputLayout"
-        android:layout_width="292dp"
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:gravity="end" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/date"
-            android:layout_width="292dp"
-            android:layout_height="49dp"
-            android:hint="Date:"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:text="Select Date" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="84dp"
-        android:layout_height="37dp"
-        android:layout_gravity=""
-        app:srcCompat="@drawable/calendar" />
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:gravity="end" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/timeInputLayout"
-        android:layout_width="292dp"
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/time"
-            android:layout_width="292dp"
-            android:layout_height="49dp"
-            android:hint="Time:"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:text="Select Time" />
 
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="81dp"
-        android:layout_height="35dp"
-        app:srcCompat="@drawable/time" />
+    <Button
+        android:id="@+id/button22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="Add" />
 
     <Button
         android:id="@+id/button2"
@@ -110,13 +100,6 @@
         android:layout_gravity="end"
         android:layout_marginBottom="25dp"
         android:text="cancel" />
-
-    <Button
-        android:id="@+id/button22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="Add" />
 
 
 </LinearLayout>
