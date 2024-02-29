@@ -20,6 +20,12 @@ public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragment
         this.addPatientDtoList = patientList;
     }
 
+    public void updateList(List<AddPatientDto> newData) {
+        addPatientDtoList.clear();
+        addPatientDtoList.addAll(newData);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public PatientFragmentAdapter.PatientFragmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -30,6 +36,7 @@ public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragment
     @Override
     public void onBindViewHolder(@NonNull PatientFragmentAdapter.PatientFragmentViewHolder holder, int position) {
         holder.name.setText(addPatientDtoList.get(position).getFullName());
+        holder.idNumber.setText(addPatientDtoList.get(position).getIdNumber());
     }
 
     @Override
@@ -39,9 +46,11 @@ public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragment
 
     public static class PatientFragmentViewHolder extends RecyclerView.ViewHolder{
         TextView name;
+        TextView idNumber;
         public PatientFragmentViewHolder(@NonNull View itemView) {
             super(itemView);
-           // name = itemView.findViewById(R.id.patientNameName);
+            name = itemView.findViewById(R.id.textView_patientName);
+            idNumber = itemView.findViewById(R.id.textView_patientId);
         }
     }
 }
