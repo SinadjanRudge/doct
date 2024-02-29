@@ -1,11 +1,20 @@
 package com.triadss.doctrack2.dto;
 
-import com.google.type.Date;
-import com.google.type.DateTime;
-
-import java.sql.Time;
+import com.google.firebase.Timestamp;
 
 public class AppointmentDto {
+    public AppointmentDto() {
+        // required for Firestore deserialization
+    }
+    public AppointmentDto(String patientId, String nameOfRequester, String purpose,
+            Timestamp dateOfAppointment, String status) {
+        this.patientId = patientId;
+        this.nameOfRequester = nameOfRequester;
+        this.purpose = purpose;
+        this.dateOfAppointment = dateOfAppointment;
+        this.status = status;
+    }
+
     public String getNameOfRequester() {
         return nameOfRequester;
     }
@@ -22,20 +31,12 @@ public class AppointmentDto {
         this.purpose = purpose;
     }
 
-    public Date getDateOfAppointment() {
+    public Timestamp getDateOfAppointment() {
         return dateOfAppointment;
     }
 
-    public void setDateOfAppointment(Date dateOfAppointment) {
+    public void setDateOfAppointment(Timestamp dateOfAppointment) {
         this.dateOfAppointment = dateOfAppointment;
-    }
-
-    public Time getTimeOfAppointment() {
-        return timeOfAppointment;
-    }
-
-    public void setTimeOfAppointment(Time timeOfAppointment) {
-        this.timeOfAppointment = timeOfAppointment;
     }
 
     public String getStatus() {
@@ -46,20 +47,27 @@ public class AppointmentDto {
         this.status = status;
     }
 
-    public int getAppointmentId() {
-        return appointmentId;
+    public String getPatientId() {
+        return patientId;
     }
 
-    public void setAppointmentId(int appointmentId) {
-        this.appointmentId = appointmentId;
+    public void setPatientId(String userId) {
+        this.patientId = userId;
     }
 
-    private int appointmentId;
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
     private String nameOfRequester;
     private String purpose;
-    private Date dateOfAppointment;
-    private Time timeOfAppointment;
+    private Timestamp dateOfAppointment;
     private String status;
-
+    private String patientId;
+    private Timestamp createdAt;
 
 }

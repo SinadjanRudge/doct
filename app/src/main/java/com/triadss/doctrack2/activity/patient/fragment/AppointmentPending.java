@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.triadss.doctrack2.R;
 
-
 public class AppointmentPending extends Fragment {
 
     private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_patient_appointment, container, false);
         return rootView;
