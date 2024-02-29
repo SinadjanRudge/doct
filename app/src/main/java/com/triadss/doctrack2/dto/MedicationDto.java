@@ -1,19 +1,9 @@
 package com.triadss.doctrack2.dto;
 
-import com.google.firebase.Timestamp;
+import java.sql.Time;
+import java.util.Date;
 
 public class MedicationDto {
-
-    public MedicationDto(int mediId, int patientId, String medicine, String note, Timestamp timestamp)
-    {
-        this.mediId = mediId;
-        this.patientId = patientId;
-        this.medicine = medicine;
-        this.note = note;
-        this.timestamp = timestamp;
-    }
-
-
     public int getMediId() {
         return mediId;
     }
@@ -46,17 +36,26 @@ public class MedicationDto {
         this.note = note;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public Date getMedDate() {
+        return medDate;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    public void setMedDate(Date medDate) {
+        this.medDate = medDate;
+    }
+
+    public Time getMedTime() {
+        return medTime;
+    }
+
+    public void setMedTime(Time medTime) {
+        this.medTime = medTime;
     }
 
     private int mediId;
     private int patientId;
     private String medicine;
     private String note;
-    private Timestamp timestamp;
+    private Date medDate;
+    private Time medTime;
 }
