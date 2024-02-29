@@ -37,8 +37,7 @@ public class MedicationRepository {
             medications.put(MedicationModel.patientId, medicationDto.getPatientId());
             medications.put(MedicationModel.medicine, medicationDto.getMedicine());
             medications.put(MedicationModel.note, medicationDto.getNote());
-            medications.put(MedicationModel.medDate, medicationDto.getMedDate());
-            medications.put(MedicationModel.medTime, medicationDto.getMedTime());
+            medications.put(MedicationModel.timestamp, medicationDto.getTimestamp());
             // TODO: EDIT THIS
             userRef.set(medications, SetOptions.merge());
         } catch(Exception ex)
