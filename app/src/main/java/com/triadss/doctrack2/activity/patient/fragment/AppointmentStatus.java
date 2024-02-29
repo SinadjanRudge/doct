@@ -27,7 +27,11 @@ public class AppointmentStatus extends Fragment {
     private AppointmentRepository appointmentRepository;
     private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
 
-    ArrayList<String> courseName = new ArrayList<>(Arrays.asList("Data Structure"));
+    ArrayList<String> Purpose = new ArrayList<>(Arrays.asList("Data Structure"));
+
+    ArrayList<String> Date = new ArrayList<>();
+    ArrayList<String> Time = new ArrayList<>();
+    ArrayList<String> Status = new ArrayList<>();
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,16 +47,37 @@ public class AppointmentStatus extends Fragment {
     public void CallStatus() {
         appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
             @Override
+            public void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(linearLayoutManager);
+
+                PatientAppointmentStatusAdapter adapter = new PatientAppointmentStatusAdapter(getContext(), Purpose, Date, Time, Status);
+
+                for (AppointmentDto a : appointments) {
+                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+                    Purpose.add(a.getPurpose());
+
+                    Date.add(a.getDateOfAppointment().toString());
+                    Time.add(a.getDateOfAppointment().toString());
+                    Status.add("Status:                          " + a.getStatus().toString());
+                }
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
             public void onSuccess(List<AppointmentDto> appointments) {
 
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
 
-                PatientAppointmentAdapter adapter = new PatientAppointmentAdapter(getContext(), courseName);
+                PatientAppointmentPendingAdapter adapter = new PatientAppointmentPendingAdapter(getContext(), Purpose, Date, Time);
 
                 for (AppointmentDto a : appointments) {
                     Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                    courseName.add(a.getPurpose());
+                    Purpose.add(a.getPurpose());
+
+                    Date.add(a.getDateOfAppointment().toString());
+                    Time.add(a.getDateOfAppointment().toString());
                 }
                 recyclerView.setAdapter(adapter);
             }
