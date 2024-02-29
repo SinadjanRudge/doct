@@ -1,116 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.healthprof.fragment.PatientFragment">
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="15dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
 
-        <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-3dp">
 
         <TextView
-            android:layout_width="143dp"
-            android:layout_height="wrap_content"
+            android:id="@+id/textview_patient_list"
+            android:layout_width="356dp"
+            android:layout_height="67dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="31dp"
-            android:layout_marginEnd="123dp"
-            android:layout_marginBottom="668dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="25dp"
+            android:gravity="center"
             android:text="@string/patient_list"
             android:textColor="#1D7844"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <SearchView
-            android:id="@+id/search_record_src"
-            android:layout_width="291dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="74dp"
-            android:layout_marginEnd="94dp"
-            android:layout_marginBottom="614dp"
-            android:width="1dp"
-            android:background="@drawable/stroke"
-            android:color="@color/black"
-            android:radius="8dp"
-            android:shape="rectangle"
-            android:textColorHint="@color/black" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="wrap_content"
-            android:layout_height="573dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="157dp"
-            android:layout_marginEnd="6dp"
-            android:layout_marginBottom="1dp"
-            android:background="@drawable/bg_color"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp" />
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.036" />
 
         <LinearLayout
-            android:layout_width="69dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="326dp"
-            android:layout_marginTop="74dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="615dp"
-            android:orientation="horizontal"
-            android:paddingRight="10dp">
+            android:layout_width="386dp"
+            android:layout_height="87dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/search_bar_patient"
+                android:layout_width="278dp"
+                android:layout_height="57dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/green_stroke"
+                android:hint=" Search Patient Name"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.115"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/patient_add_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
+                android:layout_width="70dp"
+                android:layout_height="53dp"
+                android:layout_gravity="center|center_horizontal"
                 android:background="@drawable/green_stroke"
                 android:gravity="center"
                 android:text="+"
                 android:textColor="@color/green"
                 android:textSize="24sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                app:circularflow_radiusInDP="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.906"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.098"
+                tools:ignore="MissingConstraints" />
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="27dp"
-            android:layout_height="22dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleview_patient_list"
+            android:layout_width="410dp"
+            android:layout_height="606dp"
+            android:layout_below="@id/search_bar_patient"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="31dp"
-            android:layout_marginTop="31dp"
-            android:orientation="horizontal"
-            android:paddingRight="10dp">
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_color"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_bar_patient"
+            app:layout_constraintVertical_bias="1.0"
+            tools:ignore="MissingConstraints" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="25dp"
-                android:layout_height="23dp"
-                android:background="@drawable/btn_back" />
+    </LinearLayout>
 
-
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
