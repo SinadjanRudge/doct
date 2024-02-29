@@ -14,13 +14,19 @@ import com.triadss.doctrack2.config.model.AppointmentsModel;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import android.util.Log;
 import com.google.firebase.Timestamp;
 import java.util.Date;
 
 public class AppointmentRepository {
+    /**
+     * Saves user information to Firestore.
+     *
+     * @param userId         The ID of the user.
+     * @param appointmentDto The DTO (Data Transfer Object) containing patient
+     *                       information.
+     */
     private static final String TAG = "AppointmentRepository";
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference appointmentsCollection = firestore
@@ -28,10 +34,6 @@ public class AppointmentRepository {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
 
-    //! SAMPLE CODE ON HOW TO USE THESE FUNCTIONS, PLEASE REFER TO THE AppointmentRequest.java fragment
-    //! located in the patient/fragment folder
-
-    //* Saves patient's appointment to the database using the values exist in the AppointmentDto type
     public void addAppointment(AppointmentDto appointment, AppointmentAddCallback callback) {
         if (user != null) {
             appointment.setPatientId(user.getUid());
@@ -73,21 +75,18 @@ public class AppointmentRepository {
         }
     }
 
-    //* Will fetch all the appointments in descending order
     public void getAllAppointments(AppointmentFetchCallback callback) {
         appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         List<AppointmentDto> appointments = new ArrayList<>();
-                        List<String> appointmentIds = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             AppointmentDto appointment = document.toObject(AppointmentDto.class);
 
                             appointments.add(appointment);
-                            appointmentIds.add(document.getId());
                         }
-                        callback.onSuccess(appointments, appointmentIds);
+                        callback.onSuccess(appointments);
                     } else {
                         Log.e(TAG, "Error getting appointments", task.getException());
                         callback.onError(task.getException().getMessage());
@@ -96,102 +95,6 @@ public class AppointmentRepository {
 
     }
 
-
-    // will update the patient's appointment details
-    public void updateAppointment(String appointmentId, AppointmentDto updatedAppointment, UpdateAppointmentCallback callback) {
-        DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
-
-        // Fetch the existing appointment data
-        appointmentRef.get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        // Convert the Firestore document to AppointmentDto
-                        AppointmentDto existingAppointment = documentSnapshot.toObject(AppointmentDto.class);
-
-                        // Check if the existingAppointment is not null
-                        if (existingAppointment != null) {
-                            // Update only the specified fields in the existingAppointment
-                            if (updatedAppointment.getNameOfRequester() != null) {
-                                existingAppointment.setNameOfRequester(updatedAppointment.getNameOfRequester());
-                            }
-                            if (updatedAppointment.getPurpose() != null) {
-                                existingAppointment.setPurpose(updatedAppointment.getPurpose());
-                            }
-
-                            if(updatedAppointment.getDateOfAppointment() != null){
-                                existingAppointment.setDateOfAppointment(updatedAppointment.getDateOfAppointment());
-                            }
-                            if(updatedAppointment.getCreatedAt() != null){
-                                existingAppointment.setCreatedAt(updatedAppointment.getCreatedAt());
-                            }
-
-                            if(updatedAppointment.getPatientId() != null){
-                                existingAppointment.setPatientId(updatedAppointment.getPatientId());
-                            }
-
-                            if(updatedAppointment.getStatus() != null){
-                                existingAppointment.setStatus(updatedAppointment.getStatus());
-                            }
-
-                            // Set the updated data with SetOptions.merge() to update only the specified fields
-                            appointmentRef.set(existingAppointment, SetOptions.merge())
-                                    .addOnSuccessListener(aVoid -> {
-                                        Log.d(TAG, "Appointment updated successfully");
-                                        callback.onSuccess();
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.e(TAG, "Error updating appointment", e);
-                                        callback.onError(e.getMessage());
-                                    });
-                        } else {
-                            Log.e(TAG, "Failed to convert Firestore document to AppointmentDto");
-                            callback.onError("Failed to fetch existing appointment data");
-                        }
-                    } else {
-                        Log.e(TAG, "Appointment document does not exist");
-                        callback.onError("Appointment document does not exist");
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error fetching appointment data", e);
-                    callback.onError(e.getMessage());
-                });
-    }
-
-    public void getAppointment(String appointmentId, AppointmentFetchOneCallback callback) {
-        DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
-
-        appointmentRef.get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        AppointmentDto appointment = documentSnapshot.toObject(AppointmentDto.class);
-                        callback.onSuccess(Collections.singletonList(appointment));
-                    } else {
-                        Log.e(TAG, "Appointment document not found");
-                        callback.onError("Appointment document not found");
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error fetching appointment data", e);
-                    callback.onError(e.getMessage());
-                });
-    }
-
-    public void deleteAppointment(String appointmentId, DeleteAppointmentCallback callback) {
-        DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
-
-        appointmentRef.delete()
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "Appointment deleted successfully");
-                    callback.onSuccess();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error deleting appointment", e);
-                    callback.onError(e.getMessage());
-                });
-    }
-
-
     public interface AppointmentAddCallback {
         void onSuccess(String appointmentId);
 
@@ -199,27 +102,9 @@ public class AppointmentRepository {
     }
 
     public interface AppointmentFetchCallback {
-        void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds);
-
-        void onError(String errorMessage);
-    }
-
-    public interface AppointmentFetchOneCallback {
         void onSuccess(List<AppointmentDto> appointments);
 
         void onError(String errorMessage);
     }
-
-    public interface UpdateAppointmentCallback {
-        void onSuccess();
-
-        void onError(String errorMessage);
-    }
-    public interface DeleteAppointmentCallback {
-        void onSuccess();
-
-        void onError(String errorMessage);
-    }
-
 
 }
