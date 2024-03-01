@@ -1,7 +1,6 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,6 +45,8 @@ public class AppointmentStatus extends Fragment {
 
     public void CallStatus() {
         appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+
+
             @Override
             public void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -70,7 +71,7 @@ public class AppointmentStatus extends Fragment {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
 
-                PatientAppointmentPendingAdapter adapter = new PatientAppointmentPendingAdapter(getContext(), Purpose, Date, Time);
+                PatientAppointmentStatusAdapter adapter = new PatientAppointmentStatusAdapter(getContext(), Purpose, Date, Time, Status);
 
                 for (AppointmentDto a : appointments) {
                     Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
@@ -78,6 +79,7 @@ public class AppointmentStatus extends Fragment {
 
                     Date.add(a.getDateOfAppointment().toString());
                     Time.add(a.getDateOfAppointment().toString());
+                    Status.add("Status:                          " + a.getStatus().toString());
                 }
                 recyclerView.setAdapter(adapter);
             }

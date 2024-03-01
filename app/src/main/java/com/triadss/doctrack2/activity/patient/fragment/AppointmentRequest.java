@@ -1,6 +1,5 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -17,20 +16,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
-import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +31,6 @@ import java.util.Locale;
 import com.google.firebase.Timestamp;
 
 public class AppointmentRequest extends Fragment {
-    private static final String TAG = "AppointmentRequest";
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;
@@ -141,9 +132,9 @@ public class AppointmentRequest extends Fragment {
 
     private void handleConfirmationButtonClick() {
         // Sample values for AppointmentDto
-        String purpose = textInputPurpose.getText().toString();;
+        String purpose = textInputPurpose.getText().toString();
+        ;
 
-        // THE DATE AND TIME PICKER MUST HAVE VALUES IN THE UI TO MAKE THE ADD APPOINTMENT WORKED!!!
         Timestamp dateTimeOfAppointment = new Timestamp(
                 new Date(selectedYear - 1900, selectedMonth, selectedDay, selectedHour, selectedMinute));
 
@@ -164,127 +155,26 @@ public class AppointmentRequest extends Fragment {
             }
         });
 
-        //*********************************************************************************************//
-        //! FOR TESTING ADD APPOINTMENT USING THIS SAMPLE APPOINTMENT DTO OBJECT
-//        AppointmentDto sampleAddAppointment = new AppointmentDto(
-//                "samplePatientId",
-//                "John Doe",
-//                "Regular Checkup",
-//                Timestamp.now(), // Use the current timestamp for testing
-//                "Scheduled"
-//        );
-//
-//        appointmentRepository.addAppointment(sampleAddAppointment, new AppointmentRepository.AppointmentAddCallback() {
-//            @Override
-//            public void onSuccess(String appointmentId) {
-//                // Handle success, if needed
-//            }
-//
-//            @Override
-//            public void onError(String errorMessage) {
-//                // Handle error, if needed
-//            }
-//        });
+        //! FOR TESTING
+        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+            @Override
+            public void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds) {
+                for (AppointmentDto a : appointments) {
+                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+                }
+            }
 
-        //*********************************************************************************************//
-        //! FOR TESTING GET ALL APPOINTMENTS
-//        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
-//            @Override
-//            public void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds) {
-//                //! VIEW THE VALUES IN THE LOGCAT
-//                for (int i = 0; i < appointments.size(); i++) {
-//                    AppointmentDto appointment = appointments.get(i);
-//                    String appointmentId = appointmentIds.get(i);
-//
-//                    Log.d("AppointRequest Fragment", "Appointment ID: " + appointmentId);
-//                    Log.d("AppointRequest Fragment", "Requester's ID: " + appointment.getPatientId());
-//                    Log.d("AppointRequest Fragment", "Name of Requester: " + appointment.getNameOfRequester());
-//                    Log.d("AppointRequest Fragment", "Purpose: " + appointment.getPurpose());
-//                    Log.d("AppointRequest Fragment", "Date of Appointment: " + appointment.getDateOfAppointment());
-//                    Log.d("AppointRequest Fragment", "Status: " + appointment.getStatus());
-//                    Log.d("AppointRequest Fragment", "Created At: " + appointment.getCreatedAt());
-//                }
-//            }
-//
-//            @Override
-//            public void onError(String errorMessage) {
-//
-//            }
-//        });
+            @Override
+            public void onSuccess(List<AppointmentDto> appointments) {
+                for (AppointmentDto a : appointments) {
+                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+                }
+            }
 
+            @Override
+            public void onError(String errorMessage) {
 
-        //****************************************************************************************//
-        //! SAMPLE DATA TO TEST UPDATE APPOINTMENT
-//        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-//
-//        String sampleAppointmentId = "1pGPWAZ0wxXaET8YuswQ";    // the doc id must exists in the firestore
-//        AppointmentDto sampleAppointment = new AppointmentDto(
-//                "samplePatientId",
-//                "John Doe",
-//                "Regular Checkup",
-//                Timestamp.now(), // Use the current timestamp for testinupdatedAppointmentg
-//                "Scheduled"
-//        );
-//
-//        CollectionReference appointmentsCollection = firestore
-//                .collection(FireStoreCollection.APPOINTMENTS_TABLE);
-//
-//        DocumentReference appointmentRef = appointmentsCollection.document(sampleAppointmentId);
-//
-//        appointmentRepository.updateAppointment(sampleAppointmentId, sampleAppointment, new AppointmentRepository.UpdateAppointmentCallback() {
-//            @Override
-//            public void onSuccess() {
-//                // Handle success
-//                System.out.println("Appointment updated successfully!");
-//            }
-//
-//            @Override
-//            public void onError(String errorMessage) {
-//                // Handle error
-//                System.out.println("Error updating appointment: " + errorMessage);
-//            }
-//        });
-        //****************************************************************************************//
-        //! SAMPLE DATA TO TEST GET APPOINTMENT
-//        String sampleAppointmentId = "0RD49B906MYchHOzSAW9";  // must exists in the firestore
-//        appointmentRepository.getAppointment(sampleAppointmentId, new AppointmentRepository.AppointmentFetchOneCallback() {
-//            @Override
-//            public void onSuccess(List<AppointmentDto> appointments) {
-//                // Process the fetched appointments
-            //! VIEW THE VALUES IN THE LOGCAT
-//                for (AppointmentDto appointment : appointments) {
-//                    Log.d(TAG, "Appointment ID: " + sampleAppointmentId);
-//                    Log.d(TAG, "Patient ID: " + appointment.getPatientId());
-//                    Log.d(TAG, "Name of Requester: " + appointment.getNameOfRequester());
-//                    Log.d(TAG, "Purpose: " + appointment.getPurpose());
-//                    Log.d(TAG, "Date of Appointment: " + appointment.getDateOfAppointment());
-//                    Log.d(TAG, "Status: " + appointment.getStatus());
-//                    Log.d(TAG, "Created At: " + appointment.getCreatedAt());
-//                    Log.d(TAG, "------------------------");
-//                }
-//            }
-//
-//            @Override
-//            public void onError(String errorMessage) {
-//                // Handle the error
-//            }
-//        });
-
-        //****************************************************************************************//
-        //! SAMPLE DATA TO TEST DELETE APPOINTMENT
-//        String sampleAppointmentId = "0RD49B906MYchHOzSAW9"; // must exists in the firestore
-//        appointmentRepository.deleteAppointment(sampleAppointmentId, new AppointmentRepository.DeleteAppointmentCallback() {
-//            @Override
-//            public void onSuccess() {
-//                // Handle success
-//            }
-//
-//            @Override
-//            public void onError(String errorMessage) {
-//                // Handle the error
-//            }
-//        });
-
-
+            }
+        });
     }
 }

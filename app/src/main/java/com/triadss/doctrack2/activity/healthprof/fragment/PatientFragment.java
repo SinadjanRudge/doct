@@ -5,13 +5,23 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.adapters.PatientFragmentAdapter;
+import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.repoositories.PatientRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +40,11 @@ public class PatientFragment extends Fragment {
     private String mParam2;
 
     private Button addPatient;
+
+    RecyclerView recyclerView;
+    FirebaseFirestore db;
+    PatientFragmentAdapter adapter;
+    List<AddPatientDto> addPatientDtoList;
 
     public PatientFragment() {
         // Required empty public constructor
@@ -81,6 +96,28 @@ public class PatientFragment extends Fragment {
             transaction.commit();
         });
 
+        recyclerView = rootView.findViewById(R.id.recycleview_patient_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        adapter = new PatientFragmentAdapter(new ArrayList<>());
+        recyclerView.setAdapter(adapter);
+
+        PatientRepository patientRepository = new PatientRepository();
+        patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
+            @Override
+            public void onSuccess(List<AddPatientDto> patients) {
+                // Update the adapter with the latest data
+                adapter.updateList(patients);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                // Handle failure, e.g., show an error message
+                Log.e("Patients", "Error fetching patient list from Firestore. " + errorMessage);
+            }
+        });
+
         return rootView;
     }
+
 }

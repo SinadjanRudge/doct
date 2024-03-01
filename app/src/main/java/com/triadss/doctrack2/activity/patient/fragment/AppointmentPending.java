@@ -46,6 +46,24 @@ public class AppointmentPending extends Fragment {
    public void CallPending() {
        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
 
+//           @Override
+//           public void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds) {
+//               LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+//               recyclerView.setLayoutManager(linearLayoutManager);
+//
+//               PatientAppointmentPendingAdapter adapter = new PatientAppointmentPendingAdapter(getContext(), Purpose, Date, Time);
+//
+//               for (AppointmentDto a : appointments) {
+//                   Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+//                   Purpose.add(a.getPurpose());
+////                   Date.add(a.getPurpose());
+////                   Time.add(a.getPurpose());
+//                   Date.add(a.getDateOfAppointment().toString());
+//                   Time.add(a.getDateOfAppointment().toString());
+//               }
+//               recyclerView.setAdapter(adapter);
+//           }
+
            @Override
            public void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds) {
                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -74,8 +92,7 @@ public class AppointmentPending extends Fragment {
                for (AppointmentDto a : appointments) {
                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
                    Purpose.add(a.getPurpose());
-//                   Date.add(a.getPurpose());
-//                   Time.add(a.getPurpose());
+
                    Date.add(a.getDateOfAppointment().toString());
                    Time.add(a.getDateOfAppointment().toString());
                }
