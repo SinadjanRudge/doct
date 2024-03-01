@@ -1,6 +1,7 @@
 package com.triadss.doctrack2.repoositories;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentTransaction;
@@ -10,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragment.PatientFragment;
@@ -22,7 +24,9 @@ import com.triadss.doctrack2.dto.AddPatientDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PatientRepository {
@@ -59,6 +63,35 @@ public class PatientRepository {
         }
 
         return true;
+    }
+
+    public interface PatientListCallback {
+        void onSuccess(List<AddPatientDto> patients);
+        void onFailure(String errorMessage);
+    }
+
+    public void getPatientList(PatientListCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .whereEqualTo("role", "PATIENT")
+                .get()
+                .addOnCompleteListener(task->{
+                    if (task.isSuccessful()){
+                        List<AddPatientDto> addPatientDtoList = new ArrayList<>();
+
+                        for (QueryDocumentSnapshot document: task.getResult()){
+                            String role = document.getString("role");
+                            if ("PATIENT".equals(role)) {
+                                AddPatientDto patients = document.toObject(AddPatientDto.class);
+                                addPatientDtoList.add(patients);
+                            }
+                        }
+                        callback.onSuccess(addPatientDtoList);
+                    }
+                    else {
+                        callback.onFailure(task.getException().getMessage());
+                    }
+                });
     }
 
 }

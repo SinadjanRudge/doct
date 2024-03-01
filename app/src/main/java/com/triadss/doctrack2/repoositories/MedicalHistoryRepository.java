@@ -5,22 +5,23 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
-import com.triadss.doctrack2.config.model.MedicationModel;
-import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.config.model.MedicalHistoryModel;
+import com.triadss.doctrack2.dto.MedicalHistoryDto;
+import com.triadss.doctrack2.dto.WearableDeviceDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MedicationRepository {
+public class MedicalHistoryRepository {
     /**
      * Saves user information to Firestore.
      *
      * @param userId     The ID of the user.
-     * @param medicationDto The DTO (Data Transfer Object) containing patient information.
+     * @param medicalHistoryDto The DTO (Data Transfer Object) containing patient information.
      */
-    public boolean AddMedication(String userId, MedicationDto medicationDto)
+    public boolean AddMedicalHistory(String userId, MedicalHistoryDto medicalHistoryDto)
     {
         try
         {
@@ -32,14 +33,15 @@ public class MedicationRepository {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DocTrackConstant.AUDIT_DATE_FORMAT);
             String dateNow = currentDate.format(formatter);
 
-            Map<String, Object> medications = new HashMap<>();
-            medications.put(MedicationModel.mediId, 0);
-            medications.put(MedicationModel.patientId, medicationDto.getPatientId());
-            medications.put(MedicationModel.medicine, medicationDto.getMedicine());
-            medications.put(MedicationModel.note, medicationDto.getNote());
-            medications.put(MedicationModel.timestamp, medicationDto.getTimestamp());
+            Map<String, Object> medicalHistories = new HashMap<>();
+            medicalHistories.put(MedicalHistoryModel.medHistId, 0);
+            medicalHistories.put(MedicalHistoryModel.patientId, medicalHistoryDto.getPatientId());
+            medicalHistories.put(MedicalHistoryModel.pastIllness, medicalHistoryDto.getPastIllness());
+            medicalHistories.put(MedicalHistoryModel.prevOperation, medicalHistoryDto.getPrevOperation());
+            medicalHistories.put(MedicalHistoryModel.obgyneHist, medicalHistoryDto.getObgyneHist());
+            medicalHistories.put(MedicalHistoryModel.familyHist, medicalHistoryDto.getFamilyHist());
             // TODO: EDIT THIS
-            userRef.set(medications, SetOptions.merge());
+            userRef.set(medicalHistories, SetOptions.merge());
         } catch(Exception ex)
         {
             return false;
