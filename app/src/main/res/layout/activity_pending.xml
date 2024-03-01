@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Pending"
+    tools:context=".activity.patient.fragment.AppointmentPending"
     tools:ignore="HardcodedText">
 
     <!--make sure to give the appropriate IDs to textView
@@ -24,7 +24,7 @@
 
 
     <Button
-        android:id="@+id/datebutton"
+        android:id="@+id/datebuttonold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -37,7 +37,7 @@
         android:id="@+id/idTVSelectedTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/idBtnPickTime"
+        android:layout_above="@id/idBtnPickTimeold"
         android:layout_centerInParent="true"
         android:layout_margin="20dp"
         android:gravity="center"
@@ -51,7 +51,7 @@
     <!--on below line we are creating a
         button for date picker-->
     <Button
-        android:id="@+id/idBtnPickTime"
+        android:id="@+id/idBtnPickTimeold"
         android:layout_width="186dp"
         android:layout_height="61dp"
         android:layout_gravity="center"

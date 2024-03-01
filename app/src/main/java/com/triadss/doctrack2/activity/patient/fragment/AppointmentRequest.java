@@ -1,10 +1,8 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,27 +11,15 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
-import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import com.google.firebase.Timestamp;
