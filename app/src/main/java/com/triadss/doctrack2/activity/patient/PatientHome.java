@@ -77,8 +77,7 @@ public class PatientHome extends AppCompatActivity {
             }
             else if (item.getItemId() == R.id.appointment_menu) {
                 replaceFragment(new PatientAppointmentFragment());
-            }
-            else if (item.getItemId() == R.id.medication_menu) {
+            } else if (item.getItemId() == R.id.medication_menu) {
                 replaceFragment(new PatientMedicationFragment());
             }
             return true;
