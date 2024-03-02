@@ -203,7 +203,6 @@ public class PatientMedicationAddFragment extends Fragment {
 
     private void handleConfirmationButtonClick() {
         try {
-            Log.e(TAG, "1");
             // Sample values for MedicationDto
             String medicine = medicineInput.getText().toString();
             String note = noteInput.getText().toString();
@@ -213,9 +212,7 @@ public class PatientMedicationAddFragment extends Fragment {
             final String status = AppointmentTypeConstants.PENDING;
 
             MedicationDto medication = new MedicationDto("",
-                    "", medicine, note, Timestamp.now());
-            Log.e(TAG, "2");
-
+                    "", medicine, note, dateTimeOfAppointment);
             medicationRepository.addMedication(medication, new MedicationRepository.MedicationsAddCallback() {
                 @Override
                 public void onSuccess(String medicationId) {
@@ -228,10 +225,7 @@ public class PatientMedicationAddFragment extends Fragment {
                 }
             });
 
-            Log.e(TAG, "3");
-
         } catch (Exception e) {
-            // TODO: handle exception
             Log.e(TAG, e.getMessage());
         }
     }

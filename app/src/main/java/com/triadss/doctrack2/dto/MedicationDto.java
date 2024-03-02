@@ -13,7 +13,6 @@ public class MedicationDto {
         this.timestamp = timestamp;
     }
 
-
     public String getMediId() {
         return mediId;
     }

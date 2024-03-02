@@ -13,6 +13,9 @@ import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.MedicationModel;
 import com.triadss.doctrack2.dto.MedicationDto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MedicationRepository {
     private static final String TAG = "MedicationRepository";
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -22,14 +25,17 @@ public class MedicationRepository {
     private FirebaseUser user = auth.getCurrentUser();
 
     public void addMedication(MedicationDto medications, MedicationsAddCallback callback) {
-        System.out.println("HELLO WORLDDD");
-        Log.e(TAG, "A");
         if (user != null) {
-            Log.e(TAG, "B");
             medications.setPatientId(user.getUid());
 
+            Map<String, Object> medicationMap = new HashMap<>();
+            medicationMap.put("patientId", medications.getPatientId());
+            medicationMap.put("medicine", medications.getMedicine());
+            medicationMap.put("note", medications.getNote());
+            medicationMap.put("timestamp", medications.getTimestamp());
+
             medicationsCollection
-                    .add(medications)
+                    .add(medicationMap)
                     .addOnSuccessListener(documentReference -> {
                         Log.d(TAG, "Medication added with ID: " + documentReference.getId());
                         callback.onSuccess(documentReference.getId());
