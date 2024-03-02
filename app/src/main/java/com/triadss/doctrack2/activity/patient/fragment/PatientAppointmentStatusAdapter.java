@@ -34,8 +34,7 @@ public class PatientAppointmentStatusAdapter extends RecyclerView.Adapter<Patien
     @NonNull
     @Override
     public PatientAppointmentStatusAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflating the Layout(Instantiates list_item.xml
-        // layout file into View object)
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_status, parent, false);
 
         // Passing view to ViewHolder
