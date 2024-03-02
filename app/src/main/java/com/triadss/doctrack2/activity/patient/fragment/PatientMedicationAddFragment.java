@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import android.util.Log;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link PatientMedicationAddFragment#newInstance} factory method to
@@ -47,6 +49,9 @@ public class PatientMedicationAddFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Button button_date, button_time, add_button;
+    private TextInputEditText medicineInput, noteInput;
 
     public PatientMedicationAddFragment() {
         // Required empty public constructor
@@ -82,16 +87,26 @@ public class PatientMedicationAddFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_add, container, false);
+
+        button_date = rootView.findViewById(R.id.button_date);
+        button_time = rootView.findViewById(R.id.button_time);
+        medicineInput = rootView.findViewById(R.id.medicineInput);
+        noteInput = rootView.findViewById(R.id.noteInput);
+        add_button = rootView.findViewById(R.id.add_button);
+
+        setupDatePicker();
+        setupTimePicker();
+        setupConfirmationButton();
 
         return rootView;
     }
 
-    private void setupDatePicker(Button pickDateButton) {
+    private void setupDatePicker() {
         // Set up Date Picker Dialog
-        pickDateButton.setOnClickListener(new View.OnClickListener() {
+        button_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get the current date
@@ -105,12 +120,12 @@ public class PatientMedicationAddFragment extends Fragment {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
+                                    int monthOfYear, int dayOfMonth) {
                                 // Store the selected date
                                 selectedDateTime.setDate(new DateDto(year, monthOfYear, dayOfMonth));
 
                                 // Update the text on the button
-                                pickDateButton.setText(selectedDateTime.getDate().ToString());
+                                button_date.setText(selectedDateTime.getDate().ToString());
                             }
                         }, year, month, day);
 
@@ -120,9 +135,9 @@ public class PatientMedicationAddFragment extends Fragment {
         });
     }
 
-    private void setupTimePicker(Button pickTimeBtn) {
+    private void setupTimePicker() {
         // Set up Time Picker Dialog
-        pickTimeBtn.setOnClickListener(new View.OnClickListener() {
+        button_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get the current time
@@ -139,7 +154,7 @@ public class PatientMedicationAddFragment extends Fragment {
                                 selectedDateTime.setTime(new TimeDto(hourOfDay, minute));
 
                                 // Update the text on the button
-                                pickTimeBtn.setText(selectedDateTime.getTime().ToString());
+                                button_time.setText(selectedDateTime.getTime().ToString());
                             }
                         }, hour, minute, false);
 
@@ -149,18 +164,35 @@ public class PatientMedicationAddFragment extends Fragment {
         });
     }
 
-    private void handleConfirmationButtonClick(TextInputEditText medicineInput, TextInputEditText noteInput) {
-        // Sample values for MedicationDto
-        String medicine = medicineInput.getText().toString();
-        String note = noteInput.getText().toString();
+    private void setupConfirmationButton() {
+        add_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle confirmation button click
+                handleConfirmationButtonClick();
+            }
+        });
+    }
 
-        Timestamp dateTimeOfAppointment = selectedDateTime.ToTimestamp();
+    private void handleConfirmationButtonClick() {
+        try {
+            // Sample values for MedicationDto
+            String medicine = medicineInput.getText().toString();
+            String note = noteInput.getText().toString();
 
-        final String status = AppointmentTypeConstants.PENDING;
+            Timestamp dateTimeOfAppointment = selectedDateTime.ToTimestamp();
 
-        MedicationDto appointment = new MedicationDto(0,
-                0, medicine, note, dateTimeOfAppointment);
+            final String status = AppointmentTypeConstants.PENDING;
 
-        // TODO: Complete Backend
+            MedicationDto appointment = new MedicationDto(0,
+                    0, medicine, note, dateTimeOfAppointment);
+
+            Log.e("Add Medication", "Add Button clicked");
+            Log.e("medicine", medicine);
+            Log.e("note", note);
+            Log.e("Timestamp", appointment.getTimestamp().toString());
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 }

@@ -20,13 +20,6 @@ import com.google.firebase.Timestamp;
 import java.util.Date;
 
 public class AppointmentRepository {
-    /**
-     * Saves user information to Firestore.
-     *
-     * @param userId         The ID of the user.
-     * @param appointmentDto The DTO (Data Transfer Object) containing patient
-     *                       information.
-     */
     private static final String TAG = "AppointmentRepository";
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference appointmentsCollection = firestore
