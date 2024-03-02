@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp">
 
-    <!-- Toolbar -->
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/add_patient_toolbar"
         android:layout_width="match_parent"
@@ -16,13 +19,11 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="Update Medication" />
 
-    <!-- list here   -->
     <TextView
         android:id="@+id/add_patient_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/add_patient_toolbar"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:layout_marginTop="20sp"
         android:text="Update Medication"
         android:textSize="20sp" />
@@ -31,13 +32,14 @@
         android:id="@+id/medicineInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/add_patient_header"
         android:layout_marginHorizontal="20sp"
         android:layout_marginTop="5sp">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="top"
             android:hint="Medicine:"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -46,7 +48,6 @@
         android:id="@+id/nameInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/medicineInputLayout"
         android:layout_marginHorizontal="20sp"
         android:layout_marginTop="5sp">
 
@@ -54,76 +55,51 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="123dp"
+            android:gravity="top"
             android:hint="Note:"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:gravity="end" />
+
+    <Button
+        android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="670dp">
 
-    </com.google.android.material.textfield.TextInputLayout>
+        android:text="Select Date" />
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="50dp"
-        android:layout_height="37dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="337dp"
-        android:layout_marginBottom="345dp"
-        android:src="@drawable/calendar" />
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:gravity="end" />
 
-    <ImageView
-        android:id="@+id/imageView55"
-        android:layout_width="34dp"
-        android:layout_height="35dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="343dp"
-        android:layout_marginBottom="284dp"
-        android:src="@drawable/time" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:layout_width="306dp"
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="342dp"
-        android:hint="Select Date" />
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:layout_width="306dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="279dp"
-        android:hint="Select Time" />
+        android:text="Select Time" />
 
     <Button
         android:id="@+id/button22"
-        android:layout_width="122dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="234dp"
-        android:layout_marginBottom="187dp"
-        android:text="Cacel" />
+        android:layout_gravity="end"
+        android:text="Update" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="122dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="185dp"
-        android:text="Update" />
+        android:layout_gravity="end"
+        android:layout_marginBottom="25dp"
+        android:text="cancel" />
 
 
-
-</RelativeLayout>
+</LinearLayout>
