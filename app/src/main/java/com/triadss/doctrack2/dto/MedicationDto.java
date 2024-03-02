@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp;
 
 public class MedicationDto {
 
-    public MedicationDto(int mediId, int patientId, String medicine, String note, Timestamp timestamp)
+    public MedicationDto(String mediId, String patientId, String medicine, String note, Timestamp timestamp)
     {
         this.mediId = mediId;
         this.patientId = patientId;
@@ -13,20 +13,19 @@ public class MedicationDto {
         this.timestamp = timestamp;
     }
 
-
-    public int getMediId() {
+    public String getMediId() {
         return mediId;
     }
 
-    public void setMediId(int mediId) {
+    public void setMediId(String mediId) {
         this.mediId = mediId;
     }
 
-    public int getPatientId() {
+    public String getPatientId() {
         return patientId;
     }
 
-    public void setPatientId(int patientId) {
+    public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
 
@@ -54,8 +53,8 @@ public class MedicationDto {
         this.timestamp = timestamp;
     }
 
-    private int mediId;
-    private int patientId;
+    private String mediId;
+    private String patientId;
     private String medicine;
     private String note;
     private Timestamp timestamp;

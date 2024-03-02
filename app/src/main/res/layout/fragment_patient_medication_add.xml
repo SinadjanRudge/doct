@@ -68,7 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/medicineInput"
-                        android:hint="hint" />
+                        android:hint="Enter medicine" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -108,7 +108,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/noteInput"
-                        android:hint="hint" />
+                        android:hint="Enter note" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -121,7 +121,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/button_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
@@ -130,7 +130,7 @@
                 app:icon="@drawable/calendar" />
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/button_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
@@ -146,15 +146,15 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button6"
+                android:id="@+id/clear_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_weight="1"
-                android:text="Cancel" />
+                android:text="Clear" />
 
             <Button
-                android:id="@+id/button7"
+                android:id="@+id/add_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
