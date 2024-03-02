@@ -158,6 +158,13 @@ public class AppointmentRequest extends Fragment {
         //! FOR TESTING
         appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
             @Override
+            public void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds) {
+                for (AppointmentDto a : appointments) {
+                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+                }
+            }
+
+            @Override
             public void onSuccess(List<AppointmentDto> appointments) {
                 for (AppointmentDto a : appointments) {
                     Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
