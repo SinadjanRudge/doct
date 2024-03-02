@@ -50,7 +50,7 @@ public class PatientMedicationAddFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Button button_date, button_time, add_button;
+    private Button button_date, button_time, add_button, clear_button;
     private TextInputEditText medicineInput, noteInput;
 
     public PatientMedicationAddFragment() {
@@ -96,9 +96,11 @@ public class PatientMedicationAddFragment extends Fragment {
         medicineInput = rootView.findViewById(R.id.medicineInput);
         noteInput = rootView.findViewById(R.id.noteInput);
         add_button = rootView.findViewById(R.id.add_button);
+        clear_button = rootView.findViewById(R.id.clear_button);
 
         setupDatePicker();
         setupTimePicker();
+        setupClearButton();
         setupConfirmationButton();
 
         return rootView;
@@ -164,6 +166,15 @@ public class PatientMedicationAddFragment extends Fragment {
         });
     }
 
+    private void setupClearButton() {
+        clear_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleClearButtonClick();
+            }
+        });
+    }
+
     private void setupConfirmationButton() {
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +183,15 @@ public class PatientMedicationAddFragment extends Fragment {
                 handleConfirmationButtonClick();
             }
         });
+    }
+
+    private void handleClearButtonClick() {
+        medicineInput.setText("");
+        noteInput.setText("");
+        selectedDateTime.setDate(null);
+        selectedDateTime.setTime(null);
+        button_time.setText("Select Time");
+        button_date.setText("Select Date");
     }
 
     private void handleConfirmationButtonClick() {
