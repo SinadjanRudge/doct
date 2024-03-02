@@ -32,7 +32,7 @@ public class AppointmentRepository {
             appointment.setPatientId(user.getUid());
 
             FirebaseFirestore.getInstance()
-                    .collection("users") // Change to your users collection name
+                    .collection(FireStoreCollection.USERS_TABLE)
                     .document(appointment.getPatientId())
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
@@ -66,6 +66,7 @@ public class AppointmentRepository {
                         callback.onError(e.getMessage());
                     });
         }
+
     }
 
     public void getAllAppointments(AppointmentFetchCallback callback) {

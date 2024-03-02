@@ -1,5 +1,10 @@
 package com.triadss.doctrack2.repoositories;
 
+import android.util.Log;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -14,39 +19,39 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MedicationRepository {
-    /**
-     * Saves user information to Firestore.
-     *
-     * @param userId     The ID of the user.
-     * @param medicationDto The DTO (Data Transfer Object) containing patient information.
-     */
-    public boolean AddMedication(String userId, MedicationDto medicationDto)
-    {
-        try
-        {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final String TAG = "MedicationRepository";
+    private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private final CollectionReference medicationsCollection = firestore
+            .collection(FireStoreCollection.MEDICATIONS_TABLE);
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
 
-            // TODO: EDIT THIS
-            DocumentReference userRef = db.collection(FireStoreCollection.USERS_TABLE).document(userId);
-            LocalDateTime currentDate = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DocTrackConstant.AUDIT_DATE_FORMAT);
-            String dateNow = currentDate.format(formatter);
+    public void addMedication(MedicationDto medications, MedicationsAddCallback callback) {
+        if (user != null) {
+            medications.setPatientId(user.getUid());
 
-            Map<String, Object> medications = new HashMap<>();
-            medications.put(MedicationModel.mediId, 0);
-            medications.put(MedicationModel.patientId, medicationDto.getPatientId());
-            medications.put(MedicationModel.medicine, medicationDto.getMedicine());
-            medications.put(MedicationModel.note, medicationDto.getNote());
-//            medications.put(MedicationModel.medDate, medicationDto.getMedDate());
-//            medications.put(MedicationModel.medTime, medicationDto.getMedTime());
-            // TODO: EDIT THIS
-            userRef.set(medications, SetOptions.merge());
-        } catch(Exception ex)
-        {
-            return false;
+            medicationsCollection
+                    .add(medications)
+                    .addOnSuccessListener(documentReference -> {
+                        Log.d(TAG, "Medication added with ID: " + documentReference.getId());
+                        callback.onSuccess(documentReference.getId());
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error adding medication", e);
+                        callback.onError(e.getMessage());
+                    })
+                    .addOnFailureListener(e -> {
+                        // Error fetching user document from Firestore
+                        Log.e(TAG, "Error fetching user document from Firestore", e);
+                        callback.onError(e.getMessage());
+                    });
         }
 
-        return true;
     }
 
+    public interface MedicationsAddCallback {
+        void onSuccess(String appointmentId);
+
+        void onError(String errorMessage);
+    }
 }
