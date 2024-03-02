@@ -26,7 +26,7 @@ public class AppointmentStatus extends Fragment {
     private AppointmentRepository appointmentRepository;
     private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
 
-    ArrayList<String> Purpose = new ArrayList<>(Arrays.asList("Data Structure"));
+    ArrayList<String> Purpose = new ArrayList<>();
 
     ArrayList<String> Date = new ArrayList<>();
     ArrayList<String> Time = new ArrayList<>();
