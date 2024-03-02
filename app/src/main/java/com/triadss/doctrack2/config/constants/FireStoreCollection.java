@@ -7,6 +7,7 @@ public class FireStoreCollection {
     public static final String WEARABLEDEVICES_TABLE = "wearableDevices";
     public static final String MEDICATION_TABLE = "medications";
     public static final String VITALSIGNS_TABLE = "vitalSigns";
+    public static final String MEDICALHISTORY_TABLE = "medicalHistory";
     public static final String REPORTS_TABLE = "reports";
     public static final String MEDICATIONS_TABLE = "medications";
 }
