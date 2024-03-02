@@ -13,11 +13,6 @@ import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.MedicationModel;
 import com.triadss.doctrack2.dto.MedicationDto;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-
 public class MedicationRepository {
     private static final String TAG = "MedicationRepository";
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -27,7 +22,10 @@ public class MedicationRepository {
     private FirebaseUser user = auth.getCurrentUser();
 
     public void addMedication(MedicationDto medications, MedicationsAddCallback callback) {
+        System.out.println("HELLO WORLDDD");
+        Log.e(TAG, "A");
         if (user != null) {
+            Log.e(TAG, "B");
             medications.setPatientId(user.getUid());
 
             medicationsCollection
@@ -45,12 +43,15 @@ public class MedicationRepository {
                         Log.e(TAG, "Error fetching user document from Firestore", e);
                         callback.onError(e.getMessage());
                     });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
         }
 
     }
 
     public interface MedicationsAddCallback {
-        void onSuccess(String appointmentId);
+        void onSuccess(String medicationId);
 
         void onError(String errorMessage);
     }

@@ -24,7 +24,9 @@ import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.dto.TimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.repoositories.MedicationRepository;
 
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -43,6 +45,7 @@ public class PatientMedicationAddFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "PatientMedicationAddFragment";
 
     private DateTimeDto selectedDateTime;
 
@@ -52,6 +55,7 @@ public class PatientMedicationAddFragment extends Fragment {
 
     private Button button_date, button_time, add_button, clear_button;
     private TextInputEditText medicineInput, noteInput;
+    private MedicationRepository medicationRepository;
 
     public PatientMedicationAddFragment() {
         // Required empty public constructor
@@ -90,6 +94,8 @@ public class PatientMedicationAddFragment extends Fragment {
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_add, container, false);
+
+        medicationRepository = new MedicationRepository();
 
         button_date = rootView.findViewById(R.id.button_date);
         button_time = rootView.findViewById(R.id.button_time);
@@ -153,6 +159,7 @@ public class PatientMedicationAddFragment extends Fragment {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 // Store the selected time
+
                                 selectedDateTime.setTime(new TimeDto(hourOfDay, minute));
 
                                 // Update the text on the button
@@ -196,6 +203,7 @@ public class PatientMedicationAddFragment extends Fragment {
 
     private void handleConfirmationButtonClick() {
         try {
+            Log.e(TAG, "1");
             // Sample values for MedicationDto
             String medicine = medicineInput.getText().toString();
             String note = noteInput.getText().toString();
@@ -204,15 +212,27 @@ public class PatientMedicationAddFragment extends Fragment {
 
             final String status = AppointmentTypeConstants.PENDING;
 
-            MedicationDto appointment = new MedicationDto(0,
-                    0, medicine, note, dateTimeOfAppointment);
+            MedicationDto medication = new MedicationDto("",
+                    "", medicine, note, Timestamp.now());
+            Log.e(TAG, "2");
 
-            Log.e("Add Medication", "Add Button clicked");
-            Log.e("medicine", medicine);
-            Log.e("note", note);
-            Log.e("Timestamp", appointment.getTimestamp().toString());
+            medicationRepository.addMedication(medication, new MedicationRepository.MedicationsAddCallback() {
+                @Override
+                public void onSuccess(String medicationId) {
+                    Log.e(TAG, "Successfully added medication with the id of " + medicationId);
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    Log.e(TAG, "Failure in adding medication in the document");
+                }
+            });
+
+            Log.e(TAG, "3");
+
         } catch (Exception e) {
             // TODO: handle exception
+            Log.e(TAG, e.getMessage());
         }
     }
 }

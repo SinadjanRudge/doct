@@ -14,11 +14,11 @@ public class MedicationDto {
     }
 
 
-    public int getMediId() {
+    public String getMediId() {
         return mediId;
     }
 
-    public void setMediId(int mediId) {
+    public void setMediId(String mediId) {
         this.mediId = mediId;
     }
 
