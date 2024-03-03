@@ -102,8 +102,6 @@ public class AppointmentRepository {
     }
 
     public interface AppointmentFetchCallback {
-        void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds);
-
         void onSuccess(List<AppointmentDto> appointments);
 
         void onError(String errorMessage);
