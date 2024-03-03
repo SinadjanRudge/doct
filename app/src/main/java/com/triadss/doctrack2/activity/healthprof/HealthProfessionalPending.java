@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragment.AddPatientFragment;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentPendingAdapter;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
@@ -44,7 +46,6 @@ public class HealthProfessionalPending extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private BottomNavigationView bottomNavigationView, HealthProfbottomNavigationView;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -81,11 +82,19 @@ public class HealthProfessionalPending extends Fragment {
         }
     }
 
+
+
+
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
-   // private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
+    private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
 
-    ArrayList<String> courseName = new ArrayList<>(Arrays.asList("Data Structure"));
+    ArrayList<String> Purpose = new ArrayList<>();
+    ArrayList<String> Date = new ArrayList<>();
+    ArrayList<String> Time = new ArrayList<>();
+
+    ArrayList<String> Identification = new ArrayList<>();
+    ArrayList<String> Name = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,43 +104,7 @@ public class HealthProfessionalPending extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_health_professional_pending, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        bottomNavigationView = rootView.findViewById(R.id.bottomNavigationView);
-        HealthProfbottomNavigationView = rootView.findViewById(R.id.HealthProfbottomNavigationView);
 
-        HealthProfbottomNavigationView.setSelectedItemId(R.id.pending);
-
-        HealthProfbottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.upcoming) {
-                @SuppressLint("CommitTransaction")
-                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.frame_layout, new HealthProfessionalUpcoming());
-                // Add HomeFragment to the back stack with a tag
-                transaction.addToBackStack("tag_for_home_fragment");
-
-                transaction.commit();
-            } else if (itemId == R.id.pending) {
-                @SuppressLint("CommitTransaction")
-                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.frame_layout, new HealthProfessionalPending());
-                // Add HomeFragment to the back stack with a tag
-                transaction.addToBackStack("tag_for_home_fragment");
-
-                transaction.commit();
-            } else if (itemId == R.id.status) {
-                @SuppressLint("CommitTransaction")
-                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.frame_layout, new HealthProfessionalStatus());
-                // Add HomeFragment to the back stack with a tag
-                transaction.addToBackStack("tag_for_home_fragment");
-
-                transaction.commit();
-            }
-            return true;
-        });
         CallPending();
         return rootView;
     }
@@ -142,11 +115,16 @@ public class HealthProfessionalPending extends Fragment {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
 
-                HealthProfAppointmentAdapter adapter = new  HealthProfAppointmentAdapter(getContext(), courseName);
+                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), Purpose, Date, Time, Identification, Name);
 
                 for (AppointmentDto a : appointments) {
-                  //  Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                    courseName.add(a.getPurpose());
+                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+                    Purpose.add(a.getPurpose());
+
+                    Date.add(a.getDateOfAppointment().toString());
+                    Time.add(a.getDateOfAppointment().toString());
+                    Identification.add(a.getPatientId().toString());
+                    Name.add(a.getNameOfRequester().toString());
                 }
                 recyclerView.setAdapter(adapter);
             }

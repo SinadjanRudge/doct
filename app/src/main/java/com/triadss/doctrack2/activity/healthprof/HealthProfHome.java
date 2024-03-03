@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
+import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentFragment;
 import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
 import com.triadss.doctrack2.activity.healthprof.fragment.AppointmentFragment;
 import com.triadss.doctrack2.activity.healthprof.fragment.DeviceFragment;
@@ -39,7 +40,7 @@ public class HealthProfHome extends AppCompatActivity {
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.appointment_menu) {
                // replaceFragment(new AppointmentFragment());
-                replaceFragment(new HealthProfessionalUpcoming());
+                replaceFragment(new HealthProfessionalAppointmentFragment());
             } else if (item.getItemId() == R.id.device_menu) {
                 replaceFragment(new DeviceFragment());
             } else if (item.getItemId() == R.id.patient_menu) {

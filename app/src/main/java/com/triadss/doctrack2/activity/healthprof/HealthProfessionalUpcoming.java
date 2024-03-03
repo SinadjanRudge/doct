@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import com.triadss.doctrack2.R;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,6 +26,13 @@ import android.view.ViewGroup;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragment.AddPatientFragment;
+import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentPendingAdapter;
+import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentUpcomingAdapter;
+import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.repoositories.AppointmentRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,8 +45,6 @@ public class HealthProfessionalUpcoming extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private BottomNavigationView bottomNavigationView, HealthProfbottomNavigationView;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -74,46 +82,56 @@ public class HealthProfessionalUpcoming extends Fragment {
     }
 
 
+
+
+    RecyclerView recyclerView;
+    private AppointmentRepository appointmentRepository;
+    private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
+
+    ArrayList<String> Purpose = new ArrayList<>();
+    ArrayList<String> Date = new ArrayList<>();
+    ArrayList<String> Time = new ArrayList<>();
+
+    ArrayList<String> Identification = new ArrayList<>();
+    ArrayList<String> Name = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        appointmentRepository = new AppointmentRepository();
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_health_professional_upcoming, container, false);
-        bottomNavigationView = rootView.findViewById(R.id.bottomNavigationView);
-        HealthProfbottomNavigationView = rootView.findViewById(R.id.HealthProfbottomNavigationView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        HealthProfbottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.upcoming) {
-                @SuppressLint("CommitTransaction")
-                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.frame_layout, new HealthProfessionalUpcoming());
-                // Add HomeFragment to the back stack with a tag
-                transaction.addToBackStack("tag_for_home_fragment");
-
-                transaction.commit();
-            } else if (itemId == R.id.pending) {
-                @SuppressLint("CommitTransaction")
-                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.frame_layout, new HealthProfessionalPending());
-                // Add HomeFragment to the back stack with a tag
-                transaction.addToBackStack("tag_for_home_fragment");
-
-                transaction.commit();
-            } else if (itemId == R.id.status) {
-                @SuppressLint("CommitTransaction")
-                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.frame_layout, new HealthProfessionalStatus());
-                // Add HomeFragment to the back stack with a tag
-                transaction.addToBackStack("tag_for_home_fragment");
-
-                transaction.commit();
-            }
-            return true;
-        });
+        CallPending();
         return rootView;
+    }
+
+    public void CallPending() {
+        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+            @Override
+            public void onSuccess(List<AppointmentDto> appointments) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(linearLayoutManager);
+
+                HealthProfessionalAppointmentUpcomingAdapter adapter = new HealthProfessionalAppointmentUpcomingAdapter(getContext(), Purpose, Date, Time, Identification, Name);
+
+                for (AppointmentDto a : appointments) {
+                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
+                    Purpose.add(a.getPurpose());
+
+                    Date.add(a.getDateOfAppointment().toString());
+                    Time.add(a.getDateOfAppointment().toString());
+                    Identification.add(a.getPatientId().toString());
+                    Name.add(a.getNameOfRequester().toString());
+                }
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
     }
 }
