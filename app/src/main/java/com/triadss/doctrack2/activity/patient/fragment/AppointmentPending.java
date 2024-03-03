@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,42 +47,6 @@ public class AppointmentPending extends Fragment {
    public void CallPending() {
        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
 
-//           @Override
-//           public void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds) {
-//               LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//               recyclerView.setLayoutManager(linearLayoutManager);
-//
-//               PatientAppointmentPendingAdapter adapter = new PatientAppointmentPendingAdapter(getContext(), Purpose, Date, Time);
-//
-//               for (AppointmentDto a : appointments) {
-//                   Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-//                   Purpose.add(a.getPurpose());
-////                   Date.add(a.getPurpose());
-////                   Time.add(a.getPurpose());
-//                   Date.add(a.getDateOfAppointment().toString());
-//                   Time.add(a.getDateOfAppointment().toString());
-//               }
-//               recyclerView.setAdapter(adapter);
-//           }
-
-           @Override
-           public void onSuccess(List<AppointmentDto> appointments, List<String> appointmentIds) {
-               LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-               recyclerView.setLayoutManager(linearLayoutManager);
-
-               PatientAppointmentPendingAdapter adapter = new PatientAppointmentPendingAdapter(getContext(), Purpose, Date, Time);
-
-               for (AppointmentDto a : appointments) {
-                   Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                   Purpose.add(a.getPurpose());
-//                   Date.add(a.getPurpose());
-//                   Time.add(a.getPurpose());
-                   Date.add(a.getDateOfAppointment().toString());
-                   Time.add(a.getDateOfAppointment().toString());
-               }
-               recyclerView.setAdapter(adapter);
-           }
-
            @Override
            public void onSuccess(List<AppointmentDto> appointments) {
                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -91,9 +57,10 @@ public class AppointmentPending extends Fragment {
                for (AppointmentDto a : appointments) {
                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
                    Purpose.add(a.getPurpose());
+                   DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(a.getDateOfAppointment());
 
-                   Date.add(a.getDateOfAppointment().toString());
-                   Time.add(a.getDateOfAppointment().toString());
+                   Date.add(dateTimeDto.getDate().ToString());
+                   Time.add(dateTimeDto.getTime().ToString());
                }
                recyclerView.setAdapter(adapter);
            }
