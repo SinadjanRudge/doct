@@ -27,6 +27,9 @@
             android:exported="false" />
 
         <activity
+            android:name=".ListHealthprofPatientActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.admin.AdminHome"
             android:exported="false" />
         <activity
@@ -51,7 +54,8 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

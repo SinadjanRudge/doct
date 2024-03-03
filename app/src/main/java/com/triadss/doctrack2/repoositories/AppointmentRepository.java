@@ -20,13 +20,6 @@ import com.google.firebase.Timestamp;
 import java.util.Date;
 
 public class AppointmentRepository {
-    /**
-     * Saves user information to Firestore.
-     *
-     * @param userId         The ID of the user.
-     * @param appointmentDto The DTO (Data Transfer Object) containing patient
-     *                       information.
-     */
     private static final String TAG = "AppointmentRepository";
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference appointmentsCollection = firestore
@@ -39,7 +32,7 @@ public class AppointmentRepository {
             appointment.setPatientId(user.getUid());
 
             FirebaseFirestore.getInstance()
-                    .collection("users") // Change to your users collection name
+                    .collection(FireStoreCollection.USERS_TABLE)
                     .document(appointment.getPatientId())
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
@@ -73,6 +66,7 @@ public class AppointmentRepository {
                         callback.onError(e.getMessage());
                     });
         }
+
     }
 
     public void getAllAppointments(AppointmentFetchCallback callback) {

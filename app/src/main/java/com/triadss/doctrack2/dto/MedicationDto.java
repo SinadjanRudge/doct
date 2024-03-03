@@ -1,22 +1,36 @@
 package com.triadss.doctrack2.dto;
 
-import java.sql.Time;
-import java.util.Date;
+import com.google.firebase.Timestamp;
 
 public class MedicationDto {
-    public int getMediId() {
+    public MedicationDto()
+    {
+        // required for Firestore deserialization
+    }
+
+
+    public MedicationDto(String mediId, String patientId, String medicine, String note, Timestamp timestamp)
+    {
+        this.mediId = mediId;
+        this.patientId = patientId;
+        this.medicine = medicine;
+        this.note = note;
+        this.timestamp = timestamp;
+    }
+
+    public String getMediId() {
         return mediId;
     }
 
-    public void setMediId(int mediId) {
+    public void setMediId(String mediId) {
         this.mediId = mediId;
     }
 
-    public int getPatientId() {
+    public String getPatientId() {
         return patientId;
     }
 
-    public void setPatientId(int patientId) {
+    public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
 
@@ -36,26 +50,17 @@ public class MedicationDto {
         this.note = note;
     }
 
-    public Date getMedDate() {
-        return medDate;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setMedDate(Date medDate) {
-        this.medDate = medDate;
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public Time getMedTime() {
-        return medTime;
-    }
-
-    public void setMedTime(Time medTime) {
-        this.medTime = medTime;
-    }
-
-    private int mediId;
-    private int patientId;
+    private String mediId;
+    private String patientId;
     private String medicine;
     private String note;
-    private Date medDate;
-    private Time medTime;
+    private Timestamp timestamp;
 }

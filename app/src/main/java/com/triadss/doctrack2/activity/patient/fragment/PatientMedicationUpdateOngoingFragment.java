@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.healthprof.fragment;
+package com.triadss.doctrack2.activity.patient.fragment;
 
 import android.os.Bundle;
 
@@ -12,10 +12,10 @@ import com.triadss.doctrack2.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PatientAddMedication#newInstance} factory method to
+ * Use the {@link PatientMedicationUpdateOngoingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PatientAddMedication extends Fragment {
+public class PatientMedicationUpdateOngoingFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class PatientAddMedication extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public PatientAddMedication() {
+    public PatientMedicationUpdateOngoingFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class PatientAddMedication extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PatientAddMedication.
+     * @return A new instance of fragment UpdateOngoingMedication.
      */
     // TODO: Rename and change types and number of parameters
-    public static PatientAddMedication newInstance(String param1, String param2) {
-        PatientAddMedication fragment = new PatientAddMedication();
+    public static PatientMedicationUpdateOngoingFragment newInstance(String param1, String param2) {
+        PatientMedicationUpdateOngoingFragment fragment = new PatientMedicationUpdateOngoingFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class PatientAddMedication extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_patient_add_medication, container, false);
+        return inflater.inflate(R.layout.fragment_patient_medication_update_ongoing, container, false);
     }
 }

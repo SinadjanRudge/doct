@@ -1,6 +1,5 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -23,10 +22,7 @@ import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -150,27 +146,12 @@ public class AppointmentRequest extends Fragment {
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
             @Override
             public void onSuccess(String appointmentId) {
-                // Handle success, if needed
+                // TODO need to add confirmation UI when appointment is added successfully
             }
 
             @Override
             public void onError(String errorMessage) {
                 // Handle error, if needed
-            }
-        });
-
-        //! FOR TESTING
-        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
-            @Override
-            public void onSuccess(List<AppointmentDto> appointments) {
-                for (AppointmentDto a : appointments) {
-                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                }
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-
             }
         });
     }
