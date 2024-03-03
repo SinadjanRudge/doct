@@ -7,13 +7,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.MedicationModel;
 import com.triadss.doctrack2.dto.MedicationDto;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MedicationRepository {
@@ -56,8 +60,33 @@ public class MedicationRepository {
 
     }
 
+    public void getAllMedications(MedicationsFetchCallback callback) {
+        medicationsCollection.orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<MedicationDto> medications = new ArrayList<MedicationDto>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            MedicationDto appointment = document.toObject(MedicationDto.class);
+
+                            medications.add(appointment);
+                        }
+                        callback.onSuccess(medications);
+                    } else {
+                        Log.e(TAG, "Error getting appointments", task.getException());
+                        callback.onError(task.getException().getMessage());
+                    }
+                });
+    }
+
     public interface MedicationsAddCallback {
         void onSuccess(String medicationId);
+
+        void onError(String errorMessage);
+    }
+
+    public interface MedicationsFetchCallback {
+        void onSuccess(List<MedicationDto> appointments);
 
         void onError(String errorMessage);
     }
