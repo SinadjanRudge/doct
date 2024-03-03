@@ -146,27 +146,12 @@ public class AppointmentRequest extends Fragment {
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
             @Override
             public void onSuccess(String appointmentId) {
-                // Handle success, if needed
+                // TODO need to add confirmation UI when appointment is added successfully
             }
 
             @Override
             public void onError(String errorMessage) {
                 // Handle error, if needed
-            }
-        });
-
-        //! FOR TESTING
-        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
-            @Override
-            public void onSuccess(List<AppointmentDto> appointments) {
-                for (AppointmentDto a : appointments) {
-                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                }
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-
             }
         });
     }
