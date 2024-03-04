@@ -101,17 +101,26 @@
             android:layout_toEndOf="@+id/baseline_access_time_24"
             android:text="TextView" />
 
-        <TextView
-            android:id="@+id/statustext"
-            android:layout_width="314dp"
-            android:layout_height="50dp"
+        <Button
+            android:id="@+id/reject_button"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/purposetext"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="123dp"
-            android:textSize="16sp"
-            android:text="TextView"
-            android:textStyle="bold"/>
+            android:layout_marginStart="47dp"
+            android:layout_marginTop="126dp"
+            android:text="Reject" />
+
+        <Button
+            android:id="@+id/accept_button"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/purposetext"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="230dp"
+            android:layout_marginTop="126dp"
+            android:text="Accept" />
+
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
