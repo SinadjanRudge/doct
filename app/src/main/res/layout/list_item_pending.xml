@@ -79,6 +79,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="47dp"
             android:layout_marginTop="126dp"
+            android:backgroundTint="@color/green"
             android:text="Cancel" />
 
         <Button
@@ -89,6 +90,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="230dp"
             android:layout_marginTop="126dp"
+            android:backgroundTint="@color/green"
             android:text="Reschedule" />
 
 
