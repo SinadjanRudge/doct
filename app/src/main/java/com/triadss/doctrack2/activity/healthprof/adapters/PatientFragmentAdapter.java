@@ -3,6 +3,7 @@ package com.triadss.doctrack2.activity.healthprof.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,8 +17,15 @@ import java.util.List;
 public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragmentAdapter.PatientFragmentViewHolder> {
     List<AddPatientDto> addPatientDtoList;
 
-    public PatientFragmentAdapter(List<AddPatientDto> patientList) {
+    private OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(AddPatientDto patient);
+    }
+
+    public PatientFragmentAdapter(List<AddPatientDto> patientList, OnItemClickListener listener) {
         this.addPatientDtoList = patientList;
+        this.onItemClickListener = listener;
     }
 
     public void updateList(List<AddPatientDto> newData) {
@@ -44,13 +52,24 @@ public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragment
         return addPatientDtoList.size();
     }
 
-    public static class PatientFragmentViewHolder extends RecyclerView.ViewHolder{
+    public class PatientFragmentViewHolder extends RecyclerView.ViewHolder{
         TextView name;
         TextView idNumber;
+        Button viewRecord;
         public PatientFragmentViewHolder(@NonNull View itemView) {
             super(itemView);
+            viewRecord = itemView.findViewById(R.id.viewPatientRecord);
             name = itemView.findViewById(R.id.textView_patientName);
             idNumber = itemView.findViewById(R.id.textView_patientId);
+
+            viewRecord.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        onItemClickListener.onItemClick(addPatientDtoList.get(position));
+                    }
+                }
+            });
         }
     }
 }

@@ -99,7 +99,12 @@ public class PatientFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recycleview_patient_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapter = new PatientFragmentAdapter(new ArrayList<>());
+        adapter = new PatientFragmentAdapter(new ArrayList<>(), new PatientFragmentAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(AddPatientDto patient) {
+                showPatientRecord(patient);
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         PatientRepository patientRepository = new PatientRepository();
@@ -118,6 +123,14 @@ public class PatientFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void showPatientRecord(AddPatientDto patient) {
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
+        //transaction.replace(R.id.frame_layout, ViewRecordFragment.newInstance(patient));
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 }
