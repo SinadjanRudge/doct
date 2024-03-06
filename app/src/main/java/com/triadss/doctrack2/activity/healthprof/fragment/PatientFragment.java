@@ -27,7 +27,6 @@ import com.triadss.doctrack2.repoositories.PatientRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -108,12 +107,12 @@ public class PatientFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recycleview_patient_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        /*adapter = new PatientFragmentAdapter(new ArrayList<>());
-        recyclerView.setAdapter(adapter);*/
-        addPatientDtoList = new ArrayList<>();
-        filteredPatients = new ArrayList<>();
-
-        adapter = new PatientFragmentAdapter(addPatientDtoList);
+        adapter = new PatientFragmentAdapter(new ArrayList<>(), new PatientFragmentAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(AddPatientDto patient) {
+                showPatientRecord(patient);
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         PatientRepository patientRepository = new PatientRepository();
@@ -137,7 +136,7 @@ public class PatientFragment extends Fragment {
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                
+
             }
 
             @Override
@@ -159,6 +158,14 @@ public class PatientFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void showPatientRecord(AddPatientDto patient) {
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
+        //transaction.replace(R.id.frame_layout, ViewRecordFragment.newInstance(patient));
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void Filter(String text){
