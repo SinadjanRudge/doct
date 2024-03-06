@@ -163,7 +163,9 @@ public class PatientFragment extends Fragment {
 
     private void Filter(String text){
         for(AddPatientDto patient : addPatientDtoList){
-            if(Objects.equals(patient.getIdNumber(), text)){
+            if((text == "" ||
+                    (patient.getIdNumber() != null && (patient.getIdNumber().contains(text)))) ||
+                    (patient.getFullName() != null && (patient.getFullName().toLowerCase().contains(text.toLowerCase())))) {
                 filteredPatients.add(patient);
             }
         }
