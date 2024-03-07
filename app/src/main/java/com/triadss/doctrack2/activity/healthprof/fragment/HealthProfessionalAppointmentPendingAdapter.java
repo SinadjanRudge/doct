@@ -13,23 +13,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 
 import java.util.ArrayList;
 
 
 public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Adapter<HealthProfessionalAppointmentPendingAdapter.ViewHolder> {
-    ArrayList  Identification,Name,Pending, Date, Time;
+    ArrayList<AppointmentDto> healthProfessional;
     Context context;
 
     // Constructor for initialization
-    public HealthProfessionalAppointmentPendingAdapter(Context context,  ArrayList Pending, ArrayList Date, ArrayList Time, ArrayList Identification, ArrayList Name) {
+    public HealthProfessionalAppointmentPendingAdapter(Context context,  ArrayList<AppointmentDto> healthProfessional) {
         this.context = context;
 
-        this.Pending = Pending;
-        this.Date = Date;
-        this.Time = Time;
-        this.Identification = Identification;
-        this.Name = Name;
+        this.healthProfessional = healthProfessional;
     }
 
     @NonNull
@@ -43,31 +41,23 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
         return viewHolder;
     }
 
-
-
-
     // Binding data to the into specified position
     @Override
     public void onBindViewHolder(@NonNull HealthProfessionalAppointmentPendingAdapter.ViewHolder holder, int position) {
         // TypeCast Object to int type
-
-        holder.purpose.setText((String) Pending.get(position));
-        holder.date.setText((String) Date.get(position));
-        holder.time.setText((String) Time.get(position));
-        holder.identification.setText((String) Identification.get(position));
-        holder.name.setText((String) Name.get(position));
+        holder.update(healthProfessional.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return Pending.size();
+        return healthProfessional.size();
     }
 
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView purpose,date,time,identification,name;
+        private TextView purpose,date,time,identification,name;
 
         public ViewHolder(View view) {
             super(view);
@@ -94,5 +84,18 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                 }
             });
         }
+
+
+        public void update(AppointmentDto appointment)
+        {
+            purpose.setText(appointment.getPurpose());
+            identification.setText(appointment.getPatientId());
+            name.setText(appointment.getNameOfRequester());
+
+            DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
+            date.setText(dateTime.getDate().ToString());
+            time.setText(dateTime.getTime().ToString());
+        }
+
     }
 }

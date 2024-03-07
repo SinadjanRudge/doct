@@ -46,7 +46,6 @@ public class HealthProfessionalPending extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -82,19 +81,8 @@ public class HealthProfessionalPending extends Fragment {
         }
     }
 
-
-
-
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
-    private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
-
-    ArrayList<String> Purpose = new ArrayList<>();
-    ArrayList<String> Date = new ArrayList<>();
-    ArrayList<String> Time = new ArrayList<>();
-
-    ArrayList<String> Identification = new ArrayList<>();
-    ArrayList<String> Name = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,10 +92,10 @@ public class HealthProfessionalPending extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_health_professional_pending, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-
         CallPending();
         return rootView;
     }
+
     public void CallPending() {
         appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
             @Override
@@ -115,17 +103,8 @@ public class HealthProfessionalPending extends Fragment {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
 
-                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), Purpose, Date, Time, Identification, Name);
+                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments);
 
-                for (AppointmentDto a : appointments) {
-                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                    Purpose.add(a.getPurpose());
-
-                    Date.add(a.getDateOfAppointment().toString());
-                    Time.add(a.getDateOfAppointment().toString());
-                    Identification.add(a.getPatientId().toString());
-                    Name.add(a.getNameOfRequester().toString());
-                }
                 recyclerView.setAdapter(adapter);
             }
 
