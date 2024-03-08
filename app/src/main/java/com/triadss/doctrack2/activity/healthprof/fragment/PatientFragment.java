@@ -123,6 +123,8 @@ public class PatientFragment extends Fragment {
             public void onSuccess(List<AddPatientDto> patients) {
                 // Update the adapter with the latest data
                 adapter.updateList(patients);
+                addPatientDtoList.clear();
+                addPatientDtoList.addAll(patients);
             }
 
             @Override
