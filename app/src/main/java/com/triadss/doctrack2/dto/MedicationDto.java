@@ -53,6 +53,7 @@ public class MedicationDto {
         this.timestamp = timestamp;
     }
 
+    private String status;
     private String mediId;
     private String patientId;
     private String medicine;
