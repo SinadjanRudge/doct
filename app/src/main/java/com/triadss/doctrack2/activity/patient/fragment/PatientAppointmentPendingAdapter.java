@@ -12,22 +12,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // Extends the Adapter class to RecyclerView.Adapter
 // and implement the unimplemented methods
 public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<PatientAppointmentPendingAdapter.ViewHolder> {
-    ArrayList  Pending, Date, Time;
+    ArrayList<AppointmentDto> appointments;
     Context context;
 
     // Constructor for initialization
-    public PatientAppointmentPendingAdapter(Context context,  ArrayList Pending, ArrayList Date, ArrayList Time) {
+    public PatientAppointmentPendingAdapter(Context context, ArrayList<AppointmentDto> appointments) {
         this.context = context;
 
-        this.Pending = Pending;
-        this.Date = Date;
-        this.Time = Time;
+        this.appointments = appointments;
     }
 
     @NonNull
@@ -41,27 +42,22 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
         return viewHolder;
     }
 
-
     // Binding data to the into specified position
     @Override
     public void onBindViewHolder(@NonNull PatientAppointmentPendingAdapter.ViewHolder holder, int position) {
         // TypeCast Object to int type
-
-        holder.purpose.setText((String) Pending.get(position));
-        holder.date.setText((String) Date.get(position));
-        holder.time.setText((String) Time.get(position));
+        holder.update(appointments.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return Pending.size();
+        return appointments.size();
     }
-
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView purpose,date,time;
+        private TextView purpose,date,time;
 
         public ViewHolder(View view) {
             super(view);
@@ -75,16 +71,22 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-
                 }
             });
             reschedule.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-
                 }
             });
+        }
+
+        public void update(AppointmentDto appointment)
+        {
+            purpose.setText(appointment.getPurpose());
+            DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
+            date.setText(dateTimeDto.getDate().ToString());
+            time.setText(dateTimeDto.getTime().ToString());
         }
     }
 }
