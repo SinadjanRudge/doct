@@ -106,6 +106,8 @@ public class PatientFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recycleview_patient_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        addPatientDtoList = new ArrayList<>();
+        filteredPatients = new ArrayList<>();
         adapter = new PatientFragmentAdapter(new ArrayList<>(), new PatientFragmentAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(AddPatientDto patient) {
