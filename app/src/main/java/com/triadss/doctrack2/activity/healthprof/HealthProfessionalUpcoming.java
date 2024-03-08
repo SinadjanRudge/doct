@@ -81,19 +81,8 @@ public class HealthProfessionalUpcoming extends Fragment {
         }
     }
 
-
-
-
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
-    private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
-
-    ArrayList<String> Purpose = new ArrayList<>();
-    ArrayList<String> Date = new ArrayList<>();
-    ArrayList<String> Time = new ArrayList<>();
-
-    ArrayList<String> Identification = new ArrayList<>();
-    ArrayList<String> Name = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,17 +103,8 @@ public class HealthProfessionalUpcoming extends Fragment {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
 
-                HealthProfessionalAppointmentUpcomingAdapter adapter = new HealthProfessionalAppointmentUpcomingAdapter(getContext(), Purpose, Date, Time, Identification, Name);
+                HealthProfessionalAppointmentUpcomingAdapter adapter = new HealthProfessionalAppointmentUpcomingAdapter(getContext(), (ArrayList)appointments);
 
-                for (AppointmentDto a : appointments) {
-                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                    Purpose.add(a.getPurpose());
-
-                    Date.add(a.getDateOfAppointment().toString());
-                    Time.add(a.getDateOfAppointment().toString());
-                    Identification.add(a.getPatientId().toString());
-                    Name.add(a.getNameOfRequester().toString());
-                }
                 recyclerView.setAdapter(adapter);
             }
 
