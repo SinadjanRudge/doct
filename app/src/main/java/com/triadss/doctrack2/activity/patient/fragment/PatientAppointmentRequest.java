@@ -3,7 +3,6 @@ package com.triadss.doctrack2.activity.patient.fragment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
-import com.google.android.material.textfield.TextInputEditText;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
@@ -25,12 +20,11 @@ import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import com.google.firebase.Timestamp;
 
-public class AppointmentRequest extends Fragment {
+public class PatientAppointmentRequest extends Fragment {
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;

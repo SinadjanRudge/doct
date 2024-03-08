@@ -18,20 +18,11 @@ import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class AppointmentStatus extends Fragment {
-
+public class PatientAppointmentStatus extends Fragment {
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
-    private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
-
-    ArrayList<String> Purpose = new ArrayList<>();
-
-    ArrayList<String> Date = new ArrayList<>();
-    ArrayList<String> Time = new ArrayList<>();
-    ArrayList<String> Status = new ArrayList<>();
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,17 +44,8 @@ public class AppointmentStatus extends Fragment {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
 
-                PatientAppointmentStatusAdapter adapter = new PatientAppointmentStatusAdapter(getContext(), Purpose, Date, Time, Status);
+                PatientAppointmentStatusAdapter adapter = new PatientAppointmentStatusAdapter(getContext(), (ArrayList)appointments);
 
-                for (AppointmentDto a : appointments) {
-                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                    Purpose.add(a.getPurpose());
-                    DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(a.getDateOfAppointment());
-
-                    Date.add(dateTimeDto.getDate().ToString());
-                    Time.add(dateTimeDto.getTime().ToString());
-                    Status.add("Status:                          " + a.getStatus().toString());
-                }
                 recyclerView.setAdapter(adapter);
             }
 

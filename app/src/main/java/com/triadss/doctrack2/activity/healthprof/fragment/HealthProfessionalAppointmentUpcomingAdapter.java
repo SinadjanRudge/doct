@@ -13,24 +13,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 
 import java.util.ArrayList;
 
 // Extends the Adapter class to RecyclerView.Adapter
 // and implement the unimplemented methods
 public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.Adapter<HealthProfessionalAppointmentUpcomingAdapter.ViewHolder> {
-    ArrayList  Identification,Name,Pending, Date, Time;
+    ArrayList<AppointmentDto> appointments;
     Context context;
 
     // Constructor for initialization
-    public HealthProfessionalAppointmentUpcomingAdapter(Context context,  ArrayList Pending, ArrayList Date, ArrayList Time, ArrayList Identification, ArrayList Name) {
+    public HealthProfessionalAppointmentUpcomingAdapter(Context context,  ArrayList<AppointmentDto> appointments) {
         this.context = context;
 
-        this.Pending = Pending;
-        this.Date = Date;
-        this.Time = Time;
-        this.Identification = Identification;
-        this.Name = Name;
+        this.appointments = appointments;
     }
 
     @NonNull
@@ -49,17 +47,12 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
     @Override
     public void onBindViewHolder(@NonNull HealthProfessionalAppointmentUpcomingAdapter.ViewHolder holder, int position) {
         // TypeCast Object to int type
-
-        holder.purpose.setText((String) Pending.get(position));
-        holder.date.setText((String) Date.get(position));
-        holder.time.setText((String) Time.get(position));
-        holder.identification.setText((String) Identification.get(position));
-        holder.name.setText((String) Name.get(position));
+        holder.update(appointments.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return Pending.size();
+        return appointments.size();
     }
 
 
@@ -92,6 +85,17 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
 
                 }
             });
+        }
+
+        public void update(AppointmentDto appointment)
+        {
+            purpose.setText(appointment.getPurpose());
+            identification.setText(appointment.getPatientId());
+            name.setText(appointment.getNameOfRequester());
+
+            DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
+            date.setText(dateTime.getDate().ToString());
+            time.setText(dateTime.getTime().ToString());
         }
     }
 }
