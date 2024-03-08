@@ -7,13 +7,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.MedicationModel;
 import com.triadss.doctrack2.dto.MedicationDto;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MedicationRepository {
@@ -56,11 +59,37 @@ public class MedicationRepository {
 
     }
 
-    // TODO make a
+    public void getAllMedications(MedicationFetchCallback callback){
+        if(user != null){
+            medicationsCollection
+                    .whereEqualTo("patientId", user.getUid())
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        List<MedicationDto> medications = new ArrayList<>();
+                        for(QueryDocumentSnapshot document: queryDocumentSnapshots){
+                            MedicationDto medication = document.toObject(MedicationDto.class);
+                            medications.add(medication);
+                        }
+                        callback.onSuccess(medications);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching medicines", e);
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
 
     public interface MedicationsAddCallback {
         void onSuccess(String medicationId);
 
+        void onError(String errorMessage);
+    }
+
+    public interface MedicationFetchCallback{
+        void onSuccess(List<MedicationDto> medications);
         void onError(String errorMessage);
     }
 }
