@@ -20,5 +20,4 @@ public class UserModel extends AuditModel {
 
     public static final String idNumber = "idNumber";
     public static final String deviceId = "deviceId";
-
 }
