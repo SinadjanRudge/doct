@@ -3,6 +3,10 @@ package com.triadss.doctrack2.dto;
 import com.google.firebase.Timestamp;
 
 public class MedicationDto {
+    //* Default constructor required for Firebase deserialization
+    public MedicationDto() {
+
+    }
 
     public MedicationDto(String mediId, String patientId, String medicine, String note, Timestamp timestamp)
     {

@@ -4,11 +4,16 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.repoositories.MedicationRepository;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +31,8 @@ public class PatientMedicationOngoingFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private static final String TAG = "PatientMedicationOngoingFragment";
+    private MedicationRepository medicationRepository;
     public PatientMedicationOngoingFragment() {
         // Required empty public constructor
     }
@@ -54,6 +61,28 @@ public class PatientMedicationOngoingFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+
+        medicationRepository = new MedicationRepository();
+        //* Get all the patient's medications
+        try {
+            medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
+                @Override
+                public void onSuccess(List<MedicationDto> medications) {
+//                    for(MedicationDto meds: medications){
+//                        Log.e("patientId", meds.getPatientId());
+//                        Log.e("medicine", meds.getMedicine());
+//                        Log.e("note", meds.getNote());
+//                    }
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+
+                }
+            });
+        } catch (Exception e){
+            Log.e(TAG, "Failure in fetching patient's medication list.");
         }
     }
 
