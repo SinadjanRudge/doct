@@ -13,14 +13,4 @@
         android:text="Ongoing Medications"
         android:textSize="20sp"
         android:layout_margin="16dp"/>
-
-    <!-- RecyclerView to display ongoing medications -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewOngoingMedications"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/ongoingMedicationsTitle"
-        android:layout_marginTop="8dp"
-        android:padding="16dp"/>
-
 </RelativeLayout>

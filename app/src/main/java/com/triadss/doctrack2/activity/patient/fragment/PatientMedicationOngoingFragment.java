@@ -102,8 +102,8 @@ public class PatientMedicationOngoingFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // Pass the context and the list of ongoing medications to the adapter
-        OngoingMedicationAdapter adapter = new OngoingMedicationAdapter(requireContext(), ongoingMedications);
-        recyclerView.setAdapter(adapter);
+//        OngoingMedicationAdapter adapter = new OngoingMedicationAdapter(requireContext(), ongoingMedications);
+//        recyclerView.setAdapter(adapter);
 
         // Inflate the layout for this fragment
         return rootView;
