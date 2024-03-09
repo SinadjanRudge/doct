@@ -97,9 +97,9 @@ public class PatientMedicationOngoingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_ongoing, container, false);
 
-        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerViewOngoingMedications);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+//        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerViewOngoingMedications);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+//        recyclerView.setLayoutManager(layoutManager);
 
         // Pass the context and the list of ongoing medications to the adapter
 //        OngoingMedicationAdapter adapter = new OngoingMedicationAdapter(requireContext(), ongoingMedications);
