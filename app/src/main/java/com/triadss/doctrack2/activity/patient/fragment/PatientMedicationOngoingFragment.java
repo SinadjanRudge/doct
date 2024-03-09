@@ -3,11 +3,14 @@ package com.triadss.doctrack2.activity.patient.fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.MedicationDto;
@@ -92,8 +95,18 @@ public class PatientMedicationOngoingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_patient_medication_ongoing, container, false);
+
+        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerViewOngoingMedications);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+
+        // Pass the context and the list of ongoing medications to the adapter
+        OngoingMedicationAdapter adapter = new OngoingMedicationAdapter(requireContext(), ongoingMedications);
+        recyclerView.setAdapter(adapter);
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_patient_medication_ongoing, container, false);
+        return rootView;
     }
+
 }
