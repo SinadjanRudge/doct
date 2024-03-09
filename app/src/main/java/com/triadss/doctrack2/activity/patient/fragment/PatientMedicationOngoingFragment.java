@@ -14,6 +14,7 @@ import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,12 +66,15 @@ public class PatientMedicationOngoingFragment extends Fragment {
         }
 
         medicationRepository = new MedicationRepository();
+        ongoingMedications = new ArrayList<>();
+
         //* Get all the patient's medications
         try {
             medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
                 @Override
                 public void onSuccess(List<MedicationDto> medications) {
-                    ongoingMedications = medications;
+                    //* copied the fetched patient's ongoing medications here
+                    ongoingMedications.addAll(medications);
                 }
 
                 @Override
@@ -81,11 +85,14 @@ public class PatientMedicationOngoingFragment extends Fragment {
         } catch (Exception e){
             Log.e(TAG, "Failure in fetching patient's medication list.");
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_patient_medication_ongoing, container, false);
     }
