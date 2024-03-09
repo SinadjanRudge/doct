@@ -36,6 +36,7 @@ public class MedicationRepository {
             medicationMap.put("medicine", medications.getMedicine());
             medicationMap.put("note", medications.getNote());
             medicationMap.put("timestamp", medications.getTimestamp());
+            medicationMap.put("status", medications.getStatus());
 
             medicationsCollection
                     .add(medicationMap)

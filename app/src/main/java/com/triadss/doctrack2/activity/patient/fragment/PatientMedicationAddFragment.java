@@ -213,7 +213,7 @@ public class PatientMedicationAddFragment extends Fragment {
             final String status = MedicationTypeConstants.ONGOING;
 
             MedicationDto medication = new MedicationDto("",
-                    "", medicine, note, dateTimeOfAppointment);
+                    "", medicine, note, dateTimeOfAppointment, status);
             medicationRepository.addMedication(medication, new MedicationRepository.MedicationsAddCallback() {
                 @Override
                 public void onSuccess(String medicationId) {
