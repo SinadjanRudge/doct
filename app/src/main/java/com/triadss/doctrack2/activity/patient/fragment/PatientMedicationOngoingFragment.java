@@ -33,6 +33,7 @@ public class PatientMedicationOngoingFragment extends Fragment {
 
     private static final String TAG = "PatientMedicationOngoingFragment";
     private MedicationRepository medicationRepository;
+    private List<MedicationDto> ongoingMedications;
     public PatientMedicationOngoingFragment() {
         // Required empty public constructor
     }
@@ -69,11 +70,7 @@ public class PatientMedicationOngoingFragment extends Fragment {
             medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
                 @Override
                 public void onSuccess(List<MedicationDto> medications) {
-//                    for(MedicationDto meds: medications){
-//                        Log.e("patientId", meds.getPatientId());
-//                        Log.e("medicine", meds.getMedicine());
-//                        Log.e("note", meds.getNote());
-//                    }
+                    ongoingMedications = medications;
                 }
 
                 @Override

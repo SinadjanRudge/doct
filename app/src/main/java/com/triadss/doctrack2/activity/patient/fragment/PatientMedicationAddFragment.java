@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
@@ -209,7 +210,7 @@ public class PatientMedicationAddFragment extends Fragment {
 
             Timestamp dateTimeOfAppointment = selectedDateTime.ToTimestamp();
 
-            final String status = AppointmentTypeConstants.PENDING;
+            final String status = MedicationTypeConstants.ONGOING;
 
             MedicationDto medication = new MedicationDto("",
                     "", medicine, note, dateTimeOfAppointment);
