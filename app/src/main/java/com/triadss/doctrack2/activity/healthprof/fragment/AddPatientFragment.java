@@ -31,6 +31,7 @@ import com.triadss.doctrack2.config.enums.UserRole;
 import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.config.model.UserModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.utils.DocTrackUtils;
 
 import java.time.LocalDateTime;
@@ -59,6 +60,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     ProgressBar progressBar;
 
     Button saveButton;
+    PatientRepository _patientRepository;
 
     public AddPatientFragment() {
         // Required empty public constructor
@@ -109,6 +111,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        _patientRepository = new PatientRepository();
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_add_patient, container, false);
         Toolbar toolbar = rootView.findViewById(R.id.add_patient_toolbar);
@@ -225,7 +229,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                         try {
                             if (user != null) {
                                 // create details in user table and report table
-                                saveUserToFireStore(user.getUid(), patientDto);
+                                _patientRepository.AddPatient(user.getUid(), patientDto);
                                 createReport(user.getUid(), patientDto);
                                 Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
                                 @SuppressLint("CommitTransaction")
@@ -253,37 +257,11 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                 // GENERIC ERROR HANDLER
                 Toast.makeText(getContext(), DocTrackErrorMessage.GENERIC_ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
-            } finally {
-                progressBar.setVisibility(View.GONE);
             }
+            progressBar.setVisibility(View.GONE);
+
         }
 
-    }
-
-    /**
-     * Saves user information to Firestore.
-     *
-     * @param userId     The ID of the user.
-     * @param patientDto The DTO (Data Transfer Object) containing patient information.
-     */
-    private void saveUserToFireStore(String userId, AddPatientDto patientDto) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference userRef = db.collection(FireStoreCollection.USERS_TABLE).document(userId);
-        LocalDateTime currentDate = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DocTrackConstant.AUDIT_DATE_FORMAT);
-        String dateNow = currentDate.format(formatter);
-
-        Map<String, Object> userData = new HashMap<>();
-        userData.put(UserModel.role, UserRole.PATIENT);
-        userData.put(UserModel.email, patientDto.getEmail());
-        userData.put(UserModel.fullName, patientDto.getFullName());
-        userData.put(UserModel.address, patientDto.getAddress());
-        userData.put(UserModel.phone, patientDto.getPhone());
-        userData.put(UserModel.course, patientDto.getCourse());
-        userData.put(UserModel.idNumber, patientDto.getIdNumber());
-        userData.put(UserModel.createdDate, dateNow);
-        userData.put(UserModel.updatedDate, dateNow);
-        userRef.set(userData, SetOptions.merge());
     }
 
     /**
