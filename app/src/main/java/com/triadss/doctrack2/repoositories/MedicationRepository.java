@@ -11,6 +11,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
+import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.config.model.MedicationModel;
 import com.triadss.doctrack2.dto.MedicationDto;
 
@@ -64,6 +65,7 @@ public class MedicationRepository {
         if(user != null){
             medicationsCollection
                     .whereEqualTo("patientId", user.getUid())
+                    .whereEqualTo("status", MedicationTypeConstants.ONGOING)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         List<MedicationDto> medications = new ArrayList<>();
