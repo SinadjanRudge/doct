@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
@@ -72,26 +73,26 @@ public class PatientMedicationOngoingFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        medicationRepository = new MedicationRepository();
-        ongoingMedications = new ArrayList<>();
+//        medicationRepository = new MedicationRepository();
+//        ongoingMedications = new ArrayList<>();
 
         // * Get all the patient's medications
-        try {
-            medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
-                @Override
-                public void onSuccess(List<MedicationDto> medications) {
-                    // * copied the fetched patient's ongoing medications here
-                    ongoingMedications.addAll(medications);
-                }
-
-                @Override
-                public void onError(String errorMessage) {
-
-                }
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "Failure in fetching patient's medication list.");
-        }
+//        try {
+//            medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
+//                @Override
+//                public void onSuccess(List<MedicationDto> medications) {
+//                    // * copied the fetched patient's ongoing medications here
+//                    ongoingMedications.addAll(medications);
+//                }
+//
+//                @Override
+//                public void onError(String errorMessage) {
+//
+//                }
+//            });
+//        } catch (Exception e) {
+//            Log.e(TAG, "Failure in fetching patient's medication list.");
+//        }
 
     }
 
@@ -116,7 +117,7 @@ public class PatientMedicationOngoingFragment extends Fragment {
     }
 
     private void loadOngoingFragments() {
-        medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
+        medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING, new MedicationRepository.MedicationFetchCallback() {
             @Override
             public void onSuccess(List<MedicationDto> medications) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

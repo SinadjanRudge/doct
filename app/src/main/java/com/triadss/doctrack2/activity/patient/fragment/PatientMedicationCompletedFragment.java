@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
@@ -78,7 +79,7 @@ public class PatientMedicationCompletedFragment extends Fragment {
     }
 
     private void loadOngoingFragments(){
-        medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
+        medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING, new MedicationRepository.MedicationFetchCallback() {
             @Override
             public void onSuccess(List<MedicationDto> medications) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
