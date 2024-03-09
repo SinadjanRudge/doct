@@ -61,15 +61,16 @@ public class MedicationRepository {
 
     }
 
-    public void getAllMedications(MedicationFetchCallback callback){
-        if(user != null){
+    public void getAllMedications(MedicationFetchCallback callback) {
+        // .orderBy("timestamp", Query.Direction.DESCENDING)
+        if (user != null) {
             medicationsCollection
                     .whereEqualTo("patientId", user.getUid())
-//                    .whereEqualTo("status", MedicationTypeConstants.ONGOING)
+                    // .whereEqualTo("status", MedicationTypeConstants.ONGOING)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         List<MedicationDto> medications = new ArrayList<>();
-                        for(QueryDocumentSnapshot document: queryDocumentSnapshots){
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             MedicationDto medication = document.toObject(MedicationDto.class);
                             medications.add(medication);
                         }
@@ -91,8 +92,9 @@ public class MedicationRepository {
         void onError(String errorMessage);
     }
 
-    public interface MedicationFetchCallback{
+    public interface MedicationFetchCallback {
         void onSuccess(List<MedicationDto> medications);
+
         void onError(String errorMessage);
     }
 }

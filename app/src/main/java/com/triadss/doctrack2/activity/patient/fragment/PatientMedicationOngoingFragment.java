@@ -16,12 +16,13 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PatientMedicationOngoingFragment#newInstance} factory method to
+ * Use the {@link PatientMedicationOngoingFragment#newInstance} factory method
+ * to
  * create an instance of this fragment.
  */
 public class PatientMedicationOngoingFragment extends Fragment {
@@ -34,10 +35,14 @@ public class PatientMedicationOngoingFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ArrayList<MedicationDto> Time = new ArrayList<MedicationDto>();
+    MedicationRepository medicationRepository = new MedicationRepository();
+    RecyclerView recyclerView;
 
     private static final String TAG = "PatientMedicationOngoingFragment";
     private MedicationRepository medicationRepository;
     private List<MedicationDto> ongoingMedications;
+
     public PatientMedicationOngoingFragment() {
         // Required empty public constructor
     }
@@ -71,12 +76,12 @@ public class PatientMedicationOngoingFragment extends Fragment {
         medicationRepository = new MedicationRepository();
         ongoingMedications = new ArrayList<>();
 
-        //* Get all the patient's medications
+        // * Get all the patient's medications
         try {
             medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
                 @Override
                 public void onSuccess(List<MedicationDto> medications) {
-                    //* copied the fetched patient's ongoing medications here
+                    // * copied the fetched patient's ongoing medications here
                     ongoingMedications.addAll(medications);
                 }
 
@@ -85,28 +90,50 @@ public class PatientMedicationOngoingFragment extends Fragment {
 
                 }
             });
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, "Failure in fetching patient's medication list.");
         }
-
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_ongoing, container, false);
 
-//        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerViewOngoingMedications);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-//        recyclerView.setLayoutManager(layoutManager);
+        // RecyclerView recyclerView =
+        // rootView.findViewById(R.id.recyclerViewOngoingMedications);
+        // LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        // recyclerView.setLayoutManager(layoutManager);
 
         // Pass the context and the list of ongoing medications to the adapter
-//        OngoingMedicationAdapter adapter = new OngoingMedicationAdapter(requireContext(), ongoingMedications);
-//        recyclerView.setAdapter(adapter);
+        // OngoingMedicationAdapter adapter = new
+        // OngoingMedicationAdapter(requireContext(), ongoingMedications);
+        // recyclerView.setAdapter(adapter);
 
         // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_patient_medication_ongoing, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        loadOngoingFragments();
         return rootView;
+    }
+
+    private void loadOngoingFragments() {
+        medicationRepository.getAllMedications(new MedicationRepository.MedicationsFetchCallback() {
+            @Override
+            public void onSuccess(List<MedicationDto> medications) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(linearLayoutManager);
+                PatientMedicationOngoingAdapter adapter = new PatientMedicationOngoingAdapter(getContext(),
+                        (ArrayList<MedicationDto>) medications);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                System.out.println();
+            }
+        });
     }
 
 }

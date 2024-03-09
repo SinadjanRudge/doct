@@ -15,17 +15,20 @@
         android:theme="@style/Theme.DocTrack2"
         tools:targetApi="34">
         <activity
-            android:name=".activity.patient.fragment.AppointmentRequest"
+            android:name=".activity.patient.fragment.PatientAppointmentRequest"
 
             android:exported="false" />
         <activity
-            android:name=".activity.patient.fragment.AppointmentStatus"
+            android:name=".activity.patient.fragment.PatientAppointmentStatus"
             android:exported="false" />
 
         <activity
-            android:name=".activity.patient.fragment.AppointmentPending"
+            android:name=".activity.patient.fragment.PatientAppointmentPending"
             android:exported="false" />
 
+        <activity
+            android:name=".ListHealthprofPatientActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.admin.AdminHome"
             android:exported="false" />
@@ -51,7 +54,8 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
