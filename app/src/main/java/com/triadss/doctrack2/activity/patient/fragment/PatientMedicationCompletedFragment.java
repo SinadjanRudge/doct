@@ -78,7 +78,7 @@ public class PatientMedicationCompletedFragment extends Fragment {
     }
 
     private void loadOngoingFragments(){
-        medicationRepository.getAllMedications(new MedicationRepository.MedicationsFetchCallback() {
+        medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
             @Override
             public void onSuccess(List<MedicationDto> medications) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

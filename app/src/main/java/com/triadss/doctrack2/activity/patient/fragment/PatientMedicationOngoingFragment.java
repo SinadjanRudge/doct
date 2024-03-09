@@ -36,7 +36,6 @@ public class PatientMedicationOngoingFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     ArrayList<MedicationDto> Time = new ArrayList<MedicationDto>();
-    MedicationRepository medicationRepository = new MedicationRepository();
     RecyclerView recyclerView;
 
     private static final String TAG = "PatientMedicationOngoingFragment";
@@ -99,8 +98,6 @@ public class PatientMedicationOngoingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_patient_medication_ongoing, container, false);
-
         // RecyclerView recyclerView =
         // rootView.findViewById(R.id.recyclerViewOngoingMedications);
         // LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -119,7 +116,7 @@ public class PatientMedicationOngoingFragment extends Fragment {
     }
 
     private void loadOngoingFragments() {
-        medicationRepository.getAllMedications(new MedicationRepository.MedicationsFetchCallback() {
+        medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
             @Override
             public void onSuccess(List<MedicationDto> medications) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

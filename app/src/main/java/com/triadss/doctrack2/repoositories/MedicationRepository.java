@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
@@ -66,7 +67,8 @@ public class MedicationRepository {
         if (user != null) {
             medicationsCollection
                     .whereEqualTo("patientId", user.getUid())
-                    // .whereEqualTo("status", MedicationTypeConstants.ONGOING)
+                    .whereEqualTo("status", MedicationTypeConstants.ONGOING)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         List<MedicationDto> medications = new ArrayList<>();
