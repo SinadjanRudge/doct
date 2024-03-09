@@ -23,6 +23,10 @@ public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragment
         void onItemClick(AddPatientDto patient);
     }
 
+    public PatientFragmentAdapter(List<AddPatientDto> patientList){
+        this.addPatientDtoList = patientList;
+    }
+
     public PatientFragmentAdapter(List<AddPatientDto> patientList, OnItemClickListener listener) {
         this.addPatientDtoList = patientList;
         this.onItemClickListener = listener;
