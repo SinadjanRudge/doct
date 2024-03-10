@@ -14,7 +14,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
-import com.triadss.doctrack2.activity.patient.fragment.AppointmentRequest;
 import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientMedicationFragment;
 import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
