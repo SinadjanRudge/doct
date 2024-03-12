@@ -63,11 +63,10 @@ public class MedicationRepository {
     }
 
     public void getAllMedications(String type, MedicationFetchCallback callback) {
-        // .orderBy("timestamp", Query.Direction.DESCENDING)
         if (user != null) {
             medicationsCollection
                     .whereEqualTo("patientId", user.getUid())
-                    // .whereEqualTo("status", type)
+                     .whereEqualTo("status", type)
                     .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
