@@ -116,7 +116,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_add_patient, container, false);
         Toolbar toolbar = rootView.findViewById(R.id.add_patient_toolbar);
-        toolbar.setTitle("Add Patient Update");
+        toolbar.setTitle("Add Patient");
 
         // Set the Toolbar as the action bar for the activity
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);

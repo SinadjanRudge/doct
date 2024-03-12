@@ -12,6 +12,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
+import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.config.model.MedicationModel;
 import com.triadss.doctrack2.dto.MedicationDto;
 
@@ -37,6 +38,7 @@ public class MedicationRepository {
             medicationMap.put("medicine", medications.getMedicine());
             medicationMap.put("note", medications.getNote());
             medicationMap.put("timestamp", medications.getTimestamp());
+            medicationMap.put("status", medications.getStatus());
 
             medicationsCollection
                     .add(medicationMap)
@@ -60,23 +62,73 @@ public class MedicationRepository {
 
     }
 
-    public void getAllMedications(MedicationsFetchCallback callback) {
-        medicationsCollection.orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<MedicationDto> medications = new ArrayList<MedicationDto>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            MedicationDto appointment = document.toObject(MedicationDto.class);
-
-                            medications.add(appointment);
+    public void getAllMedications(String type, MedicationFetchCallback callback) {
+        if (user != null) {
+            medicationsCollection
+                    .whereEqualTo("patientId", user.getUid())
+                     .whereEqualTo("status", type)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        List<MedicationDto> medications = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            MedicationDto medication = document.toObject(MedicationDto.class);
+                            medications.add(medication);
+                            medication.setMediId(document.getId());
                         }
                         callback.onSuccess(medications);
-                    } else {
-                        Log.e(TAG, "Error getting appointments", task.getException());
-                        callback.onError(task.getException().getMessage());
-                    }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching medicines", e);
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
+
+    public void updateMedicationStatus(String medicationId, String newStatus, MedicationUpdateCallback callback) {
+        if(user == null) return;
+
+        DocumentReference medicationDocRef = medicationsCollection.document(medicationId);
+
+        medicationDocRef
+                .update("status", newStatus)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Medication status updated successfully");
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating medication status", e);
+                    callback.onError(e.getMessage());
                 });
+    }
+
+    public void updateMedication(String medicationId, MedicationDto updatedMedication, MedicationUpdateCallback callback) {
+        if (user != null) {
+            DocumentReference medicationDocRef = medicationsCollection.document(medicationId);
+
+            Map<String, Object> updatedFields = new HashMap<>();
+            updatedFields.put("medicine", updatedMedication.getMedicine());
+            updatedFields.put("note", updatedMedication.getNote());
+            updatedFields.put("timestamp", updatedMedication.getTimestamp());
+            updatedFields.put("status", updatedMedication.getStatus());
+            updatedFields.put("patientId", updatedMedication.getPatientId());
+            medicationDocRef
+                    .set(updatedFields, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "Medication updated successfully");
+                        callback.onSuccess();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error updating medication", e);
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
     }
 
     public interface MedicationsAddCallback {
@@ -85,8 +137,13 @@ public class MedicationRepository {
         void onError(String errorMessage);
     }
 
-    public interface MedicationsFetchCallback {
-        void onSuccess(List<MedicationDto> appointments);
+    public interface MedicationFetchCallback {
+        void onSuccess(List<MedicationDto> medications);
+
+        void onError(String errorMessage);
+    }
+    public interface MedicationUpdateCallback {
+        void onSuccess();
 
         void onError(String errorMessage);
     }
