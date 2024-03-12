@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ggreen">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Generate Admin Account"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Generated Username -->
+    <TextView
+        android:id="@+id/textViewGeneratedUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username: "
+        android:textSize="18sp"
+        android:layout_below="@id/textViewTitle"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <!-- Generated Password -->
+    <TextView
+        android:id="@+id/textViewGeneratedPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password: "
+        android:textSize="18sp"
+        android:layout_below="@id/textViewGeneratedUsername"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"/>
+
+    <!-- Generate Account Button -->
+    <Button
+        android:id="@+id/buttonGenerateAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Generate Account"
+        android:layout_below="@id/textViewGeneratedPassword"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="#2A872E"
+        android:layout_marginTop="16dp"/>
+
+</RelativeLayout>

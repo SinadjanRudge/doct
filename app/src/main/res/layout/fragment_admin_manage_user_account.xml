@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ggreen">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manage Admin Accounts"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+    <!-- List of Admin Accounts -->
+    <ListView
+        android:id="@+id/listViewAdminAccounts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewTitle"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Add New Admin Button -->
+    <Button
+        android:id="@+id/buttonAddAdmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New Admin"
+        android:layout_below="@id/listViewAdminAccounts"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="#2A872E"
+        android:layout_marginTop="16dp"/>
+
+</RelativeLayout>
