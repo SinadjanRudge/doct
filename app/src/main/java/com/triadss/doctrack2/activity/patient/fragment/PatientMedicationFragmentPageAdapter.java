@@ -20,14 +20,11 @@ public class PatientMedicationFragmentPageAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position){
             case 0:
-                Log.e(TAG, "pos: " + position);
                 return new PatientMedicationCompletedFragment();
             case 1:
-                Log.e(TAG, "pos: " + position);
                 return new PatientMedicationOngoingFragment();
 
             default:
-                Log.e(TAG, "pos: " + position);
                 return new PatientMedicationAddFragment();
         }
     }

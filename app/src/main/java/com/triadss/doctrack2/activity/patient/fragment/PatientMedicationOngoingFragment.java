@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * to
  * create an instance of this fragment.
  */
-public class PatientMedicationOngoingFragment extends Fragment {
+public class PatientMedicationOngoingFragment extends Fragment implements IListView {
     private static final String TAG = "PatientMedicationOngoingFragment";
 
     // TODO: Rename parameter arguments, choose names that match
@@ -80,11 +81,11 @@ public class PatientMedicationOngoingFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_ongoing, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        loadOngoingFragments();
+        ReloadList();
         return rootView;
     }
 
-    private void loadOngoingFragments() {
+    public void ReloadList() {
         medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING,
                 new MedicationRepository.MedicationFetchCallback() {
                     @Override

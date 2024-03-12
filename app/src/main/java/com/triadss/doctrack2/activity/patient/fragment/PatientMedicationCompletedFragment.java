@@ -6,14 +6,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
@@ -26,7 +25,7 @@ import java.util.List;
  * to
  * create an instance of this fragment.
  */
-public class PatientMedicationCompletedFragment extends Fragment{
+public class PatientMedicationCompletedFragment extends Fragment implements IListView {
     private static final String TAG = "PatientMedicationCompletedFragment";
 
     // TODO: Rename parameter arguments, choose names that match
@@ -78,11 +77,11 @@ public class PatientMedicationCompletedFragment extends Fragment{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_completed, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        loadOngoingFragments();
+        ReloadList();
         return rootView;
     }
 
-    private void loadOngoingFragments() {
+    public void ReloadList() {
         medicationRepository.getAllMedications(MedicationTypeConstants.COMPLETED,
                 new MedicationRepository.MedicationFetchCallback() {
                     @Override

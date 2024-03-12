@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.contracts.IListView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -101,6 +102,13 @@ public class PatientMedicationFragment extends Fragment {
             {
                 super.onPageSelected(position);
                 tabLayout.selectTab(tabLayout.getTabAt(position));
+
+                Fragment fragment = getParentFragmentManager().findFragmentByTag("f" + position);
+                boolean fragmentIsListView = fragment instanceof IListView;
+                boolean fragmentIsNotNull = fragment != null;
+                if (fragmentIsNotNull && fragmentIsListView) {
+                    ((IListView) fragment).ReloadList();
+                }
             }
         });
         return rootView;
