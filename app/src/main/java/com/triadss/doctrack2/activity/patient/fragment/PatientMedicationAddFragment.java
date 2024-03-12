@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -218,6 +219,9 @@ public class PatientMedicationAddFragment extends Fragment {
                 @Override
                 public void onSuccess(String medicationId) {
                     Log.e(TAG, "Successfully added medication with the id of " + medicationId);
+
+                    ViewPager2 vp = getActivity().findViewById(R.id.viewPager); // Fetch ViewPager instance
+                    vp.setCurrentItem(1);
                 }
 
                 @Override
