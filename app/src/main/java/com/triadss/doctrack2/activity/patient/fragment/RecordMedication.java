@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.repoositories.MedicationRepository;
+
 import com.triadss.doctrack2.R;
 
 /**
@@ -25,6 +28,8 @@ public class RecordMedication extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    MedicationRepository medicationRepository = new MedicationRepository();
 
     public RecordMedication() {
         // Required empty public constructor
@@ -61,6 +66,26 @@ public class RecordMedication extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_record_medication, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_record_medication, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        loadMedicationCards(recyclerView);
+        return rootView;
+    }
+
+    private void loadMedicationCards(RecyclerView recyclerView){
+        medicationRepository.getAllMedications(new MedicationRepository.MedicationsFetchCallback() {
+            @Override
+            public void onSuccess(List<MedicationDto> medications) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(linearLayoutManager);
+                PatientMedicationOngoingAdapter adapter = new PatientMedicationOngoingAdapter(getContext(), (ArrayList<MedicationDto>)medications);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                System.out.println();
+            }
+        });
     }
 }
