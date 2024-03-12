@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class PatientMedicationCompletedFragment extends Fragment {
+    private static final String TAG = "PatientMedicationCompletedFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -76,6 +78,7 @@ public class PatientMedicationCompletedFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_completed, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         loadOngoingFragments();
+        Log.e(TAG, TAG + " created");
         return rootView;
     }
 

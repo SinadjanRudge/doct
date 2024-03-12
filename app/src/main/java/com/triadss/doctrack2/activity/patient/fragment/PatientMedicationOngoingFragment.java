@@ -27,6 +27,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class PatientMedicationOngoingFragment extends Fragment {
+    private static final String TAG = "PatientMedicationOngoingFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,8 +39,6 @@ public class PatientMedicationOngoingFragment extends Fragment {
     private String mParam2;
     ArrayList<MedicationDto> Time = new ArrayList<MedicationDto>();
     RecyclerView recyclerView;
-
-    private static final String TAG = "PatientMedicationOngoingFragment";
     private MedicationRepository medicationRepository = new MedicationRepository();;
     private List<MedicationDto> ongoingMedications;
 
