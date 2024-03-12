@@ -39,6 +39,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.viewpager2.widget.ViewPager2;
+import com.google.android.material.tabs.TabLayout;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddPatientFragment#newInstance} factory method to
@@ -117,6 +120,44 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         View rootView = inflater.inflate(R.layout.fragment_add_patient, container, false);
         Toolbar toolbar = rootView.findViewById(R.id.add_patient_toolbar);
         toolbar.setTitle("Add Patient Update");
+
+        TabLayout tabLayout = rootView.findViewById(R.id.tabLayout);
+        Viewpager2 viewPager = rootView.findViewById(R.id.viewPager);
+
+        AddPatientFragmentPageAdapter pageAdapter = new RecordFragmentPageAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
+
+        viewPager.setAdapter(pageAdapter);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                // Tab selected logic here
+                if(tab != null)
+                {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // Tab unselected logic here
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // Tab reselected logic here
+            }
+        });
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public  void onPageSelected(int position)
+            {
+                super.onPageSelected(position);
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+        });
+
 
         // Set the Toolbar as the action bar for the activity
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);

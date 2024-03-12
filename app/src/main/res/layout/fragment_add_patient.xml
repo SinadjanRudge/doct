@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/add_patient_toolbar"
         android:layout_width="match_parent"
@@ -17,144 +16,37 @@
         android:backgroundTint="@color/green"
         app:title="Add Patient" />
 
-    <!-- patient list here   -->
-    <TextView
-        android:id="@+id/add_patient_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_patient_toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20sp"
-        android:text="@string/kindly_provide_your_patient_personal_details"
-        android:textSize="20sp" />
-    <!-- EMAIL   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailInputLayout"
+     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_patient_header"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- EMAIL   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/emailInputLayout"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/full_name"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- ADDRESS   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addressInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/nameInputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:hint="@string/address"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- PHONE   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/phoneInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/addressInputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:hint="@string/phone_no"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- AGE   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ageInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/phoneInputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/age"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:hint="@string/age"
-            android:inputType="number" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- COURSE   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/courseInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/ageInputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/course"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:hint="@string/course"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- ID Number   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/idNumberInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/courseInputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/idNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20sp"
-            android:hint="@string/id_number"
-            android:inputType="number" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tabLayout">
 
-    <Button
-        android:id="@+id/add_patient_save"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_below="@+id/idNumberInputLayout"
-        android:layout_alignParentBottom="true"
-        android:layout_marginHorizontal="34dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="83dp"
-        android:gravity="center"
-        android:backgroundTint="@color/green"
-        android:text="@string/add_patient" />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Personal Info" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Medical History" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/viewPager" />
+
+    </LinearLayout>
 
 </RelativeLayout>
