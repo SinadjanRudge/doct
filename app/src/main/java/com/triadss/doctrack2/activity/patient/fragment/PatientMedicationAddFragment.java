@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
@@ -209,14 +211,17 @@ public class PatientMedicationAddFragment extends Fragment {
 
             Timestamp dateTimeOfAppointment = selectedDateTime.ToTimestamp();
 
-            final String status = AppointmentTypeConstants.PENDING;
+            final String status = MedicationTypeConstants.ONGOING;
 
             MedicationDto medication = new MedicationDto("",
-                    "", medicine, note, dateTimeOfAppointment);
+                    "", medicine, note, dateTimeOfAppointment, status);
             medicationRepository.addMedication(medication, new MedicationRepository.MedicationsAddCallback() {
                 @Override
                 public void onSuccess(String medicationId) {
                     Log.e(TAG, "Successfully added medication with the id of " + medicationId);
+
+                    ViewPager2 vp = getActivity().findViewById(R.id.viewPager); // Fetch ViewPager instance
+                    vp.setCurrentItem(1);
                 }
 
                 @Override
