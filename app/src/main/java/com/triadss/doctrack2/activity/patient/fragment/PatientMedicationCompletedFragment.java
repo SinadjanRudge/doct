@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.MedicationDto;
@@ -25,7 +26,7 @@ import java.util.List;
  * to
  * create an instance of this fragment.
  */
-public class PatientMedicationCompletedFragment extends Fragment {
+public class PatientMedicationCompletedFragment extends Fragment{
     private static final String TAG = "PatientMedicationCompletedFragment";
 
     // TODO: Rename parameter arguments, choose names that match
@@ -78,12 +79,11 @@ public class PatientMedicationCompletedFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_completed, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         loadOngoingFragments();
-        Log.e(TAG, TAG + " created");
         return rootView;
     }
 
     private void loadOngoingFragments() {
-        medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING,
+        medicationRepository.getAllMedications(MedicationTypeConstants.COMPLETED,
                 new MedicationRepository.MedicationFetchCallback() {
                     @Override
                     public void onSuccess(List<MedicationDto> medications) {

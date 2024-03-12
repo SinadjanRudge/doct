@@ -21,6 +21,7 @@ import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class PatientMedicationOngoingAdapter
@@ -54,6 +55,19 @@ public class PatientMedicationOngoingAdapter
         return medications.size();
     }
 
+    public void removeItem(String mediId) {
+        Iterator<MedicationDto> iterator = medications.iterator();
+        while (iterator.hasNext()) {
+            MedicationDto medication = iterator.next();
+            if (mediId.equals(medication.getMediId())) {
+                iterator.remove();
+                notifyDataSetChanged();
+                break;
+            }
+        }
+    }
+
+
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
         private MedicationRepository medicationRepository = new MedicationRepository();
@@ -69,7 +83,10 @@ public class PatientMedicationOngoingAdapter
                         @Override
                         public void onSuccess() {
                             // Update successful
+                            // Remove the item from the list
+                            removeItem(mediId);
                             Log.d(TAG, "Medication status updated successfully");
+
                         }
 
                         @Override
