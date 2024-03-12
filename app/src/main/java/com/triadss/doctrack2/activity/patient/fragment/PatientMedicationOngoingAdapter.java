@@ -15,8 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.repoositories.MedicationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,13 +56,36 @@ public class PatientMedicationOngoingAdapter
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private MedicationRepository medicationRepository = new MedicationRepository();
         private TextView medicine, note, date, time;
-        private Button update;
+        private Button update, complete;
         private String mediId;
+        private void setupComplete(){
+            complete.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    medicationRepository.updateMedicationStatus(mediId, MedicationTypeConstants.COMPLETED, new MedicationRepository.MedicationUpdateCallback() {
+                        @Override
+                        public void onSuccess() {
+                            // Update successful
+                            Log.d(TAG, "Medication status updated successfully");
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            // Handle error
+                            Log.e(TAG, "Error updating medication status: " + errorMessage);
+                        }
+                    });
+                    Toast.makeText(itemView.getContext(), medicine + " has been completed.", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
 
         public ViewHolder(View view) {
             super(view);
-            Button complete;
 
             medicine = (TextView) view.findViewById(R.id.medicationMedicine);
             note = (TextView) view.findViewById(R.id.medicationNote);
@@ -68,16 +93,7 @@ public class PatientMedicationOngoingAdapter
             time = (TextView) view.findViewById(R.id.medicationTime);
             complete = (Button) itemView.findViewById(R.id.medicationComplete);
             update = (Button) itemView.findViewById(R.id.medicationUpdate);
-            complete.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-
-
-                    Toast.makeText(itemView.getContext(), medicine.getId() + "", Toast.LENGTH_SHORT).show();
-
-                }
-            });
+            setupComplete();
         }
 
         public void update(MedicationDto medicationDto) {

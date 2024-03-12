@@ -80,23 +80,21 @@ public class PatientMedicationCompletedFragment extends Fragment {
     }
 
     private void loadOngoingFragments() {
-        // medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING, new
-        // MedicationRepository.MedicationFetchCallback() {
-        // @Override
-        // public void onSuccess(List<MedicationDto> medications) {
-        // LinearLayoutManager linearLayoutManager = new
-        // LinearLayoutManager(getContext());
-        // recyclerView.setLayoutManager(linearLayoutManager);
-        // PatientMedicationCompletedAdapter adapter = new
-        // PatientMedicationCompletedAdapter(getContext(),
-        // (ArrayList<MedicationDto>)medications);
-        // recyclerView.setAdapter(adapter);
-        // }
+        medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING,
+                new MedicationRepository.MedicationFetchCallback() {
+                    @Override
+                    public void onSuccess(List<MedicationDto> medications) {
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        PatientMedicationCompletedAdapter adapter = new PatientMedicationCompletedAdapter(getContext(),
+                                (ArrayList<MedicationDto>) medications);
+                        recyclerView.setAdapter(adapter);
+                    }
 
-        // @Override
-        // public void onError(String errorMessage) {
-        // System.out.println();
-        // }
-        // });
+                    @Override
+                    public void onError(String errorMessage) {
+                        System.out.println();
+                    }
+                });
     }
 }
