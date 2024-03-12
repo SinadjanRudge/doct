@@ -40,7 +40,7 @@ public class PatientMedicationOngoingFragment extends Fragment {
     RecyclerView recyclerView;
 
     private static final String TAG = "PatientMedicationOngoingFragment";
-    private MedicationRepository medicationRepository;
+    private MedicationRepository medicationRepository = new MedicationRepository();;
     private List<MedicationDto> ongoingMedications;
 
     public PatientMedicationOngoingFragment() {
@@ -73,26 +73,27 @@ public class PatientMedicationOngoingFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-//        medicationRepository = new MedicationRepository();
-//        ongoingMedications = new ArrayList<>();
+        // medicationRepository = new MedicationRepository();
+        // ongoingMedications = new ArrayList<>();
 
         // * Get all the patient's medications
-//        try {
-//            medicationRepository.getAllMedications(new MedicationRepository.MedicationFetchCallback() {
-//                @Override
-//                public void onSuccess(List<MedicationDto> medications) {
-//                    // * copied the fetched patient's ongoing medications here
-//                    ongoingMedications.addAll(medications);
-//                }
-//
-//                @Override
-//                public void onError(String errorMessage) {
-//
-//                }
-//            });
-//        } catch (Exception e) {
-//            Log.e(TAG, "Failure in fetching patient's medication list.");
-//        }
+        // try {
+        // medicationRepository.getAllMedications(new
+        // MedicationRepository.MedicationFetchCallback() {
+        // @Override
+        // public void onSuccess(List<MedicationDto> medications) {
+        // // * copied the fetched patient's ongoing medications here
+        // ongoingMedications.addAll(medications);
+        // }
+        //
+        // @Override
+        // public void onError(String errorMessage) {
+        //
+        // }
+        // });
+        // } catch (Exception e) {
+        // Log.e(TAG, "Failure in fetching patient's medication list.");
+        // }
 
     }
 
@@ -112,26 +113,28 @@ public class PatientMedicationOngoingFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_ongoing, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+
         loadOngoingFragments();
         return rootView;
     }
 
     private void loadOngoingFragments() {
-        medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING, new MedicationRepository.MedicationFetchCallback() {
-            @Override
-            public void onSuccess(List<MedicationDto> medications) {
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-                recyclerView.setLayoutManager(linearLayoutManager);
-                PatientMedicationOngoingAdapter adapter = new PatientMedicationOngoingAdapter(getContext(),
-                        (ArrayList<MedicationDto>) medications);
-                recyclerView.setAdapter(adapter);
-            }
+        medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING,
+                new MedicationRepository.MedicationFetchCallback() {
+                    @Override
+                    public void onSuccess(List<MedicationDto> medications) {
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        PatientMedicationOngoingAdapter adapter = new PatientMedicationOngoingAdapter(getContext(),
+                                (ArrayList<MedicationDto>) medications);
+                        recyclerView.setAdapter(adapter);
+                    }
 
-            @Override
-            public void onError(String errorMessage) {
-                System.out.println();
-            }
-        });
+                    @Override
+                    public void onError(String errorMessage) {
+                        System.out.println();
+                    }
+                });
     }
 
 }
