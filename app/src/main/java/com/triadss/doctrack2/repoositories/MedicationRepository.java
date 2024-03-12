@@ -62,7 +62,7 @@ public class MedicationRepository {
 
     }
 
-    public void getAllMedications(String type, MedicationFetchCallback callback) {
+    public void getAllMedications(String type, MedicationFetchCallback callback) {  
         if (user != null) {
             medicationsCollection
                     .whereEqualTo("patientId", user.getUid())
