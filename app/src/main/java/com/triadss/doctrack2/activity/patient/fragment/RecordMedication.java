@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.repoositories.MedicationRepository;
+
 import com.triadss.doctrack2.R;
 
 /**
