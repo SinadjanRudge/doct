@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
@@ -51,11 +53,12 @@ public class PatientMedicationOngoingAdapter
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView medicine, note, date, time;
+        private TextView medicine, note, date, time;
+        private Button update;
 
         public ViewHolder(View view) {
             super(view);
-            Button complete, update;
+            Button complete;
 
             medicine = (TextView) view.findViewById(R.id.medicationMedicine);
             note = (TextView) view.findViewById(R.id.medicationNote);
@@ -69,22 +72,36 @@ public class PatientMedicationOngoingAdapter
                     Toast.makeText(itemView.getContext(), medicine.getText(), Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+
+        public void update(MedicationDto medicationDto)
+        {
+            medicine.setText(medicationDto.getMedicine());
+            note.setText(medicationDto.getNote());
+
+            DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(medicationDto.getTimestamp());
+            date.setText(dateTime.getDate().ToString());
+            time.setText(dateTime.getTime().ToString());
+
             update.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(itemView.getContext(), medicine.getText(), Toast.LENGTH_SHORT).show();
+
+                    Dialog dialog = new Dialog(context);
+                    dialog.setContentView(R.layout.dialog_update_medication);
+
+                    TextInputEditText medication = dialog.findViewById(R.id.medicineValue);
+                    TextInputEditText note = dialog.findViewById(R.id.noteValue);
+
+                    Button updateBtn = dialog.findViewById(R.id.updateBtn);
+
+                    medication.setText(medicationDto.getMedicine());
+                    note.setText(medicationDto.getNote());
+
+                    dialog.show();
                 }
             });
-        }
-
-        public void update(MedicationDto medication)
-        {
-            medicine.setText(medication.getMedicine());
-            note.setText(medication.getNote());
-
-            DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(medication.getTimestamp());
-            date.setText(dateTime.getDate().ToString());
-            time.setText(dateTime.getTime().ToString());
         }
     }
 }
