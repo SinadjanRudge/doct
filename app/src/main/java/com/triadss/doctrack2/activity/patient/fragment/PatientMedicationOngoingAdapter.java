@@ -2,6 +2,7 @@ package com.triadss.doctrack2.activity.patient.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +19,17 @@ import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PatientMedicationOngoingAdapter
-    extends RecyclerView.Adapter<PatientMedicationOngoingAdapter.ViewHolder>
-{
+        extends RecyclerView.Adapter<PatientMedicationOngoingAdapter.ViewHolder> {
+    private final String TAG  = "PatientMedicationOngoingAdapter";
     ArrayList<MedicationDto> medications;
     Context context;
 
-    public PatientMedicationOngoingAdapter(Context context, ArrayList<MedicationDto> medications)
-    {
+    public PatientMedicationOngoingAdapter(Context context, ArrayList<MedicationDto> medications) {
         this.context = context;
-        this.medications= medications;
+        this.medications = medications;
     }
 
     @NonNull
@@ -55,6 +56,7 @@ public class PatientMedicationOngoingAdapter
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView medicine, note, date, time;
         private Button update;
+        private String mediId;
 
         public ViewHolder(View view) {
             super(view);
@@ -64,24 +66,28 @@ public class PatientMedicationOngoingAdapter
             note = (TextView) view.findViewById(R.id.medicationNote);
             date = (TextView) view.findViewById(R.id.medicationDate);
             time = (TextView) view.findViewById(R.id.medicationTime);
-            complete = (Button)itemView.findViewById(R.id.medicationComplete);
-            update = (Button)itemView.findViewById(R.id.medicationUpdate);
+            complete = (Button) itemView.findViewById(R.id.medicationComplete);
+            update = (Button) itemView.findViewById(R.id.medicationUpdate);
             complete.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), medicine.getText(), Toast.LENGTH_SHORT).show();
+
+
+                    Toast.makeText(itemView.getContext(), medicine.getId() + "", Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
 
-        public void update(MedicationDto medicationDto)
-        {
+        public void update(MedicationDto medicationDto) {
             medicine.setText(medicationDto.getMedicine());
             note.setText(medicationDto.getNote());
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(medicationDto.getTimestamp());
             date.setText(dateTime.getDate().ToString());
             time.setText(dateTime.getTime().ToString());
+            mediId = medicationDto.getMediId();
 
             update.setOnClickListener(new View.OnClickListener() {
                 @Override

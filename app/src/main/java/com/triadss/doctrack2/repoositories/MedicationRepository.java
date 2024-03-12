@@ -62,7 +62,7 @@ public class MedicationRepository {
 
     }
 
-    public void getAllMedications(String type, MedicationFetchCallback callback) {  
+    public void getAllMedications(String type, MedicationFetchCallback callback) {
         if (user != null) {
             medicationsCollection
                     .whereEqualTo("patientId", user.getUid())
@@ -74,6 +74,7 @@ public class MedicationRepository {
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             MedicationDto medication = document.toObject(MedicationDto.class);
                             medications.add(medication);
+                            medication.setMediId(document.getId());
                         }
                         callback.onSuccess(medications);
                     })
@@ -87,6 +88,22 @@ public class MedicationRepository {
         }
     }
 
+    public void updateMedicationStatus(String medicationId, String newStatus, MedicationUpdateCallback callback) {
+        if(user == null) return;
+
+        DocumentReference medicationDocRef = medicationsCollection.document(medicationId);
+
+        medicationDocRef
+                .update("status", newStatus)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Medication status updated successfully");
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating medication status", e);
+                    callback.onError(e.getMessage());
+                });
+    }
     public interface MedicationsAddCallback {
         void onSuccess(String medicationId);
 
@@ -95,6 +112,11 @@ public class MedicationRepository {
 
     public interface MedicationFetchCallback {
         void onSuccess(List<MedicationDto> medications);
+
+        void onError(String errorMessage);
+    }
+    public interface MedicationUpdateCallback {
+        void onSuccess();
 
         void onError(String errorMessage);
     }

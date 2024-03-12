@@ -72,44 +72,11 @@ public class PatientMedicationOngoingFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        // medicationRepository = new MedicationRepository();
-        // ongoingMedications = new ArrayList<>();
-
-        // * Get all the patient's medications
-        // try {
-        // medicationRepository.getAllMedications(new
-        // MedicationRepository.MedicationFetchCallback() {
-        // @Override
-        // public void onSuccess(List<MedicationDto> medications) {
-        // // * copied the fetched patient's ongoing medications here
-        // ongoingMedications.addAll(medications);
-        // }
-        //
-        // @Override
-        // public void onError(String errorMessage) {
-        //
-        // }
-        // });
-        // } catch (Exception e) {
-        // Log.e(TAG, "Failure in fetching patient's medication list.");
-        // }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        // RecyclerView recyclerView =
-        // rootView.findViewById(R.id.recyclerViewOngoingMedications);
-        // LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        // recyclerView.setLayoutManager(layoutManager);
-
-        // Pass the context and the list of ongoing medications to the adapter
-        // OngoingMedicationAdapter adapter = new
-        // OngoingMedicationAdapter(requireContext(), ongoingMedications);
-        // recyclerView.setAdapter(adapter);
-
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_ongoing, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
@@ -136,5 +103,4 @@ public class PatientMedicationOngoingFragment extends Fragment {
                     }
                 });
     }
-
 }
