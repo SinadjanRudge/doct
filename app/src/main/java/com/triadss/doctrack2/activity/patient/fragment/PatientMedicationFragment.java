@@ -5,12 +5,14 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.contracts.IListView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +20,7 @@ import com.triadss.doctrack2.R;
  * create an instance of this fragment.
  */
 public class PatientMedicationFragment extends Fragment {
-
+    private static final String TAG = "PatientMedicationFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -78,6 +80,7 @@ public class PatientMedicationFragment extends Fragment {
                 // Tab selected logic here
                 if(tab != null)
                 {
+                    Log.e(TAG, tab.getPosition() + " position...");
                     viewPager.setCurrentItem(tab.getPosition());
                 }
             }
@@ -99,6 +102,13 @@ public class PatientMedicationFragment extends Fragment {
             {
                 super.onPageSelected(position);
                 tabLayout.selectTab(tabLayout.getTabAt(position));
+
+                Fragment fragment = getParentFragmentManager().findFragmentByTag("f" + position);
+                boolean fragmentIsListView = fragment instanceof IListView;
+                boolean fragmentIsNotNull = fragment != null;
+                if (fragmentIsNotNull && fragmentIsListView) {
+                    ((IListView) fragment).ReloadList();
+                }
             }
         });
         return rootView;
