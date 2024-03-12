@@ -104,6 +104,33 @@ public class MedicationRepository {
                     callback.onError(e.getMessage());
                 });
     }
+
+    public void updateMedication(String medicationId, MedicationDto updatedMedication, MedicationUpdateCallback callback) {
+        if (user != null) {
+            DocumentReference medicationDocRef = medicationsCollection.document(medicationId);
+
+            Map<String, Object> updatedFields = new HashMap<>();
+            updatedFields.put("medicine", updatedMedication.getMedicine());
+            updatedFields.put("note", updatedMedication.getNote());
+            updatedFields.put("timestamp", updatedMedication.getTimestamp());
+            updatedFields.put("status", updatedMedication.getStatus());
+            updatedFields.put("patientId", updatedMedication.getPatientId());
+            medicationDocRef
+                    .set(updatedFields, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "Medication updated successfully");
+                        callback.onSuccess();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error updating medication", e);
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
+
     public interface MedicationsAddCallback {
         void onSuccess(String medicationId);
 
