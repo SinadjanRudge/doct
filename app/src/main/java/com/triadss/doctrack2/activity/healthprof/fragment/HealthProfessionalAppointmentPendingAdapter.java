@@ -1,5 +1,8 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
+import com.triadss.doctrack2.dto.TimeDto;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Adapter<HealthProfessionalAppointmentPendingAdapter.ViewHolder> {
