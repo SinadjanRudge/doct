@@ -61,6 +61,8 @@ public class AdminManageUserAccount extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_manage_user_account, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_admin_manage_user_account, container, false);
+
+        return rootView;
     }
 }
