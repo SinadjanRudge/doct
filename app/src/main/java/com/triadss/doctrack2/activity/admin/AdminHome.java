@@ -1,10 +1,28 @@
 package com.triadss.doctrack2.activity.admin;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.LoginActivity;
+import com.triadss.doctrack2.activity.core.DeviceFragment;
+import com.triadss.doctrack2.activity.healthprof.fragment.AppointmentFragment;
+import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentFragment;
+import com.triadss.doctrack2.activity.healthprof.fragment.PatientFragment;
+import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
+import com.triadss.doctrack2.activity.patient.fragment.PatientMedicationFragment;
+import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
+import com.triadss.doctrack2.databinding.ActivityAdminHomeBinding;
+import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
+import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
 public class AdminHome extends AppCompatActivity {
 
@@ -12,5 +30,37 @@ public class AdminHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
+        if (user == null) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        ActivityAdminHomeBinding binding = ActivityAdminHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.healthprof_menu) {
+                replaceFragment(new AdminManageUserAccount());
+            }
+            else if (item.getItemId() == R.id.temp_logout) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            return true;
+        });
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
     }
 }
