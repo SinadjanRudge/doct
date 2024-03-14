@@ -63,21 +63,23 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView purpose,date,time,identification,name;
-        private Button reschedule;
 
         public ViewHolder(View view) {
             super(view);
-            Button cancel;
+            Button reschedule, cancel;
             purpose = (TextView) view.findViewById(R.id.purposetext);
             date = (TextView) view.findViewById(R.id.appointment_date);
             time = (TextView) view.findViewById(R.id.appointment_time);
             identification = (TextView) view.findViewById(R.id.IDtext);
             name = (TextView) view.findViewById(R.id.nametext);
+
             cancel=(Button)itemView.findViewById(R.id.cancel_button);
             reschedule=(Button)itemView.findViewById(R.id.reschedule_button);
+
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
 
                 }
@@ -172,5 +174,6 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
     public interface AppointmentCallback {
         void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid);
+        void onCancel(String appointmentUid);
     }
 }

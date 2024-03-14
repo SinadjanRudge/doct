@@ -105,6 +105,23 @@ public class AppointmentRepository {
                 });
     }
 
+    public void deleteAppointment(String appointmentId, AppointmentAddCallback callback) {
+        if(user == null) return;
+
+        DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
+
+        appointmentRef
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Appointment delete successfully");
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error delete Appointment", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
     public interface AppointmentAddCallback {
         void onSuccess(String appointmentId);
 
