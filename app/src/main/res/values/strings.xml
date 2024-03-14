@@ -30,5 +30,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="update_patient_info">Update Patient\'s Information</string>
+    <string name="view_patient_info">View Patient\'s Information</string>
 
 </resources>
