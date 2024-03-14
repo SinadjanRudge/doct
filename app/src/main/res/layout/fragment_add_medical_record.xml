@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -23,85 +23,200 @@
         android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="10dp"
         android:background="@color/white" />
 
-
     <TextView
-        android:id="@+id/medicalRecordTextView"
-        android:layout_width="match_parent"
+        android:id="@+id/myTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add the patient medical records"
         android:textSize="18sp"
-        android:layout_marginBottom="26dp"/>
+        android:textColor="#000000"
+        android:layout_margin="1dp"/>
 
     <TextView
-        android:id="@+id/medicalRecord"
-        android:layout_width="match_parent"
+        android:id="@+id/myTextView1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Past Illness"
         android:textSize="18sp"
-        android:layout_marginBottom="16dp"/>
+        android:textColor="#000000"
+        android:layout_margin="10dp"/>
 
 
-    <Spinner
-        android:id="@+id/spinner"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="63dp" />
+        android:layout_height="99dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Add checkboxes here -->
+            <CheckBox
+                android:id="@+id/checkbox1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="tuberculosis" />
+
+            <CheckBox
+                android:id="@+id/checkbox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="hypertension" />
+
+
+            <CheckBox
+                android:id="@+id/checkbox3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="heart dieases" />
+
+            <CheckBox
+                android:id="@+id/checkbox4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="nervous breakdown" />
+
+            <CheckBox
+                android:id="@+id/checkbox5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="insomnia" />
+
+            <CheckBox
+                android:id="@+id/checkbox6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="other" />
+
+            <CheckBox
+                android:id="@+id/checkbox7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="none" />
+
+
+        </LinearLayout>
+    </ScrollView>
 
     <TextView
-        android:id="@+id/medicalRecordContentTextView"
-        android:layout_width="match_parent"
+        android:id="@+id/myTextView3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Prev Hospitalization/Operation"
-        android:textSize="16sp"
-        android:layout_marginBottom="20dp"/>
+        android:text="Prev hospitalization/Operation"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:layout_margin="10dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
+        android:id="@+id/emailInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter your text">
-
+        android:layout_marginHorizontal="20sp"
+        android:layout_marginTop="5sp">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textInputEditText"
+            android:id="@+id/email"
             android:layout_width="match_parent"
-            android:layout_height="121dp" />
-
+            android:layout_height="wrap_content"
+            android:hint="Enter Text"
+            android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
-
     <TextView
-        android:id="@+id/medicalRecord1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="OB-gyne history"
-        android:textSize="16sp"
-        android:layout_marginBottom="10dp"/>
-
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="match_parent"
-        android:layout_height="63dp" />
-
-    <TextView
-        android:id="@+id/medicalRecord2"
-        android:layout_width="match_parent"
+        android:id="@+id/myTextView4"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Family History"
-        android:textSize="16sp"
-        android:layout_marginBottom="10dp"/>
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:layout_margin="10dp"/>
 
-    <Spinner
-        android:id="@+id/spinner3"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="63dp" />
+        android:layout_height="99dp">
 
-    <Button
-        android:id="@+id/updateRecordButton"
-        android:layout_width="232dp"
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Add checkboxes here -->
+            <CheckBox
+                android:id="@+id/checkbox11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Diabetes" />
+
+            <CheckBox
+                android:id="@+id/checkbox22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="hypertension" />
+
+
+            <CheckBox
+                android:id="@+id/checkbox33"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mental health disorder" />
+
+            <CheckBox
+                android:id="@+id/checkbox44"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asthma" />
+
+            <CheckBox
+                android:id="@+id/checkbox55"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bleeding disorder" />
+
+            <CheckBox
+                android:id="@+id/checkbox66"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="others" />
+
+            <CheckBox
+                android:id="@+id/checkbox77"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="none" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/myTextView7"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:text="OB-gyne History"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:layout_margin="10dp"/>
 
-        android:text="CONTINUE" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/OB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20sp"
+        android:layout_marginTop="5sp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Text"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:text="Next" />
 
 </LinearLayout>
