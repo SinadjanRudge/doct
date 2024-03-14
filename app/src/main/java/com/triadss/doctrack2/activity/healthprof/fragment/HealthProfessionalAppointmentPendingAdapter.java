@@ -66,23 +66,11 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
         public ViewHolder(View view) {
             super(view);
-            Button cancel;
             purpose = (TextView) view.findViewById(R.id.purposetext);
             date = (TextView) view.findViewById(R.id.appointment_date);
             time = (TextView) view.findViewById(R.id.appointment_time);
             identification = (TextView) view.findViewById(R.id.IDtext);
             name = (TextView) view.findViewById(R.id.nametext);
-
-            cancel=(Button)itemView.findViewById(R.id.cancel_button);
-
-            cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-                }
-            });
-
-
         }
 
         public void update(AppointmentDto appointment)
@@ -101,6 +89,16 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                 public void onClick(View v) {
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
                     showUpdateDialog(appointment.getUid());
+                }
+            });
+
+            Button cancel = (Button)itemView.findViewById(R.id.cancel_button);
+
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
+                    appointmentCallbacks.onCancel(appointment.getUid());
                 }
             });
         }
