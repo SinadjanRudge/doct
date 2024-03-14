@@ -4,17 +4,17 @@
     tools:ignore="MissingDefaultResource">
 
     <item
-        android:id="@+id/patient_menu"
+        android:id="@+id/healthprof_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/patient_icon"
-        android:title="Patient" />
+        android:title="Health Professionals" />
     <item
-        android:id="@+id/record_menu"
+        android:id="@+id/report_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/record_icon"
-        android:title="Record" />
+        android:title="Reports" />
 
     <!-- TODO:: THIS LOGOUT IS TEMPORARY FOR TESTING ONLY    -->
     <item
