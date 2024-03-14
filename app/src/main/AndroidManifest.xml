@@ -13,7 +13,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DocTrack2"
-        tools:targetApi="31">
+        tools:targetApi="34">
+        <activity
+            android:name=".activity.patient.fragment.PatientAppointmentRequest"
+
+            android:exported="false" />
+        <activity
+            android:name=".activity.patient.fragment.PatientAppointmentStatus"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.patient.fragment.PatientAppointmentPending"
+            android:exported="false" />
+
+        <activity
+            android:name=".ListHealthprofPatientActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.admin.AdminHome"
             android:exported="false" />
@@ -40,11 +55,6 @@
         <activity
             android:name=".activity.MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
