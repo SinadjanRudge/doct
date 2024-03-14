@@ -16,13 +16,13 @@
         android:layout_marginBottom="24dp"/>
 
     <EditText
-        android:id="@+id/editTextName"
+        android:id="@+id/editTextHWID"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Health Workers ID" />
 
     <EditText
-        android:id="@+id/editAddress"
+        android:id="@+id/editHWN"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Health Workers Name"/>
@@ -35,38 +35,38 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/editTextEmail"
+        android:id="@+id/editTextPosition"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Position"/>
 
     <EditText
-        android:id="@+id/editTextPhone"
+        android:id="@+id/editTextUserName"
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:hint="UserName"/>
 
     <EditText
-        android:id="@+id/editTextCourse"
+        android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Password"/>
 
     <EditText
-        android:id="@+id/editTextUniversity"
+        android:id="@+id/editTextAppointmentID"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Appointment ID"/>
 
 
     <EditText
-        android:id="@+id/editTextExperienceYears"
+        android:id="@+id/editTextGender"
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:hint="Gender" />
 
     <EditText
-        android:id="@+id/editTextBio"
+        android:id="@+id/editTextDeviceID"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Device ID" />
