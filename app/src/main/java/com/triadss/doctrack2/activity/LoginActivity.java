@@ -73,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 return;
             }
-
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
                         progressBar.setVisibility(View.GONE);
@@ -86,12 +85,12 @@ public class LoginActivity extends AppCompatActivity {
                                 fetchUserRole(user.getUid());
                             }
 
-                            finish();
                         } else {
                             FirebaseAuthException e = (FirebaseAuthException) task.getException();
                             Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
+
 
         });
 
@@ -128,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
             case ADMIN:
                 Intent adminIntent = new Intent(getApplicationContext(), AdminHome.class);
                 startActivity(adminIntent);
+                break;
             case PROF:
                 Intent profIntent = new Intent(getApplicationContext(), HealthProfHome.class);
                 startActivity(profIntent);
