@@ -15,11 +15,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="24dp"/>
 
-    <EditText
-        android:id="@+id/editTextHWID"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Health Workers ID" />
 
     <EditText
         android:id="@+id/editHWN"
@@ -65,11 +60,6 @@
         android:layout_height="57dp"
         android:hint="Gender" />
 
-    <EditText
-        android:id="@+id/editTextDeviceID"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Device ID" />
 
     <Button
         android:id="@+id/buttonSubmit"
