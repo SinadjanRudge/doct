@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -112,24 +114,17 @@ public class HealthProfessionalStatus extends Fragment implements IListView {
     }
 
     public void ReloadList() {
-        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        appointmentRepository.getAppointmentsForHealthProf(currentUser.getUid(), new AppointmentRepository.AppointmentFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
 
-                HealthProfessionalAppointmentStatusAdapter adapter = new HealthProfessionalAppointmentStatusAdapter(getContext(), Purpose, Date, Time, Status, Identification, Name);
+                HealthProfessionalAppointmentStatusAdapter adapter = new HealthProfessionalAppointmentStatusAdapter(getContext(), (ArrayList)appointments);
 
-                for (AppointmentDto a : appointments) {
-                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                    Purpose.add(a.getPurpose());
-
-                    Date.add(a.getDateOfAppointment().toString());
-                    Time.add(a.getDateOfAppointment().toString());
-                    Identification.add(a.getPatientId().toString());
-                    Name.add(a.getNameOfRequester().toString());
-                    Status.add("Status:                          " + a.getStatus().toString());
-                }
                 recyclerView.setAdapter(adapter);
             }
 

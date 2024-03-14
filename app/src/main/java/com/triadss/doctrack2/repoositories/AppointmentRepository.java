@@ -12,6 +12,7 @@ import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.AppointmentsModel;
+import com.triadss.doctrack2.config.model.UserModel;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
 import java.util.ArrayList;
@@ -92,6 +93,26 @@ public class AppointmentRepository {
                 });
     }
 
+    public void getAppointmentsForHealthProf(String healthProfId, AppointmentFetchCallback callback) {
+        appointmentsCollection
+                .whereEqualTo(AppointmentsModel.healthProfId, healthProfId)
+                .orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<AppointmentDto> appointments = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                            appointments.add(appointment);
+                        }
+                        callback.onSuccess(appointments);
+                    } else {
+                        Log.e(TAG, "Error getting appointments", task.getException());
+                        callback.onError(task.getException().getMessage());
+                    }
+                });
+    }
+
     public void updateAppointmentSchedule(String appointmentId, DateTimeDto newSchedule, AppointmentAddCallback callback) {
         if(user == null) return;
 
@@ -105,23 +126,6 @@ public class AppointmentRepository {
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error updating Appointment schedule", e);
-                    callback.onError(e.getMessage());
-                });
-    }
-
-     public void updateAppointmentStatus(String appointmentId, String status, AppointmentAddCallback callback) {
-        if(user == null) return;
-
-        DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
-
-        appointmentRef
-                .update(AppointmentsModel.status, status)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "Appointment status updated successfully");
-                    callback.onSuccess(appointmentId);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error updating Appointment status", e);
                     callback.onError(e.getMessage());
                 });
     }

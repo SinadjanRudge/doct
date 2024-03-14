@@ -12,4 +12,6 @@ public class AppointmentsModel extends AuditModel {
     public static final String dateOfAppointment = "dateOfAppointment";
     public static final String timeOfAppointment = "timeOfAppointment";
     public static final String status = "status";
+    public static final String createdAt = "createdAt";
+
 }
