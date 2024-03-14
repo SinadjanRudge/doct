@@ -21,12 +21,22 @@
             app:title="Manage User Account"
             app:titleTextColor="#FFFFFF" />
 
+        <Button
+            android:id="@+id/addHealthProfBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="50dp"
+            android:text="Add Health Professional" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewAdmin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="16dp"
-            android:textSize="24sp" />
+            android:textSize="24sp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
     </LinearLayout>
 
 </RelativeLayout>
