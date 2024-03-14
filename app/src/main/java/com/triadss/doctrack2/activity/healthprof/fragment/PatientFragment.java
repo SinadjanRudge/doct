@@ -164,8 +164,7 @@ public class PatientFragment extends Fragment {
 
     private void showPatientRecord(AddPatientDto patient) {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        //transaction.replace(R.id.frame_layout, ViewRecordFragment.newInstance(patient));
+        transaction.replace(R.id.frame_layout, ViewPatientRecordFragment.newInstance(patient));
         transaction.addToBackStack(null);
         transaction.commit();
     }
