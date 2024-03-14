@@ -6,6 +6,7 @@ public class AppointmentDto {
     public AppointmentDto() {
         // required for Firestore deserialization
     }
+
     public AppointmentDto(String patientId, String nameOfRequester, String purpose,
             Timestamp dateOfAppointment, String status) {
         this.patientId = patientId;
@@ -63,6 +64,15 @@ public class AppointmentDto {
         this.createdAt = createdAt;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    private String uid;
     private String nameOfRequester;
     private String purpose;
     private Timestamp dateOfAppointment;

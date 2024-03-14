@@ -19,6 +19,7 @@
                 android:text="Name" />
 
             <TextView
+                android:id="@+id/fullNameValue"
                 android:gravity="right"
                 android:padding="3dip"
                 android:text="Test Name" />
@@ -31,6 +32,7 @@
                 android:text="Age" />
 
             <TextView
+                android:id="@+id/ageValue"
                 android:gravity="right"
                 android:padding="3dip"
                 android:text="23" />
@@ -43,6 +45,7 @@
                 android:text="Gender" />
 
             <TextView
+                android:id="@+id/genderValue"
                 android:gravity="right"
                 android:padding="3dip"
                 android:text="Male" />
@@ -55,6 +58,7 @@
                 android:text="Address" />
 
             <TextView
+                android:id="@+id/addressValue"
                 android:gravity="right"
                 android:padding="3dip"
                 android:text="Lahug, Cebu City" />
@@ -67,6 +71,7 @@
                 android:text="Status" />
 
             <TextView
+                android:id="@+id/statusValue"
                 android:gravity="right"
                 android:padding="3dip"
                 android:text="Sample Status" />
@@ -79,6 +84,7 @@
                 android:text="Cel/Tel No." />
 
             <TextView
+                android:id="@+id/phoneValue"
                 android:gravity="right"
                 android:padding="3dip"
                 android:text="09000000000" />
@@ -91,6 +97,7 @@
                 android:text="Course" />
 
             <TextView
+                android:id="@+id/courseValue"
                 android:gravity="right"
                 android:padding="3dip"
                 android:text="BSIT" />
@@ -103,6 +110,7 @@
                 android:text="Year" />
 
             <TextView
+                android:id="@+id/yearValue"
                 android:gravity="right"
                 android:padding="3dip"
                 android:text="2" />

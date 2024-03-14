@@ -8,12 +8,16 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.PatientFragmentAdapter;
@@ -45,6 +49,9 @@ public class PatientFragment extends Fragment {
     FirebaseFirestore db;
     PatientFragmentAdapter adapter;
     List<AddPatientDto> addPatientDtoList;
+
+    EditText editTextSearch;
+    List<AddPatientDto> filteredPatients;
 
     public PatientFragment() {
         // Required empty public constructor
@@ -99,7 +106,15 @@ public class PatientFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recycleview_patient_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapter = new PatientFragmentAdapter(new ArrayList<>());
+        addPatientDtoList = new ArrayList<>();
+        filteredPatients = new ArrayList<>();
+        adapter = new PatientFragmentAdapter(new ArrayList<>(), new PatientFragmentAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(AddPatientDto patient) {
+                showPatientRecord(patient);
+            }
+        });
+
         recyclerView.setAdapter(adapter);
 
         PatientRepository patientRepository = new PatientRepository();
@@ -108,6 +123,8 @@ public class PatientFragment extends Fragment {
             public void onSuccess(List<AddPatientDto> patients) {
                 // Update the adapter with the latest data
                 adapter.updateList(patients);
+                addPatientDtoList.clear();
+                addPatientDtoList.addAll(patients);
             }
 
             @Override
@@ -117,7 +134,52 @@ public class PatientFragment extends Fragment {
             }
         });
 
+        //Search patient record
+        editTextSearch = rootView.findViewById(R.id.search_bar_patient);
+
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filteredPatients.clear();
+                if(s.toString().isEmpty()){
+                    recyclerView.setAdapter(new PatientFragmentAdapter(addPatientDtoList));
+                    adapter.notifyDataSetChanged();
+                }
+                else {
+                    Filter(s.toString());
+                }
+            }
+        });
+
         return rootView;
+    }
+
+    private void showPatientRecord(AddPatientDto patient) {
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
+        //transaction.replace(R.id.frame_layout, ViewRecordFragment.newInstance(patient));
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void Filter(String text){
+        for(AddPatientDto patient : addPatientDtoList){
+            if((text == "" ||
+                    (patient.getIdNumber() != null && (patient.getIdNumber().contains(text)))) ||
+                    (patient.getFullName() != null && (patient.getFullName().toLowerCase().contains(text.toLowerCase())))) {
+                filteredPatients.add(patient);
+            }
+        }
+        recyclerView.setAdapter(new PatientFragmentAdapter(filteredPatients));
+        adapter.notifyDataSetChanged();
     }
 
 }

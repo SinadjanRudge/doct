@@ -3,30 +3,34 @@ package com.triadss.doctrack2.dto;
 import com.google.firebase.Timestamp;
 
 public class MedicationDto {
+    // * Default constructor required for Firebase deserialization
+    public MedicationDto() {
 
-    public MedicationDto(int mediId, int patientId, String medicine, String note, Timestamp timestamp)
-    {
+    }
+
+    public MedicationDto(String mediId, String patientId, String medicine, String note, Timestamp timestamp,
+            String status) {
         this.mediId = mediId;
         this.patientId = patientId;
         this.medicine = medicine;
         this.note = note;
         this.timestamp = timestamp;
+        this.status = status;
     }
 
-
-    public int getMediId() {
+    public String getMediId() {
         return mediId;
     }
 
-    public void setMediId(int mediId) {
+    public void setMediId(String mediId) {
         this.mediId = mediId;
     }
 
-    public int getPatientId() {
+    public String getPatientId() {
         return patientId;
     }
 
-    public void setPatientId(int patientId) {
+    public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
 
@@ -54,8 +58,17 @@ public class MedicationDto {
         this.timestamp = timestamp;
     }
 
-    private int mediId;
-    private int patientId;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    private String status;
+    private String mediId;
+    private String patientId;
     private String medicine;
     private String note;
     private Timestamp timestamp;

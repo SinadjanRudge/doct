@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,17 +19,22 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.dto.TimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.repoositories.MedicationRepository;
 
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import android.util.Log;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,12 +47,17 @@ public class PatientMedicationAddFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "PatientMedicationAddFragment";
 
     private DateTimeDto selectedDateTime;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Button button_date, button_time, add_button, clear_button;
+    private TextInputEditText medicineInput, noteInput;
+    private MedicationRepository medicationRepository;
 
     public PatientMedicationAddFragment() {
         // Required empty public constructor
@@ -82,16 +93,30 @@ public class PatientMedicationAddFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_medication_add, container, false);
+
+        medicationRepository = new MedicationRepository();
+
+        button_date = rootView.findViewById(R.id.button_date);
+        button_time = rootView.findViewById(R.id.button_time);
+        medicineInput = rootView.findViewById(R.id.medicineInput);
+        noteInput = rootView.findViewById(R.id.noteInput);
+        add_button = rootView.findViewById(R.id.add_button);
+        clear_button = rootView.findViewById(R.id.clear_button);
+
+        setupDatePicker();
+        setupTimePicker();
+        setupClearButton();
+        setupConfirmationButton();
 
         return rootView;
     }
 
-    private void setupDatePicker(Button pickDateButton) {
+    private void setupDatePicker() {
         // Set up Date Picker Dialog
-        pickDateButton.setOnClickListener(new View.OnClickListener() {
+        button_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get the current date
@@ -105,12 +130,12 @@ public class PatientMedicationAddFragment extends Fragment {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
+                                    int monthOfYear, int dayOfMonth) {
                                 // Store the selected date
                                 selectedDateTime.setDate(new DateDto(year, monthOfYear, dayOfMonth));
 
                                 // Update the text on the button
-                                pickDateButton.setText(selectedDateTime.getDate().ToString());
+                                button_date.setText(selectedDateTime.getDate().ToString());
                             }
                         }, year, month, day);
 
@@ -120,9 +145,9 @@ public class PatientMedicationAddFragment extends Fragment {
         });
     }
 
-    private void setupTimePicker(Button pickTimeBtn) {
+    private void setupTimePicker() {
         // Set up Time Picker Dialog
-        pickTimeBtn.setOnClickListener(new View.OnClickListener() {
+        button_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get the current time
@@ -136,10 +161,11 @@ public class PatientMedicationAddFragment extends Fragment {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 // Store the selected time
+
                                 selectedDateTime.setTime(new TimeDto(hourOfDay, minute));
 
                                 // Update the text on the button
-                                pickTimeBtn.setText(selectedDateTime.getTime().ToString());
+                                button_time.setText(selectedDateTime.getTime().ToString());
                             }
                         }, hour, minute, false);
 
@@ -149,18 +175,63 @@ public class PatientMedicationAddFragment extends Fragment {
         });
     }
 
-    private void handleConfirmationButtonClick(TextInputEditText medicineInput, TextInputEditText noteInput) {
-        // Sample values for MedicationDto
-        String medicine = medicineInput.getText().toString();
-        String note = noteInput.getText().toString();
+    private void setupClearButton() {
+        clear_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleClearButtonClick();
+            }
+        });
+    }
 
-        Timestamp dateTimeOfAppointment = selectedDateTime.ToTimestamp();
+    private void setupConfirmationButton() {
+        add_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle confirmation button click
+                handleConfirmationButtonClick();
+            }
+        });
+    }
 
-        final String status = AppointmentTypeConstants.PENDING;
+    private void handleClearButtonClick() {
+        medicineInput.setText("");
+        noteInput.setText("");
+        selectedDateTime.setDate(null);
+        selectedDateTime.setTime(null);
+        button_time.setText("Select Time");
+        button_date.setText("Select Date");
+    }
 
-        MedicationDto appointment = new MedicationDto(0,
-                0, medicine, note, dateTimeOfAppointment);
+    private void handleConfirmationButtonClick() {
+        try {
+            // Sample values for MedicationDto
+            String medicine = medicineInput.getText().toString();
+            String note = noteInput.getText().toString();
 
-        // TODO: Complete Backend
+            Timestamp dateTimeOfAppointment = selectedDateTime.ToTimestamp();
+
+            final String status = MedicationTypeConstants.ONGOING;
+
+            MedicationDto medication = new MedicationDto("",
+                    "", medicine, note, dateTimeOfAppointment, status);
+            medicationRepository.addMedication(medication, new MedicationRepository.MedicationsAddCallback() {
+                @Override
+                public void onSuccess(String medicationId) {
+                    Log.e(TAG, "Successfully added medication with the id of " + medicationId);
+
+                    ViewPager2 vp = getActivity().findViewById(R.id.viewPager); // Fetch ViewPager instance
+                    vp.setCurrentItem(1);
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    Log.e(TAG, "Failure in adding medication in the document");
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 }

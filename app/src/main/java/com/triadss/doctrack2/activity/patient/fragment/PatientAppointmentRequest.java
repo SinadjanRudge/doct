@@ -3,7 +3,6 @@ package com.triadss.doctrack2.activity.patient.fragment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
-import com.google.android.material.textfield.TextInputEditText;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
@@ -25,12 +20,11 @@ import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import com.google.firebase.Timestamp;
 
-public class AppointmentRequest extends Fragment {
+public class PatientAppointmentRequest extends Fragment {
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;
@@ -138,7 +132,7 @@ public class AppointmentRequest extends Fragment {
         Timestamp dateTimeOfAppointment = new Timestamp(
                 new Date(selectedYear - 1900, selectedMonth, selectedDay, selectedHour, selectedMinute));
 
-        final String status = AppointmentTypeConstants.PENDING;
+        final String status = AppointmentTypeConstants.ONGOING;
 
         AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, status);
@@ -146,27 +140,12 @@ public class AppointmentRequest extends Fragment {
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
             @Override
             public void onSuccess(String appointmentId) {
-                // Handle success, if needed
+                // TODO need to add confirmation UI when appointment is added successfully
             }
 
             @Override
             public void onError(String errorMessage) {
                 // Handle error, if needed
-            }
-        });
-
-        //! FOR TESTING
-        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
-            @Override
-            public void onSuccess(List<AppointmentDto> appointments) {
-                for (AppointmentDto a : appointments) {
-                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                }
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-
             }
         });
     }
