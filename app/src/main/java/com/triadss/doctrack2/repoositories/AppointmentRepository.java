@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -95,7 +96,10 @@ public class AppointmentRepository {
 
     public void getAppointmentsForHealthProf(String healthProfId, AppointmentFetchCallback callback) {
         appointmentsCollection
-                .whereEqualTo(AppointmentsModel.healthProfId, healthProfId)
+                .where(Filter.or(
+                    Filter.equalTo(AppointmentsModel.healthProfId, healthProfId),
+                    Filter.equalTo(AppointmentsModel.status, AppointmentTypeConstants.ONGOING)
+                ))
                 .orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
