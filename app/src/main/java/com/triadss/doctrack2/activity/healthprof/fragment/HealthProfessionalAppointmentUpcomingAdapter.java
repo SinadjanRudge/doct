@@ -23,11 +23,12 @@ import java.util.ArrayList;
 public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.Adapter<HealthProfessionalAppointmentUpcomingAdapter.ViewHolder> {
     ArrayList<AppointmentDto> appointments;
     Context context;
+    AppointmentCallback callback;
 
     // Constructor for initialization
-    public HealthProfessionalAppointmentUpcomingAdapter(Context context,  ArrayList<AppointmentDto> appointments) {
+    public HealthProfessionalAppointmentUpcomingAdapter(Context context,  ArrayList<AppointmentDto> appointments, AppointmentCallback callback) {
         this.context = context;
-
+        this.callback = callback;
         this.appointments = appointments;
     }
 
@@ -97,5 +98,10 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             date.setText(dateTime.getDate().ToString());
             time.setText(dateTime.getTime().ToString());
         }
+    }
+
+    public interface AppointmentCallback {
+        void onAccept(String appointmentUid);
+        void onReject(String appointmentUid);
     }
 }

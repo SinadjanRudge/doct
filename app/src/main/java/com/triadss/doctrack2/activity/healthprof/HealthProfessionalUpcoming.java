@@ -103,7 +103,29 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
 
-                HealthProfessionalAppointmentUpcomingAdapter adapter = new HealthProfessionalAppointmentUpcomingAdapter(getContext(), (ArrayList)appointments);
+                HealthProfessionalAppointmentUpcomingAdapter adapter = new HealthProfessionalAppointmentUpcomingAdapter(getContext(), (ArrayList)appointments, 
+                    new HealthProfessionalAppointmentUpcomingAdapter.AppointmentCallback()
+                    {
+                        @Override
+                        public void onAccept(String appointmentUid) {
+                            appointmentRepository.updateAppointmentStatus(appointmentUid, AppointmentTypeConstants.PENDING, new AppointmentRepository.AppointmentAddCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    ReloadList();
+                                }
+
+                                @Override
+                                public void onError(String errorMessage) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onReject(String appointmentUid) {
+                            // Show Dialog for confirmation before deleting
+                        }
+                    });
 
                 recyclerView.setAdapter(adapter);
             }

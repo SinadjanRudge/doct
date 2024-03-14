@@ -105,6 +105,23 @@ public class AppointmentRepository {
                 });
     }
 
+     public void updateAppointmentStatus(String appointmentId, String status, AppointmentAddCallback callback) {
+        if(user == null) return;
+
+        DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
+
+        appointmentRef
+                .update(AppointmentsModel.status, status)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Appointment status updated successfully");
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating Appointment status", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
     public void deleteAppointment(String appointmentId, AppointmentAddCallback callback) {
         if(user == null) return;
 
