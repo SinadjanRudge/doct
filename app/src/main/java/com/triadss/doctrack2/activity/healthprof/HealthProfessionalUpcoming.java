@@ -130,7 +130,17 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
 
                         @Override
                         public void onReject(String appointmentUid) {
-                            // Show Dialog for confirmation before deleting
+                            appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                                @Override
+                                public void onSuccess(String appointmentId) {
+                                    ReloadList();
+                                }
+
+                                @Override
+                                public void onError(String errorMessage) {
+
+                                }
+                            });
                         }
                     });
 

@@ -44,7 +44,6 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
         return viewHolder;
     }
 
-
     // Binding data to the into specified position
     @Override
     public void onBindViewHolder(@NonNull HealthProfessionalAppointmentUpcomingAdapter.ViewHolder holder, int position) {
@@ -57,10 +56,8 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
         return appointments.size();
     }
 
-
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView purpose,date,time,identification,name;
 
         public ViewHolder(View view) {
@@ -70,7 +67,6 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             time = (TextView) view.findViewById(R.id.appointment_time);
             identification = (TextView) view.findViewById(R.id.IDtext);
             name = (TextView) view.findViewById(R.id.nametext);
-
         }
 
         public void update(AppointmentDto appointment)
