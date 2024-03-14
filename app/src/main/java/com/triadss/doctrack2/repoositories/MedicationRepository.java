@@ -17,6 +17,7 @@ import com.triadss.doctrack2.config.model.MedicationModel;
 import com.triadss.doctrack2.dto.MedicationDto;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,9 +65,16 @@ public class MedicationRepository {
 
     public void getAllMedications(String type, MedicationFetchCallback callback) {
         if (user != null) {
+            List<String> types = Arrays.asList(type);
+
+            if(type == "")
+            {
+                types = Arrays.asList(MedicationTypeConstants.ONGOING, MedicationTypeConstants.COMPLETED);
+            }
+
             medicationsCollection
                     .whereEqualTo("patientId", user.getUid())
-                     .whereEqualTo("status", type)
+                    .whereIn("status", types)
                     .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
