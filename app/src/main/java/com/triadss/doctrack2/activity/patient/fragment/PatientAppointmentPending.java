@@ -24,6 +24,7 @@ public class PatientAppointmentPending extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //storage of patient appointment on fire store
         appointmentRepository = new AppointmentRepository();
 
        View rootView = inflater.inflate(R.layout.activity_patient_appointment, container, false);
@@ -36,20 +37,20 @@ public class PatientAppointmentPending extends Fragment {
    public void CallPending() {
        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
 
-           @Override
-           public void onSuccess(List<AppointmentDto> appointments) {
-               LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-               recyclerView.setLayoutManager(linearLayoutManager);
+               @Override
+               public void onSuccess(List<AppointmentDto> appointments) {
+                   LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                   recyclerView.setLayoutManager(linearLayoutManager);
 
-               PatientAppointmentPendingAdapter adapter = new PatientAppointmentPendingAdapter(getContext(), (ArrayList) appointments);
+                   PatientAppointmentPendingAdapter adapter = new PatientAppointmentPendingAdapter(getContext(), (ArrayList) appointments);
 
-               recyclerView.setAdapter(adapter);
-           }
+                   recyclerView.setAdapter(adapter);
+               }
 
-           @Override
-           public void onError(String errorMessage) {
+               @Override
+               public void onError(String errorMessage) {
 
-           }
+               }
        });
     }
 }
