@@ -64,21 +64,14 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
 
         public ViewHolder(View view) {
             super(view);
-            Button reject, accept;
+            Button accept;
             purpose = (TextView) view.findViewById(R.id.purposetext);
             date = (TextView) view.findViewById(R.id.appointment_date);
             time = (TextView) view.findViewById(R.id.appointment_time);
             identification = (TextView) view.findViewById(R.id.IDtext);
             name = (TextView) view.findViewById(R.id.nametext);
-            reject=(Button)itemView.findViewById(R.id.reject_button);
             accept=(Button)itemView.findViewById(R.id.accept_button);
-            reject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
+           
             accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,6 +90,36 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
             time.setText(dateTime.getTime().ToString());
+
+            Button reject = (Button)itemView.findViewById(R.id.reject_button);
+
+            reject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Dialog dialog = new Dialog(context);
+                    dialog.setContentView(R.layout.dialog_cancel_appointment_confirmation);
+
+                    Button yes = dialog.findViewById(R.id.yesBtn);
+                    Button no = dialog.findViewById(R.id.noBtn);
+
+                    no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            callback.onReject(appointments.get(getAdapterPosition()).getUid());
+                            dialog.dismiss();
+                        }
+                    });
+
+                    dialog.show();
+                }
+            });
         }
     }
 
