@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.healthprof;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -20,14 +22,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragment.AddPatientFragment;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentPendingAdapter;
+import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import java.util.ArrayList;
@@ -39,7 +48,7 @@ import java.util.List;
  * Use the {@link HealthProfessionalPending#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HealthProfessionalPending extends Fragment implements IListView  {
+public class HealthProfessionalPending extends Fragment implements IListView {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,7 +106,10 @@ public class HealthProfessionalPending extends Fragment implements IListView  {
     }
 
     public void ReloadList() {
-        appointmentRepository.getAppointmentsByStatus(AppointmentTypeConstants.PENDING, new AppointmentRepository.AppointmentFetchCallback() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        appointmentRepository.getPendingAppointments(currentUser.getUid(), new AppointmentRepository.AppointmentFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -110,8 +122,8 @@ public class HealthProfessionalPending extends Fragment implements IListView  {
                             appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
-                                    Toast.makeText(context, appointmentId + " updated", Toast.LENGTH_SHORT).show();
-                                    CallPending();
+                                    Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+                                    ReloadList();
                                 }
 
                                 @Override
@@ -126,8 +138,8 @@ public class HealthProfessionalPending extends Fragment implements IListView  {
                             appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
-                                    Toast.makeText(context, appointmentId + " deleted", Toast.LENGTH_SHORT).show();
-                                    CallPending();
+                                    Toast.makeText(getContext(), appointmentId + " deleted", Toast.LENGTH_SHORT).show();
+                                    ReloadList();
                                 }
 
                                 @Override
@@ -139,6 +151,11 @@ public class HealthProfessionalPending extends Fragment implements IListView  {
                 });
 
                 recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
             }
         });
     }

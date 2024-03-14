@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.contracts.IListView;
 
 /**
  * A simple {@link Fragment} subclass.

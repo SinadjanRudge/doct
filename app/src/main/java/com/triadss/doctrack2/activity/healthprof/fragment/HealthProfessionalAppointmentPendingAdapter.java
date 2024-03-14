@@ -66,7 +66,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
         public ViewHolder(View view) {
             super(view);
-            Button reschedule, cancel;
+            Button cancel;
             purpose = (TextView) view.findViewById(R.id.purposetext);
             date = (TextView) view.findViewById(R.id.appointment_date);
             time = (TextView) view.findViewById(R.id.appointment_time);
@@ -74,24 +74,15 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             name = (TextView) view.findViewById(R.id.nametext);
 
             cancel=(Button)itemView.findViewById(R.id.cancel_button);
-            reschedule=(Button)itemView.findViewById(R.id.reschedule_button);
 
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-
                 }
             });
 
-            reschedule.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-                    showUpdateDialog();
-                }
-            });
+
         }
 
         public void update(AppointmentDto appointment)
@@ -103,9 +94,18 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
             time.setText(dateTime.getTime().ToString());
+            Button reschedule = (Button)itemView.findViewById(R.id.reschedule_button);
+
+            reschedule.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
+                    showUpdateDialog(appointment.getUid());
+                }
+            });
         }
 
-        private void showUpdateDialog()
+        private void showUpdateDialog(String appointmentId)
         {
             Dialog dialog = new Dialog(context);
             dialog.setContentView(R.layout.fragment_patient_appointment_reschedule);
@@ -162,7 +162,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             });
 
             confirm.setOnClickListener(v -> {
-                appointmentCallback.onRescheduleConfirmed(selectedDateTime);
+                appointmentCallbacks.onRescheduleConfirmed(selectedDateTime, appointmentId);
                 dialog.dismiss();
             });
 

@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,21 +65,12 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
 
         public ViewHolder(View view) {
             super(view);
-            Button accept;
             purpose = (TextView) view.findViewById(R.id.purposetext);
             date = (TextView) view.findViewById(R.id.appointment_date);
             time = (TextView) view.findViewById(R.id.appointment_time);
             identification = (TextView) view.findViewById(R.id.IDtext);
             name = (TextView) view.findViewById(R.id.nametext);
-            accept=(Button)itemView.findViewById(R.id.accept_button);
-           
-            accept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
 
-                }
-            });
         }
 
         public void update(AppointmentDto appointment)
@@ -118,6 +110,16 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                     });
 
                     dialog.show();
+                }
+            });
+
+            Button accept = (Button)itemView.findViewById(R.id.accept_button);
+
+            accept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
+                    callback.onAccept(appointment.getUid());
                 }
             });
         }

@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -28,6 +30,8 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragment.AddPatientFragment;
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentPendingAdapter;
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentUpcomingAdapter;
+import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
@@ -97,7 +101,10 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
     }
 
     public void ReloadList() {
-        appointmentRepository.getAppointmentsByStatus(AppointmentTypeConstants.ONGOING, new AppointmentRepository.AppointmentFetchCallback() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        appointmentRepository.getOngoingAppointments(new AppointmentRepository.AppointmentFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -108,9 +115,9 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                     {
                         @Override
                         public void onAccept(String appointmentUid) {
-                            appointmentRepository.updateAppointmentStatus(appointmentUid, AppointmentTypeConstants.PENDING, new AppointmentRepository.AppointmentAddCallback() {
+                            appointmentRepository.acceptAppointment(appointmentUid, currentUser.getUid(), new AppointmentRepository.AppointmentAddCallback() {
                                 @Override
-                                public void onSuccess() {
+                                public void onSuccess(String appointmentId) {
                                     ReloadList();
                                 }
 
