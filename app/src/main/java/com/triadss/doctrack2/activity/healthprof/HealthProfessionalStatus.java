@@ -39,7 +39,7 @@ import java.util.List;
  * Use the {@link HealthProfessionalStatus#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HealthProfessionalStatus extends Fragment {
+public class HealthProfessionalStatus extends Fragment implements IListView {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -106,11 +106,11 @@ public class HealthProfessionalStatus extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_health_professional_status, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        CallPending();
+        ReloadList();
         return rootView;
     }
 
-    public void CallPending() {
+    public void ReloadList() {
         appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {

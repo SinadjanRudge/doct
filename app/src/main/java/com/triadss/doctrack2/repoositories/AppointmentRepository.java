@@ -122,6 +122,39 @@ public class AppointmentRepository {
                 });
     }
 
+    public void getAppointmentsByStatus(String status, AppointmentFetchCallback callback) {
+        if (user != null) {
+            List<String> statuses = Arrays.asList(status);
+
+            if(status == "")
+            {
+                statuses = Arrays.asList(AppointmentTypeConstants.ONGOING, MedicationstatusConstants.PENDING);
+            }
+
+            appointmentsCollection
+                    .whereEqualTo("patientId", user.getUid())
+                    .whereIn(AppointmentsModel.status, statuses)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        List<AppointmentDto> appointments = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                            appointments.add(appointment);
+                            appointment.setMediId(document.getId());
+                        }
+                        callback.onSuccess(appointments);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching medicines", e);
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
+
     public interface AppointmentAddCallback {
         void onSuccess(String appointmentId);
 

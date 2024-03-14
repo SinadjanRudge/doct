@@ -112,6 +112,13 @@ public class HealthProfessionalAppointmentFragment extends Fragment {
             {
                 super.onPageSelected(position);
                 tabLayout.selectTab(tabLayout.getTabAt(position));
+
+                Fragment fragment = getParentFragmentManager().findFragmentByTag("f" + position);
+                boolean fragmentIsListView = fragment instanceof IListView;
+                boolean fragmentIsNotNull = fragment != null;
+                if (fragmentIsNotNull && fragmentIsListView) {
+                    ((IListView) fragment).ReloadList();
+                }
             }
         });
 

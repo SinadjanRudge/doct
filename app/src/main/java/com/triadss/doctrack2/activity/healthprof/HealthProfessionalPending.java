@@ -39,7 +39,7 @@ import java.util.List;
  * Use the {@link HealthProfessionalPending#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HealthProfessionalPending extends Fragment {
+public class HealthProfessionalPending extends Fragment implements IListView  {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -92,12 +92,12 @@ public class HealthProfessionalPending extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_health_professional_pending, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        CallPending();
+        ReloadList();
         return rootView;
     }
 
-    public void CallPending() {
-        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+    public void ReloadList() {
+        appointmentRepository.getAppointmentsByStatus(AppointmentTypeConstants.PENDING, new AppointmentRepository.AppointmentFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
