@@ -86,7 +86,23 @@ public class AppointmentRepository {
                         callback.onError(task.getException().getMessage());
                     }
                 });
+    }
 
+    public void updateAppointmentSchedule(String appointmentId, DateTimeDto newSchedule, AppointmentAddCallback callback) {
+        if(user == null) return;
+
+        DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
+
+        appointmentRef
+                .update(AppointmentsModel.dateOfAppointment, newSchedule.ToTimestamp())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Appointment schedule updated successfully");
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating Appointment schedule", e);
+                    callback.onError(e.getMessage());
+                });
     }
 
     public interface AppointmentAddCallback {

@@ -28,11 +28,12 @@ import java.util.Calendar;
 public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Adapter<HealthProfessionalAppointmentPendingAdapter.ViewHolder> {
     ArrayList<AppointmentDto> healthProfessional;
     Context context;
+    AppointmentCallback appointmentCallbacks;
 
     // Constructor for initialization
-    public HealthProfessionalAppointmentPendingAdapter(Context context,  ArrayList<AppointmentDto> healthProfessional) {
+    public HealthProfessionalAppointmentPendingAdapter(Context context,  ArrayList<AppointmentDto> healthProfessional, AppointmentCallback appointmentCallback) {
         this.context = context;
-
+        this.appointmentCallbacks = appointmentCallback;
         this.healthProfessional = healthProfessional;
     }
 
@@ -59,10 +60,8 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
         return healthProfessional.size();
     }
 
-
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         private TextView purpose,date,time,identification,name;
         private Button reschedule;
 
@@ -115,6 +114,8 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             Button timeBtn = dialog.findViewById(R.id.timeBtn);
             TextView updateTime = dialog.findViewById(R.id.updateTime);
 
+            Button confirm = dialog.findViewById(R.id.confirmbutton);
+
             DateTimeDto selectedDateTime = new DateTimeDto();
 
             dateBtn.setOnClickListener((View.OnClickListener) v -> {
@@ -148,7 +149,6 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context,
                         (view, hourOfDay, minute1) -> {
                             // Store the selected time
-
                             selectedDateTime.setTime(new TimeDto(hourOfDay, minute1));
 
                             // Update the text on the button
@@ -159,8 +159,18 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                 timePickerDialog.show();
             });
 
+            confirm.setOnClickListener(v -> {
+                appointmentCallback.onRescheduleConfirmed(selectedDateTime);
+                dialog.dismiss();
+            });
+
             dialog.show();
         }
 
+    }
+
+
+    public interface AppointmentCallback {
+        void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid);
     }
 }

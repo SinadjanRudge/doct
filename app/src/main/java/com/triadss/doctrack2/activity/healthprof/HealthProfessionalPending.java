@@ -103,14 +103,26 @@ public class HealthProfessionalPending extends Fragment {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
 
-                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments);
+                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments, 
+                    new HealthProfessionalAppointmentPendingAdapter.AppointmentCallback() {
+                        @Override
+                        public void onSuccess(DateTimeDto dateTime, String appointmentUid) {
+                            appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
+                                @Override
+                                public void onSuccess(String appointmentId) {
+                                    Toast.makeText(context, appointmentId + " updated", Toast.LENGTH_SHORT).show();
+                                    CallPending();
+                                }
+
+                                @Override
+                                public void onError(String errorMessage) {
+                                    Log.e(TAG, "Error updating medication: " + errorMessage);
+                                }
+                            });
+                        }
+                });
 
                 recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-
             }
         });
     }
