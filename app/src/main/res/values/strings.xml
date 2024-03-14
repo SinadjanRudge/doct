@@ -27,7 +27,9 @@
     <string name="update_record">Update Record</string>
     <string name="view_patient_info">View Patient\'s Information</string>
     <string name="view_patient_record">Patient Personal Information</string>
+    <string name="vital_signs">Vital Signs</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>
