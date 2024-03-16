@@ -281,6 +281,21 @@ public class AppointmentRepository {
                 });
     }
 
+    public void rescheduleAppointment(String DocumentId,Timestamp date,AppointmentRescheduleCallback callback) {
+
+        appointmentsCollection
+                .document(DocumentId)
+                .update("dateOfAppointment", date)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Appointment added with ID: " + DocumentId);
+                    callback.onSuccess(DocumentId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error adding appointment", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
     public interface AppointmentCancelCallback {
         void onSuccess(String appointmentId);
 
@@ -310,4 +325,9 @@ public class AppointmentRepository {
         void onError(String errorMessage);
     }
 
+    public interface AppointmentRescheduleCallback {
+        void onSuccess(String appointmentId);
+
+        void onError(String errorMessage);
+    }
 }

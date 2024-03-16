@@ -25,8 +25,10 @@ import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.TimeDto;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
@@ -127,7 +129,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-                    showUpdateDialog();
+                    showUpdateDialog(documentId.getText().toString());
                     System.out.println();
                 }
             });
@@ -142,7 +144,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             documentId.setText(appointment.getDocumentId());
         }
 
-        private void showUpdateDialog()
+        private void showUpdateDialog(String id)
         {
             Dialog dialog = new Dialog(context);
             dialog.setContentView(R.layout.fragment_patient_appointment_reschedule);
@@ -198,11 +200,23 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             });
 
             confirmBtn.setOnClickListener(v -> {
+                SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+                SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                appointmentRepository.rescheduleAppointment(id, selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
+                    @Override
+                    public void onSuccess(String appointmentId) {
+                        Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
 
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
 
-
+                    }
+                });
+                myEdit.putInt("PatientPending", Integer.parseInt("10"));
+                myEdit.putInt("PatientStatus", Integer.parseInt("10"));
+                myEdit.apply();
             });
-
             dialog.show();
         }
     }
