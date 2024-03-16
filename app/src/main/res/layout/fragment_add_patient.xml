@@ -1,158 +1,313 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_color">
 
-    <!-- Toolbar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/add_patient_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Add Patient" />
-
-    <!-- patient list here   -->
     <TextView
-        android:id="@+id/add_patient_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_patient_toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20sp"
-        android:text="@string/kindly_provide_your_patient_personal_details"
-        android:textSize="20sp" />
-    <!-- EMAIL   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_patient_header"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- EMAIL   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/emailInputLayout"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/full_name"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- ADDRESS   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addressInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/nameInputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:hint="@string/address"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- PHONE   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/phoneInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/addressInputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:hint="@string/phone_no"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- AGE   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ageInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/phoneInputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/age"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:hint="@string/age"
-            android:inputType="number" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- COURSE   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/courseInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/ageInputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/course"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:hint="@string/course"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <!-- ID Number   -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/idNumberInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/courseInputLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/idNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20sp"
-            android:hint="@string/id_number"
-            android:inputType="number" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/add_patient_save"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_below="@+id/idNumberInputLayout"
+        android:id="@+id/textview_personal_information"
+        android:layout_width="407dp"
+        android:layout_height="81dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginHorizontal="34dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="83dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_green"
         android:gravity="center"
-        android:text="@string/add_patient" />
+        android:text="Personal Information"
+        android:textColor="@color/lightgreen"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
-</RelativeLayout>
+    <ScrollView
+        android:layout_width="411dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="90dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.724">
+
+        <LinearLayout
+            android:layout_width="413dp"
+            android:layout_height="645dp"
+            android:layout_marginBottom="180dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.361">
+
+
+            <TextView
+                android:id="@+id/textView_personal_info"
+                android:layout_width="380dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:text="Add the patient's personal information."
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="570dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:text="Patient ID:"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/input_patientID"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/green_stroke"
+                    android:hint=" enter patient id" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:text="Email:"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/input_Email"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/green_stroke"
+                    android:hint=" enter email" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:text="Full Name:"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/input_fullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/green_stroke"
+                    android:hint=" enter full name" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="114dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Age:"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:text="Gender:"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/input_Age"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/green_stroke"
+                        android:hint=" enter age" />
+
+                    <EditText
+                        android:id="@+id/input_Gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/green_stroke"
+                        android:hint=" enter gender" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:text="Address:"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/input_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/green_stroke"
+                    android:hint=" enter address" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Date of Birth:"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_weight="0.9"
+                        android:text="Status:"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/input_DateOfBirth"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/green_stroke"
+                        android:hint="MM/DD/YYYY" />
+
+                    <EditText
+                        android:id="@+id/input_Status"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/green_stroke"
+                        android:hint=" enter status" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:text="Contact No.:"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/input_contactNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/green_stroke"
+                    android:hint=" enter contact no." />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Course:"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_weight="0.9"
+                        android:text="Year:"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/input_dateOfBirth"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/green_stroke"
+                        android:hint=" enter course" />
+
+                    <EditText
+                        android:id="@+id/input_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/green_stroke"
+                        android:hint=" enter year" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/noteForButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:text="click <NEXT> to enter Medical History"
+                android:textSize="13sp"
+                tools:ignore="MissingConstraints" />
+
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="35dp"
+                android:backgroundTint="@color/green"
+                android:text="NEXT" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
