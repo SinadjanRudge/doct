@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -61,6 +63,16 @@ public class PatientAppointmentFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor myEdit = sharedPreferences.edit();
+
+        myEdit.putInt("PatientStatus", Integer.parseInt("0"));
+        myEdit.putInt("PatientPending", Integer.parseInt("0"));
+
+        myEdit.apply();
+
     }
 
     @Override
