@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/ggreen"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvHealthProfName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Health Professional Name"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/tvHealthProfSpecialty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Specialty"
+        android:layout_below="@id/tvHealthProfName"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/btnViewUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View / Update"
+        android:layout_below="@id/tvHealthProfSpecialty"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>
