@@ -132,7 +132,7 @@ public class PatientAppointmentRequest extends Fragment {
         Timestamp dateTimeOfAppointment = new Timestamp(
                 new Date(selectedYear - 1900, selectedMonth, selectedDay, selectedHour, selectedMinute));
 
-        final String status = AppointmentTypeConstants.ONGOING;
+        final String status = AppointmentTypeConstants.PENDING;
 
         AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, status);
