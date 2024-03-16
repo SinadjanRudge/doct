@@ -52,10 +52,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="251dp"
+            android:layout_height="195dp"
             android:layout_marginStart="25dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
             android:background="@color/white"
             android:orientation="vertical">
 
@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:text="Medicine:"
+                android:text="Medicine Name:"
                 android:textSize="16sp" />
 
             <EditText
@@ -83,11 +83,41 @@
             <EditText
                 android:id="@+id/input_note"
                 android:layout_width="match_parent"
-                android:layout_height="151dp"
+                android:layout_height="100dp"
                 android:background="@drawable/green_stroke"
                 android:gravity="top|left"
                 android:hint=" Input here" />
 
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_addMedicine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="255dp"
+            android:backgroundTint="@color/green"
+            android:text="Add Medicine" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="201dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="25dp"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="199dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </ScrollView>
         </LinearLayout>
 
         <TextView
@@ -95,14 +125,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="10dp"
             android:text="click <NEXT> to enter Vital Signs"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/button9"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
