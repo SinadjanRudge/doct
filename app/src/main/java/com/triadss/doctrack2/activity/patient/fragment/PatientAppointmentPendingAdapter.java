@@ -1,8 +1,11 @@
 package com.triadss.doctrack2.activity.patient.fragment;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +28,12 @@ import com.triadss.doctrack2.dto.TimeDto;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 // Extends the Adapter class to RecyclerView.Adapter
 // and implement the unimplemented methods
 public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<PatientAppointmentPendingAdapter.ViewHolder> {
+    AppointmentRepository appointmentRepository;
     ArrayList<AppointmentDto> appointments;
     Context context;
 
@@ -43,6 +48,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
     @Override
     public PatientAppointmentPendingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+        appointmentRepository = new AppointmentRepository();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending, parent, false);
 
         // Passing view to ViewHolder
@@ -65,7 +71,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView purpose,date,time;
+        private TextView purpose,date,time, documentId;
         public ViewHolder(View view) {
             super(view);
             Button cancel, reschedule;
@@ -74,10 +80,47 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             time = (TextView) view.findViewById(R.id.appointment_time);
             cancel=(Button)itemView.findViewById(R.id.cancel_button);
             reschedule=(Button)itemView.findViewById(R.id.reschedule_button);
+            documentId = (TextView) view.findViewById(R.id.DocumentID);
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
+                 //   Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(itemView.getContext(), documentId.getText(), Toast.LENGTH_SHORT).show();
+                    android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(itemView.getContext());
+
+
+                    alertDialog.setTitle("Canceling");
+                    alertDialog.setMessage("Are you sure?");
+                    alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            android.app.AlertDialog.Builder progressDialog = new AlertDialog.Builder(itemView.getContext());
+
+                            getBindingAdapterPosition();
+                            SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor myEdit = sharedPreferences.edit();
+
+                            appointmentRepository.cancelAppointment(documentId.getText().toString(), new AppointmentRepository.AppointmentCancelCallback() {
+                                @Override
+                                public void onSuccess(String appointmentId) {
+
+                                    android.app.AlertDialog.Builder progressDialog = new AlertDialog.Builder(itemView.getContext());
+
+                                    progressDialog.setTitle("Canceled");
+                                    progressDialog.setMessage("appointment was canceled");
+                                    progressDialog.show();
+                                }
+                                @Override
+                                public void onError(String errorMessage) {
+
+                                }
+                            });
+                            myEdit.putInt("PatientPending", Integer.parseInt("10"));
+                            myEdit.putInt("PatientStatus", Integer.parseInt("10"));
+                            myEdit.apply();
+                        }
+                    });
+                    alertDialog.show();
+
                 }
             });
             reschedule.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +139,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTimeDto.getDate().ToString());
             time.setText(dateTimeDto.getTime().ToString());
+            documentId.setText(appointment.getDocumentId());
         }
 
         private void showUpdateDialog()
