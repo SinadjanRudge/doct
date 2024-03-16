@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -28,6 +30,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragment.AddPatientFragment;
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentStatusAdapter;
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentUpcomingAdapter;
+import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
@@ -39,7 +42,7 @@ import java.util.List;
  * Use the {@link HealthProfessionalStatus#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HealthProfessionalStatus extends Fragment {
+public class HealthProfessionalStatus extends Fragment implements IListView {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -106,29 +109,22 @@ public class HealthProfessionalStatus extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_health_professional_status, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        CallPending();
+        ReloadList();
         return rootView;
     }
 
-    public void CallPending() {
-        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+    public void ReloadList() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        appointmentRepository.getAppointmentsForHealthProf(currentUser.getUid(), new AppointmentRepository.AppointmentFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
 
-                HealthProfessionalAppointmentStatusAdapter adapter = new HealthProfessionalAppointmentStatusAdapter(getContext(), Purpose, Date, Time, Status, Identification, Name);
+                HealthProfessionalAppointmentStatusAdapter adapter = new HealthProfessionalAppointmentStatusAdapter(getContext(), (ArrayList)appointments);
 
-                for (AppointmentDto a : appointments) {
-                    Log.d("AppointRequest Fragment", "Requester's id: " + a.getPatientId());
-                    Purpose.add(a.getPurpose());
-
-                    Date.add(a.getDateOfAppointment().toString());
-                    Time.add(a.getDateOfAppointment().toString());
-                    Identification.add(a.getPatientId().toString());
-                    Name.add(a.getNameOfRequester().toString());
-                    Status.add("Status:                          " + a.getStatus().toString());
-                }
                 recyclerView.setAdapter(adapter);
             }
 
