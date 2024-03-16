@@ -152,7 +152,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
 
             Button timeBtn = dialog.findViewById(R.id.timeBtn);
             TextView updateTime = dialog.findViewById(R.id.updateTime);
-
+            Button confirmBtn = dialog.findViewById(R.id.confirmbutton);
             DateTimeDto selectedDateTime = new DateTimeDto();
 
             dateBtn.setOnClickListener((View.OnClickListener) v -> {
@@ -195,6 +195,12 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
 
                 // Show the Time Picker Dialog
                 timePickerDialog.show();
+            });
+
+            confirmBtn.setOnClickListener(v -> {
+
+
+
             });
 
             dialog.show();
