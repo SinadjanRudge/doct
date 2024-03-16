@@ -78,7 +78,7 @@ public class RecordMedication extends Fragment {
     }
 
     private void loadMedicationCards(RecyclerView recyclerView){
-        medicationRepository.getAllMedications(new MedicationRepository.MedicationsFetchCallback() {
+        medicationRepository.getAllMedications("", new MedicationRepository.MedicationFetchCallback() {
             @Override
             public void onSuccess(List<MedicationDto> medications) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
