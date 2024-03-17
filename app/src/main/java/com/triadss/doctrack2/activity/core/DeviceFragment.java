@@ -1,5 +1,8 @@
 package com.triadss.doctrack2.activity.core;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +28,9 @@ public class DeviceFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private BluetoothAdapter bluetoothAdapter;
+    private final static int REQUEST_ENABLE_BT = 1;
 
     public DeviceFragment() {
         // Required empty public constructor
@@ -55,12 +61,27 @@ public class DeviceFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //Bluetooth
+        BluetoothManager bluetoothManager = getContext().getSystemService(BluetoothManager.class);
+        bluetoothAdapter = bluetoothManager.getAdapter();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_no_device, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_device_no_device, container, false);
+        return rootView;
+    }
+
+    private void initBluetooth()
+    {
+        if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
     }
 }
