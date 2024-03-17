@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.fragment.AddVitalSigns;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.HealthProfDto;
@@ -86,7 +88,25 @@ public class AdminManageUserAccount extends Fragment {
                 RecyclerView recyclerView = rootView.findViewById(R.id.recyclerViewAdmin);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
-                HealthProfessionalAdapter adapter = new HealthProfessionalAdapter(getContext(),(ArrayList) healthProf);
+                HealthProfessionalAdapter adapter = new HealthProfessionalAdapter(getContext(),(ArrayList) healthProf, new HealthProfessionalAdapter.Callback() {
+                    @Override
+                    public void OnViewPressed(String uid) {
+                        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
+                        transaction.replace(R.id.frame_layout, ViewHealthProfPage.newInstance("", ""));
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+
+                    @Override
+                    public void OnUpdatePressed(String uid) {
+                        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
+                        transaction.replace(R.id.frame_layout, UpdateHealthProfPage.newInstance("", ""));
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
                 recyclerView.setAdapter(adapter);
             }
 

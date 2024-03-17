@@ -99,5 +99,6 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
 
     public interface Callback {
         public void OnViewPressed(String uid);
+        public void OnUpdatePressed(String uid);
     }
 }
