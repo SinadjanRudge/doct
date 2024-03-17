@@ -42,6 +42,12 @@
         android:hint="UserName"/>
 
     <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:hint="Email" />
+
+    <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="50dp"
