@@ -16,6 +16,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientMedicationFragment;
+import com.triadss.doctrack2.activity.patient.fragment.PatientReportFragment;
 import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
 import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
@@ -71,6 +72,8 @@ public class PatientHome extends AppCompatActivity {
                 replaceFragment(new PatientAppointmentFragment());
             } else if (item.getItemId() == R.id.medication_menu) {
                 replaceFragment(new PatientMedicationFragment());
+            } else if (item.getItemId() == R.id.report_menu) {
+                replaceFragment(new PatientReportFragment());
             }
             return true;
         });
