@@ -123,12 +123,11 @@ public class CreateHealthProfessionalPage extends Fragment {
                     editTextPositionInput.setText("");
                     editTextUserNameInput.setText("");
                     editTextPasswordInput.setText("");
-//                    editTextAppointmentIDInput.setText("");
                     editTextGenderInput.setText("");
                     editTextEmailInput.setText("");
                     Toast.makeText(getContext(), "Added Professional Health Account Created", Toast.LENGTH_SHORT).show();
 
-                    
+                    getActivity().onBackPressed();
                 }
 
                 @Override
