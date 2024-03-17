@@ -1,19 +1,21 @@
-package com.triadss.doctrack2;
+package com.triadss.doctrack2.activity.healthprof.fragment;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import androidx.fragment.app.Fragment;
+
+import com.triadss.doctrack2.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link addMedicalRecord#newInstance} factory method to
+ * Use the {@link AddVitalSigns#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class addMedicalRecord extends Fragment {
+public class AddVitalSigns extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +26,7 @@ public class addMedicalRecord extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public addMedicalRecord() {
+    public AddVitalSigns() {
         // Required empty public constructor
     }
 
@@ -37,8 +39,8 @@ public class addMedicalRecord extends Fragment {
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static addMedicalRecord newInstance(String param1, String param2) {
-        addMedicalRecord fragment = new addMedicalRecord();
+    public static AddVitalSigns newInstance(String param1, String param2) {
+        AddVitalSigns fragment = new AddVitalSigns();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +61,16 @@ public class addMedicalRecord extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_medical_record, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_patient_record_add_vital_signs, container, false);
+        Button submit = rootView.findViewById(R.id.submitBtn);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Do Action here
+            }
+        });
+
+        return rootView;
     }
 }

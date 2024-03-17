@@ -155,6 +155,6 @@
         android:layout_marginBottom="83dp"
         android:gravity="center"
         android:backgroundTint="@color/green"
-        android:text="@string/update_record" />
+        android:text="update_record" />
 
 </RelativeLayout>
