@@ -15,52 +15,90 @@
         android:textStyle="bold"
         android:layout_marginBottom="24dp"/>
 
-    <EditText
-        android:id="@+id/editTextHealthProfName"
-        android:layout_width="383dp"
-        android:layout_height="57dp"
-        android:hint="Health Professional Name"
-        android:inputType="text" />
-
     <TextView
-        android:id="@+id/health_professional_update"
-        android:layout_width="match_parent"
-        android:layout_height="107dp"
+        android:id="@+id/health_worker_name_update"
+        android:layout_width="387dp"
+        android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:clickable="false"
         android:focusable="false"
         android:longClickable="false"
         android:padding="16dp"
-        android:text="This is a non-editable text"
+        android:text="Health Worker Name"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
-    <EditText
-        android:id="@+id/editTextHealthProfSpecialty"
-        android:layout_width="380dp"
-        android:layout_height="55dp"
-        android:hint="Specialty"
-        android:inputType="text" />
-
     <TextView
-        android:id="@+id/health_professional_update_textview"
-        android:layout_width="match_parent"
-        android:layout_height="107dp"
+        android:id="@+id/health_position_update"
+        android:layout_width="387dp"
+        android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:clickable="false"
         android:focusable="false"
         android:longClickable="false"
         android:padding="16dp"
-        android:text="This is a non-editable text"
+        android:text="Position"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/health_user_name_update"
+        android:layout_width="387dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:clickable="false"
+        android:focusable="false"
+        android:longClickable="false"
+        android:padding="16dp"
+        android:text="UserName"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+
+    <TextView
+        android:id="@+id/health_Password_update"
+        android:layout_width="388dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:clickable="false"
+        android:focusable="false"
+        android:longClickable="false"
+        android:padding="16dp"
+        android:text="Password"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/health_AppointmentID_update"
+        android:layout_width="388dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:clickable="false"
+        android:focusable="false"
+        android:longClickable="false"
+        android:padding="16dp"
+        android:text="Appointment ID"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/health_gender_update"
+        android:layout_width="388dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:clickable="false"
+        android:focusable="false"
+        android:longClickable="false"
+        android:padding="16dp"
+        android:text="Gender"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/buttonUpdateHealthProf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Update"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24dp"
+        android:text="Update" />
 
 </LinearLayout>
