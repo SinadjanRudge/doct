@@ -73,7 +73,6 @@ public class CreateHealthProfessionalPage extends Fragment {
         }
     }
 
-    @SuppressLint("WrongViewCast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -112,7 +111,7 @@ public class CreateHealthProfessionalPage extends Fragment {
             String Password = editTextPasswordInput.getText().toString();
             String Gender = editTextGenderInput.getText().toString();
             String fullName = editTextNameInput.getText().toString();
-            String email = "";
+            String email = editTextEmailInput.getText().toString();
 
             HealthProfDto healthProfdto = new HealthProfDto(fullName, Position,UserName, email, Password, Gender);
             healthProfRepository.addHealthProf(healthProfdto,new HealthProfRepository.HealthProAddCallback(){
@@ -124,10 +123,12 @@ public class CreateHealthProfessionalPage extends Fragment {
                     editTextPositionInput.setText("");
                     editTextUserNameInput.setText("");
                     editTextPasswordInput.setText("");
-                    editTextAppointmentIDInput.setText("");
+//                    editTextAppointmentIDInput.setText("");
                     editTextGenderInput.setText("");
                     editTextEmailInput.setText("");
                     Toast.makeText(getContext(), "Added Professional Health Account Created", Toast.LENGTH_SHORT).show();
+
+                    
                 }
 
                 @Override

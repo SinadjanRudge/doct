@@ -26,44 +26,59 @@ public class HealthProfRepository {
             .collection(FireStoreCollection.USERS_TABLE);
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
-    //private List<HealthProfDto> healthprofdto;
 
-    //create instance from firestore
     public void addHealthProf(HealthProfDto healthProf, HealthProAddCallback callback) {
-        if (user != null) {
-            healthProf.setHealthProfid(user.getUid());
+        String newEmail = healthProf.getEmail();
+        String newPassword = healthProf.getPassword();
 
-            Map<String, Object> healthprofMap = new HashMap<>();
-            healthprofMap.put("idNumber", user.getUid());
-            healthprofMap.put("fullName", healthProf.getFullName());
-            healthprofMap.put("role", healthProf.getPosition());
-            healthprofMap.put("userName", healthProf.getUserName());
-//            healthprofMap.put("password", healthProf.getPassword());
-            healthprofMap.put("gender", healthProf.getGender());
-            healthprofMap.put("createdDate", Timestamp.now());
-            healthprofMap.put("createdDate", Timestamp.now());
-            healthprofMap.put("email", Timestamp.now());
+        FirebaseAuth newUserAuth = FirebaseAuth.getInstance();
 
-            healProfCollection
-                    .add(healthprofMap)
-                    .addOnSuccessListener(documentReference -> {
-                        Log.d(TAG, "Health Professional added with ID: " + documentReference.getId());
-                        callback.onSuccess(documentReference.getId());
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Error adding medication", e);
-                        callback.onFailure(e.getMessage());
-                    })
-                    .addOnFailureListener(e -> {
-                        // Error fetching user document from Firestore
-                        Log.e(TAG, "Error fetching user document from Firestore", e);
-                        callback.onFailure(e.getMessage());
-                    });
-        } else {
-            Log.e(TAG, "User is null");
-            callback.onFailure("User is null");
-        }
+        newUserAuth.createUserWithEmailAndPassword(newEmail, newPassword)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = task.getResult().getUser();
+                        if (firebaseUser != null) {
+                            String userId = firebaseUser.getUid();
+                            healthProf.setHealthProfid(userId);
+
+                            Map<String, Object> healthprofMap = new HashMap<>();
+                            healthprofMap.put("idNumber", userId);
+                            healthprofMap.put("fullName", healthProf.getFullName());
+                            healthprofMap.put("position", healthProf.getPosition());
+
+                            healthprofMap.put("userName", healthProf.getUserName());
+                            healthprofMap.put("gender", healthProf.getGender());
+                            healthprofMap.put("createdDate", Timestamp.now());
+                            healthprofMap.put("email", newEmail);
+
+                            healthprofMap.put("role", UserRoleConstants.HealthProf);
+
+                            healProfCollection
+                                    .document(userId)
+                                    .set(healthprofMap)
+                                    .addOnSuccessListener(documentReference -> {
+                                        Log.d(TAG, "Health Professional added with ID: " + userId);
+                                        callback.onSuccess(userId);
+
+                                        // Sign out the new user from the separate FirebaseAuth instance
+                                        newUserAuth.signOut();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Error adding health professional to Firestore", e);
+                                        callback.onFailure(e.getMessage());
+                                    });
+                        } else {
+                            Log.e(TAG, "Failed to get current user after creating account");
+                            callback.onFailure("Failed to get current user after creating account");
+                        }
+                    } else {
+                        Log.e(TAG, "Error creating user in Firebase Authentication", task.getException());
+                        callback.onFailure("Error creating user in Firebase Authentication: " + task.getException().getMessage());
+                    }
+                });
     }
+
+
 
     public void getHealthProfList(HealthProListCallback callback){
         FirebaseFirestore db = FirebaseFirestore.getInstance();

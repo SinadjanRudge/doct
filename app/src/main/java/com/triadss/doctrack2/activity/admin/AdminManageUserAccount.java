@@ -93,6 +93,7 @@ public class AdminManageUserAccount extends Fragment {
                 @SuppressLint("CommitTransaction")
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
                         .beginTransaction();
+
                 transaction.replace(R.id.frame_layout, new CreateHealthProfessionalPage());
                 // Add HomeFragment to the back stack with a tag
                 transaction.addToBackStack("tag_for_home_fragment");
