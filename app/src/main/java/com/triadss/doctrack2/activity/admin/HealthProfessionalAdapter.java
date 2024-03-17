@@ -83,14 +83,14 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
             viewBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Callback(healthProfDto.getHWIN());
+                    callback.OnViewPressed(healthProfDto.getHealthProfid());
                 }
             });
 
             updateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Callback(healthProfDto.getHWIN());
+                    callback.OnUpdatePressed(healthProfDto.getHealthProfid());
                 }
             });
         }
@@ -99,5 +99,6 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
 
     public interface Callback {
         public void OnViewPressed(String uid);
+        public void OnUpdatePressed(String uid);
     }
 }

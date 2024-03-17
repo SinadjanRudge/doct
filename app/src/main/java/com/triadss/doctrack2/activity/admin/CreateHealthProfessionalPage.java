@@ -39,7 +39,7 @@ public class CreateHealthProfessionalPage extends Fragment {
     private HealthProfRepository healthProfRepository;
     private static final String TAG = "PatientMedicationAddFragment";
     private Button buttonSubmit;
-    private EditText editHWNInput, editTextPositionInput, editTextUserNameInput, editTextPasswordInput, editTextAppointmentIDInput, editTextGenderInput;
+    private EditText editTextPositionInput, editTextUserNameInput, editTextPasswordInput, editTextAppointmentIDInput, editTextGenderInput;
 
     public CreateHealthProfessionalPage() {
         // Required empty public constructor
@@ -77,11 +77,15 @@ public class CreateHealthProfessionalPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+<<<<<<< HEAD
         View rootView =  inflater.inflate(R.layout.fragment_create_health_professional_page, container, false);
+=======
+        // Inflate the layout for this fragment
+        View rootView =  inflater.inflate(R.layout.fragment_admin_manage_user_accounts_create_health_professional, container, false);
+>>>>>>> origin/Item_AdminMangeUserAccount_Rev
 
         healthProfRepository = new HealthProfRepository();
 
-        editHWNInput = rootView.findViewById(R.id.editHWN);
         editTextPositionInput = rootView.findViewById(R.id.editTextPosition);
         editTextUserNameInput = rootView.findViewById(R.id.editTextUserName);
         editTextPasswordInput = rootView.findViewById(R.id.editTextPassword);
@@ -104,14 +108,13 @@ public class CreateHealthProfessionalPage extends Fragment {
 
     private void handleConfirmationButtonClick() {
         try {
-            String HWN = editHWNInput.getText().toString();
             String Position = editTextPositionInput.getText().toString();
             String UserName = editTextUserNameInput.getText().toString();
             String Password = editTextPasswordInput.getText().toString();
             String AppointmentID = editTextAppointmentIDInput.getText().toString();
             String Gender = editTextGenderInput.getText().toString();
 
-            HealthProfDto healthProfdto = new HealthProfDto(HWN, Position,UserName, Password, AppointmentID, Gender);
+            HealthProfDto healthProfdto = new HealthProfDto("", Position,UserName, Password, AppointmentID, Gender);
             healthProfRepository.addHealthProf(healthProfdto,new HealthProfRepository.HealthProAddCallback(){
 
                 @Override
