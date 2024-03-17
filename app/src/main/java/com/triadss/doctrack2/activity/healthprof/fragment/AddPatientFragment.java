@@ -229,7 +229,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     private void showMedicalHistory() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, AddMedicalHistory.newInstance("", ""));
+        transaction.replace(R.id.frame_layout, AddMedicalHistory.newInstance("", "", ""));
         transaction.addToBackStack(null);
         transaction.commit();
     }

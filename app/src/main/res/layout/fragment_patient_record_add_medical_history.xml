@@ -137,7 +137,7 @@
                         android:text="insomnia" />
 
                     <CheckBox
-                        android:id="@+id/checkbox7"
+                        android:id="@+id/checkbox6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.4"
@@ -151,7 +151,7 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkbox8"
+                        android:id="@+id/checkbox7"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"

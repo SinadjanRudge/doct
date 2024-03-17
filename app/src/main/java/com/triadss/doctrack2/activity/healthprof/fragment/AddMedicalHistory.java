@@ -9,8 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.MedicalHistoryDto;
+import com.triadss.doctrack2.dto.VitalSignsDto;
+import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
+import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +24,8 @@ import com.triadss.doctrack2.R;
  * create an instance of this fragment.
  */
 public class AddMedicalHistory extends Fragment {
+    CheckBox checkBox1;
+    EditText editPastIllness, editPrevHospitalization, editFamilyHistory, editObgyneHistory;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,11 +49,12 @@ public class AddMedicalHistory extends Fragment {
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddMedicalHistory newInstance(String param1, String param2) {
+    public static AddMedicalHistory newInstance(String param1, String param2, String userId) {
         AddMedicalHistory fragment = new AddMedicalHistory();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString("userId", userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,19 +74,32 @@ public class AddMedicalHistory extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_record_add_medical_history, container, false);
         Button nextButton = rootView.findViewById(R.id.nxtButton);
+        String userId = getArguments().getString("userId");
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                createMedicalHistory(userId);
                 showVitalSigns();
             }
         });
         return rootView;
     }
 
+    private void createMedicalHistory(String userId){
+        MedicalHistoryDto medicalHistoryDto= new MedicalHistoryDto();
+        medicalHistoryDto.setPastIllness(String.valueOf(editPastIllness.getText()).trim());
+        medicalHistoryDto.setPrevOperation(String.valueOf(editPrevHospitalization.getText()).trim());
+        medicalHistoryDto.setFamilyHist(String.valueOf(editFamilyHistory.getText()).trim());
+        medicalHistoryDto.setObgyneHist(String.valueOf(editObgyneHistory.getText()).trim());
+
+        MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
+        medicalHistoryRepo.AddMedicalHistory(userId, medicalHistoryDto);
+    }
+
     private void showVitalSigns() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, AddVitalSigns.newInstance("", ""));
+        transaction.replace(R.id.frame_layout, AddVitalSigns.newInstance("", "", ""));
         transaction.addToBackStack(null);
         transaction.commit();
     }
