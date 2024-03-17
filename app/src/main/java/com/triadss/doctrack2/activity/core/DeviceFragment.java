@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.BluetoothDeviceDto;
@@ -53,10 +55,13 @@ public class DeviceFragment extends Fragment {
     private RecyclerView scannedDeviceContainer;
     private ArrayList<BluetoothDeviceDto> scannedDevices;
 
+    // PERMISSIONS NEEDS ARBITRARY VALUES THAT ARE UNIQUE AND > 0
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_CONNECT_BT = 2;
+    private static final int REQUEST_SCAN_BT = 3;
 
-    private String MY_UUID = "18db211d-d69b-4024-a843-b1ebc45d00aa"
+    // PAIRING REQUIRES AN ARBITRARY VALUE
+    private String MY_UUID = "18db211d-d69b-4024-a843-b1ebc45d00aa";
 
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -68,7 +73,7 @@ public class DeviceFragment extends Fragment {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_CONNECT_BT);
+                            new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_CONNECT_BT);
                     return;
                 }
 
@@ -77,9 +82,8 @@ public class DeviceFragment extends Fragment {
 
                 BluetoothDeviceDto newDevice = new BluetoothDeviceDto(deviceName, deviceHardwareAddress);
 
-                if(scannedDevices.stream().anyMatch(existingDevice -> existingDevice.getName() == newDevice.getName()
-                    && existingDevice.getAddress() == newDevice.getAddress()))
-                {
+                if (scannedDevices.stream().anyMatch(existingDevice -> existingDevice.getName() == newDevice.getName()
+                        && existingDevice.getAddress() == newDevice.getAddress())) {
                     scannedDevices.add(newDevice);
                     updateScannedDevices();
                 }
@@ -132,6 +136,7 @@ public class DeviceFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         pairedDeviceContainer.setLayoutManager(linearLayoutManager);
 
+        // For permission of activating bluetooth
         if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -142,6 +147,29 @@ public class DeviceFragment extends Fragment {
         // Register for broadcasts when a device is discovered.
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         getContext().registerReceiver(receiver, filter);
+
+        Button scanBtn = rootView.findViewById(R.id.scanBtn);
+        Button cancelScanBtn = rootView.findViewById(R.id.cancelScanBtn);
+
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelScanBtn.setVisibility(View.VISIBLE);
+                scanBtn.setVisibility(View.GONE);
+                //
+            }
+        });
+
+        cancelScanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelScanBtn.setVisibility(View.GONE);
+                scanBtn.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+        updatePairedDevices();
 
         return rootView;
     }
@@ -181,9 +209,28 @@ public class DeviceFragment extends Fragment {
         public BluetoothClientThread(BluetoothDevice device) {
             this.device = device;
             try {
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_CONNECT_BT);
+                    return;
+                }
                 socket = device.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID));
             } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
 
+        public void run() {
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.BLUETOOTH_SCAN}, REQUEST_SCAN_BT);
+                return;
+            }
+            bluetoothAdapter.cancelDiscovery();
+            try {
+                socket.connect();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
