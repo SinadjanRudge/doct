@@ -6,6 +6,7 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,8 +26,10 @@ import android.view.ViewGroup;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.BluetoothDeviceDto;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +55,8 @@ public class DeviceFragment extends Fragment {
 
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_CONNECT_BT = 2;
+
+    private String MY_UUID = "18db211d-d69b-4024-a843-b1ebc45d00aa"
 
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -167,5 +172,19 @@ public class DeviceFragment extends Fragment {
 
         // Don't forget to unregister the ACTION_FOUND receiver.
         getContext().unregisterReceiver(receiver);
+    }
+
+    private class BluetoothClientThread extends Thread {
+        private BluetoothSocket socket;
+        private BluetoothDevice device;
+
+        public BluetoothClientThread(BluetoothDevice device) {
+            this.device = device;
+            try {
+                socket = device.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID));
+            } catch (IOException ex) {
+
+            }
+        }
     }
 }
