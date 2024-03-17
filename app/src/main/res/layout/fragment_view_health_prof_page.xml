@@ -13,10 +13,10 @@
         android:layout_centerHorizontal="true"/>
 
     <TextView
-        android:id="@+id/tvHealthProfSpecialty"
+        android:id="@+id/tvHealthProfPosition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Specialty"
+        android:text="position"
         android:layout_below="@id/tvHealthProfName"
         android:layout_marginTop="8dp"
         android:layout_centerHorizontal="true"/>
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View / Update"
-        android:layout_below="@id/tvHealthProfSpecialty"
+        android:layout_below="@id/tvHealthProfPosition"
         android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"/>
 

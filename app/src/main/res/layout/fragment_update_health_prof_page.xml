@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Update Health Professional"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginBottom="24dp"/>
 
@@ -28,6 +28,13 @@
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
+    <EditText
+        android:id="@+id/editTextPosition"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:hint="Position"
+        android:inputType="text" />
+
     <TextView
         android:id="@+id/health_position_update"
         android:layout_width="387dp"
@@ -40,6 +47,7 @@
         android:text="Position"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
+
 
     <TextView
         android:id="@+id/health_user_name_update"
@@ -54,6 +62,12 @@
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:hint="Password"
+        android:inputType="text" />
 
     <TextView
         android:id="@+id/health_Password_update"
@@ -68,6 +82,13 @@
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
+    <EditText
+        android:id="@+id/editTextAppointmentID"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:hint="Appointment ID"
+        android:inputType="text" />
+
     <TextView
         android:id="@+id/health_AppointmentID_update"
         android:layout_width="388dp"
@@ -80,6 +101,7 @@
         android:text="Appointment ID"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
+
 
     <TextView
         android:id="@+id/health_gender_update"
