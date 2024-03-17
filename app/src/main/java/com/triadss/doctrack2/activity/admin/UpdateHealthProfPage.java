@@ -1,4 +1,4 @@
-package com.triadss.doctrack2;
+package com.triadss.doctrack2.activity.admin;
 
 import android.os.Bundle;
 
@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.triadss.doctrack2.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link addMedicalRecord#newInstance} factory method to
+ * Use the {@link UpdateHealthProfPage#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class addMedicalRecord extends Fragment {
+public class UpdateHealthProfPage extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +26,7 @@ public class addMedicalRecord extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public addMedicalRecord() {
+    public UpdateHealthProfPage() {
         // Required empty public constructor
     }
 
@@ -34,11 +36,11 @@ public class addMedicalRecord extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment addMedicalRecord.
+     * @return A new instance of fragment UpdateHealthProfPage.
      */
     // TODO: Rename and change types and number of parameters
-    public static addMedicalRecord newInstance(String param1, String param2) {
-        addMedicalRecord fragment = new addMedicalRecord();
+    public static UpdateHealthProfPage newInstance(String param1, String param2) {
+        UpdateHealthProfPage fragment = new UpdateHealthProfPage();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +61,6 @@ public class addMedicalRecord extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_medical_record, container, false);
+        return inflater.inflate(R.layout.fragment_admin_manage_user_accounts_update_health_prof, container, false);
     }
 }

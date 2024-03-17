@@ -90,10 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-
-
         });
-
     }
 
     private void fetchUserRole(String userId) {

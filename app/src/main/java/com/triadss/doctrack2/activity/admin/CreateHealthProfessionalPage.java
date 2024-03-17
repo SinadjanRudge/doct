@@ -77,7 +77,6 @@ public class CreateHealthProfessionalPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_create_health_professional_page, container, false);
 
         healthProfRepository = new HealthProfRepository();
@@ -93,7 +92,6 @@ public class CreateHealthProfessionalPage extends Fragment {
         setupConfirmationButton();
         return rootView;
     }
-    //create function in getting data from xml id's
     private void setupConfirmationButton() {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override

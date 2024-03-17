@@ -28,11 +28,12 @@ import java.util.Calendar;
 public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfessionalAdapter.ViewHolder> {
     ArrayList<HealthProfDto> healthProfessional;
     Context context;
+    Callback callback;
 
     // Constructor for initialization
-    public HealthProfessionalAdapter(Context context, ArrayList<HealthProfDto> healthProfessional) {
+    public HealthProfessionalAdapter(Context context, ArrayList<HealthProfDto> healthProfessional, Callback callback) {
         this.context = context;
-
+        this.callback = callback;
         this.healthProfessional = healthProfessional;
     }
 
@@ -64,77 +65,39 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView email, name;
-        private Button reschedule;
+        private Button viewBtn, updateBtn;
 
         public ViewHolder(View view) {
             super(view);
-            Button cancel;
             name = (TextView) view.findViewById(R.id.textViewAdminName);
             email = (TextView) view.findViewById(R.id.textViewAdminEmail);
+
+            viewBtn = view.findViewById(R.id.viewBtn);
+            updateBtn = view.findViewById(R.id.updateBtn);
         }
 
-        public void update(HealthProfDto appointment)
+        public void update(HealthProfDto healthProfDto)
         {
-            name.setText(appointment.getFullName());
-        }
+            name.setText(healthProfDto.getFullName());
 
-        private void showUpdateDialog()
-        {
-            Dialog dialog = new Dialog(context);
-            dialog.setContentView(R.layout.fragment_patient_appointment_reschedule);
-
-            Button dateBtn = dialog.findViewById(R.id.dateBtn);
-            TextView updateDate = dialog.findViewById(R.id.updateDate);
-
-            Button timeBtn = dialog.findViewById(R.id.timeBtn);
-            TextView updateTime = dialog.findViewById(R.id.updateTime);
-
-            DateTimeDto selectedDateTime = new DateTimeDto();
-
-            dateBtn.setOnClickListener((View.OnClickListener) v -> {
-                // Get the current date
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
-
-                // Create and show the Date Picker Dialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(context,
-                        (view, year1, monthOfYear, dayOfMonth) -> {
-                            // Store the selected date
-                            selectedDateTime.setDate(new DateDto(year1, monthOfYear, dayOfMonth));
-
-                            // Update the text on the button
-                            updateDate.setText(selectedDateTime.getDate().ToString());
-                        }, year, month, day);
-
-                // Show the Date Picker Dialog
-                datePickerDialog.show();
+            viewBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Callback(healthProfDto.getHWIN());
+                }
             });
 
-            timeBtn.setOnClickListener(v -> {
-                // Get the current time
-                final Calendar c = Calendar.getInstance();
-                int hour = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
-
-                // Create and show the Time Picker Dialog
-                TimePickerDialog timePickerDialog = new TimePickerDialog(context,
-                        (view, hourOfDay, minute1) -> {
-                            // Store the selected time
-
-                            selectedDateTime.setTime(new TimeDto(hourOfDay, minute1));
-
-                            // Update the text on the button
-                            updateTime.setText(selectedDateTime.getTime().ToString());
-                        }, hour, minute, false);
-
-                // Show the Time Picker Dialog
-                timePickerDialog.show();
+            updateBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Callback(healthProfDto.getHWIN());
+                }
             });
-
-            dialog.show();
         }
 
+    }
+
+    public interface Callback {
+        public void OnViewPressed(String uid);
     }
 }
