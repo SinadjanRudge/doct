@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.triadss.doctrack2.R;
@@ -102,7 +103,6 @@ public class CreateHealthProfessionalPage extends Fragment {
             }
         });
     }
-    //and reflect to List<HealthProfDto>
 
     private void handleConfirmationButtonClick() {
         try {
@@ -119,6 +119,13 @@ public class CreateHealthProfessionalPage extends Fragment {
                 @Override
                 public void onSuccess(String healthProfId) {
                     Log.e(TAG, "Successfully added medication with the id of " + healthProfdto);
+                    editHWNInput.setText("");
+                    editTextPositionInput.setText("");
+                    editTextUserNameInput.setText("");
+                    editTextPasswordInput.setText("");
+                    editTextAppointmentIDInput.setText("");
+                    editTextGenderInput.setText("");
+                    Toast.makeText(getContext(), "Added Professional Health Account Created", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
