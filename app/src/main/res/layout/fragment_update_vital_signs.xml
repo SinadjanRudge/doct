@@ -226,7 +226,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="70dp"
-            android:text="click UPDATE to record information"
+            android:text="click UPDATE to update vital signs"
             android:textSize="13sp"
             tools:ignore="MissingConstraints" />
 
