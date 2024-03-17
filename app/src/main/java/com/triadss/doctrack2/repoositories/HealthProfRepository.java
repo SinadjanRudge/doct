@@ -10,14 +10,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.constants.UserRoleConstants;
 import com.triadss.doctrack2.config.model.UserModel;
-import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.HealthProfDto;
-import com.triadss.doctrack2.dto.MedicationDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.firebase.Timestamp;
 
 public class HealthProfRepository {
     private static final String TAG = "HealthProfRepository";
@@ -38,11 +38,10 @@ public class HealthProfRepository {
             healthprofMap.put("fullName", healthProf.getFullName());
             healthprofMap.put("role", healthProf.getPosition());
             healthprofMap.put("userName", healthProf.getUserName());
-            healthprofMap.put("password", healthProf.getPassword());
+//            healthprofMap.put("password", healthProf.getPassword());
             healthprofMap.put("appointmentID", healthProf.getAppointmentId());
             healthprofMap.put("gender", healthProf.getGender());
-
-            //healthprofdto.add(healthProf);
+            healthprofMap.put("createdDate", Timestamp.now());
 
             healProfCollection
                     .add(healthprofMap)
