@@ -369,11 +369,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="25dp"
-                android:text="click <NEXT> to enter Medication"
+                android:text="click NEXT to enter Medication"
                 android:textSize="13sp" />
 
             <Button
-                android:id="@+id/button9"
+                android:id="@+id/nxtButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -382,8 +382,12 @@
                 android:layout_marginBottom="50dp"
                 android:backgroundTint="@color/green"
                 android:text="NEXT" />
-
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="90dp" />
         </LinearLayout>
     </ScrollView>
+
+
 
 </LinearLayout>

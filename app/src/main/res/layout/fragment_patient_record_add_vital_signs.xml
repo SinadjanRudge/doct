@@ -226,12 +226,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="70dp"
-            android:text="click <SUBMIT> to record information"
+            android:text="click SUBMIT to record information"
             android:textSize="13sp"
             tools:ignore="MissingConstraints" />
 
         <Button
-            android:id="@+id/button9"
+            android:id="@+id/submitBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"

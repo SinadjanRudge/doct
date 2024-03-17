@@ -266,7 +266,7 @@
                     android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/input_dateOfBirth"
+                        android:id="@+id/input_course"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginEnd="10dp"
@@ -293,12 +293,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="30dp"
-                android:text="click <NEXT> to enter Medical History"
+                android:text="click NEXT to enter Medical History"
                 android:textSize="13sp"
                 tools:ignore="MissingConstraints" />
 
             <Button
-                android:id="@+id/button9"
+                android:id="@+id/nextBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -308,6 +308,13 @@
                 android:backgroundTint="@color/green"
                 android:text="NEXT" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="90dp" />
+
         </LinearLayout>
     </ScrollView>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
