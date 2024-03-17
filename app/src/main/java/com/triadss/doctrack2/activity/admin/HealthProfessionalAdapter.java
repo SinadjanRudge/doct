@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.healthprof.fragment;
+package com.triadss.doctrack2.activity.admin;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,38 +18,38 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
+import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.dto.TimeDto;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Adapter<HealthProfessionalAppointmentPendingAdapter.ViewHolder> {
-    ArrayList<AppointmentDto> healthProfessional;
+public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfessionalAdapter.ViewHolder> {
+    ArrayList<HealthProfDto> healthProfessional;
     Context context;
-    AppointmentCallback appointmentCallbacks;
 
     // Constructor for initialization
-    public HealthProfessionalAppointmentPendingAdapter(Context context,  ArrayList<AppointmentDto> healthProfessional, AppointmentCallback appointmentCallback) {
+    public HealthProfessionalAdapter(Context context, ArrayList<HealthProfDto> healthProfessional) {
         this.context = context;
-        this.appointmentCallbacks = appointmentCallback;
+
         this.healthProfessional = healthProfessional;
     }
 
     @NonNull
     @Override
-    public HealthProfessionalAppointmentPendingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HealthProfessionalAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_admin_healthprof, parent, false);
 
         // Passing view to ViewHolder
-        HealthProfessionalAppointmentPendingAdapter.ViewHolder viewHolder = new HealthProfessionalAppointmentPendingAdapter.ViewHolder(view);
+        HealthProfessionalAdapter.ViewHolder viewHolder = new HealthProfessionalAdapter.ViewHolder(view);
         return viewHolder;
     }
 
     // Binding data to the into specified position
     @Override
-    public void onBindViewHolder(@NonNull HealthProfessionalAppointmentPendingAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull HealthProfessionalAdapter.ViewHolder holder, int position) {
         // TypeCast Object to int type
         holder.update(healthProfessional.get(position));
     }
@@ -60,50 +59,26 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
         return healthProfessional.size();
     }
 
+
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView purpose,date,time,identification,name;
+
+        private TextView email, name;
+        private Button reschedule;
 
         public ViewHolder(View view) {
             super(view);
-            purpose = (TextView) view.findViewById(R.id.purposetext);
-            date = (TextView) view.findViewById(R.id.appointment_date);
-            time = (TextView) view.findViewById(R.id.appointment_time);
-            identification = (TextView) view.findViewById(R.id.IDtext);
-            name = (TextView) view.findViewById(R.id.nametext);
+            Button cancel;
+            name = (TextView) view.findViewById(R.id.textViewAdminName);
+            email = (TextView) view.findViewById(R.id.textViewAdminEmail);
         }
 
-        public void update(AppointmentDto appointment)
+        public void update(HealthProfDto appointment)
         {
-            purpose.setText(appointment.getPurpose());
-            identification.setText(appointment.getPatientId());
-            name.setText(appointment.getNameOfRequester());
-
-            DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
-            date.setText(dateTime.getDate().ToString());
-            time.setText(dateTime.getTime().ToString());
-            Button reschedule = (Button)itemView.findViewById(R.id.reschedule_button);
-
-            reschedule.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-                    showUpdateDialog(appointment.getUid());
-                }
-            });
-
-            Button cancel = (Button)itemView.findViewById(R.id.cancel_button);
-
-            cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-                    appointmentCallbacks.onCancel(appointment.getUid());
-                }
-            });
+            name.setText(appointment.getFullName());
         }
 
-        private void showUpdateDialog(String appointmentId)
+        private void showUpdateDialog()
         {
             Dialog dialog = new Dialog(context);
             dialog.setContentView(R.layout.fragment_patient_appointment_reschedule);
@@ -113,8 +88,6 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
             Button timeBtn = dialog.findViewById(R.id.timeBtn);
             TextView updateTime = dialog.findViewById(R.id.updateTime);
-
-            Button confirm = dialog.findViewById(R.id.confirmbutton);
 
             DateTimeDto selectedDateTime = new DateTimeDto();
 
@@ -149,6 +122,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context,
                         (view, hourOfDay, minute1) -> {
                             // Store the selected time
+
                             selectedDateTime.setTime(new TimeDto(hourOfDay, minute1));
 
                             // Update the text on the button
@@ -159,19 +133,8 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                 timePickerDialog.show();
             });
 
-            confirm.setOnClickListener(v -> {
-                appointmentCallbacks.onRescheduleConfirmed(selectedDateTime, appointmentId);
-                dialog.dismiss();
-            });
-
             dialog.show();
         }
 
-    }
-
-
-    public interface AppointmentCallback {
-        void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid);
-        void onCancel(String appointmentUid);
     }
 }
