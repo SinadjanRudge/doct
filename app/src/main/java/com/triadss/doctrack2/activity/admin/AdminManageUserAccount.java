@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.admin;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -11,9 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragment.AddVitalSigns;
+import com.triadss.doctrack2.activity.healthprof.fragment.AddPatientFragment;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.HealthProfDto;
@@ -81,6 +85,21 @@ public class AdminManageUserAccount extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_admin_manage_user_account, container, false);
+        Button addHealthProfBtn = rootView.findViewById(R.id.addHealthProfBtn);
+
+        addHealthProfBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                @SuppressLint("CommitTransaction")
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
+                        .beginTransaction();
+                transaction.replace(R.id.frame_layout, new CreateHealthProfessionalPage());
+                // Add HomeFragment to the back stack with a tag
+                transaction.addToBackStack("tag_for_home_fragment");
+
+                transaction.commit();
+            }
+        });
 
         repository.getHealthProfList(new HealthProfRepository.HealthProListCallback() {
             @Override

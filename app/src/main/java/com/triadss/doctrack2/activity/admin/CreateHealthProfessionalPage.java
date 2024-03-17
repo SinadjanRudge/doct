@@ -1,14 +1,24 @@
 package com.triadss.doctrack2.activity.admin;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.HealthProfDto;
+import com.triadss.doctrack2.repoositories.HealthProfRepository;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +35,10 @@ public class CreateHealthProfessionalPage extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private HealthProfRepository healthProfRepository;
+    private static final String TAG = "PatientMedicationAddFragment";
+    private Button buttonSubmit;
+    private EditText editHWNInput, editTextPositionInput, editTextUserNameInput, editTextPasswordInput, editTextAppointmentIDInput, editTextGenderInput;
 
     public CreateHealthProfessionalPage() {
         // Required empty public constructor
@@ -57,10 +71,63 @@ public class CreateHealthProfessionalPage extends Fragment {
         }
     }
 
+    @SuppressLint("WrongViewCast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_manage_user_accounts_create_health_professional, container, false);
+        View rootView =  inflater.inflate(R.layout.fragment_create_health_professional_page, container, false);
+
+        healthProfRepository = new HealthProfRepository();
+
+        editHWNInput = rootView.findViewById(R.id.editHWN);
+        editTextPositionInput = rootView.findViewById(R.id.editTextPosition);
+        editTextUserNameInput = rootView.findViewById(R.id.editTextUserName);
+        editTextPasswordInput = rootView.findViewById(R.id.editTextPassword);
+        editTextAppointmentIDInput = rootView.findViewById(R.id.editTextAppointmentID);
+        editTextGenderInput = rootView.findViewById(R.id.editTextGender);
+        buttonSubmit = rootView.findViewById(R.id.buttonSubmit);
+
+        setupConfirmationButton();
+        return rootView;
+    }
+    //create function in getting data from xml id's
+    private void setupConfirmationButton() {
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle confirmation button click
+                handleConfirmationButtonClick();
+            }
+        });
+    }
+    //and reflect to List<HealthProfDto>
+
+    private void handleConfirmationButtonClick() {
+        try {
+            String HWN = editHWNInput.getText().toString();
+            String Position = editTextPositionInput.getText().toString();
+            String UserName = editTextUserNameInput.getText().toString();
+            String Password = editTextPasswordInput.getText().toString();
+            String AppointmentID = editTextAppointmentIDInput.getText().toString();
+            String Gender = editTextGenderInput.getText().toString();
+
+            HealthProfDto healthProfdto = new HealthProfDto(HWN, Position,UserName, Password, AppointmentID, Gender);
+            healthProfRepository.addHealthProf(healthProfdto,new HealthProfRepository.HealthProAddCallback(){
+
+                @Override
+                public void onSuccess(String healthProfId) {
+                    Log.e(TAG, "Successfully added medication with the id of " + healthProfdto);
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                        Log.e(TAG, "Failure in adding medication in the document");
+                }
+            });
+        }catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 }
