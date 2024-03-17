@@ -35,18 +35,7 @@
         android:hint="Position"
         android:inputType="text" />
 
-    <TextView
-        android:id="@+id/health_position_update"
-        android:layout_width="387dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:clickable="false"
-        android:focusable="false"
-        android:longClickable="false"
-        android:padding="16dp"
-        android:text="Position"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+
 
 
     <TextView
@@ -62,45 +51,7 @@
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="match_parent"
-        android:layout_height="63dp"
-        android:hint="Password"
-        android:inputType="text" />
 
-    <TextView
-        android:id="@+id/health_Password_update"
-        android:layout_width="388dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:clickable="false"
-        android:focusable="false"
-        android:longClickable="false"
-        android:padding="16dp"
-        android:text="Password"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
-
-    <EditText
-        android:id="@+id/editTextAppointmentID"
-        android:layout_width="match_parent"
-        android:layout_height="63dp"
-        android:hint="Appointment ID"
-        android:inputType="text" />
-
-    <TextView
-        android:id="@+id/health_AppointmentID_update"
-        android:layout_width="388dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:clickable="false"
-        android:focusable="false"
-        android:longClickable="false"
-        android:padding="16dp"
-        android:text="Appointment ID"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
 
 
     <TextView

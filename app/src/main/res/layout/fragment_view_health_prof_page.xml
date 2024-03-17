@@ -1,34 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/ggreen"
-    android:layout_height="match_parent">
+    android:padding="16dp">
 
     <TextView
-        android:id="@+id/tvHealthProfName"
+        android:id="@+id/textViewHealthProfTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Health Professional Name"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
+        android:text="View Health Professional"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
 
     <TextView
-        android:id="@+id/tvHealthProfPosition"
-        android:layout_width="wrap_content"
+        android:id="@+id/healthWorkerName"
+        android:layout_width="387dp"
         android:layout_height="wrap_content"
-        android:text="position"
-        android:layout_below="@id/tvHealthProfName"
-        android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true"/>
+        android:background="@android:color/white"
+        android:clickable="false"
+        android:focusable="false"
+        android:longClickable="false"
+        android:padding="16dp"
+        android:text="Health Worker Name"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+
+    <TextView
+        android:id="@+id/UserName"
+        android:layout_width="387dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:clickable="false"
+        android:focusable="false"
+        android:longClickable="false"
+        android:padding="16dp"
+        android:text="UserName"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+
+
+
+    <TextView
+        android:id="@+id/Gender"
+        android:layout_width="388dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:clickable="false"
+        android:focusable="false"
+        android:longClickable="false"
+        android:padding="16dp"
+        android:text="Gender"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/Position"
+        android:layout_width="388dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:clickable="false"
+        android:focusable="false"
+        android:longClickable="false"
+        android:padding="16dp"
+        android:text="Position"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+
 
     <Button
-        android:id="@+id/btnViewUpdate"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonExit"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View / Update"
-        android:layout_below="@id/tvHealthProfPosition"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginTop="24dp"
+        android:text="Exit" />
 
-
-</RelativeLayout>
+</LinearLayout>
