@@ -13,25 +13,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 
 import java.util.ArrayList;
 
 // Extends the Adapter class to RecyclerView.Adapter
 // and implement the unimplemented methods
 public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Adapter<HealthProfessionalAppointmentStatusAdapter.ViewHolder> {
-    ArrayList  Identification,Name,Pending, Date, Time, Status;
+    ArrayList<AppointmentDto> appointments;
     Context context;
 
     // Constructor for initialization
-    public HealthProfessionalAppointmentStatusAdapter(Context context,  ArrayList Pending, ArrayList Date, ArrayList Time, ArrayList Status, ArrayList Identification, ArrayList Name) {
+    public HealthProfessionalAppointmentStatusAdapter(Context context, ArrayList<AppointmentDto> appointments) {
         this.context = context;
-
-        this.Pending = Pending;
-        this.Date = Date;
-        this.Time = Time;
-        this.Status = Status;
-        this.Identification = Identification;
-        this.Name = Name;
+        this.appointments = appointments;
     }
 
     @NonNull
@@ -46,30 +42,22 @@ public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Ada
         return viewHolder;
     }
 
-
     // Binding data to the into specified position
     @Override
     public void onBindViewHolder(@NonNull HealthProfessionalAppointmentStatusAdapter.ViewHolder holder, int position) {
         // TypeCast Object to int type
-
-        holder.purpose.setText((String) Pending.get(position));
-        holder.date.setText((String) Date.get(position));
-        holder.time.setText((String) Time.get(position));
-        holder.status.setText((String) Status.get(position));
-        holder.identification.setText((String) Identification.get(position));
-        holder.name.setText((String) Name.get(position));
+        holder.update(appointments.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return Pending.size();
+        return appointments.size();
     }
 
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView purpose,date,time,status,identification,name;
+        private TextView purpose,date,time,status,identification,name;
 
         public ViewHolder(View view) {
             super(view);
@@ -80,6 +68,19 @@ public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Ada
             status = (TextView) view.findViewById(R.id.statustext);
             identification = (TextView) view.findViewById(R.id.IDtext);
             name = (TextView) view.findViewById(R.id.nametext);
+        }
+
+        public void update(AppointmentDto appointment)
+        {
+            purpose.setText(appointment.getPurpose());
+            identification.setText(appointment.getPatientId());
+            name.setText(appointment.getNameOfRequester());
+
+            DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
+            date.setText(dateTime.getDate().ToString());
+            time.setText(dateTime.getTime().ToString());
+
+            status.setText(appointment.getStatus());
         }
     }
 }

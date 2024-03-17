@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +24,12 @@ import java.util.ArrayList;
 public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.Adapter<HealthProfessionalAppointmentUpcomingAdapter.ViewHolder> {
     ArrayList<AppointmentDto> appointments;
     Context context;
+    AppointmentCallback callback;
 
     // Constructor for initialization
-    public HealthProfessionalAppointmentUpcomingAdapter(Context context,  ArrayList<AppointmentDto> appointments) {
+    public HealthProfessionalAppointmentUpcomingAdapter(Context context,  ArrayList<AppointmentDto> appointments, AppointmentCallback callback) {
         this.context = context;
-
+        this.callback = callback;
         this.appointments = appointments;
     }
 
@@ -42,7 +44,6 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
         return viewHolder;
     }
 
-
     // Binding data to the into specified position
     @Override
     public void onBindViewHolder(@NonNull HealthProfessionalAppointmentUpcomingAdapter.ViewHolder holder, int position) {
@@ -55,36 +56,17 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
         return appointments.size();
     }
 
-
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView purpose,date,time,identification,name;
 
         public ViewHolder(View view) {
             super(view);
-            Button reject, accept;
             purpose = (TextView) view.findViewById(R.id.purposetext);
             date = (TextView) view.findViewById(R.id.appointment_date);
             time = (TextView) view.findViewById(R.id.appointment_time);
             identification = (TextView) view.findViewById(R.id.IDtext);
             name = (TextView) view.findViewById(R.id.nametext);
-            reject=(Button)itemView.findViewById(R.id.reject_button);
-            accept=(Button)itemView.findViewById(R.id.accept_button);
-            reject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
-            accept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
         }
 
         public void update(AppointmentDto appointment)
@@ -96,6 +78,51 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
             time.setText(dateTime.getTime().ToString());
+
+            Button reject = (Button)itemView.findViewById(R.id.reject_button);
+
+            reject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Dialog dialog = new Dialog(context);
+                    dialog.setContentView(R.layout.dialog_cancel_appointment_confirmation);
+
+                    Button yes = dialog.findViewById(R.id.yesBtn);
+                    Button no = dialog.findViewById(R.id.noBtn);
+
+                    no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            callback.onReject(appointments.get(getAdapterPosition()).getUid());
+                            dialog.dismiss();
+                        }
+                    });
+
+                    dialog.show();
+                }
+            });
+
+            Button accept = (Button)itemView.findViewById(R.id.accept_button);
+
+            accept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
+                    callback.onAccept(appointment.getUid());
+                }
+            });
         }
+    }
+
+    public interface AppointmentCallback {
+        void onAccept(String appointmentUid);
+        void onReject(String appointmentUid);
     }
 }

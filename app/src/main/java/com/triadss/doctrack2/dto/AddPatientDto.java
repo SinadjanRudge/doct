@@ -19,7 +19,7 @@ public class AddPatientDto implements Parcelable {
 
     private String phone;
 
-    private String Age;
+    private int Age;
 
     private String course;
 
@@ -71,11 +71,11 @@ public class AddPatientDto implements Parcelable {
         this.idNumber = idNumber;
     }
 
-    public String getAge() {
+    public int getAge() {
         return Age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         Age = age;
     }
 

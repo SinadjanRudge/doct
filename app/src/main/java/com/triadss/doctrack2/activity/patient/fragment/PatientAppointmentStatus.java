@@ -5,11 +5,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.triadss.doctrack2.R;
@@ -32,11 +36,12 @@ public class PatientAppointmentStatus extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_patient_status, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         CallStatus();
+        CallSomething();
         return rootView;
     }
 
     public void CallStatus() {
-        appointmentRepository.getAllAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+        appointmentRepository.getAllPatientStatusAppointments(new AppointmentRepository.AppointmentPatientStatusFetchCallback() {
 
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
@@ -54,5 +59,29 @@ public class PatientAppointmentStatus extends Fragment {
 
             }
         });
+    }
+
+    public void CallSomething(){
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            int carl = 2;
+            public void run() {
+                SharedPreferences sh = getActivity().getApplicationContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+                int a = sh.getInt("PatientStatus",9);
+                carl = a;
+                if(carl == 10){
+                    SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor myEdit = sharedPreferences.edit();
+
+                    myEdit.putInt("PatientStatus", Integer.parseInt("0"));
+
+                    myEdit.apply();
+                    CallStatus();
+                }
+                //Toast.makeText(getContext(), Integer.toString(carl), Toast.LENGTH_SHORT).show();
+                handler.postDelayed(this,1000);
+            }
+        }, 1000);
     }
 }
