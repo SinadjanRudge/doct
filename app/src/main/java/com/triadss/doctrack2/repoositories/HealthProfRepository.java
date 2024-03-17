@@ -39,9 +39,10 @@ public class HealthProfRepository {
             healthprofMap.put("role", healthProf.getPosition());
             healthprofMap.put("userName", healthProf.getUserName());
 //            healthprofMap.put("password", healthProf.getPassword());
-            healthprofMap.put("appointmentID", healthProf.getAppointmentId());
             healthprofMap.put("gender", healthProf.getGender());
             healthprofMap.put("createdDate", Timestamp.now());
+            healthprofMap.put("createdDate", Timestamp.now());
+            healthprofMap.put("email", Timestamp.now());
 
             healProfCollection
                     .add(healthprofMap)

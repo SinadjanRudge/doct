@@ -40,6 +40,7 @@ public class CreateHealthProfessionalPage extends Fragment {
     private static final String TAG = "PatientMedicationAddFragment";
     private Button buttonSubmit;
     private EditText editTextPositionInput, editTextUserNameInput, editTextPasswordInput, editTextAppointmentIDInput, editTextGenderInput;
+    private EditText editTextEmailInput, editTextNameInput;
 
     public CreateHealthProfessionalPage() {
         // Required empty public constructor
@@ -81,12 +82,13 @@ public class CreateHealthProfessionalPage extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_admin_manage_user_accounts_create_health_professional, container, false);
 
         healthProfRepository = new HealthProfRepository();
-
+        editTextNameInput = rootView.findViewById(R.id.editTextHWN);
         editTextPositionInput = rootView.findViewById(R.id.editTextPosition);
         editTextUserNameInput = rootView.findViewById(R.id.editTextUserName);
         editTextPasswordInput = rootView.findViewById(R.id.editTextPassword);
-        editTextAppointmentIDInput = rootView.findViewById(R.id.editTextAppointmentID);
         editTextGenderInput = rootView.findViewById(R.id.editTextGender);
+        editTextEmailInput = rootView.findViewById(R.id.editTextEmail);
+
         buttonSubmit = rootView.findViewById(R.id.buttonSubmit);
 
         setupConfirmationButton();
@@ -108,21 +110,23 @@ public class CreateHealthProfessionalPage extends Fragment {
             String Position = editTextPositionInput.getText().toString();
             String UserName = editTextUserNameInput.getText().toString();
             String Password = editTextPasswordInput.getText().toString();
-            String AppointmentID = editTextAppointmentIDInput.getText().toString();
             String Gender = editTextGenderInput.getText().toString();
+            String fullName = editTextNameInput.getText().toString();
+            String email = "";
 
-            HealthProfDto healthProfdto = new HealthProfDto("", Position,UserName, Password, AppointmentID, Gender);
+            HealthProfDto healthProfdto = new HealthProfDto(fullName, Position,UserName, email, Password, Gender);
             healthProfRepository.addHealthProf(healthProfdto,new HealthProfRepository.HealthProAddCallback(){
 
                 @Override
                 public void onSuccess(String healthProfId) {
-                    Log.e(TAG, "Successfully added medication with the id of " + healthProfdto);
-                    editHWNInput.setText("");
+                    Log.e(TAG, "Successfully added medication with the id of " + healthProfId);
+                    editTextNameInput.setText("");
                     editTextPositionInput.setText("");
                     editTextUserNameInput.setText("");
                     editTextPasswordInput.setText("");
                     editTextAppointmentIDInput.setText("");
                     editTextGenderInput.setText("");
+                    editTextEmailInput.setText("");
                     Toast.makeText(getContext(), "Added Professional Health Account Created", Toast.LENGTH_SHORT).show();
                 }
 

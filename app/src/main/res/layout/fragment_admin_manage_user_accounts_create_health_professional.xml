@@ -55,13 +55,6 @@
         android:hint="Password"/>
 
     <EditText
-        android:id="@+id/editTextAppointmentID"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Appointment ID"/>
-
-
-    <EditText
         android:id="@+id/editTextGender"
         android:layout_width="match_parent"
         android:layout_height="57dp"
