@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.bluetooth
+package com.triadss.doctrack2.bluetooth_kotlin
 
 import android.content.BroadcastReceiver
 import android.content.Context

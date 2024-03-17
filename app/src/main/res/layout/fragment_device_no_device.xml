@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="15dp"
     tools:context=".activity.core.DeviceFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -20,11 +21,56 @@
             android:textAlignment="gravity"
             android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/SyncDeviceBtn"
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Register Device" />
+            android:text="Find Device" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Paired Device" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pairedDevices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_weight="1"
+                android:text="Scanned Devices" />
+
+            <Button
+                android:id="@+id/scanBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Scan" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/scannedDevices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
     </LinearLayout>
 
 </FrameLayout>

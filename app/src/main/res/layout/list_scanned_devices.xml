@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
-    tools:context=".list_paired_devices">
+    android:padding="10dp">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -22,13 +21,12 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/textView10"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Name:" />
 
                 <TextView
-                    android:id="@+id/textView10"
+                    android:id="@+id/nameValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -40,13 +38,12 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/textView10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Address:" />
 
                 <TextView
-                    android:id="@+id/textView10"
+                    android:id="@+id/addressValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
