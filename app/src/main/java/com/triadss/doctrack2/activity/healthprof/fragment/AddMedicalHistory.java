@@ -189,6 +189,9 @@ public class AddMedicalHistory extends Fragment {
         if (!editTextMenopause.getText().toString().isEmpty()) {
             obgyneHistoryBuilder.append("Menopause: ").append(editTextMenopause.getText().toString()).append(", ");
         }
+        if (obgyneHistoryBuilder.length() > 0) {
+            obgyneHistoryBuilder.setLength(obgyneHistoryBuilder.length() - 2);
+        }
         medicalHistoryDto.setObgyneHist(obgyneHistoryBuilder.toString());
 
         MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
