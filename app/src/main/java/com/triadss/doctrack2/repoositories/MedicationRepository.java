@@ -10,10 +10,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
-import com.triadss.doctrack2.config.model.MedicationModel;
 import com.triadss.doctrack2.dto.MedicationDto;
 
 import java.util.ArrayList;
@@ -96,6 +94,32 @@ public class MedicationRepository {
         }
     }
 
+    public void getAllMedicationsFromUser(String userId, MedicationFetchCallback callback) {
+        if (user != null) {
+
+            medicationsCollection
+                    .whereEqualTo("patientId", userId)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        List<MedicationDto> medications = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            MedicationDto medication = document.toObject(MedicationDto.class);
+                            medications.add(medication);
+                            medication.setMediId(document.getId());
+                        }
+                        callback.onSuccess(medications);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching medicines", e);
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
+
     public void updateMedicationStatus(String medicationId, String newStatus, MedicationUpdateCallback callback) {
         if(user == null) return;
 
@@ -137,6 +161,23 @@ public class MedicationRepository {
             Log.e(TAG, "User is null");
             callback.onError("User is null");
         }
+    }
+
+    public void deleteMedication(String medicationId, MedicationUpdateCallback callback) {
+        if(user == null) return;
+
+        DocumentReference appointmentRef = medicationsCollection.document(medicationId);
+
+        appointmentRef
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Medication delete successfully");
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error delete Appointment", e);
+                    callback.onError(e.getMessage());
+                });
     }
 
     public interface MedicationsAddCallback {
