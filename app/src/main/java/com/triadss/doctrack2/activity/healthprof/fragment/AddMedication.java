@@ -37,6 +37,9 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class AddMedication extends Fragment {
+    EditText inputMedicine, inputNote;
+    Button addMedicine;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,6 +48,7 @@ public class AddMedication extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    String userId;
 
     RecyclerView recyclerView;
     MedicationRepository repository;
@@ -78,6 +82,7 @@ public class AddMedication extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            userId = getArguments().getString("userId");
         }
     }
 
@@ -165,9 +170,7 @@ public class AddMedication extends Fragment {
 
             }
         });
-
     }
-
 
     private void showVitalSigns() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
