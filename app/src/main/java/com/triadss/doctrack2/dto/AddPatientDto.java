@@ -3,6 +3,8 @@ package com.triadss.doctrack2.dto;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.Timestamp;
+
 public class AddPatientDto implements Parcelable {
 
     public AddPatientDto(){
@@ -21,7 +23,47 @@ public class AddPatientDto implements Parcelable {
 
     private int Age;
 
+    public int getYear() {
+        return Year;
+    }
+
+    public void setYear(int year) {
+        Year = year;
+    }
+
+    private int Year;
     private String course;
+    private Timestamp dateOfBirth;
+    private String gender;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    private String status;
+
+    public Timestamp getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Timestamp dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+
 
     public String getEmail() {
         return email;

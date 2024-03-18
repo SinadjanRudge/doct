@@ -1,22 +1,15 @@
 package com.triadss.doctrack2.repoositories;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
-import android.widget.Toast;
-
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.activity.healthprof.fragment.PatientFragment;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
-import com.triadss.doctrack2.config.constants.DocTrackErrorMessage;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.enums.UserRole;
 import com.triadss.doctrack2.config.model.UserModel;
@@ -30,6 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 public class PatientRepository {
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private final CollectionReference usersCollection = firestore
+            .collection(FireStoreCollection.USERS_TABLE);
     /**
      * Saves user information to Firestore.
      *
@@ -63,6 +61,40 @@ public class PatientRepository {
         }
 
         return true;
+    }
+
+    public void addPatientCallback(AddPatientDto patient, PatientAddUpdateCallback callback) {
+        if (user != null) {
+            Map<String, Object> patientMap = new HashMap<>();
+            patientMap.put(UserModel.idNumber, patient.getIdNumber());
+            patientMap.put(UserModel.email, patient.getEmail());
+            patientMap.put(UserModel.fullName, patient.getFullName());
+            patientMap.put(UserModel.age, patient.getAge());
+            patientMap.put(UserModel.gender, patient.getGender());
+            patientMap.put(UserModel.address, patient.getAddress());
+            patientMap.put(UserModel.dateOfBirth, patient.getDateOfBirth());
+            patientMap.put(UserModel.status, patient.getStatus());
+            patientMap.put(UserModel.phone, patient.getPhone());
+            patientMap.put(UserModel.course, patient.getCourse());
+            patientMap.put(UserModel.year, patient.getYear());
+
+            usersCollection
+                    .add(patientMap)
+                    .addOnSuccessListener(documentReference -> {
+                        callback.onSuccess(documentReference.getId());
+                    })
+                    .addOnFailureListener(e -> {
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            callback.onError("User is null");
+        }
+
+    }
+
+    public interface PatientAddUpdateCallback {
+        void onSuccess(String patientId);
+        void onError(String errorMessage);
     }
 
     public interface PatientListCallback {

@@ -19,19 +19,26 @@
             android:exported="false" />
         <activity
             android:name=".activity.admin.AdminHome"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".activity.healthprof.HealthProfHome"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".activity.patient.PatientHome"
+            android:windowSoftInputMode="adjustResize"
+
             android:exported="false" />
         <activity
             android:name=".activity.RegisterActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+
             android:theme="@style/Theme.Material3.Light.NoActionBar" />
         <activity
             android:name=".activity.LoginActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/Theme.Material3.Light.NoActionBar">
             <intent-filter>

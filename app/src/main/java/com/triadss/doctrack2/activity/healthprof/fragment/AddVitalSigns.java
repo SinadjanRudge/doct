@@ -11,9 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
@@ -29,7 +27,7 @@ public class AddVitalSigns extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    private static final String PATIENT_UID = "patientUid";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
@@ -45,17 +43,14 @@ public class AddVitalSigns extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param userId Parameter 1.
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddVitalSigns newInstance(String param1, String param2, String userId) {
+    public static AddVitalSigns newInstance(String userId) {
         AddVitalSigns fragment = new AddVitalSigns();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        args.putString("userId", userId);
+        args.putString(PATIENT_UID, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,7 +59,7 @@ public class AddVitalSigns extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = getArguments().getString(PATIENT_UID);
             mParam2 = getArguments().getString(ARG_PARAM2);
             userId = getArguments().getString("userId");
         }

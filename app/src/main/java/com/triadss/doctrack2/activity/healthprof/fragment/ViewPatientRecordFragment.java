@@ -19,12 +19,10 @@ public class ViewPatientRecordFragment extends Fragment {
     public ViewPatientRecordFragment(){
         //Required empty public constructor
     }
-    public static ViewPatientRecordFragment newInstance(AddPatientDto patient,
-                                                        MedicalHistoryDto medicalHistory) {
+    public static ViewPatientRecordFragment newInstance(AddPatientDto patient) {
         ViewPatientRecordFragment fragment = new ViewPatientRecordFragment();
         Bundle args = new Bundle();
         args.putParcelable("patient", patient);
-        args.putParcelable("medicalHistory", medicalHistory);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,8 +37,7 @@ public class ViewPatientRecordFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             AddPatientDto patient = args.getParcelable("patient");
-            MedicalHistoryDto medicalHistory = args.getParcelable("medicalHistory");
-            if (patient != null && medicalHistory != null) {
+            if (patient != null) {
                 //Patient Personal Information
                 TextView patientId = rootView.findViewById(R.id.value_patientID);
                 TextView patientName = rootView.findViewById(R.id.value_Name);
@@ -62,10 +59,10 @@ public class ViewPatientRecordFragment extends Fragment {
                 TextView patientPrevHospitalization = rootView.findViewById(R.id.value_prevHospitalization);
                 TextView patientFamilyHistory = rootView.findViewById(R.id.value_familyHistory);
                 TextView patientOBGyneHistory = rootView.findViewById(R.id.value_OBGyneHistory);
-                patientPastIllness.setText(medicalHistory.getPastIllness());
-                patientPrevHospitalization.setText(medicalHistory.getPrevOperation());
-                patientFamilyHistory.setText(medicalHistory.getFamilyHist());
-                patientOBGyneHistory.setText(medicalHistory.getObgyneHist());
+//                patientPastIllness.setText(medicalHistory.getPastIllness());
+//                patientPrevHospitalization.setText(medicalHistory.getPrevOperation());
+//                patientFamilyHistory.setText(medicalHistory.getFamilyHist());
+//                patientOBGyneHistory.setText(medicalHistory.getObgyneHist());
 
                 //Patient Vital Signs
                 TextView bloodPressure = rootView.findViewById(R.id.value_bloodPressure);

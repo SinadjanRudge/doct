@@ -12,12 +12,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
-import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
-import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,13 +28,10 @@ public class AddMedicalHistory extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String PATIENT_UID = "patientUid";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    String userId;
+    String patientUid;
 
     public AddMedicalHistory() {
         // Required empty public constructor
@@ -47,17 +41,14 @@ public class AddMedicalHistory extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param patientUid Parameter 1.
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddMedicalHistory newInstance(String param1, String param2, String userId) {
+    public static AddMedicalHistory newInstance(String patientUid) {
         AddMedicalHistory fragment = new AddMedicalHistory();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        args.putString("userId", userId);
+        args.putString(PATIENT_UID, patientUid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,9 +57,7 @@ public class AddMedicalHistory extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-            userId = getArguments().getString("userId");
+            patientUid = getArguments().getString(PATIENT_UID);
         }
     }
 
@@ -104,7 +93,7 @@ public class AddMedicalHistory extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createMedicalHistory(userId);
+                createMedicalHistory(patientUid);
                 showMedication();
             }
         });
@@ -199,7 +188,7 @@ public class AddMedicalHistory extends Fragment {
     private void showMedication() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, AddMedication.newInstance("", "", ""));
+        transaction.replace(R.id.frame_layout, AddMedication.newInstance(patientUid));
         transaction.addToBackStack(null);
         transaction.commit();
     }
