@@ -166,7 +166,7 @@
                     android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/editTextText"
+                        android:id="@+id/editTextOthers"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginStart="35dp"
@@ -204,6 +204,7 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textViewPrevHos"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
