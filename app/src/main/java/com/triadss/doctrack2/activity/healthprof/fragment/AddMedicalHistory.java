@@ -94,7 +94,6 @@ public class AddMedicalHistory extends Fragment {
             @Override
             public void onClick(View v) {
                 createMedicalHistory(patientUid);
-                showMedication();
             }
         });
         return rootView;
@@ -182,7 +181,19 @@ public class AddMedicalHistory extends Fragment {
         medicalHistoryDto.setObgyneHist(obgyneHistoryBuilder.toString());
 
         MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
-        medicalHistoryRepo.AddMedicalHistory(userId, medicalHistoryDto);
+        medicalHistoryRepo.AddMedicalHistory(userId, medicalHistoryDto, new MedicalHistoryRepository.AddUpdateCallback() {
+
+            @Override
+            public void onSuccess(String patientId) {
+                showMedication();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                System.out.println();
+            }
+        });
+
     }
 
     private void showMedication() {
