@@ -33,7 +33,7 @@ public class AddMedicationAdapter
     @NonNull
     @Override
     public AddMedicationAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_medication_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_medication_add_update, parent, false);
 
         // Passing view to ViewHolder
         AddMedicationAdapter.ViewHolder viewHolder = new AddMedicationAdapter.ViewHolder(view);
@@ -56,10 +56,9 @@ public class AddMedicationAdapter
         Button delete;
         public ViewHolder(View view) {
             super(view);
-            medicine = (TextView) view.findViewById(R.id.medicationMedicine);
-            note = (TextView) view.findViewById(R.id.medicationNote);
+            medicine = (TextView) view.findViewById(R.id.input_medicineName);
+            note = (TextView) view.findViewById(R.id.input_note);
             delete = view.findViewById(R.id.deleteBtn);
-
         }
 
         public void update(MedicationDto medication)

@@ -30,8 +30,6 @@ public class MedicationRepository {
 
     public void addMedication(MedicationDto medications, MedicationsAddCallback callback) {
         if (user != null) {
-            medications.setPatientId(user.getUid());
-
             Map<String, Object> medicationMap = new HashMap<>();
             medicationMap.put("patientId", medications.getPatientId());
             medicationMap.put("medicine", medications.getMedicine());

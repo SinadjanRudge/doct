@@ -27,24 +27,24 @@ public class MedicalHistoryRepository {
     /**
      * Saves user information to Firestore.
      *
-     * @param userId     The ID of the user.
+     * @param patientId     The ID of the user.
      * @param medicalHistoryDto The DTO (Data Transfer Object) containing patient information.
      */
-    public boolean AddMedicalHistory(String userId, MedicalHistoryDto medicalHistoryDto, AddUpdateCallback callback)
+    public boolean AddMedicalHistory(String patientId, MedicalHistoryDto medicalHistoryDto, AddUpdateCallback callback)
     {
         try
         {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             // TODO: EDIT THIS
-            DocumentReference userRef = db.collection(FireStoreCollection.USERS_TABLE).document(userId);
+            DocumentReference userRef = db.collection(FireStoreCollection.USERS_TABLE).document(patientId);
             LocalDateTime currentDate = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DocTrackConstant.AUDIT_DATE_FORMAT);
             String dateNow = currentDate.format(formatter);
 
             Map<String, Object> medicalHistories = new HashMap<>();
             medicalHistories.put(MedicalHistoryModel.medHistId, 0);
-            medicalHistories.put(MedicalHistoryModel.patientId, medicalHistoryDto.getPatientId());
+            medicalHistories.put(MedicalHistoryModel.patientId, patientId);
             medicalHistories.put(MedicalHistoryModel.pastIllness, medicalHistoryDto.getPastIllness());
             medicalHistories.put(MedicalHistoryModel.prevOperation, medicalHistoryDto.getPrevOperation());
             medicalHistories.put(MedicalHistoryModel.obgyneHist, medicalHistoryDto.getObgyneHist());

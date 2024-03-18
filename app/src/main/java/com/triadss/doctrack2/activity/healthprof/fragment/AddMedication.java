@@ -78,7 +78,7 @@ public class AddMedication extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_record_add_medication, container, false);
         Button nextButton = rootView.findViewById(R.id.nxtButton);
-        String userId = getArguments().getString(PATIENT_UID);
+        String patientUid = getArguments().getString(PATIENT_UID);
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
@@ -89,7 +89,7 @@ public class AddMedication extends Fragment {
         addMedication.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MedicationDto dto = new MedicationDto("", userId,
+                MedicationDto dto = new MedicationDto("", patientUid,
                         inputMedicine.getText().toString(),
                         inputNote.getText().toString(),
                         Timestamp.now(),
