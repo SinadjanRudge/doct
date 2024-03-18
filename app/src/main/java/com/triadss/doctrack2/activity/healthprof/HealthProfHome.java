@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentFragment;
+import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalReportFragment;
 import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
 import com.triadss.doctrack2.activity.healthprof.fragment.AppointmentFragment;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
@@ -47,6 +48,8 @@ public class HealthProfHome extends AppCompatActivity {
                 replaceFragment(new PatientFragment());
             } else if (item.getItemId() == R.id.record_menu) {
                 replaceFragment(new RecordFragment());
+            } else if (item.getItemId() == R.id.report_menu) {
+                replaceFragment(new HealthProfessionalReportFragment());
             } else if (item.getItemId() == R.id.temp_logout) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
