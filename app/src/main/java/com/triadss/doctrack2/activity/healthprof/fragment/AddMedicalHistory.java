@@ -105,7 +105,7 @@ public class AddMedicalHistory extends Fragment {
             @Override
             public void onClick(View v) {
                 createMedicalHistory(userId);
-                showVitalSigns();
+                showMedication();
             }
         });
         return rootView;
@@ -196,10 +196,10 @@ public class AddMedicalHistory extends Fragment {
         medicalHistoryRepo.AddMedicalHistory(userId, medicalHistoryDto);
     }
 
-    private void showVitalSigns() {
+    private void showMedication() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, AddVitalSigns.newInstance("", "", ""));
+        transaction.replace(R.id.frame_layout, AddMedication.newInstance("", "", ""));
         transaction.addToBackStack(null);
         transaction.commit();
     }
