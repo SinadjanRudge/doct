@@ -35,6 +35,7 @@ public class AddVitalSigns extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    String userId;
 
     public AddVitalSigns() {
         // Required empty public constructor
@@ -65,6 +66,7 @@ public class AddVitalSigns extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            userId = getArguments().getString("userId");
         }
     }
 
@@ -74,7 +76,6 @@ public class AddVitalSigns extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_record_add_vital_signs, container, false);
         Button submit = rootView.findViewById(R.id.submitBtn);
-        String userId = getArguments().getString("userId");
 
         editBloodPressure = rootView.findViewById(R.id.input_bloodPressure);
         editTemperature = rootView.findViewById(R.id.input_temperature);
