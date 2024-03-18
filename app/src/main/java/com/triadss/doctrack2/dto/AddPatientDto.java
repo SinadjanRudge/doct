@@ -1,6 +1,13 @@
 package com.triadss.doctrack2.dto;
 
-public class AddPatientDto {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class AddPatientDto implements Parcelable {
+
+    public AddPatientDto(){
+        //Required empty constructor
+    }
 
     private String idNumber;
 
@@ -70,5 +77,45 @@ public class AddPatientDto {
 
     public void setAge(int age) {
         Age = age;
+    }
+
+    public AddPatientDto(Parcel in) {
+        // Read fields from Parcel
+        idNumber = in.readString();
+        fullName = in.readString();
+        email = in.readString();
+        address = in.readString();
+        Age = in.readString();
+        phone = in.readString();
+        course = in.readString();
+    }
+
+    public static final Creator<AddPatientDto> CREATOR = new Creator<AddPatientDto>() {
+        @Override
+        public AddPatientDto createFromParcel(Parcel in) {
+            return new AddPatientDto(in);
+        }
+
+        @Override
+        public AddPatientDto[] newArray(int size) {
+            return new AddPatientDto[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        // Write fields to Parcel
+        dest.writeString(idNumber);
+        dest.writeString(fullName);
+        dest.writeString(email);
+        dest.writeString(address);
+        dest.writeString(Age);
+        dest.writeString(phone);
+        dest.writeString(course);
     }
 }
