@@ -85,7 +85,7 @@ public class AddPatientDto implements Parcelable {
         fullName = in.readString();
         email = in.readString();
         address = in.readString();
-        Age = in.readString();
+        Age = in.readInt();
         phone = in.readString();
         course = in.readString();
     }
@@ -114,7 +114,7 @@ public class AddPatientDto implements Parcelable {
         dest.writeString(fullName);
         dest.writeString(email);
         dest.writeString(address);
-        dest.writeString(Age);
+        dest.writeInt(Age);
         dest.writeString(phone);
         dest.writeString(course);
     }

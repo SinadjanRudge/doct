@@ -61,6 +61,10 @@ public class MedicalHistoryDto implements Parcelable {
     private String obgyneHist;
     private String familyHist;
 
+    public MedicalHistoryDto() {
+
+    }
+
     protected MedicalHistoryDto(Parcel in) {
         // Read fields from Parcel
         pastIllness = in.readString();

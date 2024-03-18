@@ -62,12 +62,14 @@ public class UpdateVitalSigns extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_vital_signs, container, false);
-        Button submit = rootView.findViewById(R.id.submitBtn);
+        Button submit = rootView.findViewById(R.id.updateBtn);
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Do Action here
+
+
             }
         });
 
