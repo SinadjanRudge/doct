@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -87,6 +88,7 @@ public class AddVitalSigns extends Fragment {
             @Override
             public void onClick(View v) {
                createVitalSigns(userId);
+               backToPatientList();
             }
         });
 
@@ -104,6 +106,9 @@ public class AddVitalSigns extends Fragment {
 
         VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
         vitalSignsRepo.AddVitalSigns(userId, vitalSignsDto);
-
+    }
+    private void backToPatientList() {
+        // Replace the current fragment with the patient list fragment
+        requireActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }
