@@ -75,7 +75,6 @@ public class AddVitalSigns extends Fragment {
         Button submit = rootView.findViewById(R.id.submitBtn);
         String userId = getArguments().getString("userId");
 
-        mAuth = FirebaseAuth.getInstance();
         editBloodPressure = rootView.findViewById(R.id.input_bloodPressure);
         editTemperature = rootView.findViewById(R.id.input_temperature);
         editPulseRate = rootView.findViewById(R.id.input_pulseRate);

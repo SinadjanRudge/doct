@@ -25,7 +25,6 @@ import com.triadss.doctrack2.repoositories.VitalSignsRepository;
  * create an instance of this fragment.
  */
 public class AddMedicalHistory extends Fragment {
-    FirebaseAuth mAuth;
     CheckBox checkbox1, checkbox2, checkbox3, checkbox4, checkbox5, checkbox6, checkbox7, checkbox8, checkbox9, checkbox10, checkbox11, checkbox12, checkbox13, checkbox14;
     EditText editSpecifyText1, editSpecifyText2, editPrevHospitalization, editTextMenstruation, editTextGravida, editTextAbortion, editTextMenopause;
 
@@ -80,7 +79,6 @@ public class AddMedicalHistory extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_patient_record_add_medical_history, container, false);
         Button nextButton = rootView.findViewById(R.id.nxtButton);
 
-        mAuth = FirebaseAuth.getInstance();
         checkbox1 = rootView.findViewById(R.id.checkbox1);
         checkbox2 = rootView.findViewById(R.id.checkbox2);
         checkbox3 = rootView.findViewById(R.id.checkbox3);
