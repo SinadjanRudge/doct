@@ -591,6 +591,9 @@
                 android:backgroundTint="@color/green"
                 android:text="Update" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="90dp" />
 
         </LinearLayout>
     </ScrollView>

@@ -107,6 +107,7 @@ public class PatientRepository {
                             String role = document.getString("role");
                             if ("PATIENT".equals(role)) {
                                 AddPatientDto patients = document.toObject(AddPatientDto.class);
+                                patients.setUid(document.getId().toString());
                                 addPatientDtoList.add(patients);
                             }
                         }
