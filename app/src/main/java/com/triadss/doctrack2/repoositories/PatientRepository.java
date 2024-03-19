@@ -14,7 +14,7 @@ import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.enums.UserRole;
 import com.triadss.doctrack2.config.model.UserModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
-
+import com.triadss.doctrack2.config.constants.UserRoleConstants;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -78,6 +78,7 @@ public class PatientRepository {
             patientMap.put(UserModel.phone, patient.getPhone());
             patientMap.put(UserModel.course, patient.getCourse());
             patientMap.put(UserModel.year, patient.getYear());
+            patientMap.put(UserModel.role, UserRoleConstants.Patient);
 
             usersCollection
                     .add(patientMap)

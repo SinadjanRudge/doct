@@ -98,6 +98,7 @@ public class AddMedication extends Fragment {
                 repository.addMedication(dto, new MedicationRepository.MedicationsAddCallback() {
                     @Override
                     public void onSuccess(String medicationId) {
+
                         updateMedicationList();
                     }
 
