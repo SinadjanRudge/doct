@@ -86,6 +86,28 @@ public class MedicalHistoryRepository {
                 });
     }
 
+     public void updateMedicalHistory(MedicalHistoryDto medicalHistory, AddUpdateCallback callback) {
+        if (user != null) {
+            Map<String, Object> medicalHistories = new HashMap<>();
+            medicalHistories.put(MedicalHistoryModel.pastIllness, medicalHistoryDto.getPastIllness());
+            medicalHistories.put(MedicalHistoryModel.prevOperation, medicalHistoryDto.getPrevOperation());
+            medicalHistories.put(MedicalHistoryModel.obgyneHist, medicalHistoryDto.getObgyneHist());
+            medicalHistories.put(MedicalHistoryModel.familyHist, medicalHistoryDto.getFamilyHist());
+
+            usersCollection
+                    .add(patientMap)
+                    .addOnSuccessListener(documentReference -> {
+                        callback.onSuccess(documentReference.getId());
+                    })
+                    .addOnFailureListener(e -> {
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            callback.onError("User is null");
+        }
+
+    }
+
     public interface AddUpdateCallback {
         void onSuccess(String medHistoryUid);
         void onError(String errorMessage);

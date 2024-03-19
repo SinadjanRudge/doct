@@ -105,7 +105,7 @@ public class UpdatePersonalInfo extends Fragment {
     private void showMedicalHistory() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, UpdateMedicalHistory.newInstance("", ""));
+        transaction.replace(R.id.frame_layout, UpdateMedicalHistory.newInstance(patientUid));
         transaction.addToBackStack(null);
         transaction.commit();
     }

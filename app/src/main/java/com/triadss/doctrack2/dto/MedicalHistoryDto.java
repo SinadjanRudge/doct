@@ -14,11 +14,11 @@ public class MedicalHistoryDto implements Parcelable {
         this.medHistId = medHistId;
     }
 
-    public int getPatientId() {
+    public String getPatientId() {
         return patientId;
     }
 
-    public void setPatientId(int patientId) {
+    public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
 
@@ -55,7 +55,7 @@ public class MedicalHistoryDto implements Parcelable {
     }
 
     private int medHistId;
-    private int patientId;
+    private String patientId;
     private String pastIllness;
     private String prevOperation;
     private String obgyneHist;
