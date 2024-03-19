@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,51 +9,49 @@
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
-        android:layout_width="404dp"
+        android:layout_width="wrap_content"
         android:layout_height="379dp"
         android:padding="15dp">
 
         <TextView
             android:id="@+id/IDtext"
-            android:layout_width="346dp"
-            android:layout_height="42dp"
+            android:layout_width="41dp"
+            android:layout_height="44dp"
             android:layout_alignParentStart="true"
-
             android:layout_alignParentTop="true"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="10dp"
-
-            android:text="ID"
+            android:text="ID :"
             android:textColor="#000"
             android:textSize="16sp"
             android:textStyle="bold" />
 
+
+
         <TextView
             android:id="@+id/nametext"
-            android:layout_width="346dp"
-            android:layout_height="42dp"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
             android:layout_below="@+id/IDtext"
-
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:text="name"
+            android:text="Name :"
             android:textColor="#000"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/purposetext"
-            android:layout_width="346dp"
-            android:layout_height="42dp"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
             android:layout_below="@+id/nametext"
-
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="13dp"
-            android:text="purpose"
+            android:text="Purpose :"
             android:textColor="#000"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -128,6 +125,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="107dp"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="170dp"
+            android:text="TextView ID" />
+
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="wrap_content"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="152dp"
+            android:layout_marginBottom="250dp"
+            android:text="TextView Name" />
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="166dp"
+            android:layout_height="52dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="106dp"
+            android:layout_marginBottom="181dp"
+            android:text="TextView Purpose" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
