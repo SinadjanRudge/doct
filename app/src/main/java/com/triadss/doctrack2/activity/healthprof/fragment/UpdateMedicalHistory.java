@@ -176,6 +176,7 @@ public class UpdateMedicalHistory extends Fragment {
             obgyneHistoryBuilder.setLength(obgyneHistoryBuilder.length() - 2);
         }
         medicalHistoryDto.setObgyneHist(obgyneHistoryBuilder.toString());
+        medicalHistoryDto.setPatientId(patientUid);
 
         return medicalHistoryDto;
     }
@@ -200,7 +201,7 @@ public class UpdateMedicalHistory extends Fragment {
     private void showMedications() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, UpdateMedications.newInstance("", ""));
+        transaction.replace(R.id.frame_layout, UpdateMedications.newInstance(patientUid));
         transaction.addToBackStack(null);
         transaction.commit();
     }

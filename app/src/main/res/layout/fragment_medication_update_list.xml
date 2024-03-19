@@ -63,7 +63,7 @@
                     android:textSize="16sp" />
 
                 <EditText
-                    android:id="@+id/input_medicineName"
+                    android:id="@+id/input_medicine"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
@@ -85,7 +85,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/addBtn"
+                android:id="@+id/btn_addMedicine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="250dp"

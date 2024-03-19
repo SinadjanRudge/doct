@@ -19,12 +19,13 @@ public class UpdateMedications extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String PATIENT_UID = "patientUid";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String patientUid;
+
+    RecyclerView recyclerView;
+    MedicationRepository repository;
 
     public UpdateMedications() {
         // Required empty public constructor
@@ -39,11 +40,10 @@ public class UpdateMedications extends Fragment {
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static UpdateMedications newInstance(String param1, String param2) {
+    public static UpdateMedications newInstance(String patientUid) {
         UpdateMedications fragment = new UpdateMedications();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(PATIENT_UID, patientUid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,17 +52,47 @@ public class UpdateMedications extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            patientUid = getArguments().getString(PATIENT_UID);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        repository = new MedicationRepository();
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_medication_update_list, container, false);
         Button submit = rootView.findViewById(R.id.updateBtn);
+        recyclerView = rootView.findViewById(R.id.recyclerView);
+
+
+        EditText inputMedicine = rootView.findViewById(R.id.input_medicine);
+        EditText inputNote = rootView.findViewById(R.id.input_note);
+
+        Button addMedication = rootView.findViewById(R.id.btn_addMedicine);
+        addMedication.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MedicationDto dto = new MedicationDto("", patientUid,
+                        inputMedicine.getText().toString(),
+                        inputNote.getText().toString(),
+                        Timestamp.now(),
+                        MedicationTypeConstants.ONGOING);
+
+                repository.addMedication(dto, new MedicationRepository.MedicationsAddCallback() {
+                    @Override
+                    public void onSuccess(String medicationId) {
+                        updateMedicationList();
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        System.out.println();
+                    }
+                });
+            }
+        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +102,44 @@ public class UpdateMedications extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void updateMedicationList()
+    {
+        String userId = getArguments().getString(PATIENT_UID);
+
+        repository.getAllMedicationsFromUser(userId, new MedicationRepository.MedicationFetchCallback() {
+
+            @Override
+            public void onSuccess(List<MedicationDto> medications) {
+                AddMedicationAdapter pageAdapter = new AddMedicationAdapter(getContext(),
+                        (ArrayList)medications, new AddMedicationAdapter.Callback() {
+
+                    @Override
+                    public void onDelete(String medicationId) {
+                        repository.deleteMedication(medicationId, new MedicationRepository.MedicationUpdateCallback() {
+                            @Override
+                            public void onSuccess() {
+                                updateMedicationList();
+                            }
+
+                            @Override
+                            public void onError(String errorMessage) {
+
+                            }
+                        });
+                    }
+                });
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(linearLayoutManager);
+                recyclerView.setAdapter(pageAdapter);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
     }
 
     private void showVitalSigns() {
