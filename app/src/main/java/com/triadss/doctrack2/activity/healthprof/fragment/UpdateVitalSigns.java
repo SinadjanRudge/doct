@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
+import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
 /**
@@ -28,8 +30,10 @@ public class UpdateVitalSigns extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String patientUid;
+    private String vitalSignsUid;
 
     EditText editBloodPressure, editTemperature, editPulseRate, editOxygenLevel, editWeight, editHeight, editBMI;
+    VitalSignsRepository repository = new VitalSignsRepository();
 
     public UpdateVitalSigns() {
         // Required empty public constructor
@@ -81,22 +85,47 @@ public class UpdateVitalSigns extends Fragment {
             }
         });
 
+        populatePersonalInfo();
+
         return rootView;
+    }
+
+    private void populatePersonalInfo()
+    {
+        repository.getVitalSignOfPatient(patientUid, new VitalSignsRepository.FetchCallback() {
+
+            @Override
+            public void onSuccess(VitalSignsDto vitalSigns) {
+                editBloodPressure.setText(vitalSigns.getBloodPressure());
+                editTemperature.setText(String.valueOf(vitalSigns.getTemperature()));
+                editOxygenLevel.setText(String.valueOf(vitalSigns.getOxygenLevel()));
+                editPulseRate.setText(String.valueOf(vitalSigns.getPulseRate()));
+                editWeight.setText(String.valueOf(vitalSigns.getWeight()));
+                editHeight.setText(String.valueOf(vitalSigns.getHeight()));
+                editBMI.setText(String.valueOf(vitalSigns.getBMI()));
+                vitalSignsUid = vitalSigns.getUid();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                System.out.println();
+            }
+        });
     }
 
     private void updateVitalSigns()
     {
-        VitalSignsRepository repository = new VitalSignsRepository();
 
         VitalSignsDto vitalSignsDto = new VitalSignsDto();
         vitalSignsDto.setBloodPressure(String.valueOf(editBloodPressure.getText()).trim());
         vitalSignsDto.setTemperature(Double.parseDouble(String.valueOf(editTemperature.getText()).trim()));
         vitalSignsDto.setPulseRate(Integer.parseInt(String.valueOf(editPulseRate.getText()).trim()));
         vitalSignsDto.setOxygenLevel(Integer.parseInt(String.valueOf(editOxygenLevel.getText()).trim()));
-        vitalSignsDto.setWeight(Integer.parseInt(String.valueOf(editWeight.getText())));
-        vitalSignsDto.setHeight(Integer.parseInt(String.valueOf(editHeight.getText()).trim()));
+        vitalSignsDto.setWeight(Double.parseDouble(String.valueOf(editWeight.getText())));
+        vitalSignsDto.setHeight(Double.parseDouble(String.valueOf(editHeight.getText())));
         vitalSignsDto.setBMI(Double.parseDouble(String.valueOf(editBMI.getText()).trim()));
         vitalSignsDto.setPatientId(patientUid);
+        vitalSignsDto.setUid(vitalSignsUid);
 
         repository.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
             @Override

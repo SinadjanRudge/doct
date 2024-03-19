@@ -74,7 +74,7 @@ public class UpdateMedications extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_medication_update_list, container, false);
-        Button nxtButton = rootView.findViewById(R.id.nxtButton);
+        Button nxtButton = rootView.findViewById(R.id.nextBtn);
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
 
@@ -112,8 +112,10 @@ public class UpdateMedications extends Fragment {
             }
         });
 
+        updateMedicationList();
         return rootView;
     }
+
 
     private void updateMedicationList()
     {

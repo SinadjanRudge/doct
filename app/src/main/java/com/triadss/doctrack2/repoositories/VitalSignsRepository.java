@@ -158,4 +158,5 @@ public class VitalSignsRepository {
         void onSuccess(VitalSignsDto vitalSigns);
         void onError(String errorMessage);
     }
+
 }

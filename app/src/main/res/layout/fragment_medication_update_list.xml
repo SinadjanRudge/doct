@@ -122,7 +122,9 @@
                 android:layout_marginBottom="25dp"
                 android:backgroundTint="@color/green"
                 android:text="NEXT" />
-
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="90dp" />
         </LinearLayout>
     </ScrollView>
 

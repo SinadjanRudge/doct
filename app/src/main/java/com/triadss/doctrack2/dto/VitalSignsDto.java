@@ -59,11 +59,11 @@ public class VitalSignsDto {
         this.weight = weight;
     }
 
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
@@ -82,7 +82,7 @@ public class VitalSignsDto {
     private int pulseRate;
     private int oxygenLevel;
     private double weight;
-    private int height;
+    private double height;
     private double BMI;
 
     public String getUid() {
