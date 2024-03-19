@@ -92,16 +92,6 @@ public class PatientRepository {
 
     }
 
-    public interface PatientAddUpdateCallback {
-        void onSuccess(String patientId);
-        void onError(String errorMessage);
-    }
-
-    public interface PatientListCallback {
-        void onSuccess(List<AddPatientDto> patients);
-        void onFailure(String errorMessage);
-    }
-
     public void getPatientList(PatientListCallback callback){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users")
@@ -126,4 +116,35 @@ public class PatientRepository {
                 });
     }
 
+    public void updatePatient(AddPatientDto patient, PatientAddUpdateCallback callback) {
+        if(user == null) return;
+
+        DocumentReference patientRef = appointmentsCollection.document(patient.getUid());
+
+        patientRef
+                .update(UserModel.age, patient.getAge(),
+                        UserModel.address, patient.getAddress(),
+                        UserModel.status, patient.getStatus(),
+                        UserModel.phone, patient.getPhone(),
+                        UserModel.course, patient.getCourse(),
+                        UserModel.year, patient.getYear())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Patient Info updated successfully");
+                    callback.onSuccess(patient.getUid());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating Patient Info", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
+    public interface PatientAddUpdateCallback {
+        void onSuccess(String patientId);
+        void onError(String errorMessage);
+    }
+
+    public interface PatientListCallback {
+        void onSuccess(List<AddPatientDto> patients);
+        void onFailure(String errorMessage);
+    }
 }
