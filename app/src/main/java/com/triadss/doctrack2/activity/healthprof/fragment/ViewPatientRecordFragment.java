@@ -38,6 +38,10 @@ public class ViewPatientRecordFragment extends Fragment {
         if (args != null) {
             AddPatientDto patient = args.getParcelable("patient");
             if (patient != null) {
+                MedicalHistoryRepository medicalHistoryRepository = new MedicalHistoryRepository();
+
+                String patientUid = patient.getUid(); 
+
                 //Patient Personal Information
                 TextView patientId = rootView.findViewById(R.id.value_patientID);
                 TextView patientName = rootView.findViewById(R.id.value_Name);
@@ -59,11 +63,21 @@ public class ViewPatientRecordFragment extends Fragment {
                 TextView patientPrevHospitalization = rootView.findViewById(R.id.value_prevHospitalization);
                 TextView patientFamilyHistory = rootView.findViewById(R.id.value_familyHistory);
                 TextView patientOBGyneHistory = rootView.findViewById(R.id.value_OBGyneHistory);
-//                patientPastIllness.setText(medicalHistory.getPastIllness());
-//                patientPrevHospitalization.setText(medicalHistory.getPrevOperation());
-//                patientFamilyHistory.setText(medicalHistory.getFamilyHist());
-//                patientOBGyneHistory.setText(medicalHistory.getObgyneHist());
+                medicalHistoryRepository.getMedicalHistoryOfPatient(patientUid, new FetchCallback() {
+                    @Override
+                    public void onSuccess(MedicalHistoryDto medicalHistory) {
+                        patientPastIllness.setText(medicalHistory.getPastIllness());
+                        patientPrevHospitalization.setText(medicalHistory.getPrevOperation());
+                        patientFamilyHistory.setText(medicalHistory.getFamilyHist());
+                        patientOBGyneHistory.setText(medicalHistory.getObgyneHist());
+                    }
 
+                    @Override
+                    public void onError(String message) {
+
+                    }
+                });
+                
                 //Patient Vital Signs
                 TextView bloodPressure = rootView.findViewById(R.id.value_bloodPressure);
                 TextView temperature = rootView.findViewById(R.id.value_temperature);

@@ -68,8 +68,32 @@ public class MedicalHistoryRepository {
         return true;
     }
 
+    public void getMedicalHistoryOfPatient(String patientUid, FetchCallback callback) {
+        medHistoryCollection.whereEqualTo(MedicalHistoryModel.patientId, patientUid)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        MedicalHistoryDto medicalHistory;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            medicalHistory = document.toObject(MedicalHistoryDto.class);
+                            appointment.setDocumentId(document.getId().toString());
+                        }
+                        callback.onSuccess(medicalHistory);
+                    } else {
+                        Log.e(TAG, "Error getting medicalHistory", task.getException());
+                        callback.onError(task.getException().getMessage());
+                    }
+                });
+
+    }
+
     public interface AddUpdateCallback {
-        void onSuccess(String patientId);
+        void onSuccess(String medHistoryUid);
+        void onError(String errorMessage);
+    }
+
+    public interface FetchCallback {
+        void onSuccess(MedicalHistoryDto medHistory);
         void onError(String errorMessage);
     }
 }
