@@ -17,19 +17,16 @@ import java.util.List;
 public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragmentAdapter.PatientFragmentViewHolder> {
     List<AddPatientDto> addPatientDtoList;
 
-    private OnItemClickListener onItemClickListener;
+    private Callbacks callback;
 
     public interface OnItemClickListener {
         void onItemClick(AddPatientDto patient);
     }
 
-    public PatientFragmentAdapter(List<AddPatientDto> patientList){
-        this.addPatientDtoList = patientList;
-    }
 
-    public PatientFragmentAdapter(List<AddPatientDto> patientList, OnItemClickListener listener) {
+    public PatientFragmentAdapter(List<AddPatientDto> patientList, Callbacks callback) {
         this.addPatientDtoList = patientList;
-        this.onItemClickListener = listener;
+        this.callback = callback;
     }
 
     public void updateList(List<AddPatientDto> newData) {
@@ -47,8 +44,7 @@ public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragment
 
     @Override
     public void onBindViewHolder(@NonNull PatientFragmentAdapter.PatientFragmentViewHolder holder, int position) {
-        holder.name.setText(addPatientDtoList.get(position).getFullName());
-        holder.idNumber.setText(addPatientDtoList.get(position).getIdNumber());
+        holder.update(addPatientDtoList.get(position));
     }
 
     @Override
@@ -60,20 +56,27 @@ public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragment
         TextView name;
         TextView idNumber;
         Button viewRecord;
+
         public PatientFragmentViewHolder(@NonNull View itemView) {
             super(itemView);
             viewRecord = itemView.findViewById(R.id.viewPatientRecord);
             name = itemView.findViewById(R.id.textView_patientName);
             idNumber = itemView.findViewById(R.id.textView_patientId);
+        }
+
+        public void update(AddPatientDto patient)
+        {
+            name.setText(addPatientDtoList.get(position).getFullName());
+            idNumber.setText(addPatientDtoList.get(position).getIdNumber());
 
             viewRecord.setOnClickListener(v -> {
-                if (onItemClickListener != null) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        onItemClickListener.onItemClick(addPatientDtoList.get(position));
-                    }
-                }
+                callback.onPatientView(patient.getUid());
             });
         }
+    }
+
+    public interface Callbacks {
+        void onPatientView(String patientUid);
+
     }
 }
