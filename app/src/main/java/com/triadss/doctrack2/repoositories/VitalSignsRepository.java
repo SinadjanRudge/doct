@@ -17,7 +17,7 @@ import java.util.Map;
 public class VitalSignsRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference vitalSignsCollection = firestore
-            .collection(FireStoreCollection.Vital SignsS_TABLE);
+            .collection(FireStoreCollection.VITALSIGNS_TABLE);
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
 
@@ -63,7 +63,6 @@ public class VitalSignsRepository {
     {
         try
         {
-
             // TODO: EDIT THIS
             Map<String, Object> vitalSigns = new HashMap<>();
             vitalSigns.put(VitalSignsModel.vitalsId, 0);
@@ -96,8 +95,25 @@ public class VitalSignsRepository {
         {
             return false;
         }
-
         return true;
+    }
+
+     public void getVitalSignOfPatient(String patientUid, FetchCallback callback) {
+        vitalSignsCollection.whereEqualTo(VitalSignsModel.patientId, patientUid)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        VitalSignsDto vitalSign;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            vitalSign = document.toObject(VitalSignsDto.class);
+                            vitalSign.setDocumentId(document.getId().toString());
+                        }
+                        callback.onSuccess(vitalSign);
+                    } else {
+                        Log.e(TAG, "Error getting vitalSign", task.getException());
+                        callback.onError(task.getException().getMessage());
+                    }
+                });
     }
 
     public interface AddUpdateCallback {
@@ -106,4 +122,8 @@ public class VitalSignsRepository {
         void onError(String errorMessage);
     }
 
+    public interface FetchCallback {
+        void onSuccess(VitalSignsDto vitalSigns);
+        void onError(String errorMessage);
+    }
 }

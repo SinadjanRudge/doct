@@ -39,6 +39,7 @@ public class ViewPatientRecordFragment extends Fragment {
             AddPatientDto patient = args.getParcelable("patient");
             if (patient != null) {
                 MedicalHistoryRepository medicalHistoryRepository = new MedicalHistoryRepository();
+                VitalSignsRepository vitalSignsRepository = new VitalSignsRepository();
 
                 String patientUid = patient.getUid(); 
 
@@ -86,6 +87,23 @@ public class ViewPatientRecordFragment extends Fragment {
                 TextView weight = rootView.findViewById(R.id.value_weight);
                 TextView height = rootView.findViewById(R.id.value_height);
                 TextView BMI = rootView.findViewById(R.id.value_BMI);
+                vitalSignsRepository.getVitalSignOfPatient(patientUid, new VitalSignsRepository.FetchCallback() {
+                    @Override
+                    public void onSuccess(VitalSignsDto vitalSigns) {
+                        bloodPressure.setText(vitalSigns.getBloodPressure());
+                        temperature.setText(String.valueOf(vitalSigns.getTemperature()));
+                        spo2.setText(String.valueOf(vitalSigns.getOxygenLevel()));
+                        pulseRate.setText(String.valueOf(vitalSigns.getPulseRate()));
+                        weight.setText(String.valueOf(vitalSigns.getWeight()));
+                        height.setText(String.valueOf(vitalSigns.getHeight()));
+                        BMI.setText(String.valueOf(vitalSigns.getBMI()));
+                    }
+
+                    @Override
+                    public void onError(String message) {
+
+                    }
+                });
 
                 //Patient Medication
                 RecyclerView medicationRecyclerView = rootView.findViewById(R.id.recyclerView_medication);

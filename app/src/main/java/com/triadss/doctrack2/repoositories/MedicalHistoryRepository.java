@@ -73,10 +73,10 @@ public class MedicalHistoryRepository {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        MedicalHistoryDto medicalHistory;
+                        VitalSignsDto medicalHistory;
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            medicalHistory = document.toObject(MedicalHistoryDto.class);
-                            appointment.setDocumentId(document.getId().toString());
+                            medicalHistory = document.toObject(VitalSignsDto.class);
+                            medicalHistory.setDocumentId(document.getId().toString());
                         }
                         callback.onSuccess(medicalHistory);
                     } else {
@@ -84,7 +84,6 @@ public class MedicalHistoryRepository {
                         callback.onError(task.getException().getMessage());
                     }
                 });
-
     }
 
     public interface AddUpdateCallback {
@@ -93,7 +92,7 @@ public class MedicalHistoryRepository {
     }
 
     public interface FetchCallback {
-        void onSuccess(MedicalHistoryDto medHistory);
+        void onSuccess(VitalSignsDto medHistory);
         void onError(String errorMessage);
     }
 }
