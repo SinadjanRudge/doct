@@ -12,12 +12,15 @@ import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.MedicalHistoryModel;
+import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.dto.WearableDeviceDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MedicalHistoryRepository {
@@ -109,8 +112,41 @@ public class MedicalHistoryRepository {
         }
     }
 
+    public void getMedicalHistoryIdOfUser(String userUid, StringFetchCallback callback) {
+        if (user != null) {
+            medHistoryCollection
+                    .whereEqualTo(MedicalHistoryModel.patientId, userUid)
+                    .get()
+                    .addOnCompleteListener(task->{
+                        if (task.isSuccessful()){
+                            MedicalHistoryDto medHistory = null;
+
+                            for (QueryDocumentSnapshot document: task.getResult()){
+                                medHistory = document.toObject(MedicalHistoryDto.class);
+                                medHistory.setUid(document.getId().toString());
+                                break;
+                            }
+                            callback.onSuccess(medHistory.getUid());
+                        }
+                        else {
+                            callback.onError(task.getException().getMessage());
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            callback.onError("User is null");
+        }
+    }
+
     public interface AddUpdateCallback {
         void onSuccess(String medHistoryUid);
+        void onError(String errorMessage);
+    }
+
+    public interface StringFetchCallback {
+        void onSuccess(String stringValue);
         void onError(String errorMessage);
     }
 

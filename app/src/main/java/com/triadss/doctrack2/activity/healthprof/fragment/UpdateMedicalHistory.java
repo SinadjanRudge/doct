@@ -189,17 +189,31 @@ public class UpdateMedicalHistory extends Fragment {
     {
         MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
         MedicalHistoryDto dto = extractDto();
-        medicalHistoryRepo.updateMedicalHistory(dto, new MedicalHistoryRepository.AddUpdateCallback() {
+        medicalHistoryRepo.getMedicalHistoryIdOfUser(patientUid, new MedicalHistoryRepository.StringFetchCallback()
+        {
             @Override
-            public void onSuccess(String id) {
-                showMedications();
+            public void onSuccess(String medHistoryId) {
+                dto.setUid(medHistoryId);
+                medicalHistoryRepo.updateMedicalHistory(dto, new MedicalHistoryRepository.AddUpdateCallback() {
+                    @Override
+                    public void onSuccess(String medicalHistoryId) {
+                        showMedications();
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
-            public void onError(String message) {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+            public void onError(String errorMessage) {
+
             }
         });
+
+
     }
 
     private void showMedications() {

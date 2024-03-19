@@ -30,7 +30,9 @@ public class UpdatePersonalInfo extends Fragment {
     // TODO: Rename and change types of parameters
     private String patientUid;
 
-    EditText editTextAddress, editTextPhone, editTextAge, editTextCourse;
+    EditText editTextAddress, editTextPhone, editTextAge, editTextCourse,
+        editTextEmail, editTextFullname, editTextIdNumber;
+    PatientRepository patientRepository = new PatientRepository();
 
     public UpdatePersonalInfo() {
         // Required empty public constructor
@@ -69,7 +71,12 @@ public class UpdatePersonalInfo extends Fragment {
         editTextPhone = rootView.findViewById(R.id.input_contactNo);
         editTextAge = rootView.findViewById(R.id.input_Age);
         editTextCourse = rootView.findViewById(R.id.input_course);
-        
+        editTextEmail = rootView.findViewById(R.id.email);
+        editTextFullname = rootView.findViewById(R.id.name);
+        editTextIdNumber = rootView.findViewById(R.id.idNumber);
+
+        populatePersonalInfo();
+
         Button nextButton = rootView.findViewById(R.id.nxtButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,13 +85,35 @@ public class UpdatePersonalInfo extends Fragment {
                 showMedicalHistory();
             }
         });
+
         return rootView;
+    }
+
+    private void populatePersonalInfo()
+    {
+        patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback(){
+
+            @Override
+            public void onSuccess(AddPatientDto patient) {
+                editTextEmail.setText(patient.getEmail());
+                editTextFullname.setText(patient.getFullName());
+                editTextAddress.setText(patient.getAddress());
+                editTextPhone.setText(patient.getPhone());
+                editTextAge.setText(String.valueOf(patient.getAge()));
+                editTextCourse.setText(patient.getCourse());
+                editTextIdNumber.setText(patient.getIdNumber());
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                System.out.println();
+            }
+        });
     }
 
     private void updatePersonalInfo()
     {
-        PatientRepository patientRepository = new PatientRepository();
-        
+
         AddPatientDto patientDto = new AddPatientDto();
         patientDto.setUid(patientUid);
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
