@@ -21,12 +21,12 @@ public class UpdatePersonalInfo extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String PATIENT_UID = "patientUid";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String patientUid;
+
+    EditText editTextAddress, editTextPhone, editTextAge, editTextCourse;
 
     public UpdatePersonalInfo() {
         // Required empty public constructor
@@ -36,16 +36,14 @@ public class UpdatePersonalInfo extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param patientUid Parameter 1.
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static UpdatePersonalInfo newInstance(String param1, String param2) {
+    public static UpdatePersonalInfo newInstance(String patientUid) {
         UpdatePersonalInfo fragment = new UpdatePersonalInfo();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(PATIENT_UID, patientUid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,8 +52,7 @@ public class UpdatePersonalInfo extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            patientUid = getArguments().getString(PATIENT_UID);
         }
     }
 
@@ -64,14 +61,45 @@ public class UpdatePersonalInfo extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_record, container, false);
+        editTextAddress = rootView.findViewById(R.id.input_address);
+        editTextPhone = rootView.findViewById(R.id.input_contactNo);
+        editTextAge = rootView.findViewById(R.id.input_Age);
+        editTextCourse = rootView.findViewById(R.id.input_course);
+        
         Button nextButton = rootView.findViewById(R.id.nxtButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                updatePersonalInfo();
                 showMedicalHistory();
             }
         });
         return rootView;
+    }
+
+    private void updatePersonalInfo()
+    {
+        PatientRepository patientRepository = new PatientRepository();
+        
+        AddPatientDto patientDto = new AddPatientDto();
+        patientDto.setUid(patientUid);
+        patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
+        patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
+        patientDto.setAge(Integer.parseInt(String.valueOf(editTextAge.getText())));
+        patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
+        
+        patientRepository.updatePatient(patientDto, new PatientRepository.PatientAddUpdateCallback() {
+            @Override
+            public void onSuccess(String patientId) {
+                Toast.makeText(requireContext(), "Patient information updated successfully", Toast.LENGTH_SHORT).show();
+                showMedicalHistory();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                    Toast.makeText(requireContext(), "Failed to update patient information: " + errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showMedicalHistory() {
