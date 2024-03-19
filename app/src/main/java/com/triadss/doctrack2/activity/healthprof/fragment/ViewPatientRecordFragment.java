@@ -40,6 +40,7 @@ public class ViewPatientRecordFragment extends Fragment {
             if (patient != null) {
                 MedicalHistoryRepository medicalHistoryRepository = new MedicalHistoryRepository();
                 VitalSignsRepository vitalSignsRepository = new VitalSignsRepository();
+                MedicationRepository medicationRepostory = new MedicationRepository();
 
                 String patientUid = patient.getUid(); 
 
@@ -107,8 +108,18 @@ public class ViewPatientRecordFragment extends Fragment {
 
                 //Patient Medication
                 RecyclerView medicationRecyclerView = rootView.findViewById(R.id.recyclerView_medication);
+                medicationRepostory.getAllMedicationsFromUser(patientUid, new MedicationRepository.MedicationFetchCallback() {
+                    @Override
+                    public void onSuccess(List<MedicationDto> medications) {
+                        ViewMedicationAdapter viewMedicationAdapter = new ViewMedicationAdapter(medications);
+                        medicationRecyclerView.setAdapter(viewMedicationAdapter);
+                    }
 
+                    @Override
+                    public void onError(String message) {
 
+                    }
+                });
             }
         }
 
