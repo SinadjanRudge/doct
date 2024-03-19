@@ -66,8 +66,8 @@ public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragment
 
         public void update(AddPatientDto patient)
         {
-            name.setText(addPatientDtoList.get(position).getFullName());
-            idNumber.setText(addPatientDtoList.get(position).getIdNumber());
+            name.setText(patient.getFullName());
+            idNumber.setText(patient.getIdNumber());
 
             viewRecord.setOnClickListener(v -> {
                 callback.onPatientView(patient.getUid());

@@ -5,10 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.VitalSignsDto;
+import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,6 +86,8 @@ public class UpdateVitalSigns extends Fragment {
 
     private void updateVitalSigns()
     {
+        VitalSignsRepository repository = new VitalSignsRepository();
+
         VitalSignsDto vitalSignsDto = new VitalSignsDto();
         vitalSignsDto.setBloodPressure(String.valueOf(editBloodPressure.getText()).trim());
         vitalSignsDto.setTemperature(Double.parseDouble(String.valueOf(editTemperature.getText()).trim()));
@@ -91,7 +98,7 @@ public class UpdateVitalSigns extends Fragment {
         vitalSignsDto.setBMI(Double.parseDouble(String.valueOf(editBMI.getText()).trim()));
         vitalSignsDto.setPatientId(patientUid);
 
-        repository.updateVitalSigns(vitalSignsDto, new AddUpdateCallback() {
+        repository.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
             @Override
             public void onSuccess(String documentId) {
                 showViewPatient();

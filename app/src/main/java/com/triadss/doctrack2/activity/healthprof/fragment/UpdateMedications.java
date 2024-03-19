@@ -5,10 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.adapters.AddMedicationAdapter;
+import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.repoositories.MedicationRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,8 +47,7 @@ public class UpdateMedications extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param patientUid Parameter 1.
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
@@ -63,7 +74,7 @@ public class UpdateMedications extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_medication_update_list, container, false);
-        Button submit = rootView.findViewById(R.id.updateBtn);
+        Button nxtButton = rootView.findViewById(R.id.nxtButton);
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
 
@@ -94,7 +105,7 @@ public class UpdateMedications extends Fragment {
             }
         });
 
-        submit.setOnClickListener(new View.OnClickListener() {
+        nxtButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showVitalSigns();

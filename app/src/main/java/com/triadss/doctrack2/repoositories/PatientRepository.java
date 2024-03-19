@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PatientRepository {
+    private final String TAG = "PatientRepository";
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -119,7 +120,7 @@ public class PatientRepository {
     public void updatePatient(AddPatientDto patient, PatientAddUpdateCallback callback) {
         if(user == null) return;
 
-        DocumentReference patientRef = appointmentsCollection.document(patient.getUid());
+        DocumentReference patientRef = usersCollection.document(patient.getUid());
 
         patientRef
                 .update(UserModel.age, patient.getAge(),
@@ -140,7 +141,7 @@ public class PatientRepository {
 
     public void getPatient(String patientUid, PatientFetchCallback callback)
     {
-        patientRef.document(patientUid)
+        usersCollection.document(patientUid)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {

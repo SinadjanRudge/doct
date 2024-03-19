@@ -155,10 +155,10 @@ public class PatientFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        PatientFragmentAdapter adapter = new PatientFragmentAdapter(patients, new PatientFragmentAdapter.OnItemClickListener() {
+        PatientFragmentAdapter adapter = new PatientFragmentAdapter(patients, new PatientFragmentAdapter.Callbacks() {
             @Override
-            public void onItemClick(AddPatientDto patient) {
-                showPatientRecord(patient.getUid());
+            public void onPatientView(String patientUid) {
+                showPatientRecord(patientUid);
             }
         });
         recyclerView.setAdapter(adapter);

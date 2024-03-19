@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.triadss.doctrack2.activity.healthprof.adapters.ViewMedicationAdapter;
+import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
@@ -83,13 +87,14 @@ public class RecordMedication extends Fragment {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         String patientUid = currentUser.getUid();
 
-        medicalHistoryRepository.getMedicalHistoryOfPatient(patientUid, new MedicalHistoryRepository.FetchCallback() {
+
+        medicationRepository.getAllMedicationsFromUser(patientUid, new MedicationRepository.MedicationFetchCallback() {
             @Override
-            public void onSuccess(MedicalHistoryDto medicalHistory) {
-                patientPastIllness.setText(medicalHistory.getPastIllness());
-                patientPrevHospitalization.setText(medicalHistory.getPrevOperation());
-                patientFamilyHistory.setText(medicalHistory.getFamilyHist());
-                patientOBGyneHistory.setText(medicalHistory.getObgyneHist());
+            public void onSuccess(List<MedicationDto> medications) {
+                ViewMedicationAdapter viewMedicationAdapter = new ViewMedicationAdapter(getContext(), (ArrayList)medications);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(linearLayoutManager);
+                recyclerView.setAdapter(viewMedicationAdapter);
             }
 
             @Override

@@ -1,10 +1,13 @@
 package com.triadss.doctrack2.repoositories;
 
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
@@ -18,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MedicalHistoryRepository {
+    private final String TAG = "Medical History Repository";
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -73,10 +77,10 @@ public class MedicalHistoryRepository {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        VitalSignsDto medicalHistory;
+                        MedicalHistoryDto medicalHistory = null;
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            medicalHistory = document.toObject(VitalSignsDto.class);
-                            medicalHistory.setDocumentId(document.getId().toString());
+                            medicalHistory = document.toObject(MedicalHistoryDto.class);
+                            medicalHistory.setUid(document.getId().toString());
                         }
                         callback.onSuccess(medicalHistory);
                     } else {
@@ -86,15 +90,16 @@ public class MedicalHistoryRepository {
                 });
     }
 
-     public void updateMedicalHistory(MedicalHistoryDto medicalHistory, AddUpdateCallback callback) {
+     public void updateMedicalHistory(MedicalHistoryDto medicalHistoryDto, AddUpdateCallback callback) {
         if (user != null) {
-            usersCollection
+            medHistoryCollection
+                    .document(medicalHistoryDto.getUid())
                     .update(MedicalHistoryModel.pastIllness, medicalHistoryDto.getPastIllness(),
                             MedicalHistoryModel.prevOperation, medicalHistoryDto.getPrevOperation(),
                             MedicalHistoryModel.obgyneHist, medicalHistoryDto.getObgyneHist(),
                             MedicalHistoryModel.familyHist, medicalHistoryDto.getFamilyHist())
                     .addOnSuccessListener(documentReference -> {
-                        callback.onSuccess(documentReference.getId());
+                        callback.onSuccess(medicalHistoryDto.getUid());
                     })
                     .addOnFailureListener(e -> {
                         callback.onError(e.getMessage());
@@ -110,7 +115,7 @@ public class MedicalHistoryRepository {
     }
 
     public interface FetchCallback {
-        void onSuccess(VitalSignsDto medHistory);
+        void onSuccess(MedicalHistoryDto medHistory);
         void onError(String errorMessage);
     }
 }

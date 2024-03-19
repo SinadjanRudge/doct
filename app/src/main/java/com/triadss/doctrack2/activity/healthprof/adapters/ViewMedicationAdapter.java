@@ -21,13 +21,11 @@ public class ViewMedicationAdapter
 {
     ArrayList<MedicationDto> medications;
     Context context;
-    Callback callback;
 
     public ViewMedicationAdapter(Context context, ArrayList<MedicationDto> medications)
     {
         this.context = context;
         this.medications= medications;
-        this.callback = callback;
     }
 
     @NonNull

@@ -12,19 +12,39 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.adapters.ViewMedicationAdapter;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
+import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.dto.VitalSignsDto;
+import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
+import com.triadss.doctrack2.repoositories.MedicationRepository;
+import com.triadss.doctrack2.repoositories.VitalSignsRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewPatientRecordFragment extends Fragment {
+    private static final String PATIENT_UID = "patientUid";
+    private String patientUid;
+
     public ViewPatientRecordFragment(){
         //Required empty public constructor
     }
-    public static ViewPatientRecordFragment newInstance(AddPatientDto patient) {
+    public static ViewPatientRecordFragment newInstance(String patientUid) {
         ViewPatientRecordFragment fragment = new ViewPatientRecordFragment();
         Bundle args = new Bundle();
-        args.putParcelable("patient", patient);
+        args.putString(PATIENT_UID, patientUid);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            patientUid = getArguments().getString(PATIENT_UID);
+        }
     }
 
     @Override
@@ -65,7 +85,7 @@ public class ViewPatientRecordFragment extends Fragment {
                 TextView patientPrevHospitalization = rootView.findViewById(R.id.value_prevHospitalization);
                 TextView patientFamilyHistory = rootView.findViewById(R.id.value_familyHistory);
                 TextView patientOBGyneHistory = rootView.findViewById(R.id.value_OBGyneHistory);
-                medicalHistoryRepository.getMedicalHistoryOfPatient(patientUid, new FetchCallback() {
+                medicalHistoryRepository.getMedicalHistoryOfPatient(patientUid, new MedicalHistoryRepository.FetchCallback() {
                     @Override
                     public void onSuccess(MedicalHistoryDto medicalHistory) {
                         patientPastIllness.setText(medicalHistory.getPastIllness());
@@ -111,7 +131,7 @@ public class ViewPatientRecordFragment extends Fragment {
                 medicationRepostory.getAllMedicationsFromUser(patientUid, new MedicationRepository.MedicationFetchCallback() {
                     @Override
                     public void onSuccess(List<MedicationDto> medications) {
-                        ViewMedicationAdapter viewMedicationAdapter = new ViewMedicationAdapter(medications);
+                        ViewMedicationAdapter viewMedicationAdapter = new ViewMedicationAdapter(getContext(), (ArrayList)medications);
                         medicationRecyclerView.setAdapter(viewMedicationAdapter);
                     }
 
@@ -138,7 +158,7 @@ public class ViewPatientRecordFragment extends Fragment {
     private void showPatientRecordsUpdate() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, UpdatePersonalInfo.newInstance("", ""));
+        transaction.replace(R.id.frame_layout, UpdatePersonalInfo.newInstance(patientUid));
         transaction.addToBackStack(null);
         transaction.commit();
     }

@@ -95,7 +95,7 @@
                 android:text="ADD" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycleview_medication_list"
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="344dp"
                 android:layout_marginLeft="20dp"

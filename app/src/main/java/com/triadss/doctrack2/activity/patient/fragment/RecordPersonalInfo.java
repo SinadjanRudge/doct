@@ -20,6 +20,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.UserModel;
+import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.repoositories.PatientRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,7 +111,7 @@ public class RecordPersonalInfo extends Fragment {
             }
 
             @Override
-            public void onFailure(String message) {
+            public void onError(String message) {
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
         });

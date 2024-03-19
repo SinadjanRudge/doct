@@ -7,8 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.MedicalHistoryDto;
+import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
 
 /**
  * A simple {@link Fragment} subclass.

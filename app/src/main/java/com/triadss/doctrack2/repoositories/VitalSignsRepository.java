@@ -1,7 +1,13 @@
 package com.triadss.doctrack2.repoositories;
 
+import android.util.Log;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
@@ -15,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VitalSignsRepository {
+    private final String TAG = "VitalSignsRepository";
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference vitalSignsCollection = firestore
             .collection(FireStoreCollection.VITALSIGNS_TABLE);
@@ -99,6 +106,7 @@ public class VitalSignsRepository {
         {
             // TODO: EDIT THIS
             vitalSignsCollection
+                .document(vitalSignsDto.getUid())
                 .update(VitalSignsModel.bloodPressure, vitalSignsDto.getBloodPressure(),
                         VitalSignsModel.temperature, vitalSignsDto.getTemperature(),
                         VitalSignsModel.pulseRate, vitalSignsDto.getPulseRate(),
@@ -106,9 +114,9 @@ public class VitalSignsRepository {
                         VitalSignsModel.weight, vitalSignsDto.getWeight(),
                         VitalSignsModel.height, vitalSignsDto.getHeight(),
                         VitalSignsModel.BMI, vitalSignsDto.getBMI())
-                .addOnSuccessListener(documentReference -> {
-                    Log.d(TAG, "Vital Signs updated with ID: " + documentReference.getId());
-                    callback.onSuccess(documentReference.getId());
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Vital Signs updated with ID: " + vitalSignsDto.getUid());
+                    callback.onSuccess(vitalSignsDto.getUid());
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error updated Vital Signs", e);
@@ -127,10 +135,10 @@ public class VitalSignsRepository {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        VitalSignsDto vitalSign;
+                        VitalSignsDto vitalSign = null;
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             vitalSign = document.toObject(VitalSignsDto.class);
-                            vitalSign.setDocumentId(document.getId().toString());
+                            vitalSign.setUid(document.getId().toString());
                         }
                         callback.onSuccess(vitalSign);
                     } else {

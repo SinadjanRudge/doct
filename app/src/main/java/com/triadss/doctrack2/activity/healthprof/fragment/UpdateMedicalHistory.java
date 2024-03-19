@@ -9,8 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.MedicalHistoryDto;
+import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,8 +42,7 @@ public class UpdateMedicalHistory extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param patientUid Parameter 1.
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
@@ -181,7 +185,7 @@ public class UpdateMedicalHistory extends Fragment {
         return medicalHistoryDto;
     }
 
-    private updateMedicalHistory()
+    private void updateMedicalHistory()
     {
         MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
         MedicalHistoryDto dto = extractDto();
