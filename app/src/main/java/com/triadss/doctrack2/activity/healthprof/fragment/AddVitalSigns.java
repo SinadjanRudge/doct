@@ -84,9 +84,8 @@ public class AddVitalSigns extends Fragment {
 
         return rootView;
     }
+    
     private void createVitalSigns(String PatientUid) {
-        
-
         VitalSignsDto vitalSignsDto = new VitalSignsDto();
         vitalSignsDto.setBloodPressure(String.valueOf(editBloodPressure.getText()).trim());
         vitalSignsDto.setTemperature(Double.parseDouble(String.valueOf(editTemperature.getText()).trim()));

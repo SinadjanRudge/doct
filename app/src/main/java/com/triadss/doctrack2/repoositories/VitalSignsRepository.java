@@ -84,10 +84,34 @@ public class VitalSignsRepository {
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error adding Vital Signs", e);
                     callback.onError(e.getMessage());
+                });
+
+        } catch(Exception ex)
+        {
+            return false;
+        }
+        return true;
+    }
+
+      public boolean updateVitalSigns(VitalSignsDto vitalSignsDto, AddUpdateCallback callback)
+    {
+        try
+        {
+            // TODO: EDIT THIS
+            vitalSignsCollection
+                .update(VitalSignsModel.bloodPressure, vitalSignsDto.getBloodPressure(),
+                        VitalSignsModel.temperature, vitalSignsDto.getTemperature(),
+                        VitalSignsModel.pulseRate, vitalSignsDto.getPulseRate(),
+                        VitalSignsModel.oxygenLevel, vitalSignsDto.getOxygenLevel(),
+                        VitalSignsModel.weight, vitalSignsDto.getWeight(),
+                        VitalSignsModel.height, vitalSignsDto.getHeight(),
+                        VitalSignsModel.BMI, vitalSignsDto.getBMI())
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Vital Signs updated with ID: " + documentReference.getId());
+                    callback.onSuccess(documentReference.getId());
                 })
                 .addOnFailureListener(e -> {
-                    // Error fetching user document from Firestore
-                    Log.e(TAG, "Error fetching user document from Firestore", e);
+                    Log.e(TAG, "Error updated Vital Signs", e);
                     callback.onError(e.getMessage());
                 });
 
@@ -98,7 +122,7 @@ public class VitalSignsRepository {
         return true;
     }
 
-     public void getVitalSignOfPatient(String patientUid, FetchCallback callback) {
+    public void getVitalSignOfPatient(String patientUid, FetchCallback callback) {
         vitalSignsCollection.whereEqualTo(VitalSignsModel.patientId, patientUid)
                 .get()
                 .addOnCompleteListener(task -> {

@@ -145,7 +145,7 @@ public class UpdateMedications extends Fragment {
     private void showVitalSigns() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, UpdateVitalSigns.newInstance("", ""));
+        transaction.replace(R.id.frame_layout, UpdateVitalSigns.newInstance(patientUid));
         transaction.addToBackStack(null);
         transaction.commit();
     }
