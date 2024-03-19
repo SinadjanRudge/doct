@@ -184,7 +184,7 @@ public class AddMedicalHistory extends Fragment {
         medicalHistoryRepo.AddMedicalHistory(userId, medicalHistoryDto, new MedicalHistoryRepository.AddUpdateCallback() {
 
             @Override
-            public void onSuccess(String patientId) {
+            public void onSuccess(String medicalHistoryId) {
                 showMedication();
             }
 

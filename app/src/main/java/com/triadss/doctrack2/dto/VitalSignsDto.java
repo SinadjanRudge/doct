@@ -11,11 +11,11 @@ public class VitalSignsDto {
         this.vitalsId = vitalsId;
     }
 
-    public int getPatientId() {
+    public String getPatientId() {
         return patientId;
     }
 
-    public void setPatientId(int patientId) {
+    public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
 
@@ -76,7 +76,7 @@ public class VitalSignsDto {
     }
 
     private int vitalsId;
-    private int patientId;
+    private String patientId;
     private String bloodPressure;
     private double temperature;
     private int pulseRate;

@@ -28,12 +28,9 @@ public class AddVitalSigns extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PATIENT_UID = "patientUid";
-    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    String userId;
+    String PatientUid;
 
     public AddVitalSigns() {
         // Required empty public constructor
@@ -43,14 +40,14 @@ public class AddVitalSigns extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param userId Parameter 1.
+     * @param PatientUid Parameter 1.
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddVitalSigns newInstance(String userId) {
+    public static AddVitalSigns newInstance(String patientUid) {
         AddVitalSigns fragment = new AddVitalSigns();
         Bundle args = new Bundle();
-        args.putString(PATIENT_UID, userId);
+        args.putString(PATIENT_UID, patientUid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,9 +56,7 @@ public class AddVitalSigns extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(PATIENT_UID);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-            userId = getArguments().getString("userId");
+            PatientUid = getArguments().getString(PATIENT_UID);
         }
     }
 
@@ -83,14 +78,15 @@ public class AddVitalSigns extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               createVitalSigns(userId);
-               backToPatientList();
+               createVitalSigns(PatientUid);
             }
         });
 
         return rootView;
     }
-    private void createVitalSigns(String userId) {
+    private void createVitalSigns(String PatientUid) {
+        
+
         VitalSignsDto vitalSignsDto = new VitalSignsDto();
         vitalSignsDto.setBloodPressure(String.valueOf(editBloodPressure.getText()).trim());
         vitalSignsDto.setTemperature(Double.parseDouble(String.valueOf(editTemperature.getText()).trim()));
@@ -99,10 +95,22 @@ public class AddVitalSigns extends Fragment {
         vitalSignsDto.setWeight(Integer.parseInt(String.valueOf(editWeight.getText())));
         vitalSignsDto.setHeight(Integer.parseInt(String.valueOf(editHeight.getText()).trim()));
         vitalSignsDto.setBMI(Double.parseDouble(String.valueOf(editBMI.getText()).trim()));
+        vitalSignsDto.setPatientId(PatientUid);
 
         VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
-        vitalSignsRepo.AddVitalSigns(userId, vitalSignsDto);
+        vitalSignsRepo.AddVitalSignsCallback(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
+            @Override
+            public void onSuccess(String vitalSignsId) {
+                backToPatientList();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                
+            }
+        });
     }
+
     private void backToPatientList() {
         // Replace the current fragment with the patient list fragment
         requireActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

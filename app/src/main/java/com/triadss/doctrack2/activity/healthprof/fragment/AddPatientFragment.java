@@ -192,16 +192,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                                 public void onError(String errorMessage) {
                                 }
                             });
-//                            createReport(user.getUid(), patientDto);
                             Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
-//                            @SuppressLint("CommitTransaction")
-//                            FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-//                                    .beginTransaction();
-//                            transaction.replace(R.id.frame_layout, new PatientFragment());
-//                            // Add HomeFragment to the back stack with a tag
-//                            transaction.addToBackStack("tag_for_home_fragment");
-//
-//                            transaction.commit();
+
                         }
                     } catch (Exception e) {
                         // DELETE newly created user when there is something wrong with saveUserToFireStore()
