@@ -138,8 +138,30 @@ public class PatientRepository {
                 });
     }
 
+    public void getPatient(String patientUid, PatientFetchCallback callback)
+    {
+        patientRef.document(patientUid)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        AddPatientDto patient = documentSnapshot.toObject(AddPatientDto.class);
+                        callback.onSuccess(patient);
+                    } else {
+                        callback.onError("Patient not found");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    callback.onError(e.getMessage());
+                });
+    }
+
     public interface PatientAddUpdateCallback {
         void onSuccess(String patientId);
+        void onError(String errorMessage);
+    }
+
+    public interface PatientFetchCallback {
+        void onSuccess(AddPatientDto patient);
         void onError(String errorMessage);
     }
 

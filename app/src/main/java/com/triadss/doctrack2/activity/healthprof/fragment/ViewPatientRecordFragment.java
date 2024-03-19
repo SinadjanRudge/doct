@@ -47,14 +47,14 @@ public class ViewPatientRecordFragment extends Fragment {
                 //Patient Personal Information
                 TextView patientId = rootView.findViewById(R.id.value_patientID);
                 TextView patientName = rootView.findViewById(R.id.value_Name);
-                //TextView patientEmail = rootView.findViewById(R.id.value_Email);
+                TextView patientEmail = rootView.findViewById(R.id.value_Email);
                 TextView patientAddress = rootView.findViewById(R.id.value_Address);
                 TextView patientAge = rootView.findViewById(R.id.value_Age);
                 TextView patientPhone = rootView.findViewById(R.id.value_ContactNo);
                 TextView patientCourse = rootView.findViewById(R.id.value_Course);
                 patientId.setText(patient.getIdNumber());
                 patientName.setText(patient.getFullName());
-                //patientEmail.setText(patient.getEmail());
+                patientEmail.setText(patient.getEmail());
                 patientAddress.setText(patient.getAddress());
                 patientAge.setText(patient.getAge());
                 patientPhone.setText(patient.getPhone());

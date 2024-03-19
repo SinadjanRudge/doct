@@ -60,7 +60,40 @@ public class RecordVitalSigns extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        VitalSignsRepository vitalSignsRepository = new VitalSignsRepository();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String patientUid = currentUser.getUid();
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_record_vital_signs, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_record_vital_signs, container, false);
+
+        TextView bloodPressure = rootView.findViewById(R.id.value_bloodPressure);
+        TextView temperature = rootView.findViewById(R.id.value_temperature);
+        TextView spo2 = rootView.findViewById(R.id.value_SpO2);
+        TextView pulseRate = rootView.findViewById(R.id.value_pulseRate);
+        TextView weight = rootView.findViewById(R.id.value_weight);
+        TextView height = rootView.findViewById(R.id.value_height);
+        TextView BMI = rootView.findViewById(R.id.value_BMI);
+
+        vitalSignsRepository.getVitalSignOfPatient(patientUid, new VitalSignsRepository.FetchCallback() {
+            @Override
+            public void onSuccess(VitalSignsDto vitalSigns) {
+                bloodPressure.setText(vitalSigns.getBloodPressure());
+                temperature.setText(String.valueOf(vitalSigns.getTemperature()));
+                spo2.setText(String.valueOf(vitalSigns.getOxygenLevel()));
+                pulseRate.setText(String.valueOf(vitalSigns.getPulseRate()));
+                weight.setText(String.valueOf(vitalSigns.getWeight()));
+                height.setText(String.valueOf(vitalSigns.getHeight()));
+                BMI.setText(String.valueOf(vitalSigns.getBMI()));
+            }
+
+            @Override
+            public void onError(String message) {
+
+            }
+        });
+
+        return rootView;
     }
 }

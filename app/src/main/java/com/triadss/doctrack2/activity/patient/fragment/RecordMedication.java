@@ -35,6 +35,7 @@ public class RecordMedication extends Fragment {
     private String mParam2;
 
     MedicationRepository medicationRepository = new MedicationRepository();
+    RecyclerView recyclerView;
 
     public RecordMedication() {
         // Required empty public constructor
@@ -72,24 +73,28 @@ public class RecordMedication extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_record_medication, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        loadMedicationCards(recyclerView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        loadMedicationCards();
         return rootView;
     }
 
-    private void loadMedicationCards(RecyclerView recyclerView){
-        medicationRepository.getAllMedications("", new MedicationRepository.MedicationFetchCallback() {
+    private void loadMedicationCards(){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String patientUid = currentUser.getUid();
+
+        medicalHistoryRepository.getMedicalHistoryOfPatient(patientUid, new MedicalHistoryRepository.FetchCallback() {
             @Override
-            public void onSuccess(List<MedicationDto> medications) {
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-                recyclerView.setLayoutManager(linearLayoutManager);
-                PatientMedicationOngoingAdapter adapter = new PatientMedicationOngoingAdapter(getContext(), (ArrayList<MedicationDto>)medications);
-                recyclerView.setAdapter(adapter);
+            public void onSuccess(MedicalHistoryDto medicalHistory) {
+                patientPastIllness.setText(medicalHistory.getPastIllness());
+                patientPrevHospitalization.setText(medicalHistory.getPrevOperation());
+                patientFamilyHistory.setText(medicalHistory.getFamilyHist());
+                patientOBGyneHistory.setText(medicalHistory.getObgyneHist());
             }
 
             @Override
-            public void onError(String errorMessage) {
-                System.out.println();
+            public void onError(String message) {
+
             }
         });
     }

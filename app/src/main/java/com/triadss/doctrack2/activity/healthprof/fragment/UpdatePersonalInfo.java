@@ -97,7 +97,7 @@ public class UpdatePersonalInfo extends Fragment {
 
             @Override
             public void onError(String errorMessage) {
-                    Toast.makeText(requireContext(), "Failed to update patient information: " + errorMessage, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Failed to update patient information: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
