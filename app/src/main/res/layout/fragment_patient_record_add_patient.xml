@@ -202,14 +202,12 @@
                     android:layout_height="52dp"
                     android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/input_DateOfBirth"
+                    <Button
+                        android:id="@+id/selectBirthDate"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/green_stroke"
-                        android:hint="MM/DD/YYYY" />
+                        android:text="Select Date" />
 
                     <EditText
                         android:id="@+id/input_Status"

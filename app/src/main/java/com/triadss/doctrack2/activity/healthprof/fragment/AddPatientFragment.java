@@ -1,6 +1,7 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +29,12 @@ import com.triadss.doctrack2.config.constants.DocTrackErrorMessage;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.repoositories.PatientRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +51,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     private static final String ARG_PARAM2 = "param2";
 
     EditText editTextEmail, editTextAddress, editTextPhone, editTextAge, editTextCourse, editTextIdNumber, editTextFullName;
-
+    Button getBirthDate;
+    DateDto birthDate;
     FirebaseAuth mAuth;
 
     PatientRepository _patientRepository;
@@ -82,9 +86,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.add_patient_save) {
-            createPatient();
-        }
+
     }
 
     /**
@@ -123,12 +125,34 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         editTextCourse = rootView.findViewById(R.id.input_course);
         editTextIdNumber = rootView.findViewById(R.id.input_patientID);
         editTextFullName = rootView.findViewById(R.id.input_fullName);
+        getBirthDate = rootView.findViewById(R.id.selectBirthDate);
+
+        getBirthDate.setOnClickListener((View.OnClickListener) v -> {
+            // Get the current date
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create and show the Date Picker Dialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                    (view, year1, monthOfYear, dayOfMonth) -> {
+                        // Store the selected date
+                        birthDate = new DateDto(year1, monthOfYear, dayOfMonth);
+
+                        // Update the text on the button
+                        getBirthDate.setText(birthDate.ToString());
+                    }, year, month, day);
+
+            // Show the Date Picker Dialog
+            datePickerDialog.show();
+        });
 
         Button nextButton = rootView.findViewById(R.id.nextBtn);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMedicalHistory();
+                createPatient();
             }
         });
 
@@ -147,9 +171,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
         patientDto.setAge(Integer.parseInt(String.valueOf(editTextAge.getText())));
         patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
-        patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
         patientDto.setIdNumber(String.valueOf(editTextIdNumber.getText()).trim());
-
+        patientDto.setDateOfBirth(birthDate.ToTimestamp());
 
         try {
             FirebaseAuth newAuth = FirebaseAuth.getInstance();
@@ -159,17 +182,18 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                     try {
                         if (user != null) {
                             // create details in user table and report table
-                            _patientRepository.AddPatient(user.getUid(), patientDto);
-                            createReport(user.getUid(), patientDto);
-                            Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
-                            @SuppressLint("CommitTransaction")
-                            FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-                                    .beginTransaction();
-                            transaction.replace(R.id.frame_layout, new PatientFragment());
-                            // Add HomeFragment to the back stack with a tag
-                            transaction.addToBackStack("tag_for_home_fragment");
+                            _patientRepository.addPatientCallback(patientDto, new PatientRepository.PatientAddUpdateCallback() {
+                                @Override
+                                public void onSuccess(String patientId) {
+                                    showMedicalHistory(patientId);
+                                }
 
-                            transaction.commit();
+                                @Override
+                                public void onError(String errorMessage) {
+                                }
+                            });
+                            Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
+
                         }
                     } catch (Exception e) {
                         // DELETE newly created user when there is something wrong with saveUserToFireStore()
@@ -226,10 +250,10 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void showMedicalHistory() {
+    private void showMedicalHistory(String patientUId) {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, AddMedicalHistory.newInstance("", ""));
+        transaction.replace(R.id.frame_layout, AddMedicalHistory.newInstance(patientUId));
         transaction.addToBackStack(null);
         transaction.commit();
     }

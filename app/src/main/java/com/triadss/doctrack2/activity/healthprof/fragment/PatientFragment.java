@@ -47,7 +47,6 @@ public class PatientFragment extends Fragment {
 
     RecyclerView recyclerView;
     FirebaseFirestore db;
-    PatientFragmentAdapter adapter;
     List<AddPatientDto> addPatientDtoList;
 
     EditText editTextSearch;
@@ -106,25 +105,15 @@ public class PatientFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recycleview_patient_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        addPatientDtoList = new ArrayList<>();
         filteredPatients = new ArrayList<>();
-        adapter = new PatientFragmentAdapter(new ArrayList<>(), new PatientFragmentAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(AddPatientDto patient) {
-                showPatientRecord(patient);
-            }
-        });
-
-        recyclerView.setAdapter(adapter);
 
         PatientRepository patientRepository = new PatientRepository();
         patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
             @Override
             public void onSuccess(List<AddPatientDto> patients) {
                 // Update the adapter with the latest data
-                adapter.updateList(patients);
-                addPatientDtoList.clear();
-                addPatientDtoList.addAll(patients);
+                addPatientDtoList = patients;
+                updateRecyclerView(patients);
             }
 
             @Override
@@ -148,29 +137,37 @@ public class PatientFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                filteredPatients.clear();
-                if(s.toString().isEmpty()){
-                    recyclerView.setAdapter(new PatientFragmentAdapter(addPatientDtoList));
-                    adapter.notifyDataSetChanged();
-                }
-                else {
-                    Filter(s.toString());
-                }
+                Filter(s.toString());
             }
         });
 
         return rootView;
     }
 
-    private void showPatientRecord(AddPatientDto patient) {
+    private void showPatientRecord(String patientUid) {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        //transaction.replace(R.id.frame_layout, ViewRecordFragment.newInstance(patient));
+        transaction.replace(R.id.frame_layout, ViewPatientRecordFragment.newInstance(patientUid));
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
+    private void updateRecyclerView(List<AddPatientDto> patients) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        PatientFragmentAdapter adapter = new PatientFragmentAdapter(patients, new PatientFragmentAdapter.Callbacks() {
+            @Override
+            public void onPatientView(String patientUid) {
+                showPatientRecord(patientUid);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
     private void Filter(String text){
+        filteredPatients.clear();
+
         for(AddPatientDto patient : addPatientDtoList){
             if((text == "" ||
                     (patient.getIdNumber() != null && (patient.getIdNumber().contains(text)))) ||
@@ -178,8 +175,7 @@ public class PatientFragment extends Fragment {
                 filteredPatients.add(patient);
             }
         }
-        recyclerView.setAdapter(new PatientFragmentAdapter(filteredPatients));
-        adapter.notifyDataSetChanged();
+        updateRecyclerView(filteredPatients);
     }
 
 }
