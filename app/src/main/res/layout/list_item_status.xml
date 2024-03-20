@@ -11,13 +11,13 @@
 
     <RelativeLayout
         android:layout_width="404dp"
-        android:layout_height="424dp"
+        android:layout_height="368dp"
         android:padding="15dp">
 
         <TextView
-            android:id="@+id/IDtext"
-            android:layout_width="61dp"
-            android:layout_height="41dp"
+            android:id="@+id/idtext"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="25dp"
@@ -28,11 +28,10 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/nametext"
-            android:layout_width="61dp"
-            android:layout_height="49dp"
-            android:layout_below="@+id/IDtext"
-
+            android:id="@+id/NAMEtext"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/idtext"
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="10dp"
@@ -43,15 +42,14 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/purposetext"
-            android:layout_width="wrap_content"
-            android:layout_height="47dp"
-            android:layout_below="@+id/nametext"
-
+            android:id="@+id/PURPOSEtext"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/NAMEtext"
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="10dp"
             android:text="Purpose :"
             android:textColor="#000"
             android:textSize="16sp"
@@ -61,20 +59,20 @@
             android:id="@+id/calendar"
             android:layout_width="43dp"
             android:layout_height="42dp"
-            android:layout_below="@+id/purposetext"
+            android:layout_below="@+id/PURPOSEtext"
             android:layout_alignParentStart="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="30dp"
             app:srcCompat="@drawable/calendar"
             app:tint="@color/green" />
 
         <TextView
             android:id="@+id/appointment_date"
-            android:layout_width="141dp"
-            android:layout_height="56dp"
-            android:layout_below="@+id/purposetext"
-            android:layout_marginStart="21dp"
-            android:layout_marginTop="53dp"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/PURPOSEtext"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
             android:layout_toEndOf="@+id/calendar"
             android:text="TextView"
             android:textSize="14sp" />
@@ -83,62 +81,77 @@
             android:id="@+id/baseline_access_time_24"
             android:layout_width="43dp"
             android:layout_height="42dp"
-            android:layout_below="@+id/purposetext"
-            android:layout_marginStart="-201dp"
-            android:layout_marginTop="102dp"
-            android:layout_toEndOf="@+id/appointment_date"
+            android:layout_below="@+id/calendar"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
             app:srcCompat="@drawable/baseline_access_time_24"
             app:tint="@color/green" />
 
         <TextView
             android:id="@+id/appointment_time"
-            android:layout_width="104dp"
-            android:layout_height="52dp"
-            android:layout_below="@+id/purposetext"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="109dp"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/appointment_date"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/baseline_access_time_24"
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/statustext"
-            android:layout_width="72dp"
-            android:layout_height="43dp"
-            android:layout_below="@+id/purposetext"
+            android:id="@+id/STATUStext"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/PURPOSEtext"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="154dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="140dp"
             android:text="Status :"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/IDtext"
             android:layout_width="wrap_content"
-            android:layout_height="37dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="25dp"
+            android:layout_toEndOf="@+id/idtext"
             android:text="TextView ID" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/nametext"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/IDtext"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="31dp"
-            android:layout_marginBottom="249dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+            android:layout_toEndOf="@+id/NAMEtext"
             android:text="TextView Name" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/purposetext"
             android:layout_width="wrap_content"
-            android:layout_height="37dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/nametext"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="35dp"
-            android:layout_marginBottom="199dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+            android:layout_toEndOf="@+id/PURPOSEtext"
             android:text="TextView Purpose" />
+
+        <TextView
+            android:id="@+id/statustext"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/STATUStext"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            android:text="TextView Status" />
 
 
     </RelativeLayout>
