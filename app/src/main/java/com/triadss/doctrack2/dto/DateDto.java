@@ -45,7 +45,7 @@ public class DateDto {
 
     public Date ToDate()
     {
-        LocalDate localDate = LocalDate.of(year, month, day);
+        LocalDate localDate = LocalDate.of(year, month+1, day);
 
         // Convert LocalDate to LocalDateTime at the start of the day
         LocalDateTime localDateTime = localDate.atStartOfDay();

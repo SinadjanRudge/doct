@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,10 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.activity.patient.fragment.AdminGenerateReportAdapter;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.ReportDto;
@@ -146,6 +150,11 @@ public class AdminGenerateReportsPage extends Fragment {
                     ));
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
+        });
+
+        Button closeBtn = dialog.findViewById(R.id.closeBtn);
+        closeBtn.setOnClickListener(v -> {
+            dialog.dismiss();
         });
 
         dialog.show();
