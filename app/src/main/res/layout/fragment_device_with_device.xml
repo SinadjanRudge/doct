@@ -141,6 +141,12 @@
             android:textSize="18sp"
             android:layout_marginTop="16dp"/>
 
+        <Button
+            android:id="@+id/sendMessageBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send message" />
+
     </LinearLayout>
 
 </FrameLayout>
