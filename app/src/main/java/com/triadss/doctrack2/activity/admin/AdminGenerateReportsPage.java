@@ -61,6 +61,21 @@ public class AdminGenerateReportsPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_generate_reports_page, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_admin_generate_reports_page, container, false); 
+
+        Button generateReports = rootView.findViewById(R.id.generate_report_button);
+
+        return rootView;
+    }
+
+    private void showReportDialog() {
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_generate_reports);
+        
+        RecyclerView recyclerView = dialog.findViewById(R.id.reports_recycler_view);
+        
+        
+        dialog.show();
+
     }
 }
