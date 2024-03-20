@@ -78,6 +78,7 @@ public class HealthProfRepository {
                         String role = document.getString(UserModel.role);
                         if (UserRoleConstants.HealthProf.equals(role)) {
                             HealthProfDto patients = document.toObject(HealthProfDto.class);
+                            patients.setHealthProfid(document.getId());
                             healthProfListDto.add(patients);
                         }
                     }
