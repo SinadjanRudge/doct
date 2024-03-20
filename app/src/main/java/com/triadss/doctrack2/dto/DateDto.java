@@ -32,4 +32,20 @@ public class DateDto {
                 month + 1, day);
     }
 
+    public Timestamp ToTimeStamp()
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        
+        long millis = calendar.getTimeInMillis();
+
+        Timestamp timestamp = new Timestamp(millis);
+
+        return timestamp;
+    }
+
+    public static DateDto fromDatePicker(DatePicker datepicker)
+    {
+        return new DateDto(datepicker.getYear(), datepicker.getMonth(), datepicker.getDayOfMonth());
+    } 
 }

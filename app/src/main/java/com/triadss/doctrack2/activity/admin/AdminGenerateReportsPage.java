@@ -64,18 +64,73 @@ public class AdminGenerateReportsPage extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_admin_generate_reports_page, container, false); 
 
         Button generateReports = rootView.findViewById(R.id.generate_report_button);
+        DatePicker startDatePicker = rootView.findViewById(R.id.start_date_picker);
+        DatePicker endDatePicker = rootView.findViewById(R.id.end_date_picker);
+
+        generateReports.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Timestamp startDate = DateDto.fromDatePicker(startDatePicker).ToTimeStamp();
+                Timestamp endDate = DateDto.fromDatePicker(endDatePicker).ToTimeStamp(); 
+                showReportDialog(startDate, endDate);
+            }
+        });
 
         return rootView;
     }
 
-    private void showReportDialog() {
+    private void showReportDialog(Timestamp startDate, Timestamp endDate) {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_generate_reports);
         
         RecyclerView recyclerView = dialog.findViewById(R.id.reports_recycler_view);
-        
-        
+        LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        List<ReportDto> retrievedReports = new ArrayList<>();
+
+        ReportsRepository reportsRepository = new ReportsRepository();
+
+        reportsRepository.getReportsFromDateRange(startDate, endDate, new ReportsRepository.ReportsFetchCallback() {
+            @Override
+            public void onSuccess(List<ReportDto> reports) {
+                retrievedReports = reports;
+                recyclerView.setAdapter(new AdminGenerateReportAdapter(getContext(), retrievedReports));
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        TextInputEditText editTextSearch = rootView.findViewById(R.id.search_bar_patient);
+
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String filter = s.toString();
+                recyclerView.setAdapter(new AdminGenerateReportAdapter(getContext(), 
+                    retrievedReports.stream()
+                        .filter(report -> report.getMessage().contains(filter) && 
+                            report.getAction().contains(filter) &&
+                            report.getCreatedByName().contains(filter) 
+                        ).collect(Colectors.toList())
+                    ));
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+
         dialog.show();
 
     }
+
 }
