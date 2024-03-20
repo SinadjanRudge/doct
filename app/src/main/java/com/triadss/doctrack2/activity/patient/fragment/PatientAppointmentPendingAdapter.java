@@ -116,6 +116,17 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
 
                                 }
                             });
+                            appointmentRepository.addReport(documentId.getText().toString(),"CANCEL", new AppointmentRepository.ReportCallback() {
+                                @Override
+                                public void onSuccess(String appointmentId) {
+                                    Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+
+                                }
+                                @Override
+                                public void onError(String errorMessage) {
+
+                                }
+                            });
                             myEdit.putInt("PatientPending", Integer.parseInt("10"));
                             myEdit.putInt("PatientStatus", Integer.parseInt("10"));
                             myEdit.apply();
@@ -203,6 +214,17 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                 SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
                 SharedPreferences.Editor myEdit = sharedPreferences.edit();
                 appointmentRepository.rescheduleAppointment(id, selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
+                    @Override
+                    public void onSuccess(String appointmentId) {
+                        Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+
+                    }
+                });
+                appointmentRepository.addReport(id,"RESCHEDULE", new AppointmentRepository.ReportCallback() {
                     @Override
                     public void onSuccess(String appointmentId) {
                         Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
