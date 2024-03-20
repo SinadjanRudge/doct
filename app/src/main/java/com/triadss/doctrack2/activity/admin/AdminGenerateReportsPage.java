@@ -1,14 +1,33 @@
 package com.triadss.doctrack2.activity.admin;
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.patient.fragment.AdminGenerateReportAdapter;
+import com.triadss.doctrack2.dto.DateDto;
+import com.triadss.doctrack2.dto.ReportDto;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +44,8 @@ public class AdminGenerateReportsPage extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    List<ReportDto> retrievedReports = new ArrayList<>();
 
     public AdminGenerateReportsPage() {
         // Required empty public constructor
@@ -70,8 +91,8 @@ public class AdminGenerateReportsPage extends Fragment {
         generateReports.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Timestamp startDate = DateDto.fromDatePicker(startDatePicker).ToTimeStamp();
-                Timestamp endDate = DateDto.fromDatePicker(endDatePicker).ToTimeStamp(); 
+                Date startDate = DateDto.fromDatePicker(startDatePicker).ToDate();
+                Date endDate = DateDto.fromDatePicker(endDatePicker).ToDate();
                 showReportDialog(startDate, endDate);
             }
         });
@@ -79,15 +100,13 @@ public class AdminGenerateReportsPage extends Fragment {
         return rootView;
     }
 
-    private void showReportDialog(Timestamp startDate, Timestamp endDate) {
+    private void showReportDialog(Date startDate, Date endDate) {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_generate_reports);
         
         RecyclerView recyclerView = dialog.findViewById(R.id.reports_recycler_view);
-        LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-
-        List<ReportDto> retrievedReports = new ArrayList<>();
 
         ReportsRepository reportsRepository = new ReportsRepository();
 
@@ -95,7 +114,7 @@ public class AdminGenerateReportsPage extends Fragment {
             @Override
             public void onSuccess(List<ReportDto> reports) {
                 retrievedReports = reports;
-                recyclerView.setAdapter(new AdminGenerateReportAdapter(getContext(), retrievedReports));
+                recyclerView.setAdapter(new AdminGenerateReportAdapter(getContext(), (ArrayList)retrievedReports));
             }
 
             @Override
@@ -104,7 +123,7 @@ public class AdminGenerateReportsPage extends Fragment {
             }
         });
 
-        TextInputEditText editTextSearch = rootView.findViewById(R.id.search_bar_patient);
+        TextInputEditText editTextSearch = dialog.findViewById(R.id.search_bar_patient);
 
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -123,7 +142,7 @@ public class AdminGenerateReportsPage extends Fragment {
                         .filter(report -> report.getMessage().contains(filter) && 
                             report.getAction().contains(filter) &&
                             report.getCreatedByName().contains(filter) 
-                        ).collect(Colectors.toList())
+                        ).collect(Collectors.toCollection(ArrayList::new))
                     ));
                 recyclerView.getAdapter().notifyDataSetChanged();
             }

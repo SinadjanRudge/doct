@@ -1,5 +1,16 @@
 package com.triadss.doctrack2.dto;
 
+import android.widget.DatePicker;
+
+import com.google.firebase.Timestamp;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class DateDto {
@@ -32,16 +43,23 @@ public class DateDto {
                 month + 1, day);
     }
 
+    public Date ToDate()
+    {
+        LocalDate localDate = LocalDate.of(year, month, day);
+
+        // Convert LocalDate to LocalDateTime at the start of the day
+        LocalDateTime localDateTime = localDate.atStartOfDay();
+
+        // Convert LocalDateTime to Instant
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        Instant instant = zonedDateTime.toInstant();
+        Date date = Date.from(instant);
+        return date;
+    }
+
     public Timestamp ToTimeStamp()
     {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
-        
-        long millis = calendar.getTimeInMillis();
-
-        Timestamp timestamp = new Timestamp(millis);
-
-        return timestamp;
+        return new Timestamp(ToDate());
     }
 
     public static DateDto fromDatePicker(DatePicker datepicker)

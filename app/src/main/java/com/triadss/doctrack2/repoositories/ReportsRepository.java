@@ -21,6 +21,7 @@ import com.triadss.doctrack2.dto.ReportDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,24 +187,26 @@ public class ReportsRepository {
         }
     }
 
-    public void getReportsFromDateRange(Timestamp before, Timestamp after, ReportsFetchCallback callback) {
+    public void getReportsFromDateRange(Date before, Date after, ReportsFetchCallback callback) {
         if (user != null) {
             CollectionReference usersCollection = firestore
                 .collection(FireStoreCollection.USERS_TABLE);
 
             usersCollection
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addOnSuccessListener(userQueryDocumentSnapshots -> {
                         // To get user details
                         List<AddPatientDto> users = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            AddPatientDto report = document.toObject(AddPatientDto.class);
-                            users.setUid(document.getId());
-                            users.add(report);
+                        for (QueryDocumentSnapshot document : userQueryDocumentSnapshots) {
+                            AddPatientDto user = document.toObject(AddPatientDto.class);
+                            user.setUid(document.getId());
+                            users.add(user);
                         }
 
                         // TODO: EDIT THIS TO USE BEFORE AND AFTER
                         reportsCollection
+                            .whereGreaterThanOrEqualTo(ReportModel.createdBy, before)
+                            .whereLessThanOrEqualTo(ReportModel.createdBy, after)
                             // .whereEqualTo(ReportModel.createdBy, uid)
                             .orderBy(ReportModel.createdBy, Query.Direction.DESCENDING)
                             .get()
@@ -211,11 +214,14 @@ public class ReportsRepository {
                                 List<ReportDto> reports = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                     ReportDto report = document.toObject(ReportDto.class);
+                                    String fullName = users.stream()
+                                            .filter(user -> user.getUid().equals(report.getCreatedBy()))
+                                            .findFirst().get().getFullName();
+                                    report.setCreatedByName(fullName);
+
                                     reports.add(report);
                                 }
-                                reports.setCreatedByName(users.stream()
-                                    .filter(user -> user.getUid().equals(reports.getCreatedBy()))
-                                    .findFirst().get().getFullName());
+
                                 callback.onSuccess(reports);
                             })
                             .addOnFailureListener(e -> {
