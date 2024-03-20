@@ -19,6 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DocTrack2"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
         <activity
             android:name=".activity.patient.fragment.PatientAppointmentRequest"

@@ -1,237 +1,86 @@
 package com.triadss.doctrack2.activity.core;
 
-import static java.util.Arrays.stream;
-
-import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
-
+import android.widget.TextView;
+import androidx.fragment.app.Fragment;
+import com.google.android.gms.wearable.MessageClient;
+import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Wearable;
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.dto.BluetoothDeviceDto;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
+public class DeviceFragment extends Fragment implements MessageClient.OnMessageReceivedListener {
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DeviceFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class DeviceFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private BluetoothAdapter bluetoothAdapter;
-    private RecyclerView pairedDeviceContainer;
-    private RecyclerView scannedDeviceContainer;
-    private ArrayList<BluetoothDeviceDto> scannedDevices;
-
-    // PERMISSIONS NEEDS ARBITRARY VALUES THAT ARE UNIQUE AND > 0
-    private final static int REQUEST_ENABLE_BT = 1;
-    private static final int REQUEST_CONNECT_BT = 2;
-    private static final int REQUEST_SCAN_BT = 3;
-
-    // PAIRING REQUIRES AN ARBITRARY VALUE
-    private String MY_UUID = "18db211d-d69b-4024-a843-b1ebc45d00aa";
-
-    // Create a BroadcastReceiver for ACTION_FOUND.
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Discovery has found a device. Get the BluetoothDevice
-                // object and its info from the Intent.
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_CONNECT_BT);
-                    return;
-                }
-
-                String deviceName = device.getName();
-                String deviceHardwareAddress = device.getAddress(); // MAC address
-
-                BluetoothDeviceDto newDevice = new BluetoothDeviceDto(deviceName, deviceHardwareAddress);
-
-                if (scannedDevices.stream().anyMatch(existingDevice -> existingDevice.getName() == newDevice.getName()
-                        && existingDevice.getAddress() == newDevice.getAddress())) {
-                    scannedDevices.add(newDevice);
-                    updateScannedDevices();
-                }
-            }
-        }
-    };
+    private TextView receivedMessageTextView;
+    private MessageClient messageClient;
+    private String phoneNodeId = "565df7c9"; // Declare phoneNodeId at the class level
 
     public DeviceFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DeviceFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DeviceFragment newInstance(String param1, String param2) {
-        DeviceFragment fragment = new DeviceFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-        //Bluetooth
-        BluetoothManager bluetoothManager = getContext().getSystemService(BluetoothManager.class);
-        bluetoothAdapter = bluetoothManager.getAdapter();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_device_no_device, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_device_with_device, container, false);
 
-        pairedDeviceContainer = rootView.findViewById(R.id.pairedDevices);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        pairedDeviceContainer.setLayoutManager(linearLayoutManager);
+        receivedMessageTextView = rootView.findViewById(R.id.receivedMessageTextView);
 
-        // For permission of activating bluetooth
-        if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
+        // Initialize MessageClient
+        messageClient = Wearable.getMessageClient(requireContext());
+        messageClient.addListener(this);
 
-        scannedDevices = new ArrayList();
-
-        // Register for broadcasts when a device is discovered.
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        getContext().registerReceiver(receiver, filter);
-
-        Button scanBtn = rootView.findViewById(R.id.scanBtn);
-        Button cancelScanBtn = rootView.findViewById(R.id.cancelScanBtn);
-
-        scanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelScanBtn.setVisibility(View.VISIBLE);
-                scanBtn.setVisibility(View.GONE);
-                //
-            }
-        });
-
-        cancelScanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelScanBtn.setVisibility(View.GONE);
-                scanBtn.setVisibility(View.VISIBLE);
-            }
-        });
-
-
-        updatePairedDevices();
+        // Get the phoneNodeId (Wear OS device ID)
+        phoneNodeId = getPhoneNodeId();
 
         return rootView;
     }
 
-    public void updatePairedDevices() {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_CONNECT_BT);
-            return;
-        }
-        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        ArrayList<BluetoothDeviceDto> devices = pairedDevices.stream()
-                .map(device -> new BluetoothDeviceDto(device.getName(), device.getAddress()))
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        DevicePairedDeviceAdapter adapter = new DevicePairedDeviceAdapter(getContext(), devices);
-        pairedDeviceContainer.setAdapter(adapter);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Remove the message listener
+        messageClient.removeListener(this);
     }
 
-    public void updateScannedDevices() {
-        DeviceScannedDeviceAdapter adapter = new DeviceScannedDeviceAdapter(getContext(), scannedDevices);
-        scannedDeviceContainer.setAdapter(adapter);
-    }
+
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onMessageReceived(MessageEvent messageEvent) {
+        String message = new String(messageEvent.getData());
+        Log.d("DeviceFragment", "Received message: " + message);
 
-        // Don't forget to unregister the ACTION_FOUND receiver.
-        getContext().unregisterReceiver(receiver);
+        getActivity().runOnUiThread(() -> {
+            // Update UI or perform actions based on the received message
+            receivedMessageTextView.setText("Received Message: " + message);
+        });
+
+        sendMessageToWearable("/action_response", "Response message from mobile".getBytes());
     }
 
-    private class BluetoothClientThread extends Thread {
-        private BluetoothSocket socket;
-        private BluetoothDevice device;
 
-        public BluetoothClientThread(BluetoothDevice device) {
-            this.device = device;
-            try {
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_CONNECT_BT);
-                    return;
-                }
-                socket = device.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+    private void sendMessageToWearable(String messagePath, byte[] message) {
+        // Send message to the Wear OS app
+        if (phoneNodeId != null) {
+            Wearable.getMessageClient(requireContext())
+                    .sendMessage(phoneNodeId, messagePath, message);
+        } else {
+            Log.e("DeviceFragment", "Phone node ID not available");
         }
+    }
 
-        public void run() {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.BLUETOOTH_SCAN}, REQUEST_SCAN_BT);
-                return;
-            }
-            bluetoothAdapter.cancelDiscovery();
-            try {
-                socket.connect();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private String getPhoneNodeId() {
+        // Check if phoneNodeId is available
+        if (phoneNodeId != null) {
+            return phoneNodeId;
+        } else {
+            Log.e("DeviceFragment", "Phone node ID not available");
+            return null;
         }
     }
 }
+

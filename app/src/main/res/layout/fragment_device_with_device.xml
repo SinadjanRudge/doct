@@ -132,6 +132,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Remove Device" />
+        <TextView
+            android:id="@+id/receivedMessageTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Received Message:"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"/>
+
     </LinearLayout>
 
 </FrameLayout>
