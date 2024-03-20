@@ -106,7 +106,25 @@ public class AdminManageUserAccount extends Fragment {
                 RecyclerView recyclerView = rootView.findViewById(R.id.recyclerViewAdmin);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
-                HealthProfessionalAdapter adapter = new HealthProfessionalAdapter(getContext(),(ArrayList) healthProf);
+                HealthProfessionalAdapter adapter = new HealthProfessionalAdapter(getContext(),(ArrayList) healthProf, new HealthProfessionalAdapter.Callbacks() {
+                    @Override
+                    public void OnUpdate(String healthProdUid) {
+                        @SuppressLint("CommitTransaction")
+                        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_layout, UpdateHealthProfPage.newInstance(healthProdUid));
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+
+                    @Override
+                    public void OnView(String healthProdUid) {
+                        @SuppressLint("CommitTransaction")
+                        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_layout, ViewHealthProfPage.newInstance(healthProdUid));
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
                 recyclerView.setAdapter(adapter);
             }
 
