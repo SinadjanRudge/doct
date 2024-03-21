@@ -203,12 +203,10 @@ public class ReportsRepository {
                             users.add(user);
                         }
 
-                        // TODO: EDIT THIS TO USE BEFORE AND AFTER
                         reportsCollection
-                            .whereGreaterThanOrEqualTo(ReportModel.createdBy, before)
-                            .whereLessThanOrEqualTo(ReportModel.createdBy, after)
-                            // .whereEqualTo(ReportModel.createdBy, uid)
-                            .orderBy(ReportModel.createdBy, Query.Direction.DESCENDING)
+                            .whereGreaterThanOrEqualTo(ReportModel.createdDate, before)
+                            .whereLessThanOrEqualTo(ReportModel.createdDate, after)
+                            .orderBy(ReportModel.createdDate, Query.Direction.DESCENDING)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 List<ReportDto> reports = new ArrayList<>();
@@ -235,7 +233,7 @@ public class ReportsRepository {
                         callback.onError(e.getMessage());
                     });
 
-            
+
         } else {
             Log.e(TAG, "User is null");
             callback.onError("User is null");

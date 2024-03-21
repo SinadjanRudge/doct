@@ -95,8 +95,8 @@ public class AdminGenerateReportsPage extends Fragment {
         generateReports.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Date startDate = DateDto.fromDatePicker(startDatePicker).ToDate();
-                Date endDate = DateDto.fromDatePicker(endDatePicker).ToDate();
+                Date startDate = DateDto.fromDatePicker(startDatePicker).ToStartDate();
+                Date endDate = DateDto.fromDatePicker(endDatePicker).ToEndDate();
                 showReportDialog(startDate, endDate);
             }
         });
@@ -139,8 +139,7 @@ public class AdminGenerateReportsPage extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                String filter = s.toString();
+            public void afterTextChanged(Editable s) {String filter = s.toString();
                 recyclerView.setAdapter(new AdminGenerateReportAdapter(getContext(), 
                     retrievedReports.stream()
                         .filter(report -> report.getMessage().contains(filter) && 
@@ -158,7 +157,5 @@ public class AdminGenerateReportsPage extends Fragment {
         });
 
         dialog.show();
-
     }
-
 }

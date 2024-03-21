@@ -66,7 +66,7 @@ public class AdminGenerateReportAdapter extends RecyclerView.Adapter<AdminGenera
         public void update(ReportDto reportDto) {
             description.setText(reportDto.getMessage());
             action.setText(reportDto.getAction());
-
+            createdBy.setText(reportDto.getCreatedBy());
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(reportDto.getCreatedDate());
             date.setText(dateTime.ToString());
         }
