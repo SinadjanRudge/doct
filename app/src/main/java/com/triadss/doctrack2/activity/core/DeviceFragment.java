@@ -73,7 +73,7 @@ public class DeviceFragment extends Fragment {
 
         // Send sample message on click
         sendMessage.setOnClickListener(v -> {
-            String onClickMessage = "I just sent the handheld a message ";
+            String onClickMessage = "I just sent the wearable a message " + sentMessageCounter++;
             Log.e(TAG, "Send message: " + onClickMessage);
 
             //Use the same path//
