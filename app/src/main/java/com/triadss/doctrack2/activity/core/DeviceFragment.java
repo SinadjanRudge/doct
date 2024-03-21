@@ -5,10 +5,10 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -25,18 +26,26 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.MainActivity;
+import com.triadss.doctrack2.bluetooth.MessageService;
+import com.triadss.doctrack2.config.constants.BluetoothConstants;
 import com.triadss.doctrack2.dto.BluetoothDeviceDto;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class DeviceFragment extends Fragment implements MessageClient.OnMessageReceivedListener {
+public class DeviceFragment extends Fragment {
 
     private TextView receivedMessageTextView;
     private String phoneNodeId = "565df7c9"; // Declare phoneNodeId at the class level
+    private int receivedMessageNumber = 1;
+    private int sentMessageCounter = 1;
+
+    private static final String TAG = "DEVICE";
+    private static final String MessageKey = "MessageText";
 
     // NEW CODE
     private Handler handler;
+    private Receiver messageReceiver;
 
     public DeviceFragment() {
         // Required empty public constructor
@@ -68,64 +77,37 @@ public class DeviceFragment extends Fragment implements MessageClient.OnMessageR
             Log.e(TAG, "Send message: " + onClickMessage);
 
             //Use the same path//
-            new SenderThread(DataPath, onClickMessage).start();
+            new SenderThread(BluetoothConstants.DataPath, onClickMessage).start();
         });
 
+        // Use Message Service (Note MessageService does broad cast)
+        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
+        messageReceiver = new Receiver();
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(messageReceiver, messageFilter);
         return rootView;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    }
-
-
-    @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
-        String message = new String(messageEvent.getData());
-        Log.d("DeviceFragment", "Received message: " + message);
-
-        getActivity().runOnUiThread(() -> {
-            // Update UI or perform actions based on the received message
-            receivedMessageTextView.setText("Received Message: " + message);
-        });
-
-        sendMessageToWearable("/action_response", "Response message from mobile".getBytes());
-    }
-
-
-    private void sendMessageToWearable(String messagePath, byte[] message) {
-        // Send message to the Wear OS app
-        if (phoneNodeId != null) {
-            Wearable.getMessageClient(requireContext())
-                    .sendMessage(phoneNodeId, messagePath, message);
-        } else {
-            Log.e("DeviceFragment", "Phone node ID not available");
+        // Unregister the receiver
+        if (messageReceiver != null) {
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(messageReceiver);
+            messageReceiver = null;
         }
     }
-
-    private String getPhoneNodeId() {
-        // Check if phoneNodeId is available
-        if (phoneNodeId != null) {
-            return phoneNodeId;
-        } else {
-            Log.e("DeviceFragment", "Phone node ID not available");
-            return null;
-        }
-    }
-
 
     // NEW CODE
-    private static final String TAG = "DEVICE";
-    private static final String MessageKey = "MessageText";
-    private static final String DataPath = "/my_path";
-    private int sentMessageCounter = 1;
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        // ON RECEIVE FUNCTION HERE
+    public class Receiver extends BroadcastReceiver {
+        @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e(TAG, "Received message from wearable");
+            String message = "\nI just received a message from the wearable " 
+                + receivedMessageNumber++
+                + " \n" + intent.getStringExtra(BluetoothConstants.MessageKey);
+            receivedMessageTextView.append(message);
         }
-    };
+    }
+
 
     private void sendMessage(String messageText)
     {
