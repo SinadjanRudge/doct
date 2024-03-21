@@ -24,27 +24,27 @@ import com.triadss.doctrack2.repoositories.MedicationRepository;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class PatientReportAdapter extends RecyclerView.Adapter<PatientReportAdapter.ViewHolder> {
+public class AdminGenerateReportAdapter extends RecyclerView.Adapter<AdminGenerateReportAdapter.ViewHolder> {
     private final String TAG = "PatientMedicationOngoingAdapter";
     private ArrayList<ReportDto> reports;
     private Context context;
 
-    public PatientReportAdapter(Context context, ArrayList<ReportDto> reports) {
+    public AdminGenerateReportAdapter(Context context, ArrayList<ReportDto> reports) {
         this.context = context;
         this.reports = reports;
     }
 
     @NonNull
     @Override
-    public PatientReportAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_reports, parent, false);
+    public AdminGenerateReportAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_reports_admin, parent, false);
 
         // Passing view to ViewHolder
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PatientReportAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdminGenerateReportAdapter.ViewHolder holder, int position) {
         holder.update(reports.get(position));
     }
 
@@ -54,20 +54,19 @@ public class PatientReportAdapter extends RecyclerView.Adapter<PatientReportAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView description, action, date, createdByName;
+        private TextView description, action, date, createdBy;
         public ViewHolder(View view) {
             super(view);
             description = view.findViewById(R.id.descriptionValue);
             action = view.findViewById(R.id.actionValue);
             date = view.findViewById(R.id.dateValue);
-            createdByName = view.findViewById(R.id.createdByValue);
+            createdBy = view.findViewById(R.id.createdByValue);
         }
 
         public void update(ReportDto reportDto) {
             description.setText(reportDto.getMessage());
             action.setText(reportDto.getAction());
-            createdByName.setText(reportDto.getCreatedByName());
-
+            createdBy.setText(reportDto.getCreatedBy());
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(reportDto.getCreatedDate());
             date.setText(dateTime.ToString());
         }

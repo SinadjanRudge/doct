@@ -21,6 +21,7 @@ import com.triadss.doctrack2.dto.ReportDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -180,6 +181,59 @@ public class ReportsRepository {
                         Log.e(TAG, "Error fetching medicines", e);
                         callback.onError(e.getMessage());
                     });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
+
+    public void getReportsFromDateRange(Date before, Date after, ReportsFetchCallback callback) {
+        if (user != null) {
+            CollectionReference usersCollection = firestore
+                .collection(FireStoreCollection.USERS_TABLE);
+
+            usersCollection
+                .get()
+                .addOnSuccessListener(userQueryDocumentSnapshots -> {
+                        // To get user details
+                        List<AddPatientDto> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : userQueryDocumentSnapshots) {
+                            AddPatientDto user = document.toObject(AddPatientDto.class);
+                            user.setUid(document.getId());
+                            users.add(user);
+                        }
+
+                        reportsCollection
+                            .whereGreaterThanOrEqualTo(ReportModel.createdDate, before)
+                            .whereLessThanOrEqualTo(ReportModel.createdDate, after)
+                            .orderBy(ReportModel.createdDate, Query.Direction.DESCENDING)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                List<ReportDto> reports = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                    ReportDto report = document.toObject(ReportDto.class);
+                                    String fullName = users.stream()
+                                            .filter(user -> user.getUid().equals(report.getCreatedBy()))
+                                            .findFirst().get().getFullName();
+                                    report.setCreatedByName(fullName);
+
+                                    reports.add(report);
+                                }
+
+                                callback.onSuccess(reports);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(TAG, "Error fetching medicines", e);
+                                callback.onError(e.getMessage());
+                            });
+
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching medicines", e);
+                        callback.onError(e.getMessage());
+                    });
+
+
         } else {
             Log.e(TAG, "User is null");
             callback.onError("User is null");
