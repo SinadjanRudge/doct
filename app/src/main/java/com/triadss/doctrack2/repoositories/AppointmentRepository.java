@@ -132,8 +132,9 @@ public class AppointmentRepository {
                     }
                 });
     }
-    public void getAllPatientStatusAppointments(AppointmentPatientStatusFetchCallback callback) {
-        appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
+    public void getAllPatientStatusAppointments(String patientUid, AppointmentPatientStatusFetchCallback callback) {
+        appointmentsCollection.orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
+                .whereEqualTo(AppointmentsModel.patientId, patientUid)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

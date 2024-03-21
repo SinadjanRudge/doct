@@ -70,7 +70,7 @@ public class PatientAppointmentStatusAdapter extends RecyclerView.Adapter<Patien
         {
             purpose.setText(appointment.getPurpose());
             status.setText(appointment.getStatus());
-            idText.setText(appointment.getUid());
+            idText.setText(appointment.getDocumentId());
             nameText.setText(appointment.getNameOfRequester());
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
