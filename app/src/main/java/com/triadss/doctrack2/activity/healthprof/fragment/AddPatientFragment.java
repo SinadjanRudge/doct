@@ -1,6 +1,5 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -231,7 +229,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         recordData.put(ReportModel.action, "ADD");
         recordData.put(ReportModel.message, String.format("Patient id:%s name:%s has been created", userId, patientDto.getFullName()));
         recordData.put(ReportModel.idNumber, patientDto.getIdNumber());
-        recordData.put(ReportModel.createdDate, dateNow);
+        recordData.put(ReportModel.createdBy, dateNow);
         recordData.put(ReportModel.updatedDate, dateNow);
 
         // Check if mAuth and mContext are not null
