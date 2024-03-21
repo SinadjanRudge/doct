@@ -1,6 +1,15 @@
 package com.triadss.doctrack2.dto;
 
-public class AddPatientDto {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.firebase.Timestamp;
+
+public class AddPatientDto implements Parcelable {
+
+    public AddPatientDto(){
+        //Required empty constructor
+    }
 
     private String idNumber;
 
@@ -14,7 +23,57 @@ public class AddPatientDto {
 
     private int Age;
 
+    private String uid;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public int getYear() {
+        return Year;
+    }
+
+    public void setYear(int year) {
+        Year = year;
+    }
+
+    private int Year;
     private String course;
+    private Timestamp dateOfBirth;
+    private String gender;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    private String status;
+
+    public Timestamp getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Timestamp dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+
 
     private String uid;
     
@@ -80,5 +139,45 @@ public class AddPatientDto {
 
     public void setAge(int age) {
         Age = age;
+    }
+
+    public AddPatientDto(Parcel in) {
+        // Read fields from Parcel
+        idNumber = in.readString();
+        fullName = in.readString();
+        email = in.readString();
+        address = in.readString();
+        Age = in.readInt();
+        phone = in.readString();
+        course = in.readString();
+    }
+
+    public static final Creator<AddPatientDto> CREATOR = new Creator<AddPatientDto>() {
+        @Override
+        public AddPatientDto createFromParcel(Parcel in) {
+            return new AddPatientDto(in);
+        }
+
+        @Override
+        public AddPatientDto[] newArray(int size) {
+            return new AddPatientDto[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        // Write fields to Parcel
+        dest.writeString(idNumber);
+        dest.writeString(fullName);
+        dest.writeString(email);
+        dest.writeString(address);
+        dest.writeInt(Age);
+        dest.writeString(phone);
+        dest.writeString(course);
     }
 }

@@ -157,7 +157,7 @@
                     android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/editTextText"
+                        android:id="@+id/editTextOthers"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginStart="35dp"
@@ -195,6 +195,7 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textViewPrevHos"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
@@ -396,7 +397,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="25dp"
-                android:text="click UPDATE to update medical history"
+                android:text="click UPDATE to update medical history and go to Vital Signs"
                 android:textSize="13sp" />
 
             <Button
