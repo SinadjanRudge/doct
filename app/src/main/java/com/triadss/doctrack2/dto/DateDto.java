@@ -75,5 +75,10 @@ public class DateDto {
     public static DateDto fromDatePicker(DatePicker datepicker)
     {
         return new DateDto(datepicker.getYear(), datepicker.getMonth(), datepicker.getDayOfMonth());
-    } 
+    }
+
+    public Timestamp ToTimestamp()
+    {
+        return new Timestamp(ToStartDate());
+    }
 }
