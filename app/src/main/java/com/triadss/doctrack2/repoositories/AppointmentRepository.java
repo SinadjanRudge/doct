@@ -12,11 +12,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.AppointmentsModel;
+import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.config.model.UserModel;
+import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
 import java.util.ArrayList;
@@ -24,11 +27,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.dto.DateTimeDto;
+import com.triadss.doctrack2.dto.ReportDto;
 
 import java.util.Date;
 import java.util.Map;
@@ -106,27 +111,50 @@ public class AppointmentRepository {
                 });
 
     }
-    public void getAllPatientPendingAppointments(AppointmentPatientPendingFetchCallback callback) {
-        appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
-                .whereEqualTo("status", "Pending")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<AppointmentDto> appointments = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            if(document.get("status").toString().equals("Pending")) {
-                                AppointmentDto appointment = document.toObject(AppointmentDto.class);
+    public void getAllPatientPendingAppointments(String patientUid, AppointmentPatientPendingFetchCallback callback) {
+        CollectionReference usersCollection = firestore
+                .collection(FireStoreCollection.USERS_TABLE);
 
-                                appointment.setDocumentId(document.getId().toString());
-                                appointments.add(appointment);
-                            }
+        usersCollection
+                .document(patientUid)
+                .get()
+                .addOnCompleteListener(userTask -> {
+                    if (userTask.isSuccessful()) {
+                        DocumentSnapshot userDocument = userTask.getResult();
+                        if (userDocument != null && userDocument.exists()) {
+                            // Retrieve the user role from the document
+                            AddPatientDto user = userDocument.toObject(AddPatientDto.class);
+
+                            appointmentsCollection.orderBy(AppointmentsModel.createdBy, Query.Direction.DESCENDING)
+                                    .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
+                                    .get()
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            List<AppointmentDto> appointments = new ArrayList<>();
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                AppointmentDto appointment = document.toObject(AppointmentDto.class);
+
+                                                appointment.setDocumentId(document.getId().toString());
+                                                appointment.setNameOfRequester(user.getFullName());
+                                                appointments.add(appointment);
+                                            }
+                                            callback.onSuccess(appointments);
+                                        } else {
+                                            Log.e(TAG, "Error getting appointments", task.getException());
+                                            callback.onError(task.getException().getMessage());
+                                        }
+                                    });
                         }
-                        callback.onSuccess(appointments);
                     } else {
-                        Log.e(TAG, "Error getting appointments", task.getException());
-                        callback.onError(task.getException().getMessage());
+                        Log.e(TAG, "Error fetching user");
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching medicines", e);
+                    callback.onError(e.getMessage());
                 });
+
+
     }
     public void getAllPatientStatusAppointments(AppointmentPatientStatusFetchCallback callback) {
         appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)

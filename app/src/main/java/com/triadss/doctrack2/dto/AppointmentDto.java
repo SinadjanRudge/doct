@@ -88,7 +88,7 @@ public class AppointmentDto {
     private String status;
     private String patientId;
     private Timestamp createdAt;
-
+    private String requester;
     private String documentId;
 
 }

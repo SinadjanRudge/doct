@@ -73,7 +73,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView purpose,date,time, documentId;
+        private TextView purpose,date,time, documentId, patientName;
         public ViewHolder(View view) {
             super(view);
             Button cancel, reschedule;
@@ -82,7 +82,9 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             time = (TextView) view.findViewById(R.id.appointment_time);
             cancel=(Button)itemView.findViewById(R.id.cancel_button);
             reschedule=(Button)itemView.findViewById(R.id.reschedule_button);
-            documentId = (TextView) view.findViewById(R.id.DocumentID);
+            documentId = (TextView) view.findViewById(R.id.IDtext);
+            patientName = view.findViewById(R.id.nametext);
+
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -153,6 +155,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             date.setText(dateTimeDto.getDate().ToString());
             time.setText(dateTimeDto.getTime().ToString());
             documentId.setText(appointment.getDocumentId());
+            patientName.setText(appointment.getNameOfRequester());
         }
 
         private void showUpdateDialog(String id)
