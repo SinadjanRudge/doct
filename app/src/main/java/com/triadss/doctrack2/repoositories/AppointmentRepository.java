@@ -1,9 +1,12 @@
 package com.triadss.doctrack2.repoositories;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -18,18 +21,26 @@ import com.triadss.doctrack2.dto.AppointmentDto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.dto.DateTimeDto;
 
 import java.util.Date;
+import java.util.Map;
 
 public class AppointmentRepository {
     private static final String TAG = "AppointmentRepository";
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference appointmentsCollection = firestore
             .collection(FireStoreCollection.APPOINTMENTS_TABLE);
+
+    private final CollectionReference reportsCollection = firestore
+            .collection(FireStoreCollection.REPORTS_TABLE);
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
 
@@ -83,8 +94,52 @@ public class AppointmentRepository {
                         List<AppointmentDto> appointments = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             AppointmentDto appointment = document.toObject(AppointmentDto.class);
-
+                            //document.getId().toString()
+                            appointment.setDocumentId(document.get("status").toString());
                             appointments.add(appointment);
+                        }
+                        callback.onSuccess(appointments);
+                    } else {
+                        Log.e(TAG, "Error getting appointments", task.getException());
+                        callback.onError(task.getException().getMessage());
+                    }
+                });
+
+    }
+    public void getAllPatientPendingAppointments(AppointmentPatientPendingFetchCallback callback) {
+        appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
+                .whereEqualTo("status", "Pending")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<AppointmentDto> appointments = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if(document.get("status").toString().equals("Pending")) {
+                                AppointmentDto appointment = document.toObject(AppointmentDto.class);
+
+                                appointment.setDocumentId(document.getId().toString());
+                                appointments.add(appointment);
+                            }
+                        }
+                        callback.onSuccess(appointments);
+                    } else {
+                        Log.e(TAG, "Error getting appointments", task.getException());
+                        callback.onError(task.getException().getMessage());
+                    }
+                });
+    }
+    public void getAllPatientStatusAppointments(AppointmentPatientStatusFetchCallback callback) {
+        appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<AppointmentDto> appointments = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if(document.get("status").toString().equals("Canceled") || document.get("status").toString().equals("Completed")) {
+                                AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                                appointment.setDocumentId(document.getId().toString());
+                                appointments.add(appointment);
+                            }
                         }
                         callback.onSuccess(appointments);
                     } else {
@@ -222,6 +277,80 @@ public class AppointmentRepository {
         }
     }
 
+
+    public void cancelAppointment(String DocumentId, AppointmentCancelCallback callback) {
+
+        appointmentsCollection
+                .document(DocumentId)
+                .update("status", "Canceled")
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Appointment added with ID: " + DocumentId);
+                    callback.onSuccess(DocumentId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error adding appointment", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
+    public void rescheduleAppointment(String DocumentId,Timestamp date,AppointmentRescheduleCallback callback) {
+
+        appointmentsCollection
+                .document(DocumentId)
+                .update("dateOfAppointment", date)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Appointment added with ID: " + DocumentId);
+                    callback.onSuccess(DocumentId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error adding appointment", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
+    public void addReport(String DocumentId,String action,ReportCallback callback) {
+
+        DocumentReference reportRef = appointmentsCollection.document(DocumentId);
+
+                reportRef
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+
+                            Map<String, Object> data = new HashMap<>();
+                            data.put("action", action.toString());
+                            data.put("createdBy", document.get("createdAt"));
+                            data.put("createdDate", document.get("patientId"));
+                            data.put("idNumber", document.getId().toString());
+                            data.put("message", "Appointment ID:  " + document.getId() + "  has been  " + action.toString()+"ED");
+                            data.put("updatedBy", document.get("patientId").toString());
+                            data.put("updatedDate", document.get("createdAt"));
+                            reportsCollection
+                                    .add(data)
+                                    .addOnSuccessListener(documentReference -> {
+                                        Log.d(TAG, "report added with ID: " + DocumentId);
+                                        callback.onSuccess(DocumentId);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Error adding appointment", e);
+                                        callback.onError(e.getMessage());
+                                    });
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        callback.onError(task.getException().toString());
+                    }
+                });
+    }
+
+    public interface AppointmentCancelCallback {
+        void onSuccess(String appointmentId);
+
+        void onError(String errorMessage);
+    }
     public interface AppointmentAddCallback {
         void onSuccess(String appointmentId);
 
@@ -234,4 +363,26 @@ public class AppointmentRepository {
         void onError(String errorMessage);
     }
 
+    public interface AppointmentPatientPendingFetchCallback {
+        void onSuccess(List<AppointmentDto> appointments);
+
+        void onError(String errorMessage);
+    }
+
+    public interface AppointmentPatientStatusFetchCallback {
+        void onSuccess(List<AppointmentDto> appointments);
+
+        void onError(String errorMessage);
+    }
+
+    public interface AppointmentRescheduleCallback {
+        void onSuccess(String appointmentId);
+
+        void onError(String errorMessage);
+    }
+    public interface ReportCallback {
+        void onSuccess(String appointmentId);
+
+        void onError(String errorMessage);
+    }
 }
