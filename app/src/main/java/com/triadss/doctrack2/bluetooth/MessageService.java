@@ -11,6 +11,10 @@ import com.triadss.doctrack2.config.constants.BluetoothConstants;
 //Extend WearableListenerService//
 public class MessageService extends WearableListenerService {
     @Override
+    public void onCreate() {
+        super.onCreate(); // <-- don't forget this
+    }
+    @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         //If the message’s path equals "/my_path"...//
         if (messageEvent.getPath().equals(BluetoothConstants.DataPath)) {
