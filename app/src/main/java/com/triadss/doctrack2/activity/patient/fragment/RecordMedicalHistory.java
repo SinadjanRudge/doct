@@ -7,8 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.MedicalHistoryDto;
+import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +65,34 @@ public class RecordMedicalHistory extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        MedicalHistoryRepository medicalHistoryRepository = new MedicalHistoryRepository();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String patientUid = currentUser.getUid();
+        
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_record_medical_history, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_record_medical_history, container, false);
+        
+        TextView patientPastIllness = rootView.findViewById(R.id.value_pastIllness);
+        TextView patientPrevHospitalization = rootView.findViewById(R.id.value_prevHospitalization);
+        TextView patientFamilyHistory = rootView.findViewById(R.id.value_familyHistory);
+        TextView patientOBGyneHistory = rootView.findViewById(R.id.value_OBGyneHistory);
+
+        medicalHistoryRepository.getMedicalHistoryOfPatient(patientUid, new MedicalHistoryRepository.FetchCallback() {
+            @Override
+            public void onSuccess(MedicalHistoryDto medicalHistory) {
+                patientPastIllness.setText(medicalHistory.getPastIllness());
+                patientPrevHospitalization.setText(medicalHistory.getPrevOperation());
+                patientFamilyHistory.setText(medicalHistory.getFamilyHist());
+                patientOBGyneHistory.setText(medicalHistory.getObgyneHist());
+            }
+
+            @Override
+            public void onError(String message) {
+
+            }
+        });
+
+        return rootView;
     }
 }

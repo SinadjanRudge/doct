@@ -19,6 +19,8 @@ public class UserModel extends AuditModel {
     public static final String course = "course";
 
     public static final String idNumber = "idNumber";
+    public static final String patientId = "patientId";
+    public static final String dateOfBirth = "dateOfBirth";
     public static final String deviceId = "deviceId";
     public static final String age = "age";
     public static final String year = "age";

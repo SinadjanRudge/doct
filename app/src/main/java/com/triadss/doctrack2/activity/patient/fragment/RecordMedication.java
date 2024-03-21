@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.triadss.doctrack2.activity.healthprof.adapters.ViewMedicationAdapter;
+import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
@@ -35,6 +39,7 @@ public class RecordMedication extends Fragment {
     private String mParam2;
 
     MedicationRepository medicationRepository = new MedicationRepository();
+    RecyclerView recyclerView;
 
     public RecordMedication() {
         // Required empty public constructor
@@ -72,24 +77,29 @@ public class RecordMedication extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_record_medication, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        loadMedicationCards(recyclerView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        loadMedicationCards();
         return rootView;
     }
 
-    private void loadMedicationCards(RecyclerView recyclerView){
-        medicationRepository.getAllMedications("", new MedicationRepository.MedicationFetchCallback() {
+    private void loadMedicationCards(){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String patientUid = currentUser.getUid();
+
+
+        medicationRepository.getAllMedicationsFromUser(patientUid, new MedicationRepository.MedicationFetchCallback() {
             @Override
             public void onSuccess(List<MedicationDto> medications) {
+                ViewMedicationAdapter viewMedicationAdapter = new ViewMedicationAdapter(getContext(), (ArrayList)medications);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
-                PatientMedicationOngoingAdapter adapter = new PatientMedicationOngoingAdapter(getContext(), (ArrayList<MedicationDto>)medications);
-                recyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(viewMedicationAdapter);
             }
 
             @Override
-            public void onError(String errorMessage) {
-                System.out.println();
+            public void onError(String message) {
+
             }
         });
     }
