@@ -145,9 +145,6 @@ public class DeviceFragment extends Fragment {
         });
     }
 
-
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -179,23 +176,29 @@ public class DeviceFragment extends Fragment {
         return false;
     }
 
-    private void sendMessage(String jsonData) {
-        // Construct the data map
-        PutDataMapRequest dataMap = PutDataMapRequest.create("/message/path");
-        dataMap.getDataMap().putString("jsonData", jsonData);
+    int count = 0;
 
-        // Build the request and send the message
+    private void sendMessage(String jsonData) {
+        // Include count in jsonData
+        String jsonDataWithCount = jsonData + " Count: " + count;
+
+        // Construct the data map
+        PutDataMapRequest dataMap = PutDataMapRequest.create("/data_path");
+        dataMap.getDataMap().putString("jsonData", jsonDataWithCount);
+
+        // Build the request and send the data
         PutDataRequest request = dataMap.asPutDataRequest();
         Task<DataItem> putDataTask = Wearable.getDataClient(getContext()).putDataItem(request);
 
         // Handle the result
         putDataTask.addOnSuccessListener(dataItem -> {
-            Log.d(TAG, "Message sent successfully");
+            // Increment count after data sent successfully
+            count++;
+            Log.d(TAG, "Data sent successfully");
         }).addOnFailureListener(e -> {
-            Log.e(TAG, "Failed to send message", e);
+            Log.e(TAG, "Failed to send data", e);
         });
     }
-
 
 
     private class SenderThread extends Thread
@@ -234,10 +237,6 @@ public class DeviceFragment extends Fragment {
                                     Log.e("MessageSent", "Failed to send message", e);
                                 }
                             });;
-
-
-
-
                     try {
                         //Block on a task and get the result synchronously//
                         Integer result = Tasks.await(sendMessageTask);
