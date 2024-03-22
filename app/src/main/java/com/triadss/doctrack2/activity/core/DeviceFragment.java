@@ -25,24 +25,31 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.MessageClient;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.MainActivity;
 import com.triadss.doctrack2.bluetooth.MessageService;
 import com.triadss.doctrack2.config.constants.BluetoothConstants;
 import com.triadss.doctrack2.dto.BluetoothDeviceDto;
+import com.triadss.doctrack2.dto.VitalSignsDto;
+import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class DeviceFragment extends Fragment {
 
+public class DeviceFragment extends Fragment {
     private TextView receivedMessageTextView;
-    private String phoneNodeId = "565df7c9"; // Declare phoneNodeId at the class level
     private int receivedMessageNumber = 1;
     private int sentMessageCounter = 1;
 
@@ -57,6 +64,11 @@ public class DeviceFragment extends Fragment {
         // Required empty public constructor
     }
 
+    private Button sendMessage, syncButton;
+    private VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,7 +76,8 @@ public class DeviceFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_device_with_device, container, false);
 
         receivedMessageTextView = rootView.findViewById(R.id.receivedMessageTextView);
-        Button sendMessage = rootView.findViewById(R.id.sendMessageBtn);
+        sendMessage = rootView.findViewById(R.id.sendMessageBtn);
+        syncButton = rootView.findViewById(R.id.SyncDeviceBtn);
 
         handler = new Handler(new Handler.Callback() {
             @Override
@@ -76,8 +89,6 @@ public class DeviceFragment extends Fragment {
                 return true;
             }
         });
-
-
 
         // Send sample message on click
         sendMessage.setOnClickListener(v -> {
@@ -98,8 +109,43 @@ public class DeviceFragment extends Fragment {
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
         messageReceiver = new Receiver();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(messageReceiver, messageFilter);
+
+
+        handleSyncButtonClick();
         return rootView;
     }
+
+    private void handleSyncButtonClick(){
+        syncButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Log.e(TAG, "Sync Button Clicked");
+
+                    Log.e(TAG, "User uid: " + user.getUid());
+                    vitalSignsRepo.getVitalSignOfPatient(user.getUid(), new VitalSignsRepository.FetchCallback() {
+                        @Override
+                        public void onSuccess(VitalSignsDto vitalSigns) {
+                            // Convert vitalSignsDto to JSON string (you can use Gson or other libraries)
+                            String jsonData = vitalSigns.toJsonData();
+
+                            // Send JSON data to the wearable
+                            sendMessage(jsonData);
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            Log.e(TAG, "Failure in fetching patient's vital signs");
+                        }
+                    });
+                } catch (Exception e){
+                    Log.e(TAG, "Exception: " + e.getMessage());
+                }
+            }
+        });
+    }
+
+
 
 
     @Override
@@ -124,7 +170,6 @@ public class DeviceFragment extends Fragment {
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
-//        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
@@ -134,25 +179,24 @@ public class DeviceFragment extends Fragment {
         return false;
     }
 
-    public String getPhoneNodeId(){
-//        NodeApi.GetLocalNodeResult nodes = Wearable.NodeApi.getLocalNode(mGoogleApiClient).await();
-//        Node node = nodes.getNode();
-//        if (node != null) {
-//            String nodeId = node.getId();
-//            Log.i(getPackageName(), "Node ID: " + nodeId);
-//        } else {
-//            Log.e(getPackageName(), "No local node found");
-//        }
-        return "";
+    private void sendMessage(String jsonData) {
+        // Construct the data map
+        PutDataMapRequest dataMap = PutDataMapRequest.create("/message/path");
+        dataMap.getDataMap().putString("jsonData", jsonData);
+
+        // Build the request and send the message
+        PutDataRequest request = dataMap.asPutDataRequest();
+        Task<DataItem> putDataTask = Wearable.getDataClient(getContext()).putDataItem(request);
+
+        // Handle the result
+        putDataTask.addOnSuccessListener(dataItem -> {
+            Log.d(TAG, "Message sent successfully");
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Failed to send message", e);
+        });
     }
-    private void sendMessage(String messageText)
-    {
-        Bundle bundle = new Bundle();
-        bundle.putString(MessageKey, messageText);
-        Message msg = handler.obtainMessage();
-        msg.setData(bundle);
-        handler.sendMessage(msg);
-    }
+
+
 
     private class SenderThread extends Thread
     {
@@ -201,10 +245,10 @@ public class DeviceFragment extends Fragment {
                         //if the Task fails, then…..//
                     } catch (ExecutionException exception) {
                         //TO DO: Handle the exception//
-                        Log.e("DeviceFragmenty - ExecutionException", exception.getMessage());
+                        Log.e("DeviceFragment - ExecutionException", exception.getMessage());
                     } catch (InterruptedException exception) {
                         //TO DO: Handle the exception//
-                        Log.e("DeviceFragmenty - InterruptedException", exception.getMessage());
+                        Log.e("DeviceFragment - InterruptedException", exception.getMessage());
                     }
                 }
             } catch (ExecutionException exception) {
