@@ -36,7 +36,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
     @Override
     public HealthProfessionalAppointmentUpcomingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_upcoming, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_appointment_upcoming, parent, false);
 
         // Passing view to ViewHolder
         HealthProfessionalAppointmentUpcomingAdapter.ViewHolder viewHolder = new HealthProfessionalAppointmentUpcomingAdapter.ViewHolder(view);

@@ -4,9 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,7 +30,7 @@ public class PatientAppointmentStatusAdapter extends RecyclerView.Adapter<Patien
     @NonNull
     @Override
     public PatientAppointmentStatusAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_status, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_appointment_status, parent, false);
 
         // Passing view to ViewHolder
         PatientAppointmentStatusAdapter.ViewHolder viewHolder = new PatientAppointmentStatusAdapter.ViewHolder(view);

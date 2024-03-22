@@ -10,10 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,11 +22,9 @@ import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.TimeDto;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 // Extends the Adapter class to RecyclerView.Adapter
@@ -51,7 +46,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
     public PatientAppointmentPendingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         appointmentRepository = new AppointmentRepository();
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_appointment_pending, parent, false);
 
         // Passing view to ViewHolder
         PatientAppointmentPendingAdapter.ViewHolder viewHolder = new PatientAppointmentPendingAdapter.ViewHolder(view);
