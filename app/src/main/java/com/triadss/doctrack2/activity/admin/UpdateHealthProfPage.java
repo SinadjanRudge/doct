@@ -113,43 +113,4 @@ public class UpdateHealthProfPage extends Fragment {
         });
         return rootView;
     }
-/*    private void updateHealthProf() {
-        // Set up Date Picker Dialog
-        updateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleConfirmationButtonClick(v);
-            }
-        });
-    }*/
-    /*private void handleConfirmationButtonClick(View v) {
-        try {
-            String Position = editTextPosition.getText().toString();
-            HealthProfessionalAdapter healthProfessionalAdapter = new HealthProfessionalAdapter(healthProfUid, healthProfDto);
-            healthProfessionalAdapter.updateHealthProfile();
-
-            textHealthWorkerName.setText("");
-            *//*healthProfRepository.addHealthProf(healthProfdto,new HealthProfRepository.HealthProAddCallback(){
-
-                @Override
-                public void onSuccess(String healthProfId) {
-                    Log.e(TAG, "Successfully added medication with the id of " + healthProfdto);
-                    //editHWNInput.setText("");
-                    editTextPositionInput.setText("");
-                    editTextUserNameInput.setText("");
-                    editTextPasswordInput.setText("");
-                    editTextAppointmentIDInput.setText("");
-                    editTextGenderInput.setText("");
-                    Toast.makeText(getContext(), "Added Professional Health Account Created", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onFailure(String errorMessage) {
-                    Log.e(TAG, "Failure in adding medication in the document");
-                }
-            });*//*
-        }catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
-    }*/
 }
