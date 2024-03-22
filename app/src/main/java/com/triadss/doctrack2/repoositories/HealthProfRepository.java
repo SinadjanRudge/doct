@@ -10,9 +10,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.constants.UserRoleConstants;
 import com.triadss.doctrack2.config.model.UserModel;
-import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.HealthProfDto;
-import com.triadss.doctrack2.dto.MedicationDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,11 +87,63 @@ public class HealthProfRepository {
                 }
             });
     }
-    //create add health proflist function from firestore
+
+    //Update HealthProfessional data
+    public void updateHealthProfessional(HealthProfDto healthProfDto, HealthProUpdateCallback callback)
+    {
+        if(healthProfDto.getHealthProfid() != null) {
+            healthProfDto.setPosition("update position");
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users")
+                    .document(healthProfDto.getHealthProfid())
+                    .update("position", healthProfDto.getPosition())
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "Update Health Professional updated successfully");
+                        callback.onSuccess(healthProfDto);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error updating Health Professional", e);
+                        callback.onFailure(e.getMessage());
+                    });
+        }else {
+            Log.e(TAG, "Health Prof id is null");
+            callback.onFailure("Health Prof id is null");
+        }
+    }
+    public void getHealthProfessional(String healthprofUid, HealthProGetCallback callback)
+    {
+        healProfCollection.document(healthprofUid)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        HealthProfDto healthprof = documentSnapshot.toObject(HealthProfDto.class);
+                        healthprof.setHealthProfid(documentSnapshot.getId());
+                        callback.onSuccess(healthprof);
+                    } else {
+                        callback.onFailure("Patient not found");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    callback.onFailure(e.getMessage());
+                });
+    }
+
 
     public interface HealthProListCallback
     {
         public void onSuccess(List<HealthProfDto> dto);
+        public void onFailure(String errorMessage);
+
+    }
+    public interface HealthProUpdateCallback
+    {
+        public void onSuccess(HealthProfDto dto);
+        public void onFailure(String errorMessage);
+
+    }
+    public interface HealthProGetCallback
+    {
+        public void onSuccess(HealthProfDto dto);
         public void onFailure(String errorMessage);
 
     }

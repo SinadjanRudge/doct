@@ -2,10 +2,6 @@ package com.triadss.doctrack2.activity.admin;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
+import androidx.fragment.app.Fragment;
+
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;
-
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,12 +72,8 @@ public class CreateHealthProfessionalPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-<<<<<<< HEAD
-        View rootView =  inflater.inflate(R.layout.fragment_create_health_professional_page, container, false);
-=======
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_admin_manage_user_accounts_create_health_professional, container, false);
->>>>>>> origin/Item_AdminMangeUserAccount_Rev
 
         healthProfRepository = new HealthProfRepository();
 
@@ -120,7 +111,7 @@ public class CreateHealthProfessionalPage extends Fragment {
                 @Override
                 public void onSuccess(String healthProfId) {
                     Log.e(TAG, "Successfully added medication with the id of " + healthProfdto);
-                    editHWNInput.setText("");
+                    //editHWNInput.setText("");
                     editTextPositionInput.setText("");
                     editTextUserNameInput.setText("");
                     editTextPasswordInput.setText("");

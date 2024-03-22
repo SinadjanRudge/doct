@@ -20,12 +20,19 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
     ArrayList<HealthProfDto> healthProfessional;
     Context context;
     Callbacks callback;
+    String healthProfUid;
+    HealthProfDto healthProfDto;
 
     // Constructor for initialization
     public HealthProfessionalAdapter(Context context, ArrayList<HealthProfDto> healthProfessional, Callbacks callback) {
         this.context = context;
         this.callback = callback;
         this.healthProfessional = healthProfessional;
+    }
+    HealthProfessionalAdapter(String healthProfUid, HealthProfDto healthProfDto)
+    {
+        this.healthProfUid = healthProfUid;
+        this.healthProfDto = healthProfDto;
     }
 
     @NonNull
@@ -62,24 +69,10 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
             super(view);
             name = (TextView) view.findViewById(R.id.textViewAdminName);
             email = (TextView) view.findViewById(R.id.textViewAdminEmail);
-<<<<<<< HEAD
-
-=======
->>>>>>> be67203dbee5e8c335a38393d837c798a0ae5545
             viewBtn = view.findViewById(R.id.viewBtn);
             updateBtn = view.findViewById(R.id.updateBtn);
         }
 
-<<<<<<< HEAD
-        public void update(HealthProfDto healthProfDto)
-        {
-            name.setText(healthProfDto.getFullName());
-
-            viewBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.OnViewPressed(healthProfDto.getHealthProfid());
-=======
         public void update(HealthProfDto healthProfDto) {
             name.setText(healthProfDto.getFullName());
             email.setText(healthProfDto.getEmail());
@@ -88,19 +81,13 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
                 @Override
                 public void onClick(View view) {
                     callback.OnView(healthProfDto.getHealthProfid());
->>>>>>> be67203dbee5e8c335a38393d837c798a0ae5545
                 }
             });
 
             updateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
-<<<<<<< HEAD
-                public void onClick(View v) {
-                    callback.OnUpdatePressed(healthProfDto.getHealthProfid());
-=======
                 public void onClick(View view) {
                     callback.OnUpdate(healthProfDto.getHealthProfid());
->>>>>>> be67203dbee5e8c335a38393d837c798a0ae5545
                 }
             });
         }

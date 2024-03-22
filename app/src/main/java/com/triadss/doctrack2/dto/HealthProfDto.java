@@ -30,12 +30,12 @@ public class HealthProfDto {
     public void setHealthProfid(String healthProfId) {
         this.healthProfId = healthProfId;
     }
-    public String setFullName(String HWN) { return HWN;}
-    public String setPosition(String position) { return position;}
-    public String setUserName(String userName) { return userName;}
-    public String setPassword(String password) { return password;}
-    public String setAppointmentId(String appointmentId) { return appointmentId;}
-    public String setGender(String gender) { return gender;}
+    public void setFullName(String HWN) { this.HWN = HWN;}
+    public void setPosition(String position) {  this.position = position;}
+    public void setUserName(String userName) { this.userName = userName;}
+    public void setPassword(String password) { this.password = password;}
+    public void setAppointmentId(String appointmentId) { this.appointmentId = appointmentId;}
+    public void setGender(String gender) { this.gender = gender;}
 
     public String getFullName() {return HWN;}
     public String getHealthProfid() {return healthProfId;}
