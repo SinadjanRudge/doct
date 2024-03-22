@@ -72,6 +72,15 @@ public class AppointmentDto {
         this.uid = uid;
     }
 
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+
     private String uid;
     private String nameOfRequester;
     private String purpose;
@@ -79,5 +88,7 @@ public class AppointmentDto {
     private String status;
     private String patientId;
     private Timestamp createdAt;
+
+    private String documentId;
 
 }

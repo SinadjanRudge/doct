@@ -1,12 +1,14 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -15,8 +17,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,15 +27,14 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.DocTrackErrorMessage;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
-import com.triadss.doctrack2.config.enums.UserRole;
 import com.triadss.doctrack2.config.model.ReportModel;
-import com.triadss.doctrack2.config.model.UserModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.repoositories.PatientRepository;
-import com.triadss.doctrack2.utils.DocTrackUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,15 +50,11 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    TextInputEditText editTextEmail, editTextAddress, editTextPhone, editTextAge, editTextCourse, editTextIdNumber, editTextFullName;
-
-    TextInputLayout emailTextInputLayout, idNumberTextInputLayout, fullNameTextInputLayout;
-
+    EditText editTextEmail, editTextAddress, editTextPhone, editTextAge, editTextCourse, editTextIdNumber, editTextFullName;
+    Button getBirthDate;
+    DateDto birthDate;
     FirebaseAuth mAuth;
 
-    ProgressBar progressBar;
-
-    Button saveButton;
     PatientRepository _patientRepository;
 
     public AddPatientFragment() {
@@ -91,9 +86,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.add_patient_save) {
-            createPatient();
-        }
+
     }
 
     /**
@@ -114,12 +107,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         _patientRepository = new PatientRepository();
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_add_patient, container, false);
-        Toolbar toolbar = rootView.findViewById(R.id.add_patient_toolbar);
-        toolbar.setTitle("Add Patient");
-
-        // Set the Toolbar as the action bar for the activity
-        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+        View rootView = inflater.inflate(R.layout.fragment_patient_record_add_patient, container, false);
+        TextView toolbar = rootView.findViewById(R.id.textview_personal_information);
 
         // Enable the back button
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
@@ -127,81 +116,47 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // Set click listener for the back button
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        // input field
+        mAuth = FirebaseAuth.getInstance();
+        editTextEmail = rootView.findViewById(R.id.input_Email);
+        editTextAddress = rootView.findViewById(R.id.input_address);
+        editTextPhone = rootView.findViewById(R.id.input_contactNo);
+        editTextAge = rootView.findViewById(R.id.input_Age);
+        editTextCourse = rootView.findViewById(R.id.input_course);
+        editTextIdNumber = rootView.findViewById(R.id.input_patientID);
+        editTextFullName = rootView.findViewById(R.id.input_fullName);
+        getBirthDate = rootView.findViewById(R.id.selectBirthDate);
+
+        getBirthDate.setOnClickListener((View.OnClickListener) v -> {
+            // Get the current date
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create and show the Date Picker Dialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                    (view, year1, monthOfYear, dayOfMonth) -> {
+                        // Store the selected date
+                        birthDate = new DateDto(year1, monthOfYear, dayOfMonth);
+
+                        // Update the text on the button
+                        getBirthDate.setText(birthDate.ToString());
+                    }, year, month, day);
+
+            // Show the Date Picker Dialog
+            datePickerDialog.show();
+        });
+
+        Button nextButton = rootView.findViewById(R.id.nextBtn);
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle back button click, for example:
-                requireActivity().onBackPressed();
+                createPatient();
             }
         });
 
-        // input field
-        mAuth = FirebaseAuth.getInstance();
-        editTextEmail = rootView.findViewById(R.id.email);
-        editTextAddress = rootView.findViewById(R.id.address);
-        editTextPhone = rootView.findViewById(R.id.phone);
-        editTextAge = rootView.findViewById(R.id.age);
-        editTextCourse = rootView.findViewById(R.id.course);
-        editTextIdNumber = rootView.findViewById(R.id.idNumber);
-        progressBar = rootView.findViewById(R.id.progressBar);
-        saveButton = rootView.findViewById(R.id.add_patient_save);
-        editTextFullName = rootView.findViewById(R.id.name);
-
-        // layout field
-        emailTextInputLayout = rootView.findViewById(R.id.emailInputLayout);
-        fullNameTextInputLayout = rootView.findViewById(R.id.nameInputLayout);
-        idNumberTextInputLayout = rootView.findViewById(R.id.idNumberInputLayout);
-
-        saveButton.setOnClickListener(this);
-
         return rootView;
-    }
-
-    /**
-     * Validates the input fields of the patient DTO.
-     *
-     * @param patientDto The DTO (Data Transfer Object) containing patient information.
-     * @return {@code true} if the inputs are valid, {@code false} otherwise.
-     */
-    private boolean validateInputs(AddPatientDto patientDto) {
-        boolean isValidated = true;
-
-        if (patientDto.getEmail().isEmpty()) {
-            DocTrackUtils.showValidationError("Email is Required", editTextEmail, emailTextInputLayout);
-            isValidated = false;
-        } else {
-            DocTrackUtils.hideValidationError(emailTextInputLayout);
-        }
-
-        if (patientDto.getIdNumber().isEmpty()) {
-            DocTrackUtils.showValidationError("ID number is Required", editTextIdNumber, idNumberTextInputLayout);
-            isValidated = false;
-        } else {
-            DocTrackUtils.hideValidationError(idNumberTextInputLayout);
-        }
-
-        if (patientDto.getIdNumber().isEmpty()) {
-            DocTrackUtils.showValidationError("Full is Required", editTextFullName, fullNameTextInputLayout);
-            isValidated = false;
-        } else {
-            DocTrackUtils.hideValidationError(fullNameTextInputLayout);
-        }
-
-        return isValidated;
-    }
-
-    /**
-     * Validates the email input.
-     *
-     * @param email The email to be validated.
-     */
-    private void validateEmail(String email) {
-        if (email.isEmpty()) {
-            DocTrackUtils.showValidationError("Email is required", editTextEmail, emailTextInputLayout);
-        } else {
-            DocTrackUtils.hideValidationError(emailTextInputLayout);
-        }
     }
 
     /**
@@ -209,59 +164,54 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
      * It also displays appropriate toast messages based on the success or failure of the registration process.
      */
     private void createPatient() {
-        progressBar.setVisibility(View.VISIBLE);
         AddPatientDto patientDto = new AddPatientDto();
         patientDto.setEmail(String.valueOf(editTextEmail.getText()).trim());
         patientDto.setFullName(String.valueOf(editTextFullName.getText()).trim());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
-        patientDto.setAge(String.valueOf(editTextAge.getText()));
-        patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
+        patientDto.setAge(Integer.parseInt(String.valueOf(editTextAge.getText())));
         patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
         patientDto.setIdNumber(String.valueOf(editTextIdNumber.getText()).trim());
+        patientDto.setDateOfBirth(birthDate.ToTimestamp());
 
-        if (validateInputs(patientDto)) {
-            try {
-                FirebaseAuth newAuth = FirebaseAuth.getInstance();
-                newAuth.createUserWithEmailAndPassword(patientDto.getEmail(), patientDto.getIdNumber()).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = task.getResult().getUser();
-                        try {
-                            if (user != null) {
-                                // create details in user table and report table
-                                _patientRepository.AddPatient(user.getUid(), patientDto);
-                                createReport(user.getUid(), patientDto);
-                                Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
-                                @SuppressLint("CommitTransaction")
-                                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-                                        .beginTransaction();
-                                transaction.replace(R.id.frame_layout, new PatientFragment());
-                                // Add HomeFragment to the back stack with a tag
-                                transaction.addToBackStack("tag_for_home_fragment");
+        try {
+            FirebaseAuth newAuth = FirebaseAuth.getInstance();
+            newAuth.createUserWithEmailAndPassword(patientDto.getEmail(), patientDto.getIdNumber()).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    FirebaseUser user = task.getResult().getUser();
+                    try {
+                        if (user != null) {
+                            // create details in user table and report table
+                            _patientRepository.addPatientCallback(patientDto, new PatientRepository.PatientAddUpdateCallback() {
+                                @Override
+                                public void onSuccess(String patientId) {
+                                    showMedicalHistory(patientId);
+                                }
 
-                                transaction.commit();
-                            }
-                        } catch (Exception e) {
-                            // DELETE newly created user when there is something wrong with saveUserToFireStore()
-                            if (newAuth.getCurrentUser() != null) {
-                                newAuth.getCurrentUser().delete();
-                                Toast.makeText(getContext(), "Failed to create user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
+                                @Override
+                                public void onError(String errorMessage) {
+                                }
+                            });
+                            Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
+
                         }
-                    } else {
-                        FirebaseAuthException e = (FirebaseAuthException) task.getException();
-                        Toast.makeText(getContext(), "Failed to create user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        // DELETE newly created user when there is something wrong with saveUserToFireStore()
+                        if (newAuth.getCurrentUser() != null) {
+                            newAuth.getCurrentUser().delete();
+                            Toast.makeText(getContext(), "Failed to create user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                });
-            } catch (Exception e) {
-                // GENERIC ERROR HANDLER
-                Toast.makeText(getContext(), DocTrackErrorMessage.GENERIC_ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-            progressBar.setVisibility(View.GONE);
-
+                } else {
+                    FirebaseAuthException e = (FirebaseAuthException) task.getException();
+                    Toast.makeText(getContext(), "Failed to create user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            // GENERIC ERROR HANDLER
+            Toast.makeText(getContext(), DocTrackErrorMessage.GENERIC_ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
-
     }
 
     /**
@@ -300,4 +250,11 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    private void showMedicalHistory(String patientUId) {
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
+        transaction.replace(R.id.frame_layout, AddMedicalHistory.newInstance(patientUId));
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 }
