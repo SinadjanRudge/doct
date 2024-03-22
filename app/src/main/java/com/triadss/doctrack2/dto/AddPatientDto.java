@@ -73,8 +73,6 @@ public class AddPatientDto implements Parcelable {
         this.gender = gender;
     }
 
-
-
     public String getEmail() {
         return email;
     }

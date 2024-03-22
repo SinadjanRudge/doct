@@ -1,8 +1,13 @@
 package com.triadss.doctrack2.dto;
 
+import com.google.gson.Gson;
 import com.google.type.DateTime;
 
 public class VitalSignsDto {
+    public String toJsonData() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
     public int getVitalsId() {
         return vitalsId;
     }
