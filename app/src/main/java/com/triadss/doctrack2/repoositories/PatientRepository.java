@@ -53,7 +53,7 @@ public class PatientRepository {
             userData.put(UserModel.phone, patientDto.getPhone());
             userData.put(UserModel.course, patientDto.getCourse());
             userData.put(UserModel.idNumber, patientDto.getIdNumber());
-            userData.put(UserModel.createdDate, dateNow);
+            userData.put(UserModel.createdBy, dateNow);
             userData.put(UserModel.updatedDate, dateNow);
             userRef.set(userData, SetOptions.merge());
         } catch(Exception ex)

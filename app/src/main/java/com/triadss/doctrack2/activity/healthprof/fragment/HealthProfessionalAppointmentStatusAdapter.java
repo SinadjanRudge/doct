@@ -4,10 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,7 +32,7 @@ public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Ada
     public HealthProfessionalAppointmentStatusAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflating the Layout(Instantiates list_item.xml
         // layout file into View object)
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_status, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_appointment_status, parent, false);
 
         // Passing view to ViewHolder
         HealthProfessionalAppointmentStatusAdapter.ViewHolder viewHolder = new HealthProfessionalAppointmentStatusAdapter.ViewHolder(view);
@@ -61,7 +58,6 @@ public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Ada
 
         public ViewHolder(View view) {
             super(view);
-            Button cancel, reschedule;
             purpose = (TextView) view.findViewById(R.id.purposetext);
             date = (TextView) view.findViewById(R.id.appointment_date);
             time = (TextView) view.findViewById(R.id.appointment_time);
