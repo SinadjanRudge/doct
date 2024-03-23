@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
@@ -41,8 +43,10 @@ public class PatientAppointmentStatus extends Fragment {
     }
 
     public void CallStatus() {
-        appointmentRepository.getAllPatientStatusAppointments(new AppointmentRepository.AppointmentPatientStatusFetchCallback() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
 
+        appointmentRepository.getAllPatientStatusAppointments(user.getUid(), new AppointmentRepository.AppointmentPatientStatusFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
 

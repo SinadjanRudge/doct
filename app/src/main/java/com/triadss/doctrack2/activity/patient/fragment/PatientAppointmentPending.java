@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
@@ -41,14 +43,16 @@ public class PatientAppointmentPending extends Fragment {
     }
 
    public void CallPending() {
-       appointmentRepository.getAllPatientPendingAppointments(new AppointmentRepository.AppointmentPatientPendingFetchCallback() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+       appointmentRepository.getAllPatientPendingAppointments(currentUser.getUid(), new AppointmentRepository.AppointmentPatientPendingFetchCallback() {
                @Override
                public void onSuccess(List<AppointmentDto> appointments) {
                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                    recyclerView.setLayoutManager(linearLayoutManager);
 
                    PatientAppointmentPendingAdapter adapter = new PatientAppointmentPendingAdapter(getContext(), (ArrayList) appointments);
-
 
                    recyclerView.setAdapter(adapter);
                }
