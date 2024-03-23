@@ -105,7 +105,7 @@ public class RecordPersonalInfo extends Fragment {
                 patientName.setText(patient.getFullName());
                 patientEmail.setText(patient.getEmail());
                 patientAddress.setText(patient.getAddress());
-                patientAge.setText(patient.getAge());
+                patientAge.setText(String.valueOf(patient.getAge()));
                 patientPhone.setText(patient.getPhone());
                 patientCourse.setText(patient.getCourse());
             }

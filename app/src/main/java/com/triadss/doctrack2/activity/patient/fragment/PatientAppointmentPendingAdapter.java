@@ -6,14 +6,12 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,11 +23,12 @@ import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.TimeDto;
 
-import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 // Extends the Adapter class to RecyclerView.Adapter
@@ -51,7 +50,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
     public PatientAppointmentPendingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         appointmentRepository = new AppointmentRepository();
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_appointment_pending, parent, false);
 
         // Passing view to ViewHolder
         PatientAppointmentPendingAdapter.ViewHolder viewHolder = new PatientAppointmentPendingAdapter.ViewHolder(view);
@@ -73,7 +72,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView purpose,date,time, documentId;
+        private TextView purpose,date,time, documentId, patientName;
         public ViewHolder(View view) {
             super(view);
             Button cancel, reschedule;
@@ -82,7 +81,9 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             time = (TextView) view.findViewById(R.id.appointment_time);
             cancel=(Button)itemView.findViewById(R.id.cancel_button);
             reschedule=(Button)itemView.findViewById(R.id.reschedule_button);
-            documentId = (TextView) view.findViewById(R.id.DocumentID);
+            documentId = (TextView) view.findViewById(R.id.IDtext);
+            patientName = view.findViewById(R.id.nametext);
+
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -153,6 +154,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             date.setText(dateTimeDto.getDate().ToString());
             time.setText(dateTimeDto.getTime().ToString());
             documentId.setText(appointment.getDocumentId());
+            patientName.setText(appointment.getNameOfRequester());
         }
 
         private void showUpdateDialog(String id)
@@ -167,6 +169,10 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             TextView updateTime = dialog.findViewById(R.id.updateTime);
             Button confirmBtn = dialog.findViewById(R.id.confirmbutton);
             DateTimeDto selectedDateTime = new DateTimeDto();
+
+            String oldDate = date.getText().toString();
+            String oldTime = time.getText().toString();
+            String oldDateOldTime = date.getText().toString()+ " " +time.getText().toString();
 
             dateBtn.setOnClickListener((View.OnClickListener) v -> {
                 // Get the current date
@@ -211,33 +217,86 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             });
 
             confirmBtn.setOnClickListener(v -> {
-                SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
-                SharedPreferences.Editor myEdit = sharedPreferences.edit();
-                appointmentRepository.rescheduleAppointment(id, selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
-                    @Override
-                    public void onSuccess(String appointmentId) {
+
+                String newDateNewTime = updateDate.getText().toString()+ " " +updateTime.getText().toString();
+                if(updateDate.getText().toString().equals("Date") || updateTime.getText().toString().equals("Time")){
+                    Toast.makeText(itemView.getContext(), "Error: must select date and time", Toast.LENGTH_SHORT).show();
+                }else{
+                    if (newDateNewTime.compareTo(oldDateOldTime) <= 0){
+                        Toast.makeText(itemView.getContext(), "Error: selected date and time must be higher", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+                      SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                      appointmentRepository.rescheduleAppointment(id, selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
+                      @Override
+                      public void onSuccess(String appointmentId) {
                         Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
 
-                    }
-                    @Override
-                    public void onError(String errorMessage) {
+                       }
+                      @Override
+                      public void onError(String errorMessage) {
 
-                    }
-                });
-                appointmentRepository.addReport(id,"RESCHEDULE", new AppointmentRepository.ReportCallback() {
-                    @Override
-                    public void onSuccess(String appointmentId) {
+                      }
+                      });
+                      appointmentRepository.addReport(id,"RESCHEDULE", new AppointmentRepository.ReportCallback() {
+                      @Override
+                      public void onSuccess(String appointmentId) {
                         Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
 
-                    }
-                    @Override
-                    public void onError(String errorMessage) {
+                      }
+                      @Override
+                      public void onError(String errorMessage) {
+
+                      }
+                  });
+                    myEdit.putInt("PatientPending", Integer.parseInt("10"));
+                    myEdit.putInt("PatientStatus", Integer.parseInt("10"));
+                    myEdit.apply();
 
                     }
-                });
-                myEdit.putInt("PatientPending", Integer.parseInt("10"));
-                myEdit.putInt("PatientStatus", Integer.parseInt("10"));
-                myEdit.apply();
+                }
+
+//                SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+//                SharedPreferences.Editor myEdit = sharedPreferences.edit();
+//                appointmentRepository.rescheduleAppointment(id, selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
+//                    @Override
+//                    public void onSuccess(String appointmentId) {
+//                        Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                    @Override
+//                    public void onError(String errorMessage) {
+//
+//                    }
+//                });
+//                appointmentRepository.addReport(id,"RESCHEDULE", new AppointmentRepository.ReportCallback() {
+//                    @Override
+//                    public void onSuccess(String appointmentId) {
+//                        Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                    @Override
+//                    public void onError(String errorMessage) {
+//
+//                    }
+//                });
+//                myEdit.putInt("PatientPending", Integer.parseInt("10"));
+//                myEdit.putInt("PatientStatus", Integer.parseInt("10"));
+//                myEdit.apply();
+
+
+//                 String newDateNewTime = updateDate.getText().toString()+ " " +updateTime.getText().toString();
+//                 Log.d("dateANDtime",oldDateOldTime);
+//                 Log.d("dateANDtime", newDateNewTime);
+//
+//
+//                Log.d("result",String.valueOf(oldDateOldTime.compareTo(newDateNewTime)));
+//                //Toast.makeText(itemView.getContext(), newDateNewTime.compareTo(oldDateOldTime), Toast.LENGTH_SHORT).show();
+//                Log.d("result2",String.valueOf("2024-03-24 11:38".compareTo("2024-04-19 15:56")));
+
+
             });
             dialog.show();
         }
