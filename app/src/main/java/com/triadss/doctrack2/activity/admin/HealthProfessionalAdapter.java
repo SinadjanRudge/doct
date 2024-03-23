@@ -29,7 +29,6 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
         this.callback = callback;
         this.healthProfessional = healthProfessional;
     }
-
     HealthProfessionalAdapter(String healthProfUid, HealthProfDto healthProfDto)
     {
         this.healthProfUid = healthProfUid;

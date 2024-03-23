@@ -18,6 +18,7 @@ public class HealthProfDto {
     {
 
     }
+
     public HealthProfDto(String HWN, String position, String userName, String password, String appointmentId,
                          String gender) {
         this.HWN = HWN;
@@ -27,6 +28,7 @@ public class HealthProfDto {
         this.appointmentId = appointmentId;
         this.gender = gender;
     }
+
     public void setHealthProfid(String healthProfId) {
         this.healthProfId = healthProfId;
     }
