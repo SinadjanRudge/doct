@@ -29,6 +29,7 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
         this.callback = callback;
         this.healthProfessional = healthProfessional;
     }
+
     HealthProfessionalAdapter(String healthProfUid, HealthProfDto healthProfDto)
     {
         this.healthProfUid = healthProfUid;
@@ -57,7 +58,6 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
     public int getItemCount() {
         return healthProfessional.size();
     }
-
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -96,10 +96,5 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
     public interface Callbacks {
         public void OnView(String healthProdUid);
         public void OnUpdate(String healthProdUid);
-    }
-
-    public interface Callback {
-        public void OnViewPressed(String uid);
-        public void OnUpdatePressed(String uid);
     }
 }

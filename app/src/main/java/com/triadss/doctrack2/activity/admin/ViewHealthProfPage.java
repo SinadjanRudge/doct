@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.admin;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,8 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.HealthProfDto;
+import com.triadss.doctrack2.repoositories.HealthProfRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +24,7 @@ import com.triadss.doctrack2.R;
 public class ViewHealthProfPage extends Fragment {
     private static final String HEALTHPROF_ID = "healthProfUid";
     String healthProfUid;
+    HealthProfRepository repository = new HealthProfRepository();
 
     public ViewHealthProfPage() {
         // Required empty public constructor
@@ -56,11 +61,29 @@ public class ViewHealthProfPage extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_admin_manage_user_accounts_view_health_prof, container, false);
         Button exitBtn = rootView.findViewById(R.id.exitBtn);
 
+        TextView healthWorkerName = rootView.findViewById(R.id.healthWorkerName);
+        TextView userName = rootView.findViewById(R.id.UserName);
+        TextView gender = rootView.findViewById(R.id.Gender);
+        TextView position = rootView.findViewById(R.id.Position);
+
+        repository.getHealthProfessional(healthProfUid, new HealthProfRepository.HealthProGetCallback() {
+            @Override
+            public void onSuccess(HealthProfDto dto) {
+                healthWorkerName.setText(dto.getFullName());
+                userName.setText(dto.getUserName());
+                gender.setText(dto.getGender());
+                position.setText(dto.getPosition());
+            }
+            @Override
+            public void onFailure(String errorMessage) {
+                System.out.println("");
+            }
+        });
+
         exitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
                 transaction.replace(R.id.frame_layout, AdminManageUserAccount.newInstance("", ""));
                 transaction.addToBackStack(null);
                 transaction.commit();

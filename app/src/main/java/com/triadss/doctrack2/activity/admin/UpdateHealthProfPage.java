@@ -61,9 +61,7 @@ public class UpdateHealthProfPage extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         HealthProfRepository repository = new HealthProfRepository();
-
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_admin_manage_user_accounts_update_health_prof, container, false);
@@ -80,6 +78,7 @@ public class UpdateHealthProfPage extends Fragment {
                 textHealthWorkerName.setText(dto.getFullName());
                 textUserName.setText(dto.getUserName());
                 textGenderUpdate.setText(dto.getGender());
+                editTextPosition.setText(dto.getPosition());
 
                 updateBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -94,7 +93,6 @@ public class UpdateHealthProfPage extends Fragment {
                                 transaction.replace(R.id.frame_layout, new AdminManageUserAccount());
                                 // Add HomeFragment to the back stack with a tag
                                 transaction.addToBackStack(null);
-
                                 transaction.commit();
                             }
 
@@ -111,6 +109,7 @@ public class UpdateHealthProfPage extends Fragment {
                 System.out.println("");
             }
         });
+
         return rootView;
     }
 }

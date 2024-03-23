@@ -24,7 +24,6 @@ public class HealthProfRepository {
             .collection(FireStoreCollection.USERS_TABLE);
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
-    //private List<HealthProfDto> healthprofdto;
 
     //create instance from firestore
     public void addHealthProf(HealthProfDto healthProf, HealthProAddCallback callback) {
@@ -92,7 +91,6 @@ public class HealthProfRepository {
     public void updateHealthProfessional(HealthProfDto healthProfDto, HealthProUpdateCallback callback)
     {
         if(healthProfDto.getHealthProfid() != null) {
-            healthProfDto.setPosition("update position");
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("users")
                     .document(healthProfDto.getHealthProfid())
@@ -105,7 +103,7 @@ public class HealthProfRepository {
                         Log.e(TAG, "Error updating Health Professional", e);
                         callback.onFailure(e.getMessage());
                     });
-        }else {
+        } else {
             Log.e(TAG, "Health Prof id is null");
             callback.onFailure("Health Prof id is null");
         }
@@ -127,7 +125,6 @@ public class HealthProfRepository {
                     callback.onFailure(e.getMessage());
                 });
     }
-
 
     public interface HealthProListCallback
     {
@@ -151,6 +148,5 @@ public class HealthProfRepository {
     {
         public void onSuccess(String healthProfId);
         public void onFailure(String errorMessage);
-
     }
 }
