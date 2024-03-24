@@ -229,7 +229,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                     {
                         SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
                       SharedPreferences.Editor myEdit = sharedPreferences.edit();
-                      appointmentRepository.rescheduleAppointment(id, selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
+                      appointmentRepository.rescheduleAppointment(id, selectedDateTime.ReschedToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
                       @Override
                       public void onSuccess(String appointmentId) {
                         Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
