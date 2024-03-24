@@ -1,8 +1,13 @@
 package com.triadss.doctrack2.dto;
 
+import com.google.gson.Gson;
 import com.google.type.DateTime;
 
 public class VitalSignsDto {
+    public String toJsonData() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
     public int getVitalsId() {
         return vitalsId;
     }
@@ -11,11 +16,11 @@ public class VitalSignsDto {
         this.vitalsId = vitalsId;
     }
 
-    public int getPatientId() {
+    public String getPatientId() {
         return patientId;
     }
 
-    public void setPatientId(int patientId) {
+    public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
 
@@ -59,11 +64,11 @@ public class VitalSignsDto {
         this.weight = weight;
     }
 
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
@@ -76,12 +81,22 @@ public class VitalSignsDto {
     }
 
     private int vitalsId;
-    private int patientId;
+    private String patientId;
     private String bloodPressure;
     private double temperature;
     private int pulseRate;
     private int oxygenLevel;
     private double weight;
-    private int height;
+    private double height;
     private double BMI;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    private String uid;
 }

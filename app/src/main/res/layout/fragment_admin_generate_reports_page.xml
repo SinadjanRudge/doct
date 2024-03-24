@@ -16,18 +16,9 @@
         android:layout_marginBottom="16dp"
         android:textStyle="bold" />
 
-    <Spinner
-        android:id="@+id/report_type_spinner"
-        android:layout_width="381dp"
-        android:layout_height="57dp"
-        android:layout_below="@id/title_text_view"
-        android:layout_marginTop="16dp"
-        android:prompt="@string/select_report_type_prompt" />
-
     <LinearLayout
         android:layout_width="362dp"
         android:layout_height="175dp"
-        android:layout_below="@id/report_type_spinner"
         android:layout_marginTop="30dp"
         android:orientation="horizontal">
 
@@ -57,7 +48,7 @@
         android:layout_height="182dp"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="158dp"
+        android:layout_marginBottom="304dp"
         android:orientation="horizontal"
         tools:ignore="NotSibling">
 
@@ -87,7 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="224dp"
         android:text="Generate Report"
         android:textSize="18sp" />
 

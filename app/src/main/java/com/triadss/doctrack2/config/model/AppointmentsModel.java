@@ -7,6 +7,7 @@ package com.triadss.doctrack2.config.model;
 public class AppointmentsModel extends AuditModel {
     public static final String appointmentId = "appointmentId";
     public static final String healthProfId = "healthProfId";
+    public static final String patientId = "patientId";
     public static final String nameOfRequester = "nameOfRequester";
     public static final String purpose = "purpose";
     public static final String dateOfAppointment = "dateOfAppointment";
