@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.admin;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,8 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.HealthProfDto;
+import com.triadss.doctrack2.repoositories.HealthProfRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,15 +22,9 @@ import com.triadss.doctrack2.R;
  * create an instance of this fragment.
  */
 public class ViewHealthProfPage extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String HEALTHPROF_ID = "healthProfUid";
+    String healthProfUid;
+    HealthProfRepository repository = new HealthProfRepository();
 
     public ViewHealthProfPage() {
         // Required empty public constructor
@@ -36,16 +34,14 @@ public class ViewHealthProfPage extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param healthProfUid Parameter 1.
      * @return A new instance of fragment ViewHealthProfPage.
      */
     // TODO: Rename and change types and number of parameters
-    public static ViewHealthProfPage newInstance(String param1, String param2) {
+    public static ViewHealthProfPage newInstance(String healthProfUid) {
         ViewHealthProfPage fragment = new ViewHealthProfPage();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(HEALTHPROF_ID, healthProfUid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,8 +50,7 @@ public class ViewHealthProfPage extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            healthProfUid = getArguments().getString(HEALTHPROF_ID);
         }
     }
 
@@ -66,11 +61,29 @@ public class ViewHealthProfPage extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_admin_manage_user_accounts_view_health_prof, container, false);
         Button exitBtn = rootView.findViewById(R.id.exitBtn);
 
+        TextView healthWorkerName = rootView.findViewById(R.id.healthWorkerName);
+        TextView userName = rootView.findViewById(R.id.UserName);
+        TextView gender = rootView.findViewById(R.id.Gender);
+        TextView position = rootView.findViewById(R.id.Position);
+
+        repository.getHealthProfessional(healthProfUid, new HealthProfRepository.HealthProGetCallback() {
+            @Override
+            public void onSuccess(HealthProfDto dto) {
+                healthWorkerName.setText(dto.getFullName());
+                userName.setText(dto.getUserName());
+                gender.setText(dto.getGender());
+                position.setText(dto.getPosition());
+            }
+            @Override
+            public void onFailure(String errorMessage) {
+                System.out.println("");
+            }
+        });
+
         exitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
                 transaction.replace(R.id.frame_layout, AdminManageUserAccount.newInstance("", ""));
                 transaction.addToBackStack(null);
                 transaction.commit();

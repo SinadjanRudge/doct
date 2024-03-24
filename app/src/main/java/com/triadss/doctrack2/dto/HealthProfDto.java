@@ -1,9 +1,6 @@
 package com.triadss.doctrack2.dto;
 
-import com.google.firebase.Timestamp;
-
 public class HealthProfDto {
-
     private String fullName;
     private String position;
     private String userName;
@@ -25,34 +22,17 @@ public class HealthProfDto {
         this.gender = gender;
         this.email = email;
     }
-    public void setEmail(String email){
-        this.email = email;
-    }
-    public String getEmail(){
-        return this.email;
-    }
+
     public void setHealthProfid(String healthProfId) {
         this.healthProfId = healthProfId;
     }
-
-    public String setFullName(String HWN) {
-        return HWN;
-    }
-
-    public String setPosition(String position) {
-        return position;
-    }
-
-    public String setUserName(String userName) {
-        return userName;
-    }
-
-    public String setPassword(String password) {
-        return password;
-    }
-
-    public String setGender(String gender) {
-        return gender;
+    public void setFullName(String fullName) { this.fullName = fullName;}
+    public void setPosition(String position) {  this.position = position;}
+    public void setUserName(String userName) { this.userName = userName;}
+    public void setPassword(String password) { this.password = password;}
+    public void setGender(String gender) { this.gender = gender;}
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFullName() {
@@ -78,5 +58,11 @@ public class HealthProfDto {
     public String getGender() {
         return gender;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+
 
 }
