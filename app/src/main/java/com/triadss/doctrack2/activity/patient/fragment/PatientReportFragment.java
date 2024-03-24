@@ -115,6 +115,23 @@ public class PatientReportFragment extends Fragment {
             FirebaseUser user = auth.getCurrentUser();
 
             ReportsRepository repository = new ReportsRepository();
+
+            if(search.getText().toString().equals("") || search.getText().toString().equals(null)){
+                repository.getReportsFromUser(user.getUid(), new ReportsRepository.ReportsFetchCallback() {
+                    @Override
+                    public void onSuccess(List<ReportDto> reports) {
+                        PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        recyclerView.setAdapter(pageAdapter);
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+
+                    }
+                });
+            } else {
             repository.getReportsFromUserFilter(user.getUid(),search.getText().toString().toLowerCase() ,new ReportsRepository.ReportsFilterCallback() {
                 @Override
                 public void onSuccess(List<ReportDto> reports) {
@@ -128,7 +145,7 @@ public class PatientReportFragment extends Fragment {
                 public void onError(String errorMessage) {
 
                 }
-            });
+            }); }
         }
         public void beforeTextChanged(CharSequence s, int start, int count, int after){
         }
