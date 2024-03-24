@@ -1,7 +1,6 @@
 package com.triadss.doctrack2.dto;
 
 public class HealthProfDto {
-
     private String fullName;
     private String position;
     private String userName;
@@ -23,22 +22,18 @@ public class HealthProfDto {
         this.gender = gender;
         this.email = email;
     }
-    public void setEmail(String email){
-        this.email = email;
-    }
-    public String getEmail(){
-        return this.email;
-    }
 
     public void setHealthProfid(String healthProfId) {
         this.healthProfId = healthProfId;
     }
-    public void setFullName(String HWN) { this.HWN = HWN;}
+    public void setFullName(String fullName) { this.fullName = fullName;}
     public void setPosition(String position) {  this.position = position;}
     public void setUserName(String userName) { this.userName = userName;}
     public void setPassword(String password) { this.password = password;}
-    public void setAppointmentId(String appointmentId) { this.appointmentId = appointmentId;}
     public void setGender(String gender) { this.gender = gender;}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getFullName() {
         return fullName;
@@ -68,8 +63,6 @@ public class HealthProfDto {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+
 
 }
