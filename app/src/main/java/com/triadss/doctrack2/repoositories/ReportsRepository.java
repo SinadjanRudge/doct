@@ -194,7 +194,7 @@ public class ReportsRepository {
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         List<ReportDto> reports = new ArrayList<>();
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            if(document.get("action").toString().toLowerCase().equals(find.toLowerCase())){
+                            if(document.get("message").toString().toLowerCase().equals(find.toLowerCase())){
                                 ReportDto report = document.toObject(ReportDto.class);
                                 reports.add(report);
                             }
