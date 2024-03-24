@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +36,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
     @Override
     public HealthProfessionalAppointmentUpcomingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_upcoming, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_appointment_upcoming, parent, false);
 
         // Passing view to ViewHolder
         HealthProfessionalAppointmentUpcomingAdapter.ViewHolder viewHolder = new HealthProfessionalAppointmentUpcomingAdapter.ViewHolder(view);

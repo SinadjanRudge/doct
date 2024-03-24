@@ -2,7 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation"/>
+    <uses-permission android:name="android.hardware.bluetooth"/>
 
     <application
         android:allowBackup="true"
@@ -13,25 +19,33 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DocTrack2"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
         <activity
             android:name=".ListHealthprofPatientActivity"
             android:exported="false" />
         <activity
             android:name=".activity.admin.AdminHome"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".activity.healthprof.HealthProfHome"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".activity.patient.PatientHome"
+            android:windowSoftInputMode="adjustResize"
+
             android:exported="false" />
         <activity
             android:name=".activity.RegisterActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+
             android:theme="@style/Theme.Material3.Light.NoActionBar" />
         <activity
             android:name=".activity.LoginActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/Theme.Material3.Light.NoActionBar">
             <intent-filter>
@@ -44,6 +58,22 @@
             android:name=".activity.MainActivity"
             android:exported="true">
         </activity>
+
+<!--        Add metadata for Google Play Services-->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <service
+            android:name="com.triadss.doctrack2.bluetooth.MessageService"
+            android:enabled="true"
+            android:exported="true" >
+<!--            Add the gms.wearable.MESSAGE_RECEIVED intent filter-->
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+<!--             Specify your path, and a host for the filter. Here, I’m using a wildcard host-->
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/my_path" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

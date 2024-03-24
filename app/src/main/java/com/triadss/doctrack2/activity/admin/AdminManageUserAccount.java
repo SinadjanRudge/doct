@@ -80,7 +80,6 @@ public class AdminManageUserAccount extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         HealthProfRepository repository = new HealthProfRepository();
 
         // Inflate the layout for this fragment
@@ -108,21 +107,21 @@ public class AdminManageUserAccount extends Fragment {
                 RecyclerView recyclerView = rootView.findViewById(R.id.recyclerViewAdmin);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
-                HealthProfessionalAdapter adapter = new HealthProfessionalAdapter(getContext(),(ArrayList) healthProf, new HealthProfessionalAdapter.Callback() {
+                HealthProfessionalAdapter adapter = new HealthProfessionalAdapter(getContext(),(ArrayList) healthProf, new HealthProfessionalAdapter.Callbacks() {
                     @Override
-                    public void OnViewPressed(String uid) {
+                    public void OnUpdate(String healthProdUid) {
+                        @SuppressLint("CommitTransaction")
                         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-                        transaction.replace(R.id.frame_layout, ViewHealthProfPage.newInstance("", ""));
+                        transaction.replace(R.id.frame_layout, UpdateHealthProfPage.newInstance(healthProdUid));
                         transaction.addToBackStack(null);
                         transaction.commit();
                     }
 
                     @Override
-                    public void OnUpdatePressed(String uid) {
+                    public void OnView(String healthProdUid) {
+                        @SuppressLint("CommitTransaction")
                         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-                        transaction.replace(R.id.frame_layout, UpdateHealthProfPage.newInstance("", ""));
+                        transaction.replace(R.id.frame_layout, ViewHealthProfPage.newInstance(healthProdUid));
                         transaction.addToBackStack(null);
                         transaction.commit();
                     }
