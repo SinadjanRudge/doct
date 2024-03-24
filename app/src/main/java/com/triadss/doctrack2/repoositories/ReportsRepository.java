@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ReportsRepository {
     private final String TAG = "Reports Repository";
@@ -194,7 +195,7 @@ public class ReportsRepository {
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         List<ReportDto> reports = new ArrayList<>();
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            if(document.get("message").toString().toLowerCase().equals(find.toLowerCase())){
+                            if(Objects.requireNonNull(document.get("message")).toString().toLowerCase().contains(find.toLowerCase()) || Objects.requireNonNull(document.get("action")).toString().toLowerCase().contains(find.toLowerCase())){
                                 ReportDto report = document.toObject(ReportDto.class);
                                 reports.add(report);
                             }
