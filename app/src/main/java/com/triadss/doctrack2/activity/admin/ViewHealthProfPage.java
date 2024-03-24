@@ -3,10 +3,12 @@ package com.triadss.doctrack2.activity.admin;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.triadss.doctrack2.R;
 
@@ -61,6 +63,20 @@ public class ViewHealthProfPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_health_prof_page, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_admin_manage_user_accounts_view_health_prof, container, false);
+        Button exitBtn = rootView.findViewById(R.id.exitBtn);
+
+        exitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
+                transaction.replace(R.id.frame_layout, AdminManageUserAccount.newInstance("", ""));
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        return rootView;
     }
 }

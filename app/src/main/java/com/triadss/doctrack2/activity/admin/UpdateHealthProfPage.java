@@ -61,6 +61,6 @@ public class UpdateHealthProfPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_update_health_prof_page, container, false);
+        return inflater.inflate(R.layout.fragment_admin_manage_user_accounts_update_health_prof, container, false);
     }
 }

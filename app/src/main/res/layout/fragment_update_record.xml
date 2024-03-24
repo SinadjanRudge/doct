@@ -34,11 +34,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/update_record_header"
         android:layout_marginHorizontal="20sp"
+        android:enabled="false"
         android:layout_marginTop="5sp">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:hint="@string/email"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -49,11 +52,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/emailInputLayout"
         android:layout_marginHorizontal="20sp"
+        android:enabled="false"
         android:layout_marginTop="5sp">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:hint="@string/full_name"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -66,7 +72,7 @@
         android:layout_marginTop="5sp"
         android:layout_below="@+id/nameInputLayout">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/address"
+            android:id="@+id/input_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
@@ -82,7 +88,7 @@
         android:layout_marginTop="5sp"
         android:layout_below="@+id/addressInputLayout">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/phone"
+            android:id="@+id/input_contactNo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
@@ -98,7 +104,7 @@
         android:layout_marginTop="5sp"
         android:layout_below="@+id/phoneInputLayout">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/age"
+            android:id="@+id/input_Age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
@@ -114,7 +120,7 @@
         android:layout_marginTop="5sp"
         android:layout_below="@+id/ageInputLayout">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/course"
+            android:id="@+id/input_course"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
@@ -128,6 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20sp"
         android:layout_marginTop="5sp"
+        android:enabled="false"
         android:layout_below="@+id/courseInputLayout">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/idNumber"
@@ -144,17 +151,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/noteForButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="580dp"
+        android:text="click UPDATE Personal Info and go to Medical History"
+        android:textSize="13sp" />
+
     <Button
-        android:id="@+id/add_patient_save"
+        android:id="@+id/nxtButton"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_below="@+id/idNumberInputLayout"
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="34dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="83dp"
-        android:gravity="center"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="72dp"
         android:backgroundTint="@color/green"
-        android:text="update_record" />
+        android:gravity="center"
+        android:text="Update" />
 
 </RelativeLayout>
