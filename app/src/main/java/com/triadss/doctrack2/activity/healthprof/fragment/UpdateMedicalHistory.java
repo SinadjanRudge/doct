@@ -32,7 +32,8 @@ public class UpdateMedicalHistory extends Fragment {
     private String patientUid;
 
     CheckBox checkbox1, checkbox2, checkbox3, checkbox4, checkbox5, checkbox6, checkbox7, checkbox8, checkbox9, checkbox10, checkbox11, checkbox12, checkbox13, checkbox14;
-    EditText editSpecifyText1, editSpecifyText2, editPrevHospitalization, editTextMenstruation, editTextGravida, editTextAbortion, editTextMenopause;
+    EditText editSpecifyText1, editSpecifyText2, editPrevHospitalization,
+            editTextObgyneHistory;
 
     public UpdateMedicalHistory() {
         // Required empty public constructor
@@ -85,10 +86,7 @@ public class UpdateMedicalHistory extends Fragment {
         editSpecifyText1 = rootView.findViewById(R.id.editTextOthers);
         editSpecifyText2 = rootView.findViewById(R.id.editText_specify);
         editPrevHospitalization = rootView.findViewById(R.id.textViewPrevHos);
-        editTextMenstruation = rootView.findViewById(R.id.editText_menstruation);
-        editTextGravida = rootView.findViewById(R.id.editText_gravida);
-        editTextAbortion = rootView.findViewById(R.id.editText_abortion);
-        editTextMenopause = rootView.findViewById(R.id.editText_menopause);
+        editTextObgyneHistory = rootView.findViewById(R.id.editText_ObgyneHistory);
 
         Button nextButton = rootView.findViewById(R.id.nxtButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -164,17 +162,8 @@ public class UpdateMedicalHistory extends Fragment {
         medicalHistoryDto.setFamilyHist(familyHistoryBuilder.toString());
 
         //ObGyne History
-        if (!editTextMenstruation.getText().toString().isEmpty()) {
-            obgyneHistoryBuilder.append("Menstruation: ").append(editTextMenstruation.getText().toString()).append(", ");
-        }
-        if (!editTextGravida.getText().toString().isEmpty()) {
-            obgyneHistoryBuilder.append("Gravida: ").append(editTextGravida.getText().toString()).append(", ");
-        }
-        if (!editTextAbortion.getText().toString().isEmpty()) {
-            obgyneHistoryBuilder.append("Abortion: ").append(editTextAbortion.getText().toString()).append(", ");
-        }
-        if (!editTextMenopause.getText().toString().isEmpty()) {
-            obgyneHistoryBuilder.append("Menopause: ").append(editTextMenopause.getText().toString()).append(", ");
+        if (!editTextObgyneHistory.getText().toString().isEmpty()) {
+            obgyneHistoryBuilder.append("Menstruation: ").append(editTextObgyneHistory.getText().toString()).append(", ");
         }
         if (obgyneHistoryBuilder.length() > 0) {
             obgyneHistoryBuilder.setLength(obgyneHistoryBuilder.length() - 2);
