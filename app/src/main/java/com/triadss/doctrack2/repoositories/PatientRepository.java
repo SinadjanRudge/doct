@@ -65,7 +65,9 @@ public class PatientRepository {
     }
 
     public void addPatientCallback(AddPatientDto patient, PatientAddUpdateCallback callback) {
+        FirebaseAuth user = FirebaseAuth.getInstance();
         if (user != null) {
+            String userId = user.getUid();
             Map<String, Object> patientMap = new HashMap<>();
             patientMap.put(UserModel.idNumber, patient.getIdNumber());
             patientMap.put(UserModel.email, patient.getEmail());
@@ -81,9 +83,10 @@ public class PatientRepository {
             patientMap.put(UserModel.role, UserRoleConstants.Patient);
 
             usersCollection
-                    .add(patientMap)
+                    .document(userId)
+                    .set(patientMap)
                     .addOnSuccessListener(documentReference -> {
-                        callback.onSuccess(documentReference.getId());
+                        callback.onSuccess(userId);
                     })
                     .addOnFailureListener(e -> {
                         callback.onError(e.getMessage());
