@@ -1,40 +1,38 @@
 package com.triadss.doctrack2.activity.admin;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.dto.AppointmentDto;
-import com.triadss.doctrack2.dto.DateDto;
-import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.HealthProfDto;
-import com.triadss.doctrack2.dto.TimeDto;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
 public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfessionalAdapter.ViewHolder> {
     ArrayList<HealthProfDto> healthProfessional;
     Context context;
-    Callback callback;
+    Callbacks callback;
+    String healthProfUid;
+    HealthProfDto healthProfDto;
 
     // Constructor for initialization
-    public HealthProfessionalAdapter(Context context, ArrayList<HealthProfDto> healthProfessional, Callback callback) {
+    public HealthProfessionalAdapter(Context context, ArrayList<HealthProfDto> healthProfessional, Callbacks callback) {
         this.context = context;
         this.callback = callback;
         this.healthProfessional = healthProfessional;
+    }
+    HealthProfessionalAdapter(String healthProfUid, HealthProfDto healthProfDto)
+    {
+        this.healthProfUid = healthProfUid;
+        this.healthProfDto = healthProfDto;
     }
 
     @NonNull
@@ -60,7 +58,6 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
         return healthProfessional.size();
     }
 
-
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -71,34 +68,32 @@ public class HealthProfessionalAdapter extends RecyclerView.Adapter<HealthProfes
             super(view);
             name = (TextView) view.findViewById(R.id.textViewAdminName);
             email = (TextView) view.findViewById(R.id.textViewAdminEmail);
-
             viewBtn = view.findViewById(R.id.viewBtn);
             updateBtn = view.findViewById(R.id.updateBtn);
         }
 
-        public void update(HealthProfDto healthProfDto)
-        {
+        public void update(HealthProfDto healthProfDto) {
             name.setText(healthProfDto.getFullName());
+            email.setText(healthProfDto.getEmail());
 
             viewBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    callback.OnViewPressed(healthProfDto.getHealthProfid());
+                public void onClick(View view) {
+                    callback.OnView(healthProfDto.getHealthProfid());
                 }
             });
 
             updateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    callback.OnUpdatePressed(healthProfDto.getHealthProfid());
+                public void onClick(View view) {
+                    callback.OnUpdate(healthProfDto.getHealthProfid());
                 }
             });
         }
-
     }
 
-    public interface Callback {
-        public void OnViewPressed(String uid);
-        public void OnUpdatePressed(String uid);
+    public interface Callbacks {
+        public void OnView(String healthProdUid);
+        public void OnUpdate(String healthProdUid);
     }
 }

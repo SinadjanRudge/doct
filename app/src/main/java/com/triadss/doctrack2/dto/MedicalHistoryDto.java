@@ -23,7 +23,7 @@ public class MedicalHistoryDto implements Parcelable {
     }
 
     public String getPastIllness() {
-        return pastIllness;
+        return pastIllness == null ? "" : pastIllness;
     }
 
     public void setPastIllness(String pastIllness) {

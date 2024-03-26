@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ReportsRepository {
     private final String TAG = "Reports Repository";
@@ -186,6 +187,31 @@ public class ReportsRepository {
             callback.onError("User is null");
         }
     }
+    public void getReportsFromUserFilter(String uid, String find, ReportsFilterCallback callback) {
+        if (user != null) {
+            reportsCollection
+                    .whereEqualTo(ReportModel.createdBy, uid)
+                    .orderBy(ReportModel.createdBy, Query.Direction.DESCENDING)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        List<ReportDto> reports = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            if(Objects.requireNonNull(document.get("message")).toString().toLowerCase().contains(find.toLowerCase()) || Objects.requireNonNull(document.get("action")).toString().toLowerCase().contains(find.toLowerCase())){
+                                ReportDto report = document.toObject(ReportDto.class);
+                                reports.add(report);
+                            }
+                        }
+                        callback.onSuccess(reports);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching medicines", e);
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
 
     public void getReportsFromDateRange(Date before, Date after, ReportsFetchCallback callback) {
         if (user != null) {
@@ -241,6 +267,11 @@ public class ReportsRepository {
     }
 
     public interface ReportsFetchCallback {
+        void onSuccess(List<ReportDto> reports);
+
+        void onError(String errorMessage);
+    }
+    public interface ReportsFilterCallback {
         void onSuccess(List<ReportDto> reports);
 
         void onError(String errorMessage);
