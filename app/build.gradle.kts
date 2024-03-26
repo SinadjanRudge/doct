@@ -61,6 +61,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("com.google.android.gms:play-services-wearable:18.1.0")
     implementation("com.google.code.gson:gson:2.8.9")
+    implementation("androidx.health.connect:connect-client:1.1.0-alpha06")
     implementation(files("libs/samsung-health-sdk-for-android-20201103/data-v1.5.0/libs/samsung-health-data-1.5.0.aar"))
 
     testImplementation("junit:junit:4.13.2")
