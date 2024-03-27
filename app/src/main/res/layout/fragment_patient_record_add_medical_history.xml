@@ -247,8 +247,8 @@
                         android:layout_height="50dp"
                         android:layout_marginStart="35dp"
                         android:ems="10"
+                        android:hint="enter here"
                         android:inputType="text"
-                        android:text="enter here"
                         android:textSize="15sp" />
 
                 </LinearLayout>
@@ -280,10 +280,11 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_previous_hospitalization"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
-                        android:hint="enter here" />
+                        android:hint="enter here"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -319,7 +320,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
-                        android:text="diabetes" />
+                        android:text="diabetes mellitus " />
 
                     <CheckBox
                         android:id="@+id/cb_famHist_hyper"
@@ -332,22 +333,22 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="42dp"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/cb_famHist_mentalHealthDisorder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:id="@+id/cb_famHist_cancer"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
-                        android:text="mental health disorder" />
+                        android:text="allergic reaction" />
 
                     <CheckBox
-                        android:id="@+id/cb_famHist_asthma"
-                        android:layout_width="184dp"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/cb_famHist_seizureDisorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
-                        android:text="asthma" />
+                        android:text="insomnia" />
 
                 </LinearLayout>
 
@@ -357,17 +358,40 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/cb_famHist_bleedingDisorder"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/cb_famHist_mentalHealthDisorder"
+                        android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_weight="0.5"
+                        android:layout_weight="1"
+                        android:text="mental health disorder" />
+
+                    <CheckBox
+                        android:id="@+id/cb_famHist_asthma"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="bronchial asthma" />
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb_famHist_bleedingDisorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
                         android:text="bleeding disorder" />
 
                     <CheckBox
                         android:id="@+id/cb_famHist_none"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
                         android:text="none" />
 
                 </LinearLayout>
@@ -379,8 +403,8 @@
 
                     <CheckBox
                         android:id="@+id/cb_famHist_others"
-                        android:layout_width="47dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
                         android:text="others, pls. specify." />
 
@@ -398,8 +422,8 @@
                         android:layout_height="50dp"
                         android:layout_marginStart="35dp"
                         android:ems="10"
+                        android:hint="enter here"
                         android:inputType="text"
-                        android:text="enter here"
                         android:textSize="15sp" />
 
                 </LinearLayout>
@@ -431,10 +455,83 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_menarche"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
-                        android:hint="enter here" />
+                        android:hint="Menarche" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_lmp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="LMP" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_gravida"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="Gravida" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_para"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="Para" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_abortion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="Abortion" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_menopause"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="Menopause" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_papSmear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="Pap Smear (Result)" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
