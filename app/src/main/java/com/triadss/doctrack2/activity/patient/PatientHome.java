@@ -71,6 +71,8 @@ public class PatientHome extends AppCompatActivity {
         if(isHealthConnectAvailable())
         {
             healthConnectClient = HealthConnectClient.getOrCreate(this);
+
+            checkAuthorization();
         }
 
         binding = ActivityPatientHomeBinding.inflate(getLayoutInflater());
@@ -98,6 +100,7 @@ public class PatientHome extends AppCompatActivity {
             }
             return true;
         });
+
     }
 
 
@@ -135,13 +138,12 @@ public class PatientHome extends AppCompatActivity {
 
             permissionsLauncher.launch(permissionsToRequest);
 
-            if (!permissionsToRequest.isEmpty()) {
-                Log.d(TAG, "requesting authorization");
-            } else {
-                Log.d(TAG, "requesting authorization success");
-            }
+
         } catch (InterruptedException ex2) {
             System.out.println();
+        }
+        catch(Exception e){
+            throw new RuntimeException(e);
         }
     }
 
