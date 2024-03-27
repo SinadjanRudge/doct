@@ -106,6 +106,12 @@ public class DeviceFragment extends Fragment {
     HealthConnectClient healthConnectClient;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        checkAuthorization();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -148,7 +154,6 @@ public class DeviceFragment extends Fragment {
 
         if(isHealthConnectAvailable())
         {
-            checkAuthorization();
             healthConnectClient = HealthConnectClient.getOrCreate(getContext());
             LocalDateTime localDateTimeStart = LocalDateTime.of(2024, 3, 26, 12, 0);
             ZonedDateTime zonedDateTimeStart = localDateTimeStart.atZone(ZoneId.systemDefault());
