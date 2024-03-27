@@ -122,17 +122,17 @@
 
                     <CheckBox
                         android:id="@+id/checkbox5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
-                        android:text="insomnia" />
+                        android:text="peptic ulcer" />
 
                     <CheckBox
                         android:id="@+id/checkbox6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.4"
-                        android:text="none" />
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="kindney diseases" />
 
                 </LinearLayout>
 
@@ -143,6 +143,83 @@
 
                     <CheckBox
                         android:id="@+id/checkbox7"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="bronchial asthma" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox8"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="hernia" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkbox9"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="seizures epilepsy " />
+
+                    <CheckBox
+                        android:id="@+id/checkbox10"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="venereal disease" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkbox11"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="allergic reaction" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox12"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="insomnia" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkbox13"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="none" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkbox14"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
@@ -410,12 +487,12 @@
                 android:layout_marginBottom="50dp"
                 android:backgroundTint="@color/green"
                 android:text="UPDATE" />
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="90dp" />
         </LinearLayout>
     </ScrollView>
-
 
 
 </LinearLayout>

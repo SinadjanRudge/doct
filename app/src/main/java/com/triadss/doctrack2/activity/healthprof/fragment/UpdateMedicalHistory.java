@@ -31,7 +31,7 @@ public class UpdateMedicalHistory extends Fragment {
     // TODO: Rename and change types of parameters
     private String patientUid;
 
-    CheckBox checkbox1, checkbox2, checkbox3, checkbox4, checkbox5, checkbox6, checkbox7, checkbox8, checkbox9, checkbox10, checkbox11, checkbox12, checkbox13, checkbox14;
+    CheckBox checkbox1, checkbox2, checkbox3, checkbox4, checkbox5, checkbox6, checkbox7, checkbox8, checkbox9, checkbox10, checkbox11, checkbox12, checkbox13, checkbox14, checkbox15, checkbox16, checkbox17, checkbox18, checkbox19, checkbox20, checkbox21;
     EditText editSpecifyText1, editSpecifyText2, editPrevHospitalization, editTextMenstruation, editTextGravida, editTextAbortion, editTextMenopause;
 
     public UpdateMedicalHistory() {
@@ -75,13 +75,20 @@ public class UpdateMedicalHistory extends Fragment {
         checkbox5 = rootView.findViewById(R.id.checkbox5);
         checkbox6 = rootView.findViewById(R.id.checkbox6);
         checkbox7 = rootView.findViewById(R.id.checkbox7);
-        checkbox8 = rootView.findViewById(R.id.cb_famHist_diabetes);
-        checkbox9 = rootView.findViewById(R.id.cb_famHist_hyper);
-        checkbox10 = rootView.findViewById(R.id.cb_famHist_mentalHealthDisorder);
-        checkbox11 = rootView.findViewById(R.id.cb_famHist_asthma);
-        checkbox12 = rootView.findViewById(R.id.cb_famHist_bleedingDisorder);
-        checkbox13 = rootView.findViewById(R.id.cb_famHist_none);
-        checkbox14 = rootView.findViewById(R.id.cb_famHist_others);
+        checkbox8 = rootView.findViewById(R.id.checkbox8);
+        checkbox9 = rootView.findViewById(R.id.checkbox9);
+        checkbox10 = rootView.findViewById(R.id.checkbox10);
+        checkbox11 = rootView.findViewById(R.id.checkbox11);
+        checkbox12 = rootView.findViewById(R.id.checkbox12);
+        checkbox13 = rootView.findViewById(R.id.checkbox13);
+        checkbox14 = rootView.findViewById(R.id.checkbox14);
+        checkbox15 = rootView.findViewById(R.id.cb_famHist_diabetes);
+        checkbox16 = rootView.findViewById(R.id.cb_famHist_hyper);
+        checkbox17 = rootView.findViewById(R.id.cb_famHist_mentalHealthDisorder);
+        checkbox18 = rootView.findViewById(R.id.cb_famHist_asthma);
+        checkbox19 = rootView.findViewById(R.id.cb_famHist_bleedingDisorder);
+        checkbox20 = rootView.findViewById(R.id.cb_famHist_none);
+        checkbox21 = rootView.findViewById(R.id.cb_famHist_others);
         editSpecifyText1 = rootView.findViewById(R.id.editTextOthers);
         editSpecifyText2 = rootView.findViewById(R.id.editText_specify);
         editPrevHospitalization = rootView.findViewById(R.id.textViewPrevHos);
@@ -126,6 +133,27 @@ public class UpdateMedicalHistory extends Fragment {
             pastIllnessBuilder.append(checkbox6.getText()).append(", ");
         }
         if (checkbox7.isChecked()) {
+            pastIllnessBuilder.append(checkbox7.getText()).append(", ");
+        }
+        if (checkbox8.isChecked()) {
+            pastIllnessBuilder.append(checkbox8.getText()).append(", ");
+        }
+        if (checkbox9.isChecked()) {
+            pastIllnessBuilder.append(checkbox9.getText()).append(", ");
+        }
+        if (checkbox10.isChecked()) {
+            pastIllnessBuilder.append(checkbox10.getText()).append(", ");
+        }
+        if (checkbox11.isChecked()) {
+            pastIllnessBuilder.append(checkbox11.getText()).append(", ");
+        }
+        if (checkbox12.isChecked()) {
+            pastIllnessBuilder.append(checkbox12.getText()).append(", ");
+        }
+        if (checkbox13.isChecked()) {
+            pastIllnessBuilder.append(checkbox13.getText()).append(", ");
+        }
+        if (checkbox14.isChecked()) {
             pastIllnessBuilder.append(String.valueOf(editSpecifyText1.getText()).trim()).append(", ");
         }
         if (pastIllnessBuilder.length() > 0) {
@@ -137,25 +165,25 @@ public class UpdateMedicalHistory extends Fragment {
         medicalHistoryDto.setPrevOperation(String.valueOf(editPrevHospitalization.getText()).trim());
 
         //Family History
-        if (checkbox8.isChecked()) {
-            familyHistoryBuilder.append(checkbox8.getText()).append(", ");
+        if (checkbox15.isChecked()) {
+            familyHistoryBuilder.append(checkbox15.getText()).append(", ");
         }
-        if (checkbox9.isChecked()) {
-            familyHistoryBuilder.append(checkbox9.getText()).append(", ");
+        if (checkbox16.isChecked()) {
+            familyHistoryBuilder.append(checkbox16.getText()).append(", ");
         }
-        if (checkbox10.isChecked()) {
-            familyHistoryBuilder.append(checkbox10.getText()).append(", ");
+        if (checkbox17.isChecked()) {
+            familyHistoryBuilder.append(checkbox17.getText()).append(", ");
         }
-        if (checkbox11.isChecked()) {
-            familyHistoryBuilder.append(checkbox11.getText()).append(", ");
+        if (checkbox18.isChecked()) {
+            familyHistoryBuilder.append(checkbox18.getText()).append(", ");
         }
-        if (checkbox12.isChecked()) {
-            familyHistoryBuilder.append(checkbox12.getText()).append(", ");
+        if (checkbox19.isChecked()) {
+            familyHistoryBuilder.append(checkbox19.getText()).append(", ");
         }
-        if (checkbox13.isChecked()) {
-            familyHistoryBuilder.append(checkbox13.getText()).append(", ");
+        if (checkbox20.isChecked()) {
+            familyHistoryBuilder.append(checkbox20.getText()).append(", ");
         }
-        if (checkbox14.isChecked()) {
+        if (checkbox21.isChecked()) {
             familyHistoryBuilder.append(String.valueOf(editSpecifyText2.getText()).trim()).append(", ");
         }
         if (familyHistoryBuilder.length() > 0) {

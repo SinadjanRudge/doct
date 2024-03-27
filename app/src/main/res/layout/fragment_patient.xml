@@ -8,98 +8,105 @@
     android:layout_marginRight="15dp">
 
 
-    <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-3dp">
-
-        <TextView
-            android:id="@+id/textview_patient_list"
-            android:layout_width="356dp"
-            android:layout_height="67dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="25dp"
-            android:gravity="center"
-            android:text="@string/patient_list"
-            android:textColor="#1D7844"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.036" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
         <LinearLayout
-            android:layout_width="386dp"
-            android:layout_height="87dp"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints">
 
-            <EditText
-                android:id="@+id/search_bar_patient"
-                android:layout_width="278dp"
-                android:layout_height="57dp"
+            <TextView
+                android:id="@+id/textview_patient_list"
+                android:layout_width="356dp"
+                android:layout_height="67dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
                 android:layout_gravity="center"
-                android:layout_marginHorizontal="5dp"
-                android:background="@drawable/green_stroke"
-                android:hint=" Search Patient Name"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.115"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.1" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/patient_add_btn"
-                android:layout_width="70dp"
-                android:layout_height="53dp"
-                android:layout_gravity="center|center_horizontal"
-                android:background="@drawable/green_stroke"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="25dp"
                 android:gravity="center"
-                android:text="+"
-                android:textColor="@color/green"
+                android:text="@string/patient_list"
+                android:textColor="#1D7844"
                 android:textSize="24sp"
-                android:textStyle="normal"
-                app:circularflow_radiusInDP="15dp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.906"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.098"
+                app:layout_constraintVertical_bias="0.036" />
+
+            <LinearLayout
+                android:layout_width="386dp"
+                android:layout_height="87dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/search_bar_patient"
+                    android:layout_width="278dp"
+                    android:layout_height="57dp"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@drawable/green_stroke"
+                    android:hint=" Search Patient Name"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.115"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.1" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/patient_add_btn"
+                    android:layout_width="70dp"
+                    android:layout_height="53dp"
+                    android:layout_gravity="center|center_horizontal"
+                    android:background="@drawable/green_stroke"
+                    android:gravity="center"
+                    android:text="+"
+                    android:textColor="@color/green"
+                    android:textSize="24sp"
+                    android:textStyle="normal"
+                    app:circularflow_radiusInDP="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.906"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.098"
+                    tools:ignore="MissingConstraints" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycleview_patient_list"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_below="@id/search_bar_patient"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/bg_color"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_bar_patient"
+                app:layout_constraintVertical_bias="1.0"
                 tools:ignore="MissingConstraints" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="120dp" />
+
         </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleview_patient_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/search_bar_patient"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/bg_color"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_bar_patient"
-            app:layout_constraintVertical_bias="1.0"
-            tools:ignore="MissingConstraints" />
-
-    </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
