@@ -1,12 +1,21 @@
 package com.triadss.doctrack2.activity.patient;
 
+import static com.triadss.doctrack2.utils.HealthConnectUtils.getHeartRateRecordClass;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.health.connect.client.HealthConnectClient;
+import androidx.health.connect.client.PermissionController;
+import androidx.health.connect.client.permission.HealthPermission;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,8 +29,14 @@ import com.triadss.doctrack2.activity.patient.fragment.PatientReportFragment;
 import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
 import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
-public class PatientHome extends AppCompatActivity {
+import java.util.HashSet;
+import java.util.Set;
 
+import kotlin.coroutines.EmptyCoroutineContext;
+import kotlinx.coroutines.BuildersKt;
+
+public class PatientHome extends AppCompatActivity {
+    private final String TAG = "PatientHome";
     FirebaseAuth auth;
 
     Button button;
@@ -29,6 +44,7 @@ public class PatientHome extends AppCompatActivity {
     FirebaseUser user;
 
     ActivityPatientHomeBinding binding;
+    HealthConnectClient healthConnectClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +68,11 @@ public class PatientHome extends AppCompatActivity {
             finish();
         });
 
+        if(isHealthConnectAvailable())
+        {
+            healthConnectClient = HealthConnectClient.getOrCreate(this);
+        }
+
         binding = ActivityPatientHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -66,7 +87,7 @@ public class PatientHome extends AppCompatActivity {
                 finish();
             } else if(item.getItemId() == R.id.device_menu)
             {
-                replaceFragment(new DeviceFragment());
+                replaceFragment(new DeviceFragment(healthConnectClient));
             }
             else if (item.getItemId() == R.id.appointment_menu) {
                 replaceFragment(new PatientAppointmentFragment());
@@ -77,6 +98,63 @@ public class PatientHome extends AppCompatActivity {
             }
             return true;
         });
+    }
+
+
+    private void checkAuthorization() {
+        try {
+            Log.d(TAG, "checking authorization");
+            ActivityResultContract<Set<String>, Set<String>> requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract();
+            ActivityResultLauncher permissionsLauncher = registerForActivityResult(requestPermissionActivityContract, new ActivityResultCallback<Set<String>>() {
+                @Override
+                public void onActivityResult(Set<String> result) {
+                    Log.d(TAG, "got results from authorization request");
+                    for (String res : result) {
+                        Log.d(TAG, res);
+                    }
+                    if (result.isEmpty()) {
+                        System.out.println();
+                    } else {
+                        System.out.println();
+                    }
+                }
+            });
+
+            // see https://kt.academy/article/cc-other-languages
+            Set<String> grantedPermissions = BuildersKt.runBlocking(
+                    EmptyCoroutineContext.INSTANCE,
+                    (s, c) -> healthConnectClient.getPermissionController().getGrantedPermissions(c)
+            );
+
+            Set<String> permissionsToRequest = new HashSet<>();
+            String perm = HealthPermission.getReadPermission(getHeartRateRecordClass());
+            if(!grantedPermissions.contains(perm))
+            {
+                permissionsToRequest.add(perm);
+            }
+
+            permissionsLauncher.launch(permissionsToRequest);
+
+            if (!permissionsToRequest.isEmpty()) {
+                Log.d(TAG, "requesting authorization");
+            } else {
+                Log.d(TAG, "requesting authorization success");
+            }
+        } catch (InterruptedException ex2) {
+            System.out.println();
+        }
+    }
+
+    private boolean isHealthConnectAvailable()
+    {
+        int availabilityStatus = HealthConnectClient.getSdkStatus(this);
+        if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE) {
+            return false;
+        }
+        if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED) {
+            return false;
+        }
+        return true;
     }
 
     private void replaceFragment(Fragment fragment) {

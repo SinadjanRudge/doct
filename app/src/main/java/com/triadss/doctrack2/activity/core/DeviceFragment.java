@@ -2,6 +2,8 @@ package com.triadss.doctrack2.activity.core;
 
 import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
+import static com.triadss.doctrack2.utils.HealthConnectUtils.getHeartRateRecordClass;
+
 import android.Manifest;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothDevice;
@@ -59,6 +61,7 @@ import com.samsung.android.sdk.healthdata.HealthConstants;
 import com.samsung.android.sdk.healthdata.HealthDataStore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.MainActivity;
+import com.triadss.doctrack2.activity.patient.fragment.RecordPersonalInfo;
 import com.triadss.doctrack2.bluetooth.MessageService;
 import com.triadss.doctrack2.config.constants.BluetoothConstants;
 import com.triadss.doctrack2.dto.BluetoothDeviceDto;
@@ -88,28 +91,27 @@ public class DeviceFragment extends Fragment {
     private int receivedMessageNumber = 1;
     private int sentMessageCounter = 1;
 
+    private static final String HealthConnectClientParam = "HealthConnectClientParam";
+
     private static final String TAG = "DEVICE";
     private static final String MessageKey = "MessageText";
 
     // NEW CODE
     private Handler handler;
     private Receiver messageReceiver;
+    HealthConnectClient healthConnectClient;
+
+    public DeviceFragment(HealthConnectClient healthConnectClient) {
+        this.healthConnectClient = healthConnectClient;
+    }
 
     public DeviceFragment() {
-        // Required empty public constructor
     }
 
     private Button sendMessage, syncButton;
     private VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
-    HealthConnectClient healthConnectClient;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        checkAuthorization();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -152,9 +154,8 @@ public class DeviceFragment extends Fragment {
 
         //Check Health Connect
 
-        if(isHealthConnectAvailable())
+        if(healthConnectClient != null)
         {
-            healthConnectClient = HealthConnectClient.getOrCreate(getContext());
             LocalDateTime localDateTimeStart = LocalDateTime.of(2024, 3, 26, 12, 0);
             ZonedDateTime zonedDateTimeStart = localDateTimeStart.atZone(ZoneId.systemDefault());
 
@@ -203,55 +204,6 @@ public class DeviceFragment extends Fragment {
 
         handleSyncButtonClick();
         return rootView;
-    }
-
-    private KClass<HeartRateRecord> getHeartRateRecordClass()
-    {
-        return kotlin.jvm.JvmClassMappingKt.getKotlinClass(HeartRateRecord.class);
-    }
-
-    private void checkAuthorization() {
-        try {
-            Log.d(TAG, "checking authorization");
-            ActivityResultContract<Set<String>, Set<String>> requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract();
-            ActivityResultLauncher permissionsLauncher = getActivity().registerForActivityResult(requestPermissionActivityContract, new ActivityResultCallback<Set<String>>() {
-                @Override
-                public void onActivityResult(Set<String> result) {
-                    Log.d(TAG, "got results from authorization request");
-                    for (String res : result) {
-                        Log.d(TAG, res);
-                    }
-                    if (result.isEmpty()) {
-                        System.out.println();
-                    } else {
-                        System.out.println();
-                    }
-                }
-            });
-
-            // see https://kt.academy/article/cc-other-languages
-            Set<String> grantedPermissions = BuildersKt.runBlocking(
-                    EmptyCoroutineContext.INSTANCE,
-                    (s, c) -> healthConnectClient.getPermissionController().getGrantedPermissions(c)
-            );
-
-            Set<String> permissionsToRequest = new HashSet<>();
-            String perm = HealthPermission.getReadPermission(getHeartRateRecordClass());
-            if(!grantedPermissions.contains(perm))
-            {
-                permissionsToRequest.add(perm);
-            }
-
-            permissionsLauncher.launch(permissionsToRequest);
-
-            if (!permissionsToRequest.isEmpty()) {
-                Log.d(TAG, "requesting authorization");
-            } else {
-                Log.d(TAG, "requesting authorization success");
-            }
-        } catch (InterruptedException ex2) {
-            System.out.println();
-        }
     }
 
 
@@ -311,17 +263,7 @@ public class DeviceFragment extends Fragment {
         }
     }
 
-    private boolean isHealthConnectAvailable()
-    {
-        int availabilityStatus = HealthConnectClient.getSdkStatus(getContext());
-        if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE) {
-            return false;
-        }
-        if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED) {
-            return false;
-        }
-        return true;
-    }
+
 
     private void handleSyncButtonClick(){
         syncButton.setOnClickListener(new View.OnClickListener() {
