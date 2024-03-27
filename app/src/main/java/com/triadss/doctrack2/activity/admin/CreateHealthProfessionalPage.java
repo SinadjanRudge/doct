@@ -1,25 +1,20 @@
 package com.triadss.doctrack2.activity.admin;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
+import androidx.fragment.app.Fragment;
+
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;
-
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +34,8 @@ public class CreateHealthProfessionalPage extends Fragment {
     private HealthProfRepository healthProfRepository;
     private static final String TAG = "PatientMedicationAddFragment";
     private Button buttonSubmit;
+    TextView errorTextEmail, errorTextHWN, errorTextPosition, errorTextUser, errorTextPassword, errorTextGender;
+    View rootView;
     private EditText editTextPositionInput, editTextUserNameInput, editTextPasswordInput, editTextAppointmentIDInput, editTextGenderInput;
     private EditText editTextEmailInput, editTextNameInput;
 
@@ -78,7 +75,7 @@ public class CreateHealthProfessionalPage extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View rootView =  inflater.inflate(R.layout.fragment_admin_manage_user_accounts_create_health_professional, container, false);
+        rootView =  inflater.inflate(R.layout.fragment_admin_manage_user_accounts_create_health_professional, container, false);
 
         healthProfRepository = new HealthProfRepository();
         editTextNameInput = rootView.findViewById(R.id.editTextHWN);
@@ -87,6 +84,20 @@ public class CreateHealthProfessionalPage extends Fragment {
         editTextPasswordInput = rootView.findViewById(R.id.editTextPassword);
         editTextGenderInput = rootView.findViewById(R.id.editTextGender);
         editTextEmailInput = rootView.findViewById(R.id.editTextEmail);
+
+        errorTextEmail = rootView.findViewById(R.id.errorTextEmail);
+        errorTextHWN = rootView.findViewById(R.id.errorTextHWN);
+        errorTextPosition = rootView.findViewById(R.id.errorTextPosition);
+        errorTextUser = rootView.findViewById(R.id.errorTextUser);
+        errorTextPassword = rootView.findViewById(R.id.errorTextPassword);
+        errorTextGender = rootView.findViewById(R.id.errorTextGender);
+
+        errorTextEmail.setVisibility(rootView.GONE);
+        errorTextHWN.setVisibility(rootView.GONE);
+        errorTextPosition.setVisibility(rootView.GONE);
+        errorTextUser.setVisibility(rootView.GONE);
+        errorTextPassword.setVisibility(rootView.GONE);
+        errorTextGender.setVisibility(rootView.GONE);
 
         buttonSubmit = rootView.findViewById(R.id.buttonSubmit);
 
@@ -99,7 +110,19 @@ public class CreateHealthProfessionalPage extends Fragment {
             @Override
             public void onClick(View v) {
                 // Handle confirmation button click
-                handleConfirmationButtonClick();
+                if(editTextEmailInput.getText().toString().contains("@") && editTextEmailInput.getText().toString().contains(".com") && editTextEmailInput.getText().toString() != "" &&
+                editTextNameInput.getText().toString() != "" && editTextPositionInput.getText().toString() != "" && editTextUserNameInput.getText().toString() != "" &&
+                editTextPasswordInput.getText().toString() != "" && editTextGenderInput.getText().toString() != "") {
+                    handleConfirmationButtonClick();
+                }
+                else {
+                    if(editTextEmailInput.getText().toString().isEmpty()) errorTextEmail.setVisibility(rootView.VISIBLE); else errorTextEmail.setVisibility(rootView.GONE);
+                    if(editTextNameInput.getText().toString().isEmpty()) errorTextHWN.setVisibility(rootView.VISIBLE); else errorTextHWN.setVisibility(rootView.GONE);
+                    if(editTextPositionInput.getText().toString().isEmpty()) errorTextPosition.setVisibility(rootView.VISIBLE); else errorTextPosition.setVisibility(rootView.GONE);
+                    if(editTextUserNameInput.getText().toString().isEmpty()) errorTextUser.setVisibility(rootView.VISIBLE); else errorTextUser.setVisibility(rootView.GONE);
+                    if(editTextPasswordInput.getText().toString().isEmpty()) errorTextPassword.setVisibility(rootView.VISIBLE); else errorTextPassword.setVisibility(rootView.GONE);
+                    if(editTextGenderInput.getText().toString().isEmpty()) errorTextGender.setVisibility(rootView.VISIBLE); else errorTextGender.setVisibility(rootView.GONE);
+                }
             }
         });
     }
