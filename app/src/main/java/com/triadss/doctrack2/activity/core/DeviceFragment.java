@@ -18,6 +18,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.health.connect.client.permission.HealthPermission;
+import androidx.health.connect.client.records.BloodPressureRecord;
+import androidx.health.connect.client.records.HeartRateRecord;
+import androidx.health.connect.client.records.metadata.DataOrigin;
+import androidx.health.connect.client.records.metadata.Device;
+import androidx.health.connect.client.records.metadata.Metadata;
+import androidx.health.connect.client.request.ReadRecordsRequest;
+import androidx.health.connect.client.response.ReadRecordsResponse;
+import androidx.health.connect.client.time.TimeRangeFilter;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.health.connect.client.HealthConnectClient;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,6 +44,9 @@ import com.google.android.gms.wearable.Wearable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
+import com.samsung.android.sdk.healthdata.HealthConnectionErrorResult;
+import com.samsung.android.sdk.healthdata.HealthConstants;
+import com.samsung.android.sdk.healthdata.HealthDataStore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.MainActivity;
 import com.triadss.doctrack2.bluetooth.MessageService;
@@ -43,8 +55,22 @@ import com.triadss.doctrack2.dto.BluetoothDeviceDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import kotlin.coroutines.EmptyCoroutineContext;
+import kotlin.reflect.KClass;
+import kotlinx.coroutines.BuildersKt;
 
 
 public class DeviceFragment extends Fragment {
@@ -102,18 +128,121 @@ public class DeviceFragment extends Fragment {
 //
 //        boolean checkService = isMyServiceRunning(MessageService.class);
 
-
-
         // Use Message Service (Note MessageService does broad cast)
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
         messageReceiver = new Receiver();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(messageReceiver, messageFilter);
 
         //Check Health Connect
-        isHealthConnectAvailable();
+        HealthConnectClient healthConnectClient;
+
+        if(isHealthConnectAvailable())
+        {
+            healthConnectClient = HealthConnectClient.getOrCreate(getContext());
+            LocalDateTime localDateTimeStart = LocalDateTime.of(2024, 3, 26, 12, 0);
+            ZonedDateTime zonedDateTimeStart = localDateTimeStart.atZone(ZoneId.systemDefault());
+
+            LocalDateTime localDateTimeEnd = LocalDateTime.of(2024, 3, 27, 12, 0);
+            ZonedDateTime zonedDateTimeEnd = localDateTimeEnd.atZone(ZoneId.systemDefault());
+
+            TimeRangeFilter timeRange = TimeRangeFilter.between(zonedDateTimeStart.toInstant(), zonedDateTimeEnd.toInstant());
+            KClass<HeartRateRecord> dataType = null;
+            int limit = 1000;
+            HashSet<DataOrigin> dor = new HashSet<>();
+            boolean ascending = false;
+            JSONArray resultset = new JSONArray();
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                dataType = kotlin.jvm.JvmClassMappingKt.getKotlinClass(HeartRateRecord.class);
+                try {
+                    ReadRecordsRequest request = new ReadRecordsRequest(dataType,
+                                timeRange, dor, ascending, limit, null);
+
+                    ReadRecordsResponse response = BuildersKt.runBlocking(
+                            EmptyCoroutineContext.INSTANCE,
+                            (s, c) -> healthConnectClient.readRecords(request, c)
+                    );
+
+                    for (Object datapointObj : response.getRecords()) {
+                        if (datapointObj instanceof androidx.health.connect.client.records.Record) {
+                            androidx.health.connect.client.records.Record datapoint = (androidx.health.connect.client.records.Record) datapointObj;
+                            JSONObject obj = new JSONObject();
+
+                            populateFromMeta(obj, datapoint.getMetadata());
+
+                            if (datapoint instanceof HeartRateRecord) {
+                                populateFromQueryHeartRate(datapoint, resultset);
+                            }
+                        }
+                    }
+
+                    System.out.println(resultset);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
 
         handleSyncButtonClick();
         return rootView;
+    }
+
+    void populateFromMeta(JSONObject obj, Metadata meta) throws JSONException {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            String id = meta.getId();
+            if (id != null) {
+                obj.put("id", id);
+            }
+
+            Device dev = meta.getDevice();
+            if (dev != null) {
+                String device = "";
+                String manufacturer = dev.getManufacturer();
+                String model = dev.getModel();
+                if (manufacturer != null || model != null) {
+                    obj.put("sourceDevice", manufacturer + " " + model);
+                }
+            }
+
+            DataOrigin origin = meta.getDataOrigin();
+            if (origin != null) {
+                obj.put("sourceBundleId", origin.getPackageName());
+            }
+
+            int methodInt = meta.getRecordingMethod();
+
+            String method = "unknown";
+            switch (methodInt) {
+                case 1:
+                    method = "actively_recorded";
+                    break;
+                case 2:
+                    method = "automatically_recorded";
+                    break;
+                case 3:
+                    method = "manual_entry";
+                    break;
+            }
+            obj.put("entryMethod", method);
+        }
+    }
+
+    void populateFromQueryHeartRate(androidx.health.connect.client.records.Record datapoint, JSONArray resultset) throws JSONException {
+        HeartRateRecord hrDP = (HeartRateRecord) datapoint;
+        JSONObject hrObj = new JSONObject();
+
+        List<HeartRateRecord.Sample> hrSamples = hrDP.getSamples();
+        for (HeartRateRecord.Sample sample : hrSamples) {
+            long bpm = sample.getBeatsPerMinute();
+            hrObj.put("startDate", sample.getTime().toEpochMilli());
+            hrObj.put("endDate",  sample.getTime().toEpochMilli());
+
+            hrObj.put("value", bpm);
+            hrObj.put("unit", "bpm");
+            resultset.put(hrObj);
+        }
     }
 
     private boolean isHealthConnectAvailable()
