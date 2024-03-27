@@ -127,7 +127,6 @@ public class PatientAppointmentRequest extends Fragment {
     private void handleConfirmationButtonClick() {
         // Sample values for AppointmentDto
         String purpose = textInputPurpose.getText().toString();
-        ;
 
         Timestamp dateTimeOfAppointment = new Timestamp(
                 new Date(selectedYear - 1900, selectedMonth, selectedDay, selectedHour, selectedMinute));

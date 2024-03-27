@@ -1,9 +1,15 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -67,16 +73,21 @@ public class PatientReportFragment extends Fragment {
         }
     }
 
+    RecyclerView recyclerView;
+   private ReportsRepository repository;
+   private EditText search;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_reports_list, container, false);
-        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerViewReports);
+        recyclerView = rootView.findViewById(R.id.recyclerViewReports);
+        search = (EditText) rootView.findViewById(R.id.search_bar);
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
 
-        ReportsRepository repository = new ReportsRepository();
+        repository = new ReportsRepository();
         repository.getReportsFromUser(user.getUid(), new ReportsRepository.ReportsFetchCallback() {
             @Override
             public void onSuccess(List<ReportDto> reports) {
@@ -91,8 +102,55 @@ public class PatientReportFragment extends Fragment {
 
             }
         });
-
-
+        search.addTextChangedListener(inputTextWatcher);
         return rootView;
     }
+
+
+    TextWatcher inputTextWatcher = new TextWatcher() {
+        public void afterTextChanged(Editable s) {
+           // Toast.makeText(getActivity(), "This is my Toast message!", Toast.LENGTH_SHORT).show();
+
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseUser user = auth.getCurrentUser();
+
+            ReportsRepository repository = new ReportsRepository();
+
+            if(search.getText().toString().equals("") || search.getText().toString().equals(null)){
+                repository.getReportsFromUser(user.getUid(), new ReportsRepository.ReportsFetchCallback() {
+                    @Override
+                    public void onSuccess(List<ReportDto> reports) {
+                        PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        recyclerView.setAdapter(pageAdapter);
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+
+                    }
+                });
+            } else {
+            repository.getReportsFromUserFilter(user.getUid(),search.getText().toString().toLowerCase() ,new ReportsRepository.ReportsFilterCallback() {
+                @Override
+                public void onSuccess(List<ReportDto> reports) {
+
+                    PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    recyclerView.setAdapter(pageAdapter);
+                }
+                @Override
+                public void onError(String errorMessage) {
+
+                }
+            }); }
+        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after){
+        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+    };
+
 }

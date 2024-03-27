@@ -1,14 +1,20 @@
 package com.triadss.doctrack2.activity.admin;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.HealthProfDto;
+import com.triadss.doctrack2.repoositories.HealthProfRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,15 +22,13 @@ import com.triadss.doctrack2.R;
  * create an instance of this fragment.
  */
 public class UpdateHealthProfPage extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = "UpdateHealthProfPage";
+    private static final String HEALTHPROF_ID = "healthProfUid";
+    HealthProfDto healthProfDto;
+    String healthProfUid;
+    Button updateBtn;
+    EditText editTextPosition;
+    TextView textHealthWorkerName, textUserName, textGenderUpdate;
 
     public UpdateHealthProfPage() {
         // Required empty public constructor
@@ -34,16 +38,14 @@ public class UpdateHealthProfPage extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param healthProfUid Parameter 1.
      * @return A new instance of fragment UpdateHealthProfPage.
      */
     // TODO: Rename and change types and number of parameters
-    public static UpdateHealthProfPage newInstance(String param1, String param2) {
+    public static UpdateHealthProfPage newInstance(String healthProfUid) {
         UpdateHealthProfPage fragment = new UpdateHealthProfPage();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(HEALTHPROF_ID, healthProfUid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,15 +54,62 @@ public class UpdateHealthProfPage extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            healthProfUid = getArguments().getString(HEALTHPROF_ID);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        HealthProfRepository repository = new HealthProfRepository();
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_manage_user_accounts_update_health_prof, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_admin_manage_user_accounts_update_health_prof, container, false);
+
+        updateBtn = rootView.findViewById(R.id.buttonUpdateHealthProf);
+        editTextPosition = rootView.findViewById(R.id.editTextPosition);
+        textHealthWorkerName = rootView.findViewById(R.id.health_worker_name_update);
+        textUserName = rootView.findViewById(R.id.health_user_name_update);
+        textGenderUpdate = rootView.findViewById(R.id.health_gender_update);
+
+        repository.getHealthProfessional(healthProfUid, new HealthProfRepository.HealthProGetCallback() {
+            @Override
+            public void onSuccess(HealthProfDto dto) {
+                textHealthWorkerName.setText(dto.getFullName());
+                textUserName.setText(dto.getUserName());
+                textGenderUpdate.setText(dto.getGender());
+                editTextPosition.setText(dto.getPosition());
+
+                updateBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dto.setPosition(editTextPosition.getText().toString());
+                        repository.updateHealthProfessional(dto,  new HealthProfRepository.HealthProUpdateCallback() {
+                            @Override
+                            public void onSuccess(HealthProfDto dto) {
+                                @SuppressLint("CommitTransaction")
+                                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
+                                        .beginTransaction();
+                                transaction.replace(R.id.frame_layout, new AdminManageUserAccount());
+                                // Add HomeFragment to the back stack with a tag
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            }
+
+                            @Override
+                            public void onFailure(String errorMessage) {
+
+                            }
+                        });
+                    }
+                });
+            }
+            @Override
+            public void onFailure(String errorMessage) {
+                System.out.println("");
+            }
+        });
+
+        return rootView;
     }
 }

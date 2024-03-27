@@ -17,6 +17,7 @@ import android.widget.TimePicker;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
@@ -213,8 +214,10 @@ public class PatientMedicationAddFragment extends Fragment {
 
             final String status = MedicationTypeConstants.ONGOING;
 
+            String patientId = FirebaseAuth.getInstance().getUid();
+
             MedicationDto medication = new MedicationDto("",
-                    "", medicine, note, dateTimeOfAppointment, status);
+                    patientId, medicine, note, dateTimeOfAppointment, status);
             medicationRepository.addMedication(medication, new MedicationRepository.MedicationsAddCallback() {
                 @Override
                 public void onSuccess(String medicationId) {

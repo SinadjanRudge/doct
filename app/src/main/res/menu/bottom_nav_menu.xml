@@ -20,12 +20,12 @@
         android:layout_height="wrap_content"
         android:icon="@drawable/patient_icon"
         android:title="Patient" />
-    <item
-        android:id="@+id/record_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:icon="@drawable/record_icon"
-        android:title="Record" />
+<!--    <item-->
+<!--        android:id="@+id/record_menu"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:icon="@drawable/record_icon"-->
+<!--        android:title="Record" />-->
 
     <!-- TODO:: THIS LOGOUT IS TEMPORARY FOR TESTING ONLY    -->
     <item

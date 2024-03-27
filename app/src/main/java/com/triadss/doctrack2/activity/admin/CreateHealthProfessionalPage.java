@@ -104,7 +104,6 @@ public class CreateHealthProfessionalPage extends Fragment {
         setupConfirmationButton();
         return rootView;
     }
-    //create function in getting data from xml id's
     private void setupConfirmationButton() {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
