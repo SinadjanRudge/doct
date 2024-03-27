@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.core;
 
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 import android.Manifest;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothDevice;
@@ -7,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,8 +19,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.health.connect.client.PermissionController;
 import androidx.health.connect.client.permission.HealthPermission;
 import androidx.health.connect.client.records.BloodPressureRecord;
 import androidx.health.connect.client.records.HeartRateRecord;
@@ -27,6 +36,7 @@ import androidx.health.connect.client.records.metadata.Metadata;
 import androidx.health.connect.client.request.ReadRecordsRequest;
 import androidx.health.connect.client.response.ReadRecordsResponse;
 import androidx.health.connect.client.time.TimeRangeFilter;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.health.connect.client.HealthConnectClient;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -93,6 +103,7 @@ public class DeviceFragment extends Fragment {
     private VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
+    HealthConnectClient healthConnectClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -134,10 +145,10 @@ public class DeviceFragment extends Fragment {
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(messageReceiver, messageFilter);
 
         //Check Health Connect
-        HealthConnectClient healthConnectClient;
 
         if(isHealthConnectAvailable())
         {
+            checkAuthorization();
             healthConnectClient = HealthConnectClient.getOrCreate(getContext());
             LocalDateTime localDateTimeStart = LocalDateTime.of(2024, 3, 26, 12, 0);
             ZonedDateTime zonedDateTimeStart = localDateTimeStart.atZone(ZoneId.systemDefault());
@@ -153,7 +164,7 @@ public class DeviceFragment extends Fragment {
             JSONArray resultset = new JSONArray();
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                dataType = kotlin.jvm.JvmClassMappingKt.getKotlinClass(HeartRateRecord.class);
+                dataType = getHeartRateRecordClass();
                 try {
                     ReadRecordsRequest request = new ReadRecordsRequest(dataType,
                                 timeRange, dor, ascending, limit, null);
@@ -188,6 +199,56 @@ public class DeviceFragment extends Fragment {
         handleSyncButtonClick();
         return rootView;
     }
+
+    private KClass<HeartRateRecord> getHeartRateRecordClass()
+    {
+        return kotlin.jvm.JvmClassMappingKt.getKotlinClass(HeartRateRecord.class);
+    }
+
+    private void checkAuthorization() {
+        try {
+            Log.d(TAG, "checking authorization");
+            ActivityResultContract<Set<String>, Set<String>> requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract();
+            ActivityResultLauncher permissionsLauncher = getActivity().registerForActivityResult(requestPermissionActivityContract, new ActivityResultCallback<Set<String>>() {
+                @Override
+                public void onActivityResult(Set<String> result) {
+                    Log.d(TAG, "got results from authorization request");
+                    for (String res : result) {
+                        Log.d(TAG, res);
+                    }
+                    if (result.isEmpty()) {
+                        System.out.println();
+                    } else {
+                        System.out.println();
+                    }
+                }
+            });
+
+            // see https://kt.academy/article/cc-other-languages
+            Set<String> grantedPermissions = BuildersKt.runBlocking(
+                    EmptyCoroutineContext.INSTANCE,
+                    (s, c) -> healthConnectClient.getPermissionController().getGrantedPermissions(c)
+            );
+
+            Set<String> permissionsToRequest = new HashSet<>();
+            String perm = HealthPermission.getReadPermission(getHeartRateRecordClass());
+            if(!grantedPermissions.contains(perm))
+            {
+                permissionsToRequest.add(perm);
+            }
+
+            permissionsLauncher.launch(permissionsToRequest);
+
+            if (!permissionsToRequest.isEmpty()) {
+                Log.d(TAG, "requesting authorization");
+            } else {
+                Log.d(TAG, "requesting authorization success");
+            }
+        } catch (InterruptedException ex2) {
+            System.out.println();
+        }
+    }
+
 
     void populateFromMeta(JSONObject obj, Metadata meta) throws JSONException {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
