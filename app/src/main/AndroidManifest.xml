@@ -39,6 +39,11 @@
             android:windowSoftInputMode="adjustResize"
 
             android:exported="false" />
+
+            <!-- TODO: Add intent filter to handle permission rationale intent -->
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
         <activity
             android:name=".activity.RegisterActivity"
             android:exported="false"
