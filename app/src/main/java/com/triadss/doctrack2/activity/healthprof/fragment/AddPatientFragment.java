@@ -48,7 +48,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    EditText editTextEmail, editTextAddress, editTextPhone, editTextAge, editTextCourse, editTextIdNumber, editTextFullName;
+    EditText input_Email, editTextAddress, editTextPhone, editTextAge, editTextCourse, editTextIdNumber, editTextFullName, input_Status, input_contactNo, input_Year, input_Gender;
+    TextView error_patientID, error_Email, error_FullName, error_Age, error_Gender, error_Address, error_Status, error_Contact, error_Year, error_Course, error_DateBirth;
     Button getBirthDate;
     DateDto birthDate;
     FirebaseAuth mAuth;
@@ -116,7 +117,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
         // input field
         mAuth = FirebaseAuth.getInstance();
-        editTextEmail = rootView.findViewById(R.id.input_Email);
+        input_Email = rootView.findViewById(R.id.input_Email);
         editTextAddress = rootView.findViewById(R.id.input_address);
         editTextPhone = rootView.findViewById(R.id.input_contactNo);
         editTextAge = rootView.findViewById(R.id.input_Age);
@@ -124,11 +125,39 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         editTextIdNumber = rootView.findViewById(R.id.input_patientID);
         editTextFullName = rootView.findViewById(R.id.input_fullName);
         getBirthDate = rootView.findViewById(R.id.selectBirthDate);
+        input_Status = rootView.findViewById(R.id.input_Status);
+        input_Year = rootView.findViewById(R.id.input_Year);
+        input_Gender = rootView.findViewById(R.id.input_Gender);
+
+        error_patientID = rootView.findViewById(R.id.error_patientID);
+        error_Email = rootView.findViewById(R.id.error_Email);
+        error_FullName = rootView.findViewById(R.id.error_FullName);
+        error_Age = rootView.findViewById(R.id.error_Age);
+        error_Gender = rootView.findViewById(R.id.error_Gender);
+        error_Address = rootView.findViewById(R.id.error_Address);
+        error_Status = rootView.findViewById(R.id.error_Status);
+        error_Contact = rootView.findViewById(R.id.error_Contact);
+        error_Year = rootView.findViewById(R.id.error_Year);
+        error_Course = rootView.findViewById(R.id.error_Course);
+        error_DateBirth = rootView.findViewById(R.id.error_DateBirth);
+
+        error_patientID.setVisibility(rootView.GONE);
+        error_Email.setVisibility(rootView.GONE);
+        error_FullName.setVisibility(rootView.GONE);
+        error_Age.setVisibility(rootView.GONE);
+        error_Gender.setVisibility(rootView.GONE);
+        error_Address.setVisibility(rootView.GONE);
+        error_Status.setVisibility(rootView.GONE);
+        error_Contact.setVisibility(rootView.GONE);
+        error_Year.setVisibility(rootView.GONE);
+        error_Course.setVisibility(rootView.GONE);
+        error_DateBirth.setVisibility(rootView.INVISIBLE);
+
 
         getBirthDate.setOnClickListener((View.OnClickListener) v -> {
             // Get the current date
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
+            Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR)-18;
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
@@ -142,15 +171,41 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                         getBirthDate.setText(birthDate.ToString());
                     }, year, month, day);
 
+            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+
             // Show the Date Picker Dialog
             datePickerDialog.show();
         });
 
         Button nextButton = rootView.findViewById(R.id.nextBtn);
         nextButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                createPatient();
+                if(input_Email.getText().toString().contains("@") && input_Email.getText().toString().contains(".com") && !input_Email.getText().toString().isEmpty() &&
+                !editTextAddress.getText().toString().isEmpty() && !editTextPhone.getText().toString().isEmpty() && !editTextAge.getText().toString().isEmpty() &&
+                !editTextCourse.getText().toString().isEmpty() && !editTextIdNumber.getText().toString().isEmpty() && !editTextFullName.getText().toString().isEmpty() &&
+                !input_Status.getText().toString().isEmpty() &&  !editTextPhone.getText().toString().isEmpty() &&  !input_Year.getText().toString().isEmpty() &&
+                !getBirthDate.getText().toString().contains("Select Date") && (editTextIdNumber.getText().toString().length() >= 6)) {
+                    int teest = editTextIdNumber.getText().toString().length();
+                    createPatient();
+                }
+                else {
+                    int teest = editTextIdNumber.getText().toString().length();
+                    if(!input_Email.getText().toString().contains("@") || !input_Email.getText().toString().contains(".com") || input_Email.getText().toString().isEmpty())
+                    error_Email.setVisibility(rootView.VISIBLE); else error_Email.setVisibility(rootView.GONE);
+                    if(editTextAddress.getText().toString().isEmpty()) error_Address.setVisibility(rootView.VISIBLE); else error_Address.setVisibility(rootView.GONE);
+                    if(editTextPhone.getText().toString().isEmpty()) error_Contact.setVisibility(rootView.VISIBLE); else error_Contact.setVisibility(rootView.GONE);
+                    if(editTextAge.getText().toString().isEmpty()) error_Age.setVisibility(rootView.VISIBLE); else error_Age.setVisibility(rootView.INVISIBLE);
+                    if(editTextCourse.getText().toString().isEmpty()) error_Course.setVisibility(rootView.VISIBLE); else error_Course.setVisibility(rootView.INVISIBLE);
+                    if(editTextIdNumber.getText().toString().isEmpty() || (editTextIdNumber.getText().toString().length() >= 6)) error_patientID.setVisibility(rootView.VISIBLE); else error_patientID.setVisibility(rootView.GONE);
+                    if(editTextFullName.getText().toString().isEmpty()) error_FullName.setVisibility(rootView.VISIBLE); else error_FullName.setVisibility(rootView.GONE);
+                    if(input_Status.getText().toString().isEmpty()) error_Status.setVisibility(rootView.VISIBLE); else error_Status.setVisibility(rootView.GONE);
+                    if(input_Year.getText().toString().isEmpty()) error_Year.setVisibility(rootView.VISIBLE); else error_Year.setVisibility(rootView.GONE);
+                    if(input_Gender.getText().toString().isEmpty()) error_Gender.setVisibility(rootView.VISIBLE); else error_Gender.setVisibility(rootView.GONE);
+                    if(editTextIdNumber.getText().toString().isEmpty()) error_patientID.setVisibility(rootView.VISIBLE); else error_patientID.setVisibility(rootView.GONE);
+                    if(getBirthDate.getText().toString().contains("Select Date")) error_DateBirth.setVisibility(rootView.VISIBLE); else error_DateBirth.setVisibility(rootView.INVISIBLE);
+                }
             }
         });
 
@@ -163,7 +218,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
      */
     private void createPatient() {
         AddPatientDto patientDto = new AddPatientDto();
-        patientDto.setEmail(String.valueOf(editTextEmail.getText()).trim());
+        patientDto.setEmail(String.valueOf(input_Email.getText()).trim());
         patientDto.setFullName(String.valueOf(editTextFullName.getText()).trim());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
@@ -171,6 +226,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
         patientDto.setIdNumber(String.valueOf(editTextIdNumber.getText()).trim());
         patientDto.setDateOfBirth(birthDate.ToTimestamp());
+        patientDto.setYear(Integer.parseInt(String.valueOf(input_Year.getText())));
+        patientDto.setStatus(String.valueOf(input_Status.getText()).trim());
 
         try {
             FirebaseAuth newAuth = FirebaseAuth.getInstance();

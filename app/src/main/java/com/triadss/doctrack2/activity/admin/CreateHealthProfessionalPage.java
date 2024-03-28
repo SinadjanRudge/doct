@@ -109,13 +109,14 @@ public class CreateHealthProfessionalPage extends Fragment {
             @Override
             public void onClick(View v) {
                 // Handle confirmation button click
-                if(editTextEmailInput.getText().toString().contains("@") && editTextEmailInput.getText().toString().contains(".com") && editTextEmailInput.getText().toString() != "" &&
-                editTextNameInput.getText().toString() != "" && editTextPositionInput.getText().toString() != "" && editTextUserNameInput.getText().toString() != "" &&
-                editTextPasswordInput.getText().toString() != "" && editTextGenderInput.getText().toString() != "") {
+                if(editTextEmailInput.getText().toString().contains("@") && editTextEmailInput.getText().toString().contains(".com") && !editTextEmailInput.getText().toString().isEmpty() &&
+                !editTextNameInput.getText().toString().isEmpty() && !editTextPositionInput.getText().toString().isEmpty() && !editTextUserNameInput.getText().toString().isEmpty() &&
+                !editTextPasswordInput.getText().toString().isEmpty() && !editTextGenderInput.getText().toString().isEmpty()) {
                     handleConfirmationButtonClick();
                 }
                 else {
-                    if(editTextEmailInput.getText().toString().isEmpty()) errorTextEmail.setVisibility(rootView.VISIBLE); else errorTextEmail.setVisibility(rootView.GONE);
+                    if(!editTextEmailInput.getText().toString().contains("@") || !editTextEmailInput.getText().toString().contains(".com") || editTextEmailInput.getText().toString().isEmpty())
+                        errorTextEmail.setVisibility(rootView.VISIBLE); else errorTextEmail.setVisibility(rootView.GONE);
                     if(editTextNameInput.getText().toString().isEmpty()) errorTextHWN.setVisibility(rootView.VISIBLE); else errorTextHWN.setVisibility(rootView.GONE);
                     if(editTextPositionInput.getText().toString().isEmpty()) errorTextPosition.setVisibility(rootView.VISIBLE); else errorTextPosition.setVisibility(rootView.GONE);
                     if(editTextUserNameInput.getText().toString().isEmpty()) errorTextUser.setVisibility(rootView.VISIBLE); else errorTextUser.setVisibility(rootView.GONE);
