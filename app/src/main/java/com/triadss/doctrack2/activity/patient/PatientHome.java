@@ -108,6 +108,7 @@ public class PatientHome extends AppCompatActivity {
         try {
             Log.d(TAG, "checking authorization");
             ActivityResultContract<Set<String>, Set<String>> requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract();
+
             ActivityResultLauncher permissionsLauncher = registerForActivityResult(requestPermissionActivityContract, new ActivityResultCallback<Set<String>>() {
                 @Override
                 public void onActivityResult(Set<String> result) {
@@ -125,9 +126,18 @@ public class PatientHome extends AppCompatActivity {
 
             // see https://kt.academy/article/cc-other-languages
             Set<String> grantedPermissions = BuildersKt.runBlocking(
-                    EmptyCoroutineContext.INSTANCE,
-                    (s, c) -> healthConnectClient.getPermissionController().getGrantedPermissions(c)
+                EmptyCoroutineContext.INSTANCE,
+                (s, c) -> {
+                    try {
+                        Set<String> result = (Set<String>) healthConnectClient.getPermissionController().getGrantedPermissions(c);
+                        return result;
+                    } catch(Exception e)
+                    {
+                        System.out.println();
+                    }
+                }
             );
+
 
             Set<String> permissionsToRequest = new HashSet<>();
             String perm = HealthPermission.getReadPermission(getHeartRateRecordClass());
