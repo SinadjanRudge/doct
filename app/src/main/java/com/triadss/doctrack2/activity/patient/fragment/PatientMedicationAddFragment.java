@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -128,17 +129,20 @@ public class PatientMedicationAddFragment extends Fragment {
 
                 // Create and show the Date Picker Dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                    int monthOfYear, int dayOfMonth) {
-                                // Store the selected date
-                                selectedDateTime.setDate(new DateDto(year, monthOfYear, dayOfMonth));
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                            int monthOfYear, int dayOfMonth) {
+                        // Store the selected date
+                        selectedDateTime.setDate(new DateDto(year, monthOfYear, dayOfMonth));
 
-                                // Update the text on the button
-                                button_date.setText(selectedDateTime.getDate().ToString());
-                            }
-                        }, year, month, day);
+                        // Update the text on the button
+                        button_date.setText(selectedDateTime.getDate().ToString());
+                    }
+                }, year, month, day);
+
+                Calendar calendar = Calendar.getInstance();
+                datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
 
                 // Show the Date Picker Dialog
                 datePickerDialog.show();
@@ -158,17 +162,22 @@ public class PatientMedicationAddFragment extends Fragment {
 
                 // Create and show the Time Picker Dialog
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                        new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                // Store the selected time
-
-                                selectedDateTime.setTime(new TimeDto(hourOfDay, minute));
-
-                                // Update the text on the button
-                                button_time.setText(selectedDateTime.getTime().ToString());
+                    new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            // Store the selected time
+                            if (!((hourOfDay >= 8 && hourOfDay < 17) || (hourOfDay == 17 && minute == 0)))
+                            {
+                                Toast.makeText(getActivity(), "Please select a time between 8 AM and 5 PM", Toast.LENGTH_SHORT).show();
+                                return;
                             }
-                        }, hour, minute, false);
+
+                            selectedDateTime.setTime(new TimeDto(hourOfDay, minute));
+
+                            // Update the text on the button
+                            button_time.setText(selectedDateTime.getTime().ToString());
+                        }
+                    }, hour, minute, false);
 
                 // Show the Time Picker Dialog
                 timePickerDialog.show();
