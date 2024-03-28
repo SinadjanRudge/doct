@@ -68,6 +68,8 @@ public class DeviceFragment extends Fragment {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
 
+    TextView bloodPressureValue, temperatureValue, spo2Value, pulseRateValue, weightValue, heightValue, BMIValue;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,11 +100,13 @@ public class DeviceFragment extends Fragment {
             new SenderThread(BluetoothConstants.DataPath, onClickMessage).start();
         });
 
-//        getContext().startService(new Intent(getContext(), MessageService.class));
-//
-//        boolean checkService = isMyServiceRunning(MessageService.class);
-
-
+        bloodPressureValue = rootView.findViewById(R.id.BloodPressureValue);
+        temperatureValue = rootView.findViewById(R.id.TemperatureValue);
+        spo2Value = rootView.findViewById(R.id.Spo2Value);
+        pulseRateValue = rootView.findViewById(R.id.PulseRateValue);
+        weightValue = rootView.findViewById(R.id.WeightValue);
+        heightValue = rootView.findViewById(R.id.HeightValue);
+        BMIValue = rootView.findViewById(R.id.BMIValue);
 
         // Use Message Service (Note MessageService does broad cast)
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
@@ -114,6 +118,17 @@ public class DeviceFragment extends Fragment {
 
         handleSyncButtonClick();
         return rootView;
+    }
+
+    private void updateVitalSignsFromDto(VitalSignsDto dto)
+    {
+        bloodPressureValue.setText(dto.getBloodPressure());
+        temperatureValue.setText(String.valueOf(dto.getTemperature()));
+        spo2Value.setText(String.valueOf(dto.getOxygenLevel()));
+        pulseRateValue.setText(String.valueOf(dto.getPulseRate()));
+        weightValue.setText(String.valueOf(dto.getWeight()));
+        heightValue.setText(String.valueOf(dto.getHeight()));
+        BMIValue.setText(String.valueOf(dto.getBMI()));
     }
 
     private boolean isHealthConnectAvailable()
@@ -213,7 +228,6 @@ public class DeviceFragment extends Fragment {
         });
     }
 
-
     private class SenderThread extends Thread
     {
         String path;
@@ -237,7 +251,6 @@ public class DeviceFragment extends Fragment {
                     Wearable.getMessageClient(getActivity())
                             .sendMessage(node.getId(), path, message.getBytes())
                             .addOnSuccessListener(new OnSuccessListener() {
-
                                 @Override
                                 public void onSuccess(Object o) {
                                     Log.d("NodeID", nodeId);
@@ -273,4 +286,3 @@ public class DeviceFragment extends Fragment {
         }
     }
 }
-
