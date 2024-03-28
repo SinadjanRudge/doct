@@ -137,9 +137,12 @@ public class PatientHome extends AppCompatActivity {
 //                    (s, c) -> pController.getGrantedPermissions(c)
 //            );
 
-            final Set<String> grantedPermissions = new HashSet<String>();
+            Set<String> grantedPermissions = new HashSet<String>();
             CompletableFuture<Set<String>> suspendResult = new CompletableFuture<>();
             healthConnectClient.getPermissionController().getGrantedPermissions(new CustomContinuation<Set<String>>(suspendResult));
+
+            grantedPermissions = suspendResult.get();
+            System.out.println();
 
 //            Set<String> permissionsToRequest = new HashSet<>();
 //            String perm = HealthPermission.getReadPermission(getHeartRateRecordClass());
