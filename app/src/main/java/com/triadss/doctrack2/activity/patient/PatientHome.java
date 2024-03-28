@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.core.CustomContinuation;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientMedicationFragment;
@@ -137,24 +138,8 @@ public class PatientHome extends AppCompatActivity {
 //            );
 
             final Set<String> grantedPermissions = new HashSet<String>();
-            CompletableFuture<String> suspendResult = new CompletableFuture<>();
-            healthConnectClient.getPermissionController().getGrantedPermissions(new Continuation<Set<String>>(suspendResult) {
-                @NonNull
-                @Override
-                public CoroutineContext getContext() {
-                    return EmptyCoroutineContext.INSTANCE;
-                }
-
-                @Override
-                public void resumeWith(@NonNull Object o) {
-                    if (o instanceof Result.Failure)
-                        System.out.println();
-                    else {
-                        Result r = (Result)o;
-                        Set<String> properInstance = r.exceptionOrNull();
-                    }
-                }
-            });
+            CompletableFuture<Set<String>> suspendResult = new CompletableFuture<>();
+            healthConnectClient.getPermissionController().getGrantedPermissions(new CustomContinuation<Set<String>>(suspendResult));
 
 //            Set<String> permissionsToRequest = new HashSet<>();
 //            String perm = HealthPermission.getReadPermission(getHeartRateRecordClass());
@@ -166,10 +151,7 @@ public class PatientHome extends AppCompatActivity {
 //            permissionsLauncher.launch(permissionsToRequest);
 
 
-        } catch (InterruptedException ex2) {
-            System.out.println();
-        }
-        catch(Exception e){
+        } catch(Exception e){
             throw new RuntimeException(e);
         }
     }
