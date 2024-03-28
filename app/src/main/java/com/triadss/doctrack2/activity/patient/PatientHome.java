@@ -5,6 +5,7 @@ import static com.triadss.doctrack2.utils.HealthConnectUtils.getHeartRateRecordC
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -31,7 +32,11 @@ import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
+import kotlin.Result;
+import kotlin.coroutines.Continuation;
+import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlinx.coroutines.BuildersKt;
 
@@ -125,20 +130,40 @@ public class PatientHome extends AppCompatActivity {
             });
 
             // see https://kt.academy/article/cc-other-languages
-            PermissionController pController = healthConnectClient.getPermissionController();
-            Set<String> grantedPermissions = BuildersKt.runBlocking(
-                    EmptyCoroutineContext.INSTANCE,
-                    (s, c) -> pController.getGrantedPermissions(c)
-            );
+//            PermissionController pController = healthConnectClient.getPermissionController();
+//            Set<String> grantedPermissions = BuildersKt.runBlocking(
+//                    EmptyCoroutineContext.INSTANCE,
+//                    (s, c) -> pController.getGrantedPermissions(c)
+//            );
 
-            Set<String> permissionsToRequest = new HashSet<>();
-            String perm = HealthPermission.getReadPermission(getHeartRateRecordClass());
-            if(!grantedPermissions.contains(perm))
-            {
-                permissionsToRequest.add(perm);
-            }
+            final Set<String> grantedPermissions = new HashSet<String>();
+            CompletableFuture<String> suspendResult = new CompletableFuture<>();
+            healthConnectClient.getPermissionController().getGrantedPermissions(new Continuation<Set<String>>(suspendResult) {
+                @NonNull
+                @Override
+                public CoroutineContext getContext() {
+                    return EmptyCoroutineContext.INSTANCE;
+                }
 
-            permissionsLauncher.launch(permissionsToRequest);
+                @Override
+                public void resumeWith(@NonNull Object o) {
+                    if (o instanceof Result.Failure)
+                        System.out.println();
+                    else {
+                        Result r = (Result)o;
+                        Set<String> properInstance = r.exceptionOrNull();
+                    }
+                }
+            });
+
+//            Set<String> permissionsToRequest = new HashSet<>();
+//            String perm = HealthPermission.getReadPermission(getHeartRateRecordClass());
+//            if(!grantedPermissions.contains(perm))
+//            {
+//                permissionsToRequest.add(perm);
+//            }
+//
+//            permissionsLauncher.launch(permissionsToRequest);
 
 
         } catch (InterruptedException ex2) {
