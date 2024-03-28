@@ -185,7 +185,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                 Function<String, Boolean> containsDotCom = (val) -> val.contains(".com");
                 Function<String, Boolean> containsAtSign = (val) -> val.contains("@");
                 Function<String, Boolean> notContainsSelectDate = (val) -> !val.contains("Select Date");
-                Function<String, Boolean> lengthAtleast6 = (val) -> val.length() >= 6;
+                Function<String, Boolean> lengthAtleast6 = (val) -> val.length() <= 6;
 
                 if(widgetPredicate(input_Email, isNotEmptyPredicate)
                     && widgetPredicate(input_Email, containsDotCom)
@@ -202,25 +202,22 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                     && widgetPredicate(getBirthDate, notContainsSelectDate)
                     && widgetPredicate(editTextIdNumber, lengthAtleast6)
                 ) {
-
-                    int teest = editTextIdNumber.getText().toString().length();
                     createPatient();
                 }
                 else {
-                    int teest = editTextIdNumber.getText().toString().length();
-                    showTextViewWhenTrue(input_Email, (value) -> value.contains("@")
-                            || value.contains(".com")
+                    boolean test = (editTextIdNumber.getText().toString().length() < 6) || editTextIdNumber.getText().toString().isEmpty();
+                    showTextViewWhenTrue(input_Email, (value) -> !value.contains("@")
+                            || !value.contains(".com")
                             || value.isEmpty(), error_Email);
                     showTextViewWhenTrue(editTextAddress, (value) -> value.isEmpty(), error_Address);
                     showTextViewWhenTrue(editTextPhone, (value) -> value.isEmpty(), error_Contact);
                     showTextViewWhenTrue(editTextAge, (value) -> value.isEmpty(), error_Age);
                     showTextViewWhenTrue(editTextCourse, (value) -> value.isEmpty(), error_Course);
-                    showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty() || value.length() >= 6, error_patientID);
+                    showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty() || (value.length() < 6), error_patientID);
                     showTextViewWhenTrue(editTextFullName, (value) -> value.isEmpty(), error_FullName);
                     showTextViewWhenTrue(input_Status, (value) -> value.isEmpty(), error_Status);
                     showTextViewWhenTrue(input_Year, (value) -> value.isEmpty(), error_Year);
                     showTextViewWhenTrue(input_Gender, (value) -> value.isEmpty(), error_Gender);
-                    showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty(), error_patientID);
                     showTextViewWhenTrue(getBirthDate, (value) -> value.contains("Select Date"), error_DateBirth);
                 }
             }
@@ -250,7 +247,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         {
             messageWidget.setVisibility(View.VISIBLE);
         } else {
-            messageWidget.setVisibility(View.GONE);
+            messageWidget.setVisibility(View.INVISIBLE);
         }
     }
 
