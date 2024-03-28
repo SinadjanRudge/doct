@@ -125,19 +125,11 @@ public class PatientHome extends AppCompatActivity {
             });
 
             // see https://kt.academy/article/cc-other-languages
+            PermissionController pController = healthConnectClient.getPermissionController();
             Set<String> grantedPermissions = BuildersKt.runBlocking(
-                EmptyCoroutineContext.INSTANCE,
-                (s, c) -> {
-                    try {
-                        Set<String> result = (Set<String>) healthConnectClient.getPermissionController().getGrantedPermissions(c);
-                        return result;
-                    } catch(Exception e)
-                    {
-                        System.out.println();
-                    }
-                }
+                    EmptyCoroutineContext.INSTANCE,
+                    (s, c) -> pController.getGrantedPermissions(c)
             );
-
 
             Set<String> permissionsToRequest = new HashSet<>();
             String perm = HealthPermission.getReadPermission(getHeartRateRecordClass());
