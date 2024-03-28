@@ -35,7 +35,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.function.Function;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddPatientFragment#newInstance} factory method to
@@ -153,7 +153,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         error_Course.setVisibility(rootView.GONE);
         error_DateBirth.setVisibility(rootView.INVISIBLE);
 
-
         getBirthDate.setOnClickListener((View.OnClickListener) v -> {
             // Get the current date
             Calendar c = Calendar.getInstance();
@@ -182,34 +181,77 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void onClick(View v) {
-                if(input_Email.getText().toString().contains("@") && input_Email.getText().toString().contains(".com") && !input_Email.getText().toString().isEmpty() &&
-                !editTextAddress.getText().toString().isEmpty() && !editTextPhone.getText().toString().isEmpty() && !editTextAge.getText().toString().isEmpty() &&
-                !editTextCourse.getText().toString().isEmpty() && !editTextIdNumber.getText().toString().isEmpty() && !editTextFullName.getText().toString().isEmpty() &&
-                !input_Status.getText().toString().isEmpty() &&  !editTextPhone.getText().toString().isEmpty() &&  !input_Year.getText().toString().isEmpty() &&
-                !getBirthDate.getText().toString().contains("Select Date") && (editTextIdNumber.getText().toString().length() >= 6)) {
+                Function<String, Boolean> isNotEmptyPredicate = (val) -> !val.isEmpty();
+                Function<String, Boolean> containsDotCom = (val) -> val.contains(".com");
+                Function<String, Boolean> containsAtSign = (val) -> val.contains("@");
+                Function<String, Boolean> notContainsSelectDate = (val) -> !val.contains("Select Date");
+                Function<String, Boolean> lengthAtleast6 = (val) -> val.length() >= 6;
+
+                if(widgetPredicate(input_Email, isNotEmptyPredicate)
+                    && widgetPredicate(input_Email, containsDotCom)
+                    && widgetPredicate(input_Email, containsAtSign)
+                    && widgetPredicate(editTextAddress, isNotEmptyPredicate)
+                    && widgetPredicate(editTextPhone, isNotEmptyPredicate)
+                    && widgetPredicate(editTextAge, isNotEmptyPredicate)
+                    && widgetPredicate(editTextCourse, isNotEmptyPredicate)
+                    && widgetPredicate(editTextIdNumber, isNotEmptyPredicate)
+                    && widgetPredicate(editTextFullName, isNotEmptyPredicate)
+                    && widgetPredicate(input_Status, isNotEmptyPredicate)
+                    && widgetPredicate(editTextPhone, isNotEmptyPredicate)
+                    && widgetPredicate(input_Year, isNotEmptyPredicate)
+                    && widgetPredicate(getBirthDate, notContainsSelectDate)
+                    && widgetPredicate(editTextIdNumber, lengthAtleast6)
+                ) {
+
                     int teest = editTextIdNumber.getText().toString().length();
                     createPatient();
                 }
                 else {
                     int teest = editTextIdNumber.getText().toString().length();
-                    if(!input_Email.getText().toString().contains("@") || !input_Email.getText().toString().contains(".com") || input_Email.getText().toString().isEmpty())
-                    error_Email.setVisibility(rootView.VISIBLE); else error_Email.setVisibility(rootView.GONE);
-                    if(editTextAddress.getText().toString().isEmpty()) error_Address.setVisibility(rootView.VISIBLE); else error_Address.setVisibility(rootView.GONE);
-                    if(editTextPhone.getText().toString().isEmpty()) error_Contact.setVisibility(rootView.VISIBLE); else error_Contact.setVisibility(rootView.GONE);
-                    if(editTextAge.getText().toString().isEmpty()) error_Age.setVisibility(rootView.VISIBLE); else error_Age.setVisibility(rootView.INVISIBLE);
-                    if(editTextCourse.getText().toString().isEmpty()) error_Course.setVisibility(rootView.VISIBLE); else error_Course.setVisibility(rootView.INVISIBLE);
-                    if(editTextIdNumber.getText().toString().isEmpty() || (editTextIdNumber.getText().toString().length() >= 6)) error_patientID.setVisibility(rootView.VISIBLE); else error_patientID.setVisibility(rootView.GONE);
-                    if(editTextFullName.getText().toString().isEmpty()) error_FullName.setVisibility(rootView.VISIBLE); else error_FullName.setVisibility(rootView.GONE);
-                    if(input_Status.getText().toString().isEmpty()) error_Status.setVisibility(rootView.VISIBLE); else error_Status.setVisibility(rootView.GONE);
-                    if(input_Year.getText().toString().isEmpty()) error_Year.setVisibility(rootView.VISIBLE); else error_Year.setVisibility(rootView.GONE);
-                    if(input_Gender.getText().toString().isEmpty()) error_Gender.setVisibility(rootView.VISIBLE); else error_Gender.setVisibility(rootView.GONE);
-                    if(editTextIdNumber.getText().toString().isEmpty()) error_patientID.setVisibility(rootView.VISIBLE); else error_patientID.setVisibility(rootView.GONE);
-                    if(getBirthDate.getText().toString().contains("Select Date")) error_DateBirth.setVisibility(rootView.VISIBLE); else error_DateBirth.setVisibility(rootView.INVISIBLE);
+                    showTextViewWhenTrue(input_Email, (value) -> value.contains("@")
+                            || value.contains(".com")
+                            || value.isEmpty(), error_Email);
+                    showTextViewWhenTrue(editTextAddress, (value) -> value.isEmpty(), error_Address);
+                    showTextViewWhenTrue(editTextPhone, (value) -> value.isEmpty(), error_Contact);
+                    showTextViewWhenTrue(editTextAge, (value) -> value.isEmpty(), error_Age);
+                    showTextViewWhenTrue(editTextCourse, (value) -> value.isEmpty(), error_Course);
+                    showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty() || value.length() >= 6, error_patientID);
+                    showTextViewWhenTrue(editTextFullName, (value) -> value.isEmpty(), error_FullName);
+                    showTextViewWhenTrue(input_Status, (value) -> value.isEmpty(), error_Status);
+                    showTextViewWhenTrue(input_Year, (value) -> value.isEmpty(), error_Year);
+                    showTextViewWhenTrue(input_Gender, (value) -> value.isEmpty(), error_Gender);
+                    showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty(), error_patientID);
+                    showTextViewWhenTrue(getBirthDate, (value) -> value.contains("Select Date"), error_DateBirth);
                 }
             }
         });
 
         return rootView;
+    }
+
+    boolean widgetPredicate(Button textSource, Function<String, Boolean> predicate) {
+        return predicate.apply(textSource.getText().toString());
+    }
+
+    boolean widgetPredicate(EditText textSource, Function<String, Boolean> predicate) {
+        return predicate.apply(textSource.getText().toString());
+    }
+
+    void showTextViewWhenTrue(EditText textSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        showTextViewWhenTrue(textSource.getText().toString(), predicate, messageWidget);
+    }
+
+    void showTextViewWhenTrue(Button buttonSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        showTextViewWhenTrue(buttonSource.getText().toString(), predicate, messageWidget);
+    }
+
+    void showTextViewWhenTrue(String textSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        if(predicate.apply(textSource))
+        {
+            messageWidget.setVisibility(View.VISIBLE);
+        } else {
+            messageWidget.setVisibility(View.GONE);
+        }
     }
 
     /**
