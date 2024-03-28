@@ -22,6 +22,14 @@
         android:layout_height="50dp"
         android:hint="Health Workers Name"/>
 
+    <TextView
+        android:id="@+id/errorTextHWN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Health Worker Name is Blank"
+        android:text="Health Worker Name is Blank"
+        android:textColor="#FF0000" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,17 +43,41 @@
         android:layout_height="50dp"
         android:hint="Position"/>
 
+    <TextView
+        android:id="@+id/errorTextPosition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Position is Blank"
+        android:text="Position is Blank"
+        android:textColor="#FF0000" />
+
     <EditText
         android:id="@+id/editTextUserName"
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:hint="UserName"/>
 
+    <TextView
+        android:id="@+id/errorTextUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="UserName is Blank"
+        android:text="UserName is Blank"
+        android:textColor="#FF0000" />
+
     <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:hint="Email" />
+
+    <TextView
+        android:id="@+id/errorTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Incorrect Email"
+        android:text="Incorrect Email"
+        android:textColor="#FF0000" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -54,11 +86,28 @@
         android:inputType="textPassword"
         android:hint="Password"/>
 
+    <TextView
+        android:id="@+id/errorTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password is Blank"
+        android:text="Password is Blank"
+        android:textColor="#FF0000" />
+
+
     <EditText
         android:id="@+id/editTextGender"
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:hint="Gender" />
+
+    <TextView
+        android:id="@+id/errorTextGender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Gender is Blank"
+        android:text="Gender is Blank"
+        android:textColor="#FF0000" />
 
 
     <Button

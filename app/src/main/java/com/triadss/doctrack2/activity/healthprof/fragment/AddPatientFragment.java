@@ -35,7 +35,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.function.Function;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddPatientFragment#newInstance} factory method to
@@ -48,7 +48,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    EditText editTextEmail, editTextAddress, editTextPhone, editTextAge, editTextCourse, editTextIdNumber, editTextFullName;
+    EditText input_Email, editTextAddress, editTextPhone, editTextAge, editTextCourse, editTextIdNumber, editTextFullName, input_Status, input_contactNo, input_Year, input_Gender;
+    TextView error_patientID, error_Email, error_FullName, error_Age, error_Gender, error_Address, error_Status, error_Contact, error_Year, error_Course, error_DateBirth;
     Button getBirthDate;
     DateDto birthDate;
     FirebaseAuth mAuth;
@@ -116,7 +117,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
         // input field
         mAuth = FirebaseAuth.getInstance();
-        editTextEmail = rootView.findViewById(R.id.input_Email);
+        input_Email = rootView.findViewById(R.id.input_Email);
         editTextAddress = rootView.findViewById(R.id.input_address);
         editTextPhone = rootView.findViewById(R.id.input_contactNo);
         editTextAge = rootView.findViewById(R.id.input_Age);
@@ -124,11 +125,38 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         editTextIdNumber = rootView.findViewById(R.id.input_patientID);
         editTextFullName = rootView.findViewById(R.id.input_fullName);
         getBirthDate = rootView.findViewById(R.id.selectBirthDate);
+        input_Status = rootView.findViewById(R.id.input_Status);
+        input_Year = rootView.findViewById(R.id.input_Year);
+        input_Gender = rootView.findViewById(R.id.input_Gender);
+
+        error_patientID = rootView.findViewById(R.id.error_patientID);
+        error_Email = rootView.findViewById(R.id.error_Email);
+        error_FullName = rootView.findViewById(R.id.error_FullName);
+        error_Age = rootView.findViewById(R.id.error_Age);
+        error_Gender = rootView.findViewById(R.id.error_Gender);
+        error_Address = rootView.findViewById(R.id.error_Address);
+        error_Status = rootView.findViewById(R.id.error_Status);
+        error_Contact = rootView.findViewById(R.id.error_Contact);
+        error_Year = rootView.findViewById(R.id.error_Year);
+        error_Course = rootView.findViewById(R.id.error_Course);
+        error_DateBirth = rootView.findViewById(R.id.error_DateBirth);
+
+        error_patientID.setVisibility(rootView.GONE);
+        error_Email.setVisibility(rootView.GONE);
+        error_FullName.setVisibility(rootView.GONE);
+        error_Age.setVisibility(rootView.GONE);
+        error_Gender.setVisibility(rootView.GONE);
+        error_Address.setVisibility(rootView.GONE);
+        error_Status.setVisibility(rootView.GONE);
+        error_Contact.setVisibility(rootView.GONE);
+        error_Year.setVisibility(rootView.GONE);
+        error_Course.setVisibility(rootView.GONE);
+        error_DateBirth.setVisibility(rootView.INVISIBLE);
 
         getBirthDate.setOnClickListener((View.OnClickListener) v -> {
             // Get the current date
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
+            Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR)-18;
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
@@ -142,19 +170,88 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                         getBirthDate.setText(birthDate.ToString());
                     }, year, month, day);
 
+            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+
             // Show the Date Picker Dialog
             datePickerDialog.show();
         });
 
         Button nextButton = rootView.findViewById(R.id.nextBtn);
         nextButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                createPatient();
+                Function<String, Boolean> isNotEmptyPredicate = (val) -> !val.isEmpty();
+                Function<String, Boolean> containsDotCom = (val) -> val.contains(".com");
+                Function<String, Boolean> containsAtSign = (val) -> val.contains("@");
+                Function<String, Boolean> notContainsSelectDate = (val) -> !val.contains("Select Date");
+                Function<String, Boolean> lengthAtleast6 = (val) -> val.length() >= 6;
+
+                if(widgetPredicate(input_Email, isNotEmptyPredicate)
+                    && widgetPredicate(input_Email, containsDotCom)
+                    && widgetPredicate(input_Email, containsAtSign)
+                    && widgetPredicate(editTextAddress, isNotEmptyPredicate)
+                    && widgetPredicate(editTextPhone, isNotEmptyPredicate)
+                    && widgetPredicate(editTextAge, isNotEmptyPredicate)
+                    && widgetPredicate(editTextCourse, isNotEmptyPredicate)
+                    && widgetPredicate(editTextIdNumber, isNotEmptyPredicate)
+                    && widgetPredicate(editTextFullName, isNotEmptyPredicate)
+                    && widgetPredicate(input_Status, isNotEmptyPredicate)
+                    && widgetPredicate(editTextPhone, isNotEmptyPredicate)
+                    && widgetPredicate(input_Year, isNotEmptyPredicate)
+                    && widgetPredicate(getBirthDate, notContainsSelectDate)
+                    && widgetPredicate(editTextIdNumber, lengthAtleast6)
+                ) {
+
+                    int teest = editTextIdNumber.getText().toString().length();
+                    createPatient();
+                }
+                else {
+                    int teest = editTextIdNumber.getText().toString().length();
+                    showTextViewWhenTrue(input_Email, (value) -> value.contains("@")
+                            || value.contains(".com")
+                            || value.isEmpty(), error_Email);
+                    showTextViewWhenTrue(editTextAddress, (value) -> value.isEmpty(), error_Address);
+                    showTextViewWhenTrue(editTextPhone, (value) -> value.isEmpty(), error_Contact);
+                    showTextViewWhenTrue(editTextAge, (value) -> value.isEmpty(), error_Age);
+                    showTextViewWhenTrue(editTextCourse, (value) -> value.isEmpty(), error_Course);
+                    showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty() || value.length() >= 6, error_patientID);
+                    showTextViewWhenTrue(editTextFullName, (value) -> value.isEmpty(), error_FullName);
+                    showTextViewWhenTrue(input_Status, (value) -> value.isEmpty(), error_Status);
+                    showTextViewWhenTrue(input_Year, (value) -> value.isEmpty(), error_Year);
+                    showTextViewWhenTrue(input_Gender, (value) -> value.isEmpty(), error_Gender);
+                    showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty(), error_patientID);
+                    showTextViewWhenTrue(getBirthDate, (value) -> value.contains("Select Date"), error_DateBirth);
+                }
             }
         });
 
         return rootView;
+    }
+
+    boolean widgetPredicate(Button textSource, Function<String, Boolean> predicate) {
+        return predicate.apply(textSource.getText().toString());
+    }
+
+    boolean widgetPredicate(EditText textSource, Function<String, Boolean> predicate) {
+        return predicate.apply(textSource.getText().toString());
+    }
+
+    void showTextViewWhenTrue(EditText textSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        showTextViewWhenTrue(textSource.getText().toString(), predicate, messageWidget);
+    }
+
+    void showTextViewWhenTrue(Button buttonSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        showTextViewWhenTrue(buttonSource.getText().toString(), predicate, messageWidget);
+    }
+
+    void showTextViewWhenTrue(String textSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        if(predicate.apply(textSource))
+        {
+            messageWidget.setVisibility(View.VISIBLE);
+        } else {
+            messageWidget.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -163,7 +260,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
      */
     private void createPatient() {
         AddPatientDto patientDto = new AddPatientDto();
-        patientDto.setEmail(String.valueOf(editTextEmail.getText()).trim());
+        patientDto.setEmail(String.valueOf(input_Email.getText()).trim());
         patientDto.setFullName(String.valueOf(editTextFullName.getText()).trim());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
@@ -171,6 +268,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
         patientDto.setIdNumber(String.valueOf(editTextIdNumber.getText()).trim());
         patientDto.setDateOfBirth(birthDate.ToTimestamp());
+        patientDto.setYear(Integer.parseInt(String.valueOf(input_Year.getText())));
+        patientDto.setStatus(String.valueOf(input_Status.getText()).trim());
 
         try {
             FirebaseAuth newAuth = FirebaseAuth.getInstance();
