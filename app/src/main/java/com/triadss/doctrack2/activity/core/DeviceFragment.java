@@ -16,11 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
+import androidx.health.connect.client.HealthConnectClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -110,9 +109,23 @@ public class DeviceFragment extends Fragment {
         messageReceiver = new Receiver();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(messageReceiver, messageFilter);
 
+        //Check Health Connect
+        isHealthConnectAvailable();
 
         handleSyncButtonClick();
         return rootView;
+    }
+
+    private boolean isHealthConnectAvailable()
+    {
+        int availabilityStatus = HealthConnectClient.getSdkStatus(getContext());
+        if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE) {
+            return false;
+        }
+        if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED) {
+            return false;
+        }
+        return true;
     }
 
     private void handleSyncButtonClick(){

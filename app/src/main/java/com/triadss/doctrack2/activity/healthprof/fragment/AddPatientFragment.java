@@ -179,6 +179,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                     FirebaseUser user = task.getResult().getUser();
                     try {
                         if (user != null) {
+                            String userId = user.getUid();
+                            patientDto.setUid(userId);
                             // create details in user table and report table
                             _patientRepository.addPatientCallback(patientDto, new PatientRepository.PatientAddUpdateCallback() {
                                 @Override
