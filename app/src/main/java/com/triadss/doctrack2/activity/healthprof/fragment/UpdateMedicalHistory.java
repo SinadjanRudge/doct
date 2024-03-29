@@ -16,6 +16,9 @@ import android.widget.Toast;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
+import com.triadss.doctrack2.utils.CheckboxStringProcessor;
+import com.triadss.doctrack2.utils.EditTextName;
+import com.triadss.doctrack2.utils.EditTextStringProcessor;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +36,10 @@ public class UpdateMedicalHistory extends Fragment {
 
     CheckBox checkbox1, checkbox2, checkbox3, checkbox4, checkbox5, checkbox6, checkbox7, checkbox8, checkbox9, checkbox10, checkbox11, checkbox12, checkbox13, checkbox14, checkbox15, checkbox16, checkbox17, checkbox18, checkbox19, checkbox20, checkbox21;
     EditText editSpecifyText1, editSpecifyText2, editPrevHospitalization, editTextMenstruation, editTextGravida, editTextAbortion, editTextMenopause;
+
+    CheckboxStringProcessor pastIllnessProcessor, familyHistoryProcessor;
+    EditTextStringProcessor obgyneHistoryProcessor;
+    MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
 
     public UpdateMedicalHistory() {
         // Required empty public constructor
@@ -68,34 +75,48 @@ public class UpdateMedicalHistory extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_medical_history, container, false);
 
-        checkbox1 = rootView.findViewById(R.id.checkbox1);
-        checkbox2 = rootView.findViewById(R.id.checkbox2);
-        checkbox3 = rootView.findViewById(R.id.checkbox3);
-        checkbox4 = rootView.findViewById(R.id.checkbox4);
-        checkbox5 = rootView.findViewById(R.id.checkbox5);
-        checkbox6 = rootView.findViewById(R.id.checkbox6);
-        checkbox7 = rootView.findViewById(R.id.checkbox7);
-        checkbox8 = rootView.findViewById(R.id.checkbox8);
-        checkbox9 = rootView.findViewById(R.id.checkbox9);
-        checkbox10 = rootView.findViewById(R.id.checkbox10);
-        checkbox11 = rootView.findViewById(R.id.checkbox11);
-        checkbox12 = rootView.findViewById(R.id.checkbox12);
-        checkbox13 = rootView.findViewById(R.id.checkbox13);
-        checkbox14 = rootView.findViewById(R.id.checkbox14);
-        checkbox15 = rootView.findViewById(R.id.cb_famHist_diabetes);
-        checkbox16 = rootView.findViewById(R.id.cb_famHist_hyper);
-        checkbox17 = rootView.findViewById(R.id.cb_famHist_mentalHealthDisorder);
-        checkbox18 = rootView.findViewById(R.id.cb_famHist_asthma);
-        checkbox19 = rootView.findViewById(R.id.cb_famHist_bleedingDisorder);
-        checkbox20 = rootView.findViewById(R.id.cb_famHist_none);
-        checkbox21 = rootView.findViewById(R.id.cb_famHist_others);
-        editSpecifyText1 = rootView.findViewById(R.id.editTextOthers);
-        editSpecifyText2 = rootView.findViewById(R.id.editText_specify);
-        editPrevHospitalization = rootView.findViewById(R.id.textViewPrevHos);
-        editTextMenstruation = rootView.findViewById(R.id.editText_menstruation);
-        editTextGravida = rootView.findViewById(R.id.editText_gravida);
-        editTextAbortion = rootView.findViewById(R.id.editText_abortion);
-        editTextMenopause = rootView.findViewById(R.id.editText_menopause);
+        pastIllnessProcessor = new CheckboxStringProcessor(
+                rootView.findViewById(R.id.otherPastIllness),
+                rootView.findViewById(R.id.otherPastIllnessText),
+                rootView.findViewById(R.id.tuborculosis),
+                rootView.findViewById(R.id.hypertension),
+                rootView.findViewById(R.id.heartDiseases),
+                rootView.findViewById(R.id.nervousBreakdown),
+                rootView.findViewById(R.id.pelpticUlcer),
+                rootView.findViewById(R.id.kidneyDiseases),
+                rootView.findViewById(R.id.bronchialAsthma),
+                rootView.findViewById(R.id.hernia),
+                rootView.findViewById(R.id.seizuresEpilepsy),
+                rootView.findViewById(R.id.venerealDiseases),
+                rootView.findViewById(R.id.allergicReaction),
+                rootView.findViewById(R.id.insomnia)
+        );
+
+        editPrevHospitalization = rootView.findViewById(R.id.input_previous_hospitalization);
+
+        familyHistoryProcessor = new CheckboxStringProcessor(
+                rootView.findViewById(R.id.cb_famHist_others),
+                rootView.findViewById(R.id.otherFamilyHistoryText),
+                rootView.findViewById(R.id.cb_famHist_diabetes),
+                rootView.findViewById(R.id.cb_famHist_hyper),
+                rootView.findViewById(R.id.cb_famHist_mentalHealthDisorder),
+                rootView.findViewById(R.id.cb_famHist_asthma),
+                rootView.findViewById(R.id.cb_famHist_bleedingDisorder)
+        );
+
+        obgyneHistoryProcessor = new EditTextStringProcessor(
+                new EditTextName("Menarche",rootView.findViewById(R.id.input_menarche)),
+                new EditTextName("LMP",rootView.findViewById(R.id.input_lmp)),
+                new EditTextName("Gravida",rootView.findViewById(R.id.input_gravida)),
+                new EditTextName("Para",rootView.findViewById(R.id.input_para)),
+                new EditTextName("Abortion",rootView.findViewById(R.id.input_abortion)),
+                new EditTextName("Menopause",rootView.findViewById(R.id.input_menopause)),
+                new EditTextName("PAP Smear",rootView.findViewById(R.id.input_papSmear))
+        );
+
+
+//        editSpecifyText1 = rootView.findViewById(R.id.editTextOthers);
+
 
         Button nextButton = rootView.findViewById(R.id.nxtButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -104,110 +125,47 @@ public class UpdateMedicalHistory extends Fragment {
                 updateMedicalHistory();
             }
         });
+
+        populateData();
         return rootView;
+    }
+
+    private void populateData()
+    {
+        medicalHistoryRepo.getMedicalHistoryOfPatient(patientUid, new MedicalHistoryRepository.FetchCallback() {
+            @Override
+            public void onSuccess(MedicalHistoryDto medHistory) {
+                pastIllnessProcessor.PopulateFromString(medHistory.getPastIllness());
+                familyHistoryProcessor.PopulateFromString(medHistory.getFamilyHist());
+                editPrevHospitalization.setText(medHistory.getPrevOperation());
+                obgyneHistoryProcessor.PopulateFromString(medHistory.getObgyneHist());
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
     }
 
     private MedicalHistoryDto extractDto() {
         MedicalHistoryDto medicalHistoryDto= new MedicalHistoryDto();
-        StringBuilder pastIllnessBuilder = new StringBuilder();
-        StringBuilder familyHistoryBuilder = new StringBuilder();
         StringBuilder obgyneHistoryBuilder = new StringBuilder();
 
         //Past Illness
-        if (checkbox1.isChecked()) {
-            pastIllnessBuilder.append(checkbox1.getText()).append(", ");
-        }
-        if (checkbox2.isChecked()) {
-            pastIllnessBuilder.append(checkbox2.getText()).append(", ");
-        }
-        if (checkbox3.isChecked()) {
-            pastIllnessBuilder.append(checkbox3.getText()).append(", ");
-        }
-        if (checkbox4.isChecked()) {
-            pastIllnessBuilder.append(checkbox4.getText()).append(", ");
-        }
-        if (checkbox5.isChecked()) {
-            pastIllnessBuilder.append(checkbox5.getText()).append(", ");
-        }
-        if (checkbox6.isChecked()) {
-            pastIllnessBuilder.append(checkbox6.getText()).append(", ");
-        }
-        if (checkbox7.isChecked()) {
-            pastIllnessBuilder.append(checkbox7.getText()).append(", ");
-        }
-        if (checkbox8.isChecked()) {
-            pastIllnessBuilder.append(checkbox8.getText()).append(", ");
-        }
-        if (checkbox9.isChecked()) {
-            pastIllnessBuilder.append(checkbox9.getText()).append(", ");
-        }
-        if (checkbox10.isChecked()) {
-            pastIllnessBuilder.append(checkbox10.getText()).append(", ");
-        }
-        if (checkbox11.isChecked()) {
-            pastIllnessBuilder.append(checkbox11.getText()).append(", ");
-        }
-        if (checkbox12.isChecked()) {
-            pastIllnessBuilder.append(checkbox12.getText()).append(", ");
-        }
-        if (checkbox13.isChecked()) {
-            pastIllnessBuilder.append(checkbox13.getText()).append(", ");
-        }
-        if (checkbox14.isChecked()) {
-            pastIllnessBuilder.append(String.valueOf(editSpecifyText1.getText()).trim()).append(", ");
-        }
-        if (pastIllnessBuilder.length() > 0) {
-            pastIllnessBuilder.setLength(pastIllnessBuilder.length() - 2);
-        }
-        medicalHistoryDto.setPastIllness(pastIllnessBuilder.toString());
+        String pastIllness = pastIllnessProcessor.getString();
+        medicalHistoryDto.setPastIllness(pastIllness);
 
         //Previous Hospitalization
         medicalHistoryDto.setPrevOperation(String.valueOf(editPrevHospitalization.getText()).trim());
 
         //Family History
-        if (checkbox15.isChecked()) {
-            familyHistoryBuilder.append(checkbox15.getText()).append(", ");
-        }
-        if (checkbox16.isChecked()) {
-            familyHistoryBuilder.append(checkbox16.getText()).append(", ");
-        }
-        if (checkbox17.isChecked()) {
-            familyHistoryBuilder.append(checkbox17.getText()).append(", ");
-        }
-        if (checkbox18.isChecked()) {
-            familyHistoryBuilder.append(checkbox18.getText()).append(", ");
-        }
-        if (checkbox19.isChecked()) {
-            familyHistoryBuilder.append(checkbox19.getText()).append(", ");
-        }
-        if (checkbox20.isChecked()) {
-            familyHistoryBuilder.append(checkbox20.getText()).append(", ");
-        }
-        if (checkbox21.isChecked()) {
-            familyHistoryBuilder.append(String.valueOf(editSpecifyText2.getText()).trim()).append(", ");
-        }
-        if (familyHistoryBuilder.length() > 0) {
-            familyHistoryBuilder.setLength(familyHistoryBuilder.length() - 2);
-        }
-        medicalHistoryDto.setFamilyHist(familyHistoryBuilder.toString());
+        String familyHistory = familyHistoryProcessor.getString();
+        medicalHistoryDto.setFamilyHist(familyHistory);
 
-        //ObGyne History
-        if (!editTextMenstruation.getText().toString().isEmpty()) {
-            obgyneHistoryBuilder.append("Menstruation: ").append(editTextMenstruation.getText().toString()).append(", ");
-        }
-        if (!editTextGravida.getText().toString().isEmpty()) {
-            obgyneHistoryBuilder.append("Gravida: ").append(editTextGravida.getText().toString()).append(", ");
-        }
-        if (!editTextAbortion.getText().toString().isEmpty()) {
-            obgyneHistoryBuilder.append("Abortion: ").append(editTextAbortion.getText().toString()).append(", ");
-        }
-        if (!editTextMenopause.getText().toString().isEmpty()) {
-            obgyneHistoryBuilder.append("Menopause: ").append(editTextMenopause.getText().toString()).append(", ");
-        }
-        if (obgyneHistoryBuilder.length() > 0) {
-            obgyneHistoryBuilder.setLength(obgyneHistoryBuilder.length() - 2);
-        }
-        medicalHistoryDto.setObgyneHist(obgyneHistoryBuilder.toString());
+        String obgyneHistory = obgyneHistoryProcessor.getString();
+        medicalHistoryDto.setObgyneHist(obgyneHistory);
+
         medicalHistoryDto.setPatientId(patientUid);
 
         return medicalHistoryDto;
@@ -215,7 +173,6 @@ public class UpdateMedicalHistory extends Fragment {
 
     private void updateMedicalHistory()
     {
-        MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
         MedicalHistoryDto dto = extractDto();
         medicalHistoryRepo.getMedicalHistoryIdOfUser(patientUid, new MedicalHistoryRepository.StringFetchCallback()
         {
