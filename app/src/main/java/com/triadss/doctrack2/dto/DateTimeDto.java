@@ -38,11 +38,30 @@ public class DateTimeDto {
         return new Timestamp(extractedDate);
     }
 
+    public Timestamp ReschedToTimestamp()
+    {
+        return new Timestamp(
+                new Date(date.getYear() - 1900, date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute()));
+    }
+
     public String ToString() {
         return date.ToString() + " " + time.ToString();
     }
 
     public static DateTimeDto ToDateTimeDto(Timestamp timestamp)
+    {
+        Date date = timestamp.toDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        DateTimeDto converted = new DateTimeDto();
+        converted.setDate(new DateDto(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)));
+        converted.setTime(new TimeDto(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
+
+        return converted;
+    }
+
+    public static DateTimeDto ReschedToDateTimeDto(Timestamp timestamp)
     {
         Date date = timestamp.toDate();
         Calendar calendar = Calendar.getInstance();

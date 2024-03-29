@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,11 @@ import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.TimeDto;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
@@ -166,6 +170,10 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             Button confirmBtn = dialog.findViewById(R.id.confirmbutton);
             DateTimeDto selectedDateTime = new DateTimeDto();
 
+            String oldDate = date.getText().toString();
+            String oldTime = time.getText().toString();
+            String oldDateOldTime = date.getText().toString()+ " " +time.getText().toString();
+
             dateBtn.setOnClickListener((View.OnClickListener) v -> {
                 // Get the current date
                 final Calendar c = Calendar.getInstance();
@@ -209,33 +217,86 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             });
 
             confirmBtn.setOnClickListener(v -> {
-                SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
-                SharedPreferences.Editor myEdit = sharedPreferences.edit();
-                appointmentRepository.rescheduleAppointment(id, selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
-                    @Override
-                    public void onSuccess(String appointmentId) {
+
+                String newDateNewTime = updateDate.getText().toString()+ " " +updateTime.getText().toString();
+                if(updateDate.getText().toString().equals("Date") || updateTime.getText().toString().equals("Time")){
+                    Toast.makeText(itemView.getContext(), "Error: must select date and time", Toast.LENGTH_SHORT).show();
+                }else{
+                    if (newDateNewTime.compareTo(oldDateOldTime) <= 0){
+                        Toast.makeText(itemView.getContext(), "Error: selected date and time must be higher", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+                      SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                      appointmentRepository.rescheduleAppointment(id, selectedDateTime.ReschedToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
+                      @Override
+                      public void onSuccess(String appointmentId) {
                         Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
 
-                    }
-                    @Override
-                    public void onError(String errorMessage) {
+                       }
+                      @Override
+                      public void onError(String errorMessage) {
 
-                    }
-                });
-                appointmentRepository.addReport(id,"RESCHEDULE", new AppointmentRepository.ReportCallback() {
-                    @Override
-                    public void onSuccess(String appointmentId) {
+                      }
+                      });
+                      appointmentRepository.addReport(id,"RESCHEDULE", new AppointmentRepository.ReportCallback() {
+                      @Override
+                      public void onSuccess(String appointmentId) {
                         Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
 
-                    }
-                    @Override
-                    public void onError(String errorMessage) {
+                      }
+                      @Override
+                      public void onError(String errorMessage) {
+
+                      }
+                  });
+                    myEdit.putInt("PatientPending", Integer.parseInt("10"));
+                    myEdit.putInt("PatientStatus", Integer.parseInt("10"));
+                    myEdit.apply();
 
                     }
-                });
-                myEdit.putInt("PatientPending", Integer.parseInt("10"));
-                myEdit.putInt("PatientStatus", Integer.parseInt("10"));
-                myEdit.apply();
+                }
+
+//                SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+//                SharedPreferences.Editor myEdit = sharedPreferences.edit();
+//                appointmentRepository.rescheduleAppointment(id, selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
+//                    @Override
+//                    public void onSuccess(String appointmentId) {
+//                        Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                    @Override
+//                    public void onError(String errorMessage) {
+//
+//                    }
+//                });
+//                appointmentRepository.addReport(id,"RESCHEDULE", new AppointmentRepository.ReportCallback() {
+//                    @Override
+//                    public void onSuccess(String appointmentId) {
+//                        Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                    @Override
+//                    public void onError(String errorMessage) {
+//
+//                    }
+//                });
+//                myEdit.putInt("PatientPending", Integer.parseInt("10"));
+//                myEdit.putInt("PatientStatus", Integer.parseInt("10"));
+//                myEdit.apply();
+
+
+//                 String newDateNewTime = updateDate.getText().toString()+ " " +updateTime.getText().toString();
+//                 Log.d("dateANDtime",oldDateOldTime);
+//                 Log.d("dateANDtime", newDateNewTime);
+//
+//
+//                Log.d("result",String.valueOf(oldDateOldTime.compareTo(newDateNewTime)));
+//                //Toast.makeText(itemView.getContext(), newDateNewTime.compareTo(oldDateOldTime), Toast.LENGTH_SHORT).show();
+//                Log.d("result2",String.valueOf("2024-03-24 11:38".compareTo("2024-04-19 15:56")));
+
+
             });
             dialog.show();
         }
