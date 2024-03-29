@@ -49,10 +49,11 @@ public class DeviceFragment extends Fragment {
     private int sentMessageCounter = 1;
     private Handler handler;
     private Receiver messageReceiver;
+    private int count = 0;
     private VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
-    private int count = 0;
+    VitalSignsDto vitalSignsDto = new VitalSignsDto();
 
     private TextView bloodPressureValue, temperatureValue, spo2Value, pulseRateValue, weightValue, heightValue, BMIValue;
 
@@ -62,7 +63,7 @@ public class DeviceFragment extends Fragment {
         initializeViews(rootView);
         initializeHandlers();
         initializeListeners();
-        fetchVitalSigns();
+        initVitalSigns();
         return rootView;
     }
 
@@ -99,8 +100,34 @@ public class DeviceFragment extends Fragment {
         syncButton.setOnClickListener(v -> handleSyncButtonClick());
     }
 
-    private void fetchVitalSigns(){
+    private void initVitalSigns(){
+        try{
+            vitalSignsRepo.getVitalSignOfPatient(user.getUid(), new VitalSignsRepository.FetchCallback() {
+                @Override
+                public void onSuccess(VitalSignsDto vitalSigns) {
+                    vitalSignsDto = vitalSigns;
+                    setVitalSignsViews(vitalSignsDto);
+                }
 
+                @Override
+                public void onError(String errorMessage) {
+                    Log.e(TAG, "Failure in fetching patient's vital signs");
+                    Toast.makeText(getContext(), "Sync Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }catch (Exception e){
+
+        }
+    }
+
+    private void setVitalSignsViews(VitalSignsDto vitalSigns){
+        bloodPressureValue.setText(vitalSigns.getBloodPressure());
+        temperatureValue.setText(vitalSigns.getTemperature() + "");
+//        spo2Value.setText(vitalSigns.get);
+        pulseRateValue.setText(vitalSigns.getPulseRate() + "");
+        weightValue.setText(vitalSigns.getWeight() + "");
+        heightValue.setText(vitalSigns.getHeight() + "");
+        BMIValue.setText(vitalSigns.getBMI() + "");
     }
 
     private void handleSyncButtonClick() {
