@@ -190,7 +190,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                             selectedDateTime.setDate(new DateDto(year1, monthOfYear+1, dayOfMonth));
 
                             // Update the text on the button
-                            updateDate.setText(selectedDateTime.getDate().ToString());
+                            updateDate.setText(selectedDateTime.getDate().ToString(false));
                         }, date.getYear(), date.getMonth(), date.getDay());
 
                 // Show the Date Picker Dialog

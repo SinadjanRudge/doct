@@ -38,10 +38,18 @@ public class DateDto {
         return day;
     }
 
+    public String ToString(boolean isMonth0Index)
+    {
+        return String.format(Locale.getDefault(), "%04d-%02d-%02d", year,
+                month + (isMonth0Index ? 1 : 0)
+                , day);
+    }
+
     public String ToString()
     {
         return String.format(Locale.getDefault(), "%04d-%02d-%02d", year,
-                month + 1, day);
+                month + 1
+                , day);
     }
 
     public Timestamp ToStartDateTimestamp()

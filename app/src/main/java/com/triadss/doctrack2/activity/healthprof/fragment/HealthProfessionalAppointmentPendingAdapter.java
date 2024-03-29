@@ -87,7 +87,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-                    showUpdateDialog(appointment.getUid());
+                    showUpdateDialog(appointment);
                 }
             });
 
@@ -102,7 +102,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             });
         }
 
-        private void showUpdateDialog(String appointmentId)
+        private void showUpdateDialog(AppointmentDto dto)
         {
             Dialog dialog = new Dialog(context);
             dialog.setContentView(R.layout.fragment_patient_appointment_reschedule);
@@ -115,24 +115,21 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
             Button confirm = dialog.findViewById(R.id.confirmbutton);
 
-            DateTimeDto selectedDateTime = new DateTimeDto();
+            DateTimeDto selectedDateTime = DateTimeDto.ToDateTimeDto(dto.getDateOfAppointment());
 
             dateBtn.setOnClickListener((View.OnClickListener) v -> {
                 // Get the current date
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
+                DateDto dateDto = selectedDateTime.getDate();
 
                 // Create and show the Date Picker Dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(context,
                         (view, year1, monthOfYear, dayOfMonth) -> {
                             // Store the selected date
-                            selectedDateTime.setDate(new DateDto(year1, monthOfYear, dayOfMonth));
+                            selectedDateTime.setDate(new DateDto(year1, monthOfYear + 1, dayOfMonth));
 
                             // Update the text on the button
-                            updateDate.setText(selectedDateTime.getDate().ToString());
-                        }, year, month, day);
+                            updateDate.setText(selectedDateTime.getDate().ToString(false));
+                        }, dateDto.getYear(), dateDto.getMonth(), dateDto.getDay());
 
                 // Show the Date Picker Dialog
                 datePickerDialog.show();
@@ -140,9 +137,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
             timeBtn.setOnClickListener(v -> {
                 // Get the current time
-                final Calendar c = Calendar.getInstance();
-                int hour = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
+                TimeDto timeDto = selectedDateTime.getTime();
 
                 // Create and show the Time Picker Dialog
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context,
@@ -152,14 +147,14 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
                             // Update the text on the button
                             updateTime.setText(selectedDateTime.getTime().ToString());
-                        }, hour, minute, false);
+                        }, timeDto.getHour(), timeDto.getMinute(), false);
 
                 // Show the Time Picker Dialog
                 timePickerDialog.show();
             });
 
             confirm.setOnClickListener(v -> {
-                appointmentCallbacks.onRescheduleConfirmed(selectedDateTime, appointmentId);
+                appointmentCallbacks.onRescheduleConfirmed(selectedDateTime, dto.getDocumentId());
                 dialog.dismiss();
             });
 

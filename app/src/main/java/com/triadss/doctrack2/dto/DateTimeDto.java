@@ -38,12 +38,6 @@ public class DateTimeDto {
         return new Timestamp(extractedDate);
     }
 
-    public Timestamp ReschedToTimestamp()
-    {
-        return new Timestamp(
-                new Date(date.getYear() - 1900, date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute()));
-    }
-
     public String ToString() {
         return date.ToString() + " " + time.ToString();
     }

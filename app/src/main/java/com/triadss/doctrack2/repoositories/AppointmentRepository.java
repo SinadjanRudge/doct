@@ -182,6 +182,9 @@ public class AppointmentRepository {
 
         DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
 
+        Timestamp newSchedTimestamp = newSchedule.ToTimestamp();
+        String newSchedTimeStamp = DateTimeDto.ToDateTimeDto(newSchedTimestamp).ToString();
+
         appointmentRef
                 .update(AppointmentsModel.dateOfAppointment, newSchedule.ToTimestamp())
                 .addOnSuccessListener(aVoid -> {
@@ -271,6 +274,7 @@ public class AppointmentRepository {
                             AppointmentDto appointment = document.toObject(AppointmentDto.class);
                             appointments.add(appointment);
                             appointment.setUid(document.getId());
+                            appointment.setDocumentId(document.getId());
                         }
                         callback.onSuccess(appointments);
                     })
