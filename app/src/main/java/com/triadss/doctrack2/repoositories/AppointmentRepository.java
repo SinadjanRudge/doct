@@ -284,7 +284,6 @@ public class AppointmentRepository {
         }
     }
 
-
     public void cancelAppointment(String DocumentId, AppointmentCancelCallback callback) {
 
         appointmentsCollection
@@ -301,10 +300,10 @@ public class AppointmentRepository {
     }
 
     public void rescheduleAppointment(String DocumentId,Timestamp date,AppointmentRescheduleCallback callback) {
-
+        String dateTest = DateTimeDto.ToDateTimeDto(date).ToString();
         appointmentsCollection
                 .document(DocumentId)
-                .update("dateOfAppointment", date)
+                .update(AppointmentsModel.dateOfAppointment, date)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Appointment added with ID: " + DocumentId);
                     callback.onSuccess(DocumentId);

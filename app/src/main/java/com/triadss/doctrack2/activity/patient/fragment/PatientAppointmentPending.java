@@ -82,7 +82,6 @@ public class PatientAppointmentPending extends Fragment {
                     CallPending();
 
                 }
-              //  Toast.makeText(getContext(), Integer.toString(carl), Toast.LENGTH_SHORT).show();
                 handler.postDelayed(this,1000);
             }
         }, 1000);
