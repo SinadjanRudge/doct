@@ -15,6 +15,7 @@ import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
+import com.triadss.doctrack2.activity.patient.fragment.PatientHomeFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientMedicationFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientReportFragment;
 import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
@@ -34,6 +35,7 @@ public class PatientHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_home);
+        replaceFragment(new PatientHomeFragment());
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
