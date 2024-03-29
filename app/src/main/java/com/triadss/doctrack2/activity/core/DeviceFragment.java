@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -61,6 +62,7 @@ public class DeviceFragment extends Fragment {
         initializeViews(rootView);
         initializeHandlers();
         initializeListeners();
+        fetchVitalSigns();
         return rootView;
     }
 
@@ -97,20 +99,25 @@ public class DeviceFragment extends Fragment {
         syncButton.setOnClickListener(v -> handleSyncButtonClick());
     }
 
+    private void fetchVitalSigns(){
+
+    }
+
     private void handleSyncButtonClick() {
         try {
-            Log.e(TAG, "Sync Button Clicked");
-            Log.e(TAG, "User uid: " + user.getUid());
+            Toast.makeText(getContext(), "Syncing...", Toast.LENGTH_SHORT).show();
             vitalSignsRepo.getVitalSignOfPatient(user.getUid(), new VitalSignsRepository.FetchCallback() {
                 @Override
                 public void onSuccess(VitalSignsDto vitalSigns) {
                     String jsonData = vitalSigns.toJsonData();
                     sendMessage(jsonData);
+                    Toast.makeText(getContext(), "Sync Successful", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(String errorMessage) {
                     Log.e(TAG, "Failure in fetching patient's vital signs");
+                    Toast.makeText(getContext(), "Sync Error: " + errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
