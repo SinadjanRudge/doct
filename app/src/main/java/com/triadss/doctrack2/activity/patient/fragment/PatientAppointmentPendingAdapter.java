@@ -148,7 +148,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
             DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTimeDto.getDate().ToString());
             time.setText(dateTimeDto.getTime().ToString());
-            documentId.setText(appointment.getDocumentId());
+            documentId.setText(appointment.getPatientIdNumber());
             patientName.setText(appointment.getNameOfRequester());
 
             reschedule.setOnClickListener(new View.OnClickListener() {

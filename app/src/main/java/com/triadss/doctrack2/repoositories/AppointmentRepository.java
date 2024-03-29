@@ -43,14 +43,16 @@ public class AppointmentRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference appointmentsCollection = firestore
             .collection(FireStoreCollection.APPOINTMENTS_TABLE);
-
     private final CollectionReference reportsCollection = firestore
             .collection(FireStoreCollection.REPORTS_TABLE);
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
+    private PatientRepository patientRepository = new PatientRepository();
 
     public void addAppointment(AppointmentDto appointment, AppointmentAddCallback callback) {
         if (user != null) {
+
+
             appointment.setPatientId(user.getUid());
 
             FirebaseFirestore.getInstance()
@@ -91,46 +93,43 @@ public class AppointmentRepository {
 
     }
 
-    public void getAllAppointments(AppointmentFetchCallback callback) {
-        appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<AppointmentDto> appointments = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            AppointmentDto appointment = document.toObject(AppointmentDto.class);
-                            //document.getId().toString()
-                            appointment.setDocumentId(document.get("status").toString());
-                            appointments.add(appointment);
-                        }
-                        callback.onSuccess(appointments);
-                    } else {
-                        Log.e(TAG, "Error getting appointments", task.getException());
-                        callback.onError(task.getException().getMessage());
-                    }
-                });
-
-    }
     public void getAllPatientPendingAppointments(String patientUid, AppointmentPatientPendingFetchCallback callback) {
-        appointmentsCollection.orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
-                .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
-                .whereEqualTo(AppointmentsModel.patientId, patientUid)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<AppointmentDto> appointments = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            AppointmentDto appointment = document.toObject(AppointmentDto.class);
+        patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
 
-                            appointment.setDocumentId(document.getId().toString());
-                            appointments.add(appointment);
-                        }
-                        callback.onSuccess(appointments);
-                    } else {
-                        Log.e(TAG, "Error getting appointments", task.getException());
-                        callback.onError(task.getException().getMessage());
-                    }
-                });
+            @Override
+            public void onSuccess(List<AddPatientDto> patients) {
+                appointmentsCollection.orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
+                        .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
+                        .whereEqualTo(AppointmentsModel.patientId, patientUid)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                List<AppointmentDto> appointments = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                                    appointment.setDocumentId(document.getId().toString());
+                                    String idNumber = patients
+                                            .stream()
+                                            .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
+                                            .findFirst().orElse(null).getIdNumber();
+                                    appointment.setPatientIdNumber(idNumber);
+                                    appointments.add(appointment);
+                                }
+                                callback.onSuccess(appointments);
+                            } else {
+                                Log.e(TAG, "Error getting appointments", task.getException());
+                                callback.onError(task.getException().getMessage());
+                            }
+                        });
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+
+            }
+        });
+
+
     }
     public void getAllPatientStatusAppointments(String patientUid, AppointmentPatientStatusFetchCallback callback) {
         appointmentsCollection.orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
