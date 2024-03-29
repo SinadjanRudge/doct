@@ -140,6 +140,7 @@ public class PatientAppointmentRequest extends Fragment {
             @Override
             public void onSuccess(String appointmentId) {
                 // TODO need to add confirmation UI when appointment is added successfully
+                System.out.println();
             }
 
             @Override

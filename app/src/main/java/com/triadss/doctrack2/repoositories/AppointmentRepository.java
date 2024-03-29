@@ -182,6 +182,9 @@ public class AppointmentRepository {
 
         DocumentReference appointmentRef = appointmentsCollection.document(appointmentId);
 
+        Timestamp newSchedTimestamp = newSchedule.ToTimestamp();
+        String newSchedTimeStamp = DateTimeDto.ToDateTimeDto(newSchedTimestamp).ToString();
+
         appointmentRef
                 .update(AppointmentsModel.dateOfAppointment, newSchedule.ToTimestamp())
                 .addOnSuccessListener(aVoid -> {
@@ -258,9 +261,11 @@ public class AppointmentRepository {
     public void getPendingAppointments(String healthProfId, AppointmentFetchCallback callback)
     {
         if (user != null) {
+            Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
             appointmentsCollection
                     .whereEqualTo(AppointmentsModel.healthProfId, healthProfId)
                     .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
+                    .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
                     .orderBy(AppointmentsModel.dateOfAppointment, Query.Direction.DESCENDING)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -269,6 +274,7 @@ public class AppointmentRepository {
                             AppointmentDto appointment = document.toObject(AppointmentDto.class);
                             appointments.add(appointment);
                             appointment.setUid(document.getId());
+                            appointment.setDocumentId(document.getId());
                         }
                         callback.onSuccess(appointments);
                     })
@@ -281,7 +287,6 @@ public class AppointmentRepository {
             callback.onError("User is null");
         }
     }
-
 
     public void cancelAppointment(String DocumentId, AppointmentCancelCallback callback) {
 
@@ -299,10 +304,10 @@ public class AppointmentRepository {
     }
 
     public void rescheduleAppointment(String DocumentId,Timestamp date,AppointmentRescheduleCallback callback) {
-
+        String dateTest = DateTimeDto.ToDateTimeDto(date).ToString();
         appointmentsCollection
                 .document(DocumentId)
-                .update("dateOfAppointment", date)
+                .update(AppointmentsModel.dateOfAppointment, date)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Appointment added with ID: " + DocumentId);
                     callback.onSuccess(DocumentId);

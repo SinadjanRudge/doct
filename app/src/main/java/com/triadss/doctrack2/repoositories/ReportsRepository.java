@@ -213,7 +213,7 @@ public class ReportsRepository {
         }
     }
 
-    public void getReportsFromDateRange(Date before, Date after, ReportsFetchCallback callback) {
+    public void getReportsFromDateRange(Timestamp before, Timestamp after, ReportsFetchCallback callback) {
         if (user != null) {
             CollectionReference usersCollection = firestore
                 .collection(FireStoreCollection.USERS_TABLE);

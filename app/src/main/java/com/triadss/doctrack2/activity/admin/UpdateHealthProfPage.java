@@ -27,8 +27,8 @@ public class UpdateHealthProfPage extends Fragment {
     HealthProfDto healthProfDto;
     String healthProfUid;
     Button updateBtn;
-    EditText editTextPosition;
-    TextView textHealthWorkerName, textUserName, textGenderUpdate;
+    EditText editTextPosition, editTextPositionInput;
+    TextView textHealthWorkerName, textUserName, textGenderUpdate, errorTextPosition;
 
     public UpdateHealthProfPage() {
         // Required empty public constructor
@@ -72,6 +72,11 @@ public class UpdateHealthProfPage extends Fragment {
         textUserName = rootView.findViewById(R.id.health_user_name_update);
         textGenderUpdate = rootView.findViewById(R.id.health_gender_update);
 
+        editTextPositionInput = rootView.findViewById(R.id.editTextPosition);
+
+        errorTextPosition = rootView.findViewById(R.id.errorTextPosition);
+        errorTextPosition.setVisibility(rootView.GONE);
+
         repository.getHealthProfessional(healthProfUid, new HealthProfRepository.HealthProGetCallback() {
             @Override
             public void onSuccess(HealthProfDto dto) {
@@ -83,24 +88,27 @@ public class UpdateHealthProfPage extends Fragment {
                 updateBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dto.setPosition(editTextPosition.getText().toString());
-                        repository.updateHealthProfessional(dto,  new HealthProfRepository.HealthProUpdateCallback() {
-                            @Override
-                            public void onSuccess(HealthProfDto dto) {
-                                @SuppressLint("CommitTransaction")
-                                FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
-                                        .beginTransaction();
-                                transaction.replace(R.id.frame_layout, new AdminManageUserAccount());
-                                // Add HomeFragment to the back stack with a tag
-                                transaction.addToBackStack(null);
-                                transaction.commit();
-                            }
+                        if(!editTextPositionInput.getText().toString().isEmpty()) {
+                            dto.setPosition(editTextPosition.getText().toString());
+                            repository.updateHealthProfessional(dto, new HealthProfRepository.HealthProUpdateCallback() {
+                                @Override
+                                public void onSuccess(HealthProfDto dto) {
+                                    @SuppressLint("CommitTransaction")
+                                    FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
+                                            .beginTransaction();
+                                    transaction.replace(R.id.frame_layout, new AdminManageUserAccount());
+                                    // Add HomeFragment to the back stack with a tag
+                                    transaction.addToBackStack(null);
+                                    transaction.commit();
+                                }
 
-                            @Override
-                            public void onFailure(String errorMessage) {
+                                @Override
+                                public void onFailure(String errorMessage) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
+                        else if(editTextPositionInput.getText().toString().isEmpty()) errorTextPosition.setVisibility(rootView.VISIBLE); else errorTextPosition.setVisibility(rootView.GONE);
                     }
                 });
             }
