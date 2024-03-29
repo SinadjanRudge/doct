@@ -34,8 +34,7 @@ public class UpdateMedicalHistory extends Fragment {
     // TODO: Rename and change types of parameters
     private String patientUid;
 
-    CheckBox checkbox1, checkbox2, checkbox3, checkbox4, checkbox5, checkbox6, checkbox7, checkbox8, checkbox9, checkbox10, checkbox11, checkbox12, checkbox13, checkbox14, checkbox15, checkbox16, checkbox17, checkbox18, checkbox19, checkbox20, checkbox21;
-    EditText editSpecifyText1, editSpecifyText2, editPrevHospitalization, editTextMenstruation, editTextGravida, editTextAbortion, editTextMenopause;
+    EditText editPrevHospitalization;
 
     CheckboxStringProcessor pastIllnessProcessor, familyHistoryProcessor;
     EditTextStringProcessor obgyneHistoryProcessor;
