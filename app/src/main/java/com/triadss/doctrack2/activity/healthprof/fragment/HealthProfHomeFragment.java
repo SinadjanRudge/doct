@@ -1,16 +1,30 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
+import com.triadss.doctrack2.repoositories.AppointmentRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,9 +32,12 @@ import com.triadss.doctrack2.R;
  * create an instance of this fragment.
  */
 public class HealthProfHomeFragment extends Fragment {
-    FirebaseAuth auth;
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = auth.getCurrentUser();
 
-    Button button;
+    AppointmentRepository appointmentRepository = new AppointmentRepository();
+    RecyclerView recyclerView;
+    TextView pendingAppointmentCountVal;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,6 +74,66 @@ public class HealthProfHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_health_professional_home_page, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_health_professional_home_page, container, false);
+        recyclerView= rootView.findViewById(R.id.recycler_view_pending_appointments);
+        pendingAppointmentCountVal = rootView.findViewById(R.id.pendingAppointmentCountVal);
+
+        ReloadList();
+
+        return rootView;
+    }
+
+    public void ReloadList() {
+
+        appointmentRepository.getPendingAppointments(currentUser.getUid(), new AppointmentRepository.AppointmentFetchCallback() {
+            @Override
+            public void onSuccess(List<AppointmentDto> appointments) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(linearLayoutManager);
+                pendingAppointmentCountVal.setText(String.valueOf(appointments.size()));
+
+                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments,
+                        new HealthProfessionalAppointmentPendingAdapter.AppointmentCallback() {
+                            @Override
+                            public void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid) {
+                                appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
+                                    @Override
+                                    public void onSuccess(String appointmentId) {
+                                        Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+                                        ReloadList();
+                                    }
+
+                                    @Override
+                                    public void onError(String errorMessage) {
+                                        Log.e(TAG, "Error updating medication: " + errorMessage);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancel(String appointmentUid) {
+                                appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                                    @Override
+                                    public void onSuccess(String appointmentId) {
+                                        Toast.makeText(getContext(), appointmentId + " deleted", Toast.LENGTH_SHORT).show();
+                                        ReloadList();
+                                    }
+
+                                    @Override
+                                    public void onError(String errorMessage) {
+                                        Log.e(TAG, "Error deleting appointment: " + errorMessage);
+                                    }
+                                });
+                            }
+                        });
+
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
     }
 }

@@ -258,9 +258,11 @@ public class AppointmentRepository {
     public void getPendingAppointments(String healthProfId, AppointmentFetchCallback callback)
     {
         if (user != null) {
+            Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
             appointmentsCollection
                     .whereEqualTo(AppointmentsModel.healthProfId, healthProfId)
                     .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
+                    .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
                     .orderBy(AppointmentsModel.dateOfAppointment, Query.Direction.DESCENDING)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {

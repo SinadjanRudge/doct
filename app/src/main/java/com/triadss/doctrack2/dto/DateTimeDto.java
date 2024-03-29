@@ -33,8 +33,9 @@ public class DateTimeDto {
 
     public Timestamp ToTimestamp()
     {
-        return new Timestamp(
-                new Date(date.getYear() - 1900, date.getMonth(), date.getDay(), time.getHour(), time.getMinute()));
+         Date extractedDate = new Date(date.getYear() - 1900,
+                date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute());
+        return new Timestamp(extractedDate);
     }
 
     public String ToString() {
@@ -48,7 +49,7 @@ public class DateTimeDto {
         calendar.setTime(date);
 
         DateTimeDto converted = new DateTimeDto();
-        converted.setDate(new DateDto(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)));
+        converted.setDate(new DateDto(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)));
         converted.setTime(new TimeDto(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
 
         return converted;
@@ -60,5 +61,13 @@ public class DateTimeDto {
         converted.setDate(new DateDto(localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth()));
         converted.setTime(new TimeDto(localDateTime.getHour(), localDateTime.getMinute()));
         return converted;
+    }
+
+    public static Timestamp GetCurrentTimeStamp() {
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        Timestamp currentTimeStamp  = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
+
+        return currentTimeStamp;
     }
 }
