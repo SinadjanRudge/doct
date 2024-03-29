@@ -298,7 +298,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="153dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="35dp"
                 android:layout_marginEnd="35dp"
                 android:background="@color/white"
@@ -369,7 +369,7 @@
                     <TextView
                         android:id="@+id/value_OBGyneHistory"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.4"
                         android:text="OB-Gyne History" />
                 </LinearLayout>
