@@ -131,7 +131,6 @@ public class VitalSignsRepository {
     }
 
     public void getVitalSignOfPatient(String patientUid, FetchCallback callback) {
-        Log.e("VitalSign Repo", "Must agi here");
         vitalSignsCollection.whereEqualTo(VitalSignsModel.patientId, patientUid)
                 .get()
                 .addOnCompleteListener(task -> {
