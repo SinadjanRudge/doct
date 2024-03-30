@@ -17,12 +17,26 @@
             android:layout_height="50dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="Device Registered"
+            android:textStyle="bold"
+            android:textAlignment="gravity"
+            android:textSize="22sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/NoDeviceFound"
+            android:layout_height="150dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="No Wearable Device Found."
             android:textAlignment="gravity"
             android:textSize="20sp" />
 
+
         <TableLayout
+            android:id="@+id/DeviceTable"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
 
             <TableRow
                 android:layout_width="match_parent"
@@ -40,28 +54,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Sample Time" />
+                    android:text="No Time Available" />
             </TableRow>
 
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/AppVersionLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:text="App Version:" />
-
-                <TextView
-                    android:id="@+id/AppVersionValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sample Version" />
-            </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
@@ -125,8 +120,9 @@
             android:layout_height="50dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="Vital Signs"
+            android:textStyle="bold"
             android:textAlignment="gravity"
-            android:textSize="20sp" />
+            android:textSize="22sp" />
 
         <TableLayout
             android:layout_width="match_parent"

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +62,8 @@ public class DeviceFragment extends Fragment {
     private TextView bloodPressureValue, temperatureValue, spo2Value, pulseRateValue, weightValue, heightValue, BMIValue;
 
     //* TextViews for the Device Registered
-    private TextView lastSyncVal, appVersionVal, deviceNameVal, deviceIDVal, isNearbyVal;
+    private TextView lastSyncVal, deviceNameVal, deviceIDVal, isNearbyVal, noDeviceFound;
+    private TableLayout deviceRegisteredTable;
     private static boolean checkOnce = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class DeviceFragment extends Fragment {
 
     private void startContinuousCheck() {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
-        executor.scheduleAtFixedRate(() -> checkIfPairedDevice(), 0, 60, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(() -> checkIfPairedDevice(), 0, 10, TimeUnit.SECONDS);
     }
 
     private void checkIfPairedDevice() {
@@ -96,6 +98,7 @@ public class DeviceFragment extends Fragment {
                         wearableDeviceDto.setIsNearby(isNearby);
 
                         setDeviceRegisteredViews(wearableDeviceDto);
+
                     });
                 }
 
@@ -110,15 +113,30 @@ public class DeviceFragment extends Fragment {
     private void showPairedDeviceStatus(boolean isPaired) {
         requireActivity().runOnUiThread(() -> {
             if (isPaired) {
-                //
-                // Paired device connected
-                if(!checkOnce) {
+                Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+                mainThreadHandler.post(() -> {
+                    if(wearableDeviceDto.getIsNearby()){
+                        noDeviceFound.setVisibility(View.GONE);
+                        deviceRegisteredTable.setVisibility(View.VISIBLE);
+                    } else {
+                        noDeviceFound.setVisibility(View.VISIBLE);
+                        deviceRegisteredTable.setVisibility(View.GONE);
+                        Toast.makeText(requireContext(), "No Wearable Device Nearby. Searching...", Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+                if(!checkOnce && wearableDeviceDto.getIsNearby()) {
                     Toast.makeText(requireContext(), "Paired with a smartwatch", Toast.LENGTH_SHORT).show();
                     checkOnce = true;
                 }
 
             } else {
                 // No paired device connected
+                Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+                mainThreadHandler.post(() -> {
+                    noDeviceFound.setVisibility(View.VISIBLE);
+                    deviceRegisteredTable.setVisibility(View.GONE);
+                });
                 if(checkOnce) {
                     Toast.makeText(requireContext(), "Please pair a smartwatch", Toast.LENGTH_SHORT).show();
                     checkOnce = false;
@@ -143,11 +161,12 @@ public class DeviceFragment extends Fragment {
 
         //* Device Registered
         lastSyncVal = rootView.findViewById(R.id.LastSyncValue);
-        appVersionVal = rootView.findViewById(R.id.AppVersionValue);
         deviceNameVal = rootView.findViewById(R.id.DeviceNameValue);
         deviceIDVal = rootView.findViewById(R.id.DeviceIDValue);
         isNearbyVal = rootView.findViewById(R.id.IsNearbyValue);
+        deviceRegisteredTable = rootView.findViewById(R.id.DeviceTable);
 
+        noDeviceFound = rootView.findViewById(R.id.NoDeviceFound);
     }
 
     private void initializeHandlers() {
@@ -208,6 +227,11 @@ public class DeviceFragment extends Fragment {
 
     private void handleSyncButtonClick() {
         try {
+            if(!wearableDeviceDto.getIsNearby()){
+                Toast.makeText(getContext(), "Can't sync. No Device Nearby Found.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             Toast.makeText(getContext(), "Syncing...", Toast.LENGTH_SHORT).show();
 
             wearableDevicesRepo.getWearableDevice(wearableDeviceDto.getDeviceId(), user.getUid(),new WearableDeviceRepository.GetWearableDeviceCallback() {
