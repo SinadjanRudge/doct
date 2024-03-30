@@ -65,6 +65,27 @@ public class ReportsRepository {
         });
     }
 
+    public void addHealthProfRejectedAppointmentReport(String appointmentUid, ReportCallback callback)
+    {
+        appointmentRepository.getAppointment(appointmentUid, new AppointmentRepository.AppointmentDataFetchCallback() {
+
+            @Override
+            public void onSuccess(AppointmentDto appointment) {
+                addReport(
+                        "REJECTED APPOINTMENT",
+                        String.format("Rejected appointment of %s at %s",
+                                appointment.getNameOfRequester(),
+                                DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString()),
+                        callback);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
 
     public void addReport(String action, String message, ReportCallback callback)
     {
