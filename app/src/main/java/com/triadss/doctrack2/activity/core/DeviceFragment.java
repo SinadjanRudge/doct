@@ -33,6 +33,7 @@ import com.triadss.doctrack2.config.constants.BluetoothConstants;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.dto.WearableDeviceDto;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
+import com.triadss.doctrack2.repoositories.WearableDeviceRepository;
 
 import java.util.List;
 import java.util.Set;
@@ -50,6 +51,7 @@ public class DeviceFragment extends Fragment {
     private Receiver messageReceiver;
     private int count = 0;
     private VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
+    private WearableDeviceRepository wearableDevicesRepo = new WearableDeviceRepository();
     private WearableDeviceDto wearableDeviceDto = new WearableDeviceDto();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
@@ -60,10 +62,7 @@ public class DeviceFragment extends Fragment {
 
     //* TextViews for the Device Registered
     private TextView lastSyncVal, appVersionVal, deviceNameVal, deviceIDVal, isNearbyVal;
-    private static final int REQUEST_ENABLE_BLUETOOTH = 1;
-    private static final long CHECK_INTERVAL_MILLISECONDS = 5000;
     private static boolean checkOnce = false;
-    private Thread continuousCheckThread, checkPairedDeviceThread;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_device_with_device, container, false);
@@ -222,11 +221,29 @@ public class DeviceFragment extends Fragment {
     private void handleSyncButtonClick() {
         try {
             Toast.makeText(getContext(), "Syncing...", Toast.LENGTH_SHORT).show();
+
+            wearableDevicesRepo.getWearableDevice(wearableDeviceDto.getDeviceId(), new WearableDeviceRepository.GetWearableDeviceCallback() {
+                @Override
+                public void onSuccess(WearableDeviceDto wearableDevice) {
+
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+
+                }
+            });
+
             vitalSignsRepo.getVitalSignOfPatient(user.getUid(), new VitalSignsRepository.FetchCallback() {
                 @Override
                 public void onSuccess(VitalSignsDto vitalSigns) {
                     String jsonData = vitalSigns.toJsonData();
                     sendMessage(jsonData);
+
+                    //* TODO Register device registered if not registered
+
+                    //* TODO Update Last Sync
+
                     Toast.makeText(getContext(), "Sync Successful", Toast.LENGTH_SHORT).show();
                 }
 

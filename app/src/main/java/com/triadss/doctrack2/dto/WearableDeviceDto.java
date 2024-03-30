@@ -57,6 +57,12 @@ public class WearableDeviceDto {
     public void setIsNearby(boolean isNearby){
         this.isNearby = isNearby;
     }
+    public String getOwnerId(){
+        return ownerId;
+    }
+    public void setOwnerId(String ownerId){
+        this.ownerId = ownerId;
+    }
 
     private String deviceId;
     private String deviceName;
@@ -65,4 +71,5 @@ public class WearableDeviceDto {
     private String appVersion;
     private int remainingBattery;
     private boolean isNearby;
+    private String ownerId;
 }
