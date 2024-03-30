@@ -88,7 +88,7 @@ public class HealthProfessionalReportFragment extends Fragment {
         repository.getReportsFromUser(user.getUid(), new ReportsRepository.ReportsFetchCallback() {
             @Override
             public void onSuccess(List<ReportDto> reports) {
-                PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
+                HealthProfessionalReportAdapter pageAdapter = new HealthProfessionalReportAdapter(getContext(), (ArrayList)reports);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setAdapter(pageAdapter);
@@ -102,7 +102,6 @@ public class HealthProfessionalReportFragment extends Fragment {
         search.addTextChangedListener(inputTextWatcher);
         return rootView;
     }
-
 
     TextWatcher inputTextWatcher = new TextWatcher() {
         public void afterTextChanged(Editable s) {

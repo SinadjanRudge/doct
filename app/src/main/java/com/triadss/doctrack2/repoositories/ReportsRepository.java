@@ -14,6 +14,7 @@ import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.dto.MedicationDto;
@@ -33,6 +34,7 @@ public class ReportsRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference reportsCollection = firestore
             .collection(FireStoreCollection.REPORTS_TABLE);
+    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
 
@@ -40,35 +42,53 @@ public class ReportsRepository {
         void onReportAddedSuccessfully();
         void onReportFailed(String errorMessage);
     }
-    public void addPatientInfoAction(AddPatientDto patientDto, ReportCallback callback) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Get the current user's ID
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
+    // HEALTH PROF REPORTS
+    public void addHealthProfAcceptedAppointmentReport(String appointmentUid, ReportCallback callback)
+    {
+        appointmentRepository.getAppointment(appointmentUid, new AppointmentRepository.AppointmentDataFetchCallback() {
+
+            @Override
+            public void onSuccess(AppointmentDto appointment) {
+                addReport(
+                    "ACEEPTED APPOINTMENT",
+                           String.format("Accepted appointment of %s at %s",
+                                appointment.getNameOfRequester(),
+                                DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString()),
+                           callback);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+
+    public void addReport(String action, String message, ReportCallback callback)
+    {
+        if (user == null) {
             if (callback != null) {
                 callback.onReportFailed("Current user not found");
             }
             return;
         }
-        String currentUserId = currentUser.getUid();
+        String currentUserId = user.getUid();
 
-        DocumentReference recordRef = db.collection(FireStoreCollection.REPORTS_TABLE).document(currentUserId);
         LocalDateTime currentDate = LocalDateTime.now();
-
         Timestamp currentTimeStamp  = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
 
         Map<String, Object> recordData = new HashMap<>();
-        recordData.put(ReportModel.action, "ADD PATIENT INFO");
+        recordData.put(ReportModel.action, action);
         recordData.put(ReportModel.createdBy, currentUserId);
-        recordData.put(ReportModel.message, String.format("Patient id:%s name:%s has been created by user id:%s", patientDto.getIdNumber(), patientDto.getFullName(), currentUserId));
-        recordData.put(ReportModel.idNumber, patientDto.getIdNumber());
+        recordData.put(ReportModel.message, message);
         recordData.put(ReportModel.createdDate, currentTimeStamp);
         recordData.put(ReportModel.updatedDate, currentTimeStamp);
 
         // Check if mAuth and mContext are not null
-        if (mAuth != null && mAuth.getCurrentUser() != null && callback != null) {
-            recordRef.set(recordData, SetOptions.merge())
+        if (callback != null) {
+            reportsCollection.add(recordData)
                     .addOnSuccessListener(aVoid -> {
                         callback.onReportAddedSuccessfully();
                     })
@@ -76,91 +96,7 @@ public class ReportsRepository {
                         callback.onReportFailed("Failed to add report: " + e.getMessage());
                     });
         } else {
-            if (callback != null) {
-                callback.onReportFailed("Failed to add report");
-            }
-        }
-    }
-
-    public void addPatientMedHistAction(MedicalHistoryDto medicalHistoryDtoDto, AddPatientDto patientDto, ReportCallback callback) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Get the current user's ID
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            if (callback != null) {
-                callback.onReportFailed("Current user not found");
-            }
-            return;
-        }
-        String currentUserId = currentUser.getUid();
-
-        DocumentReference recordRef = db.collection(FireStoreCollection.REPORTS_TABLE).document(currentUserId);
-        LocalDateTime currentDate = LocalDateTime.now();
-        Timestamp currentTimeStamp  = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
-
-        Map<String, Object> recordData = new HashMap<>();
-        recordData.put(ReportModel.action, "ADD PATIENT MEDICAL HISTORY");
-        recordData.put(ReportModel.createdBy, currentUserId);
-        recordData.put(ReportModel.message, String.format("Patient id:%s name:%s has been created by user id:%s", medicalHistoryDtoDto.getPatientId(), patientDto.getFullName(), currentUserId));
-        recordData.put(ReportModel.idNumber, medicalHistoryDtoDto.getPatientId());
-        recordData.put(ReportModel.createdDate, currentDate);
-        recordData.put(ReportModel.updatedDate, currentDate);
-
-        // Check if mAuth and mContext are not null
-        if (mAuth != null && mAuth.getCurrentUser() != null && callback != null) {
-            recordRef.set(recordData, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {
-                        callback.onReportAddedSuccessfully();
-                    })
-                    .addOnFailureListener(e -> {
-                        callback.onReportFailed("Failed to add report: " + e.getMessage());
-                    });
-        } else {
-            if (callback != null) {
-                callback.onReportFailed("Failed to add report");
-            }
-        }
-    }
-
-    public void addPatientMedicationAction(MedicationDto medicationDto, AddPatientDto patientDto, ReportCallback callback) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Get the current user's ID
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            if (callback != null) {
-                callback.onReportFailed("Current user not found");
-            }
-            return;
-        }
-        String currentUserId = currentUser.getUid();
-
-        DocumentReference recordRef = db.collection(FireStoreCollection.REPORTS_TABLE).document(currentUserId);
-        LocalDateTime currentDate = LocalDateTime.now();
-        Timestamp currentTimeStamp  = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
-
-        Map<String, Object> recordData = new HashMap<>();
-        recordData.put(ReportModel.action, "ADD PATIENT MEDICATION");
-        recordData.put(ReportModel.createdBy, currentUserId);
-        recordData.put(ReportModel.message, String.format("Patient id:%s name:%s has been created by user id:%s", medicationDto.getPatientId(), patientDto.getFullName(), currentUserId));
-        recordData.put(ReportModel.idNumber, patientDto.getIdNumber());
-        recordData.put(ReportModel.createdDate, currentTimeStamp);
-        recordData.put(ReportModel.updatedDate, currentTimeStamp);
-
-        // Check if mAuth and mContext are not null
-        if (mAuth != null && mAuth.getCurrentUser() != null && callback != null) {
-            recordRef.set(recordData, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {
-                        callback.onReportAddedSuccessfully();
-                    })
-                    .addOnFailureListener(e -> {
-                        callback.onReportFailed("Failed to add report: " + e.getMessage());
-                    });
-        } else {
-            if (callback != null) {
-                callback.onReportFailed("Failed to add report");
-            }
+            callback.onReportFailed("Failed to add report");
         }
     }
 
@@ -187,6 +123,7 @@ public class ReportsRepository {
             callback.onError("User is null");
         }
     }
+
     public void getReportsFromUserFilter(String uid, String find, ReportsFilterCallback callback) {
         if (user != null) {
             reportsCollection

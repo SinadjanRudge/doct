@@ -370,6 +370,24 @@ public class AppointmentRepository {
                 });
     }
 
+    public void getAppointment(String appointmentId, AppointmentDataFetchCallback callback)
+    {
+        appointmentsCollection
+                .document(appointmentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        AppointmentDto appointment = documentSnapshot.toObject(AppointmentDto.class);
+                        callback.onSuccess(appointment);
+                    } else {
+                        callback.onError("Appointment not found");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    callback.onError(e.getMessage());
+                });
+    }
+
     public void addReport(String DocumentId,String action,ReportCallback callback) {
 
         DocumentReference reportRef = appointmentsCollection.document(DocumentId);
@@ -442,6 +460,13 @@ public class AppointmentRepository {
 
         void onError(String errorMessage);
     }
+
+    public interface AppointmentDataFetchCallback {
+        void onSuccess(AppointmentDto appointment);
+
+        void onError(String errorMessage);
+    }
+
     public interface ReportCallback {
         void onSuccess(String appointmentId);
 

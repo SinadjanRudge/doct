@@ -34,6 +34,7 @@ import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class HealthProfessionalUpcoming extends Fragment implements IListView {
+    private ReportsRepository reportsRepository = new ReportsRepository();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -118,9 +120,18 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                             appointmentRepository.acceptAppointment(appointmentUid, currentUser.getUid(), new AppointmentRepository.AppointmentAddCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
-                                    ReloadList();
-                                }
+                                    reportsRepository.addHealthProfAcceptedAppointmentReport(appointmentId, new ReportsRepository.ReportCallback() {
+                                        @Override
+                                        public void onReportAddedSuccessfully() {
+                                            ReloadList();
+                                        }
 
+                                        @Override
+                                        public void onReportFailed(String errorMessage) {
+                                            System.out.println();
+                                        }
+                                    });
+                                }
                                 @Override
                                 public void onError(String errorMessage) {
 
