@@ -1,17 +1,12 @@
 package com.triadss.doctrack2.activity.core;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +15,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.DataItem;
@@ -37,7 +29,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.bluetooth.MessageService;
 import com.triadss.doctrack2.config.constants.BluetoothConstants;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.dto.WearableDeviceDto;
@@ -46,6 +37,8 @@ import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class DeviceFragment extends Fragment {
     private static final String TAG = "DEVICE";
@@ -66,10 +59,11 @@ public class DeviceFragment extends Fragment {
     private TextView bloodPressureValue, temperatureValue, spo2Value, pulseRateValue, weightValue, heightValue, BMIValue;
 
     //* TextViews for the Device Registered
-//    private TextView
+    private TextView lastSyncVal, appVersionVal, deviceNameVal, deviceIDVal, isNearbyVal;
     private static final int REQUEST_ENABLE_BLUETOOTH = 1;
     private static final long CHECK_INTERVAL_MILLISECONDS = 5000;
     private static boolean checkOnce = false;
+    private Thread continuousCheckThread, checkPairedDeviceThread;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_device_with_device, container, false);
@@ -77,26 +71,17 @@ public class DeviceFragment extends Fragment {
         initializeHandlers();
         initializeListeners();
         initVitalSigns();
-//        checkPairedDevices();
-//        startContinuousCheck();
+        startContinuousCheck();
         return rootView;
     }
 
     private void startContinuousCheck() {
-        new Thread(() -> {
-            while (true) {
-                checkIfPairedDevice();
-                try {
-                    Thread.sleep(CHECK_INTERVAL_MILLISECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+        executor.scheduleAtFixedRate(() -> checkIfPairedDevice(), 0, 60, TimeUnit.SECONDS);
     }
 
     private void checkIfPairedDevice() {
-        new Thread(() -> {
+//        checkPairedDeviceThread = new Thread(() -> {
             Context context = requireContext();
             Task<List<Node>> nodeListTask = Wearable.getNodeClient(context).getConnectedNodes();
             try {
@@ -106,20 +91,32 @@ public class DeviceFragment extends Fragment {
                     String nodeId = node.getId();
                     boolean isNearby = node.isNearby();
 
-                    Log.d(TAG, "Node Name: " + nodeName);
-                    Log.d(TAG, "Node ID: " + nodeId);
-                    Log.d(TAG, "Is Nearby: " + isNearby);
 
-                    wearableDeviceDto.setDeviceId(nodeId);
-                    wearableDeviceDto.setDeviceName(nodeName);
-                    wearableDeviceDto.setIsNearby(isNearby);
+                    // Update the widget on the main thread.
+                    Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+                    mainThreadHandler.post(() -> {
+                        // This code runs on the main thread.
+                        // Update your widget here.
+//                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+//                        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, DeviceFragment.class));
+//                        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.your_widget_layout);
+                        // Update your views here, e.g., views.setTextViewText(R.id.textView, "New Text");
+                        wearableDeviceDto.setDeviceId(nodeId);
+                        wearableDeviceDto.setDeviceName(nodeName);
+                        wearableDeviceDto.setIsNearby(isNearby);
+
+                        setDeviceRegisteredViews(wearableDeviceDto);
+                    });
+
+
+
                 }
 
                 showPairedDeviceStatus(nodes.size() == 1);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }).start();
+//        });
     }
 
 
@@ -157,6 +154,12 @@ public class DeviceFragment extends Fragment {
         heightValue = rootView.findViewById(R.id.HeightValue);
         BMIValue = rootView.findViewById(R.id.BMIValue);
 
+        //* Device Registered
+        lastSyncVal = rootView.findViewById(R.id.LastSyncValue);
+        appVersionVal = rootView.findViewById(R.id.AppVersionValue);
+        deviceNameVal = rootView.findViewById(R.id.DeviceNameValue);
+        deviceIDVal = rootView.findViewById(R.id.DeviceIDValue);
+        isNearbyVal = rootView.findViewById(R.id.IsNearbyValue);
 
     }
 
@@ -203,69 +206,18 @@ public class DeviceFragment extends Fragment {
     private void setVitalSignsViews(VitalSignsDto vitalSigns){
         bloodPressureValue.setText(vitalSigns.getBloodPressure());
         temperatureValue.setText(vitalSigns.getTemperature() + "");
-//        spo2Value.setText(vitalSigns.get);
+        spo2Value.setText(vitalSigns.getOxygenLevel() + "");
         pulseRateValue.setText(vitalSigns.getPulseRate() + "");
         weightValue.setText(vitalSigns.getWeight() + "");
         heightValue.setText(vitalSigns.getHeight() + "");
         BMIValue.setText(vitalSigns.getBMI() + "");
     }
 
-    private void setDeviceRegistered(WearableDeviceDto wearableDeviceDto){
-
+    private void setDeviceRegisteredViews(WearableDeviceDto wearableDeviceDto){
+        deviceNameVal.setText(wearableDeviceDto.getDeviceName());
+        deviceIDVal.setText(wearableDeviceDto.getDeviceId());
+        isNearbyVal.setText(wearableDeviceDto.getIsNearby() + "");
     }
-
-
-    private void checkPairedDevices() {
-        // Get the BluetoothAdapter
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            // Bluetooth is not supported on this device
-            Toast.makeText(getContext(), "Bluetooth is not supported", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Check if Bluetooth is enabled
-        if (!bluetoothAdapter.isEnabled()) {
-            // Bluetooth is not enabled, prompt the user to enable it
-            Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH);
-            return;
-        }
-
-        // Get the list of paired devices
-        @SuppressLint("MissingPermission") Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        if (((Set<?>) pairedDevices).size() > 0) {
-            // There are paired devices, display their information
-            StringBuilder devicesInfo = new StringBuilder();
-            for (BluetoothDevice device : pairedDevices) {
-                @SuppressLint("MissingPermission") String deviceInfo = "Name: " + device.getName() + "\n"
-                        + "Address: " + device.getAddress() + "\n"
-                        + "Type: " + getDeviceType(device) + "\n\n";
-                devicesInfo.append(deviceInfo);
-            }
-            // Display the paired devices information in a TextView
-            receivedMessageTextView.setText(devicesInfo.toString());
-        } else {
-            // No paired devices found
-            receivedMessageTextView.setText("No paired devices found");
-        }
-    }
-
-    private String getDeviceType(BluetoothDevice device) {
-        @SuppressLint("MissingPermission") int deviceType = device.getType();
-        switch (deviceType) {
-            case BluetoothDevice.DEVICE_TYPE_CLASSIC:
-                return "Classic";
-            case BluetoothDevice.DEVICE_TYPE_LE:
-                return "Low Energy (LE)";
-            case BluetoothDevice.DEVICE_TYPE_DUAL:
-                return "Dual Mode";
-            case BluetoothDevice.DEVICE_TYPE_UNKNOWN:
-            default:
-                return "Unknown";
-        }
-    }
-
 
     private void handleSyncButtonClick() {
         try {
