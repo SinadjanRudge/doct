@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.repoositories;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.firebase.Timestamp;
@@ -35,6 +36,8 @@ public class ReportsRepository {
     private final CollectionReference reportsCollection = firestore
             .collection(FireStoreCollection.REPORTS_TABLE);
     private final AppointmentRepository appointmentRepository = new AppointmentRepository();
+    private final PatientRepository patientRepository = new PatientRepository();
+    private final MedicationRepository medicationRepository = new MedicationRepository();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
 
@@ -44,12 +47,12 @@ public class ReportsRepository {
     }
 
     // HEALTH PROF REPORTS
-    public void addHealthProfAcceptedAppointmentReport(String appointmentUid, ReportCallback callback)
+    public void addHealthProfAcceptedAppointmentReport(String createdBy, String appointmentUid, ReportCallback callback)
     {
         appointmentRepository.getAppointment(appointmentUid, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
             public void onSuccess(AppointmentDto appointment) {
-                addReport(
+                addReport(createdBy,
                     "ACEEPTED APPOINTMENT",
                            String.format("Accepted appointment of %s at %s",
                                 appointment.getNameOfRequester(),
@@ -64,12 +67,12 @@ public class ReportsRepository {
         });
     }
 
-    public void addHealthProfRejectedAppointmentReport(String appointmentUid, ReportCallback callback)
+    public void addHealthProfRejectedAppointmentReport(String createdBy, String appointmentUid, ReportCallback callback)
     {
         appointmentRepository.getAppointment(appointmentUid, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
             public void onSuccess(AppointmentDto appointment) {
-                addReport(
+                addReport(createdBy,
                         "REJECTED APPOINTMENT",
                         String.format("Rejected appointment of %s at %s",
                                 appointment.getNameOfRequester(),
@@ -84,12 +87,12 @@ public class ReportsRepository {
         });
     }
 
-    public void addHealthProfCancelledAppointmentReport(String appointmentUid, ReportCallback callback)
+    public void addHealthProfCancelledAppointmentReport(String createdBy, String appointmentUid, ReportCallback callback)
     {
         appointmentRepository.getAppointment(appointmentUid, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
             public void onSuccess(AppointmentDto appointment) {
-                addReport(
+                addReport(createdBy,
                         "CANCELLED APPOINTMENT",
                         String.format("Cancelled appointment of %s at %s",
                                 appointment.getNameOfRequester(),
@@ -104,12 +107,12 @@ public class ReportsRepository {
         });
     }
 
-    public void addHealthProfRescheduledAppointmentReport(String appointmentUid, DateTimeDto newDate, ReportCallback callback)
+    public void addHealthProfRescheduledAppointmentReport(String createdBy, String appointmentUid, DateTimeDto newDate, ReportCallback callback)
     {
         appointmentRepository.getAppointment(appointmentUid, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
             public void onSuccess(AppointmentDto appointment) {
-                addReport(
+                addReport(createdBy,
                         "RESCHEDULED APPOINTMENT",
                         String.format("Rescheduled appointment of %s at %s to %s",
                                 appointment.getNameOfRequester(),
@@ -125,7 +128,108 @@ public class ReportsRepository {
         });
     }
 
-    public void addReport(String action, String message, ReportCallback callback)
+    public void addHealthProfPatientInfoReport(String createdBy, AddPatientDto patient, ReportCallback callback)
+    {
+        addReport(createdBy,
+                "ADDED PATIENT",
+                String.format("Added patient %s",
+                        patient.getFullName()),
+                callback);
+    }
+
+    public void addHealthProfPatientMedHistoryReport(String createdBy, String patientUid, ReportCallback callback)
+    {
+        patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
+            @Override
+            public void onSuccess(AddPatientDto patient) {
+                addReport(createdBy,
+                        "ADDED PATIENT MEDICAL HISTORY",
+                        String.format("Added patient medical history of %s",
+                                patient.getFullName()),
+                        callback);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void addHealthProfPatientVitalSignReport(String createdBy, String patientUid, ReportCallback callback)
+    {
+        patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
+            @Override
+            public void onSuccess(AddPatientDto patient) {
+                addReport(createdBy,
+                        "ADDED PATIENT VITAL SIGNS",
+                        String.format("Added patient vital signs of %s",
+                                patient.getFullName()),
+                        callback);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void addHealthProfPatientMedicationReport(String createdBy, String patientUid, MedicationDto medication, ReportCallback callback)
+    {
+
+        patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
+            @Override
+            public void onSuccess(AddPatientDto patient) {
+                addReport(createdBy,
+                        "ADDED PATIENT MEDICATION",
+                        String.format("Added patient medication %s for %s",
+                                medication.getMedicine(),
+                                patient.getFullName()),
+                        callback);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void removedHealthProfPatientMedicationReport(String createdBy, String patientUid, String medicationUid, ReportCallback callback)
+    {
+
+        patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
+            @Override
+            public void onSuccess(AddPatientDto patient) {
+                medicationRepository.getMedication(medicationUid, new MedicationRepository.MedicationDataFetchCallback() {
+
+                    @Override
+                    public void onSuccess(MedicationDto medications) {
+                        addReport(createdBy,
+                                "REMOVED PATIENT MEDICATION",
+                                String.format("Removed patient medication %s for %s",
+                                        medications.getMedicine(),
+                                        patient.getFullName()),
+                                callback);
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void addReport(String createdBy, String action, String message, ReportCallback callback)
     {
         if (user == null) {
             if (callback != null) {
@@ -133,14 +237,13 @@ public class ReportsRepository {
             }
             return;
         }
-        String currentUserId = user.getUid();
 
         LocalDateTime currentDate = LocalDateTime.now();
         Timestamp currentTimeStamp  = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
 
         Map<String, Object> recordData = new HashMap<>();
         recordData.put(ReportModel.action, action);
-        recordData.put(ReportModel.createdBy, currentUserId);
+        recordData.put(ReportModel.createdBy, createdBy);
         recordData.put(ReportModel.message, message);
         recordData.put(ReportModel.createdDate, currentTimeStamp);
         recordData.put(ReportModel.updatedDate, currentTimeStamp);

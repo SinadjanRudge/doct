@@ -1,6 +1,8 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +27,12 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.DocTrackErrorMessage;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.repoositories.PatientRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -53,8 +57,9 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     Button getBirthDate;
     DateDto birthDate;
     FirebaseAuth mAuth;
-
+    String loggedInUserId;
     PatientRepository _patientRepository;
+    ReportsRepository _reportsRepository = new ReportsRepository();
 
     public AddPatientFragment() {
         // Required empty public constructor
@@ -103,6 +108,9 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
+
         _patientRepository = new PatientRepository();
 
         // Inflate the layout for this fragment
@@ -284,7 +292,18 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             _patientRepository.addPatientCallback(patientDto, new PatientRepository.PatientAddUpdateCallback() {
                                 @Override
                                 public void onSuccess(String patientId) {
-                                    showMedicalHistory(patientId);
+                                    _reportsRepository.addHealthProfPatientInfoReport(loggedInUserId, patientDto, new ReportsRepository.ReportCallback() {
+                                        @Override
+                                        public void onReportAddedSuccessfully() {
+                                            showMedicalHistory(patientId);
+
+                                        }
+
+                                        @Override
+                                        public void onReportFailed(String errorMessage) {
+
+                                        }
+                                    });
                                 }
 
                                 @Override

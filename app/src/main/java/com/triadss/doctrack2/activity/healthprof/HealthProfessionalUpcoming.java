@@ -1,10 +1,11 @@
 package com.triadss.doctrack2.activity.healthprof;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,25 +13,12 @@ import android.view.ViewGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.activity.healthprof.fragment.AddPatientFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentPendingAdapter;
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentUpcomingAdapter;
-import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
@@ -55,6 +43,7 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    String loggedInUserId;
 
     public HealthProfessionalUpcoming() {
         // Required empty public constructor
@@ -93,6 +82,9 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
+        
         appointmentRepository = new AppointmentRepository();
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_health_professional_upcoming, container, false);
@@ -120,7 +112,8 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                             appointmentRepository.acceptAppointment(appointmentUid, currentUser.getUid(), new AppointmentRepository.AppointmentAddCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
-                                    reportsRepository.addHealthProfAcceptedAppointmentReport(appointmentId, new ReportsRepository.ReportCallback() {
+
+                                    reportsRepository.addHealthProfAcceptedAppointmentReport(loggedInUserId, appointmentId, new ReportsRepository.ReportCallback() {
                                         @Override
                                         public void onReportAddedSuccessfully() {
                                             ReloadList();
@@ -141,7 +134,7 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
 
                         @Override
                         public void onReject(String appointmentUid) {
-                            reportsRepository.addHealthProfRejectedAppointmentReport(appointmentUid, new ReportsRepository.ReportCallback() {
+                            reportsRepository.addHealthProfRejectedAppointmentReport(loggedInUserId, appointmentUid, new ReportsRepository.ReportCallback() {
                                 @Override
                                 public void onReportAddedSuccessfully() {
                                     appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
