@@ -141,16 +141,16 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         error_Course = rootView.findViewById(R.id.error_Course);
         error_DateBirth = rootView.findViewById(R.id.error_DateBirth);
 
-        error_patientID.setVisibility(rootView.GONE);
-        error_Email.setVisibility(rootView.GONE);
-        error_FullName.setVisibility(rootView.GONE);
-        error_Age.setVisibility(rootView.GONE);
-        error_Gender.setVisibility(rootView.GONE);
-        error_Address.setVisibility(rootView.GONE);
-        error_Status.setVisibility(rootView.GONE);
-        error_Contact.setVisibility(rootView.GONE);
-        error_Year.setVisibility(rootView.GONE);
-        error_Course.setVisibility(rootView.GONE);
+        error_patientID.setVisibility(rootView.INVISIBLE);
+        error_Email.setVisibility(rootView.INVISIBLE);
+        error_FullName.setVisibility(rootView.INVISIBLE);
+        error_Age.setVisibility(rootView.INVISIBLE);
+        error_Gender.setVisibility(rootView.INVISIBLE);
+        error_Address.setVisibility(rootView.INVISIBLE);
+        error_Status.setVisibility(rootView.INVISIBLE);
+        error_Contact.setVisibility(rootView.INVISIBLE);
+        error_Year.setVisibility(rootView.INVISIBLE);
+        error_Course.setVisibility(rootView.INVISIBLE);
         error_DateBirth.setVisibility(rootView.INVISIBLE);
 
         getBirthDate.setOnClickListener((View.OnClickListener) v -> {
@@ -205,7 +205,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                     createPatient();
                 }
                 else {
-                    boolean test = (editTextIdNumber.getText().toString().length() < 6) || editTextIdNumber.getText().toString().isEmpty();
                     showTextViewWhenTrue(input_Email, (value) -> !value.contains("@")
                             || !value.contains(".com")
                             || value.isEmpty(), error_Email);

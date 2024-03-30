@@ -6,16 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
-import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
+
+import java.util.function.Function;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +33,7 @@ public class UpdateVitalSigns extends Fragment {
     private String patientUid;
     private String vitalSignsUid;
 
+    TextView errorBloodPresure, errorTempreture, errorSp02, errorPulse, errorWeight, errorHeight, errorBMI;
     EditText editBloodPressure, editTemperature, editPulseRate, editOxygenLevel, editWeight, editHeight, editBMI;
     VitalSignsRepository repository = new VitalSignsRepository();
 
@@ -78,16 +80,75 @@ public class UpdateVitalSigns extends Fragment {
         editHeight = rootView.findViewById(R.id.input_height);
         editBMI = rootView.findViewById(R.id.input_bmi);
 
+        errorBloodPresure = rootView.findViewById(R.id.errorBloodPresure);
+        errorTempreture = rootView.findViewById(R.id.errorTempreture);
+        errorSp02 = rootView.findViewById(R.id.errorSp02);
+        errorPulse = rootView.findViewById(R.id.errorPulse);
+        errorWeight = rootView.findViewById(R.id.errorWeight);
+        errorHeight = rootView.findViewById(R.id.errorHeight);
+        errorBMI = rootView.findViewById(R.id.errorBMI);
+
+        errorBloodPresure.setVisibility(rootView.INVISIBLE);
+        errorTempreture.setVisibility(rootView.INVISIBLE);
+        errorSp02.setVisibility(rootView.INVISIBLE);
+        errorPulse.setVisibility(rootView.INVISIBLE);
+        errorWeight.setVisibility(rootView.INVISIBLE);
+        errorHeight.setVisibility(rootView.INVISIBLE);
+        errorBMI.setVisibility(rootView.INVISIBLE);
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateVitalSigns();
+                Function<String, Boolean> isNotEmptyPredicate = (val) -> !val.isEmpty();
+                if(widgetPredicate(editBloodPressure, isNotEmptyPredicate)
+                    && widgetPredicate(editTemperature, isNotEmptyPredicate)
+                    && widgetPredicate(editPulseRate, isNotEmptyPredicate)
+                    && widgetPredicate(editOxygenLevel, isNotEmptyPredicate)
+                    && widgetPredicate(editWeight, isNotEmptyPredicate)
+                    && widgetPredicate(editHeight, isNotEmptyPredicate)
+                    && widgetPredicate(editBMI, isNotEmptyPredicate))
+                {
+                    updateVitalSigns();
+                }
+                else {
+                    showTextViewWhenTrue(editBloodPressure, (value) -> value.isEmpty(), errorBloodPresure);
+                    showTextViewWhenTrue(editTemperature, (value) -> value.isEmpty(), errorTempreture);
+                    showTextViewWhenTrue(editOxygenLevel, (value) -> value.isEmpty(), errorSp02);
+                    showTextViewWhenTrue(editPulseRate, (value) -> value.isEmpty(), errorPulse);
+                    showTextViewWhenTrue(editWeight, (value) -> value.isEmpty(), errorWeight);
+                    showTextViewWhenTrue(editHeight, (value) -> value.isEmpty(), errorHeight);
+                    showTextViewWhenTrue(editBMI, (value) -> value.isEmpty(), errorBMI);
+                }
             }
         });
 
         populatePersonalInfo();
 
         return rootView;
+    }
+    boolean widgetPredicate(Button textSource, Function<String, Boolean> predicate) {
+        return predicate.apply(textSource.getText().toString());
+    }
+
+    boolean widgetPredicate(EditText textSource, Function<String, Boolean> predicate) {
+        return predicate.apply(textSource.getText().toString());
+    }
+
+    void showTextViewWhenTrue(EditText textSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        showTextViewWhenTrue(textSource.getText().toString(), predicate, messageWidget);
+    }
+
+    void showTextViewWhenTrue(Button buttonSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        showTextViewWhenTrue(buttonSource.getText().toString(), predicate, messageWidget);
+    }
+
+    void showTextViewWhenTrue(String textSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        if(predicate.apply(textSource))
+        {
+            messageWidget.setVisibility(View.VISIBLE);
+        } else {
+            messageWidget.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void populatePersonalInfo()
