@@ -120,8 +120,6 @@ public class AddMedicalHistory extends Fragment {
         return rootView;
     }
 
-
-
     private void createMedicalHistory(String userId){
         MedicalHistoryDto medicalHistoryDto= new MedicalHistoryDto();
         StringBuilder pastIllnessBuilder = new StringBuilder();

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PatientReportAdapter extends RecyclerView.Adapter<PatientReportAdapter.ViewHolder> {
-    private final String TAG = "PatientMedicationOngoingAdapter";
+    private final String TAG = "PatientReportAdapter";
     private ArrayList<ReportDto> reports;
     private Context context;
 
