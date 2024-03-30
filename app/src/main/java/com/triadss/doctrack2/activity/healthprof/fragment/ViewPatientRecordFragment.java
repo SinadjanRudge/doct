@@ -22,9 +22,12 @@ import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
+import com.triadss.doctrack2.utils.CheckboxStringProcessor;
+import com.triadss.doctrack2.utils.EditTextStringProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ViewPatientRecordFragment extends Fragment {
     private static final String PATIENT_UID = "patientUid";
@@ -98,10 +101,22 @@ public class ViewPatientRecordFragment extends Fragment {
             medicalHistoryRepository.getMedicalHistoryOfPatient(patientUid, new MedicalHistoryRepository.FetchCallback() {
                 @Override
                 public void onSuccess(MedicalHistoryDto medicalHistory) {
-                    patientPastIllness.setText(medicalHistory.getPastIllness());
+                    String SplitDelimiter = "\\|";
+
+                    List<String> separatedPastIllness = CheckboxStringProcessor.StringToSeparatedValues(SplitDelimiter, medicalHistory.getPastIllness());
+                    String pastIllnessString = CheckboxStringProcessor.SeparatedValuesToString(", ", separatedPastIllness);
+                    patientPastIllness.setText(pastIllnessString);
                     patientPrevHospitalization.setText(medicalHistory.getPrevOperation());
-                    patientFamilyHistory.setText(medicalHistory.getFamilyHist());
-                    patientOBGyneHistory.setText(medicalHistory.getObgyneHist());
+
+                    List<String> separatedMedicalHistory = CheckboxStringProcessor.StringToSeparatedValues(SplitDelimiter, medicalHistory.getFamilyHist());
+                    String medicalHistoryString = CheckboxStringProcessor.SeparatedValuesToString(", ", separatedMedicalHistory);
+                    patientFamilyHistory.setText(medicalHistoryString);
+
+                    List<String> separatedOBGyneHistory = EditTextStringProcessor.StringToSeparatedValues(SplitDelimiter, medicalHistory.getObgyneHist());
+                    Map<String, String> mappedOBGyneHistory = EditTextStringProcessor.SeparatedValuesToMap(":", separatedOBGyneHistory);
+                    List<String> processedOBGyneHistory = EditTextStringProcessor.MapToSeparatedValues(": ", mappedOBGyneHistory);
+                    String obgyneString = EditTextStringProcessor.SeparatedValuesToString("\n", processedOBGyneHistory);
+                    patientOBGyneHistory.setText(obgyneString);
                 }
 
                 @Override
@@ -165,7 +180,6 @@ public class ViewPatientRecordFragment extends Fragment {
 
         return rootView;
     }
-
     private void showPatientRecordsUpdate() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it

@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.patient;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -79,12 +80,31 @@ public class PatientHome extends AppCompatActivity {
             }
             return true;
         });
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Back is pressed... Finishing the activity
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
+                boolean isCurrentlyAtHomepage = currentFragment instanceof PatientHomeFragment;
+                if(!isCurrentlyAtHomepage) {
+                    fragmentManager.popBackStack();
+                }
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
+        boolean isCurrentlyAtHomepage = currentFragment instanceof PatientHomeFragment;
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
+        if(isCurrentlyAtHomepage) {
+            fragmentTransaction.addToBackStack("toHome");
+        }
         fragmentTransaction.commit();
     }
 }

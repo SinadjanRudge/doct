@@ -263,7 +263,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setAge(Integer.parseInt(String.valueOf(editTextAge.getText())));
         patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
         patientDto.setIdNumber(String.valueOf(editTextIdNumber.getText()).trim());
-        patientDto.setDateOfBirth(birthDate.ToTimestamp());
+        patientDto.setDateOfBirth(birthDate.ToStartDateTimestamp());
         patientDto.setYear(Integer.parseInt(String.valueOf(input_Year.getText())));
         patientDto.setStatus(String.valueOf(input_Status.getText()).trim());
 
