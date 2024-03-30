@@ -134,7 +134,7 @@ public class UpdatePersonalInfo extends Fragment {
         patientRepository.updatePatient(patientDto, new PatientRepository.PatientAddUpdateCallback() {
             @Override
             public void onSuccess(String patientId) {
-                _reportsRepository.updateHealthProfPatientInfoReport(loggedInUserId, patientDto, new ReportsRepository.ReportCallback() {
+                _reportsRepository.addHealthProfUpdatePatientInfoReport(loggedInUserId, patientDto, new ReportsRepository.ReportCallback() {
                     @Override
                     public void onReportAddedSuccessfully() {
                         Toast.makeText(requireContext(), "Patient information updated successfully", Toast.LENGTH_SHORT).show();
