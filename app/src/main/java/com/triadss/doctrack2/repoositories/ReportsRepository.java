@@ -47,7 +47,6 @@ public class ReportsRepository {
     public void addHealthProfAcceptedAppointmentReport(String appointmentUid, ReportCallback callback)
     {
         appointmentRepository.getAppointment(appointmentUid, new AppointmentRepository.AppointmentDataFetchCallback() {
-
             @Override
             public void onSuccess(AppointmentDto appointment) {
                 addReport(
@@ -68,7 +67,6 @@ public class ReportsRepository {
     public void addHealthProfRejectedAppointmentReport(String appointmentUid, ReportCallback callback)
     {
         appointmentRepository.getAppointment(appointmentUid, new AppointmentRepository.AppointmentDataFetchCallback() {
-
             @Override
             public void onSuccess(AppointmentDto appointment) {
                 addReport(
@@ -86,6 +84,46 @@ public class ReportsRepository {
         });
     }
 
+    public void addHealthProfCancelledAppointmentReport(String appointmentUid, ReportCallback callback)
+    {
+        appointmentRepository.getAppointment(appointmentUid, new AppointmentRepository.AppointmentDataFetchCallback() {
+            @Override
+            public void onSuccess(AppointmentDto appointment) {
+                addReport(
+                        "CANCELLED APPOINTMENT",
+                        String.format("Cancelled appointment of %s at %s",
+                                appointment.getNameOfRequester(),
+                                DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString()),
+                        callback);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void addHealthProfRescheduledAppointmentReport(String appointmentUid, DateTimeDto newDate, ReportCallback callback)
+    {
+        appointmentRepository.getAppointment(appointmentUid, new AppointmentRepository.AppointmentDataFetchCallback() {
+            @Override
+            public void onSuccess(AppointmentDto appointment) {
+                addReport(
+                        "RESCHEDULED APPOINTMENT",
+                        String.format("Rescheduled appointment of %s at %s to %s",
+                                appointment.getNameOfRequester(),
+                                DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString(),
+                                newDate.ToString()),
+                        callback);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
 
     public void addReport(String action, String message, ReportCallback callback)
     {
@@ -125,7 +163,7 @@ public class ReportsRepository {
         if (user != null) {
             reportsCollection
                     .whereEqualTo(ReportModel.createdBy, uid)
-                    .orderBy(ReportModel.createdBy, Query.Direction.DESCENDING)
+                    .orderBy(ReportModel.createdDate, Query.Direction.DESCENDING)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         List<ReportDto> reports = new ArrayList<>();
@@ -136,7 +174,7 @@ public class ReportsRepository {
                         callback.onSuccess(reports);
                     })
                     .addOnFailureListener(e -> {
-                        Log.e(TAG, "Error fetching medicines", e);
+                        Log.e(TAG, "Error fetching reports", e);
                         callback.onError(e.getMessage());
                     });
         } else {

@@ -344,7 +344,7 @@ public class AppointmentRepository {
 
         appointmentsCollection
                 .document(DocumentId)
-                .update("status", "Canceled")
+                .update(AppointmentsModel.status, AppointmentTypeConstants.CANCELLED)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Appointment added with ID: " + DocumentId);
                     callback.onSuccess(DocumentId);

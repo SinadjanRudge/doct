@@ -21,6 +21,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class HealthProfHomeFragment extends Fragment {
     FirebaseUser currentUser = auth.getCurrentUser();
 
     AppointmentRepository appointmentRepository = new AppointmentRepository();
+    ReportsRepository reportsRepository = new ReportsRepository();
     RecyclerView recyclerView;
     TextView pendingAppointmentCountVal;
 
@@ -95,27 +97,47 @@ public class HealthProfHomeFragment extends Fragment {
                         new HealthProfessionalAppointmentPendingAdapter.AppointmentCallback() {
                             @Override
                             public void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid) {
-                                appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
+                                reportsRepository.addHealthProfRescheduledAppointmentReport(appointmentUid, dateTime, new ReportsRepository.ReportCallback() {
                                     @Override
-                                    public void onSuccess(String appointmentId) {
-                                        Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
-                                        ReloadList();
+                                    public void onReportAddedSuccessfully() {
+                                        appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
+                                            @Override
+                                            public void onSuccess(String appointmentId) {
+                                                Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+                                                ReloadList();
+                                            }
+
+                                            @Override
+                                            public void onError(String errorMessage) {
+                                                Log.e(TAG, "Error updating appointment: " + errorMessage);
+                                            }
+                                        });
                                     }
 
                                     @Override
-                                    public void onError(String errorMessage) {
-                                        Log.e(TAG, "Error updating medication: " + errorMessage);
+                                    public void onReportFailed(String errorMessage) {
+                                        System.out.println();
                                     }
                                 });
                             }
 
                             @Override
                             public void onCancel(String appointmentUid) {
-                                appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                                appointmentRepository.cancelAppointment(appointmentUid, new AppointmentRepository.AppointmentCancelCallback() {
                                     @Override
                                     public void onSuccess(String appointmentId) {
-                                        Toast.makeText(getContext(), appointmentId + " deleted", Toast.LENGTH_SHORT).show();
-                                        ReloadList();
+                                        Toast.makeText(getContext(), appointmentId + " cancelled", Toast.LENGTH_SHORT).show();
+                                        reportsRepository.addHealthProfCancelledAppointmentReport(appointmentId, new ReportsRepository.ReportCallback() {
+                                            @Override
+                                            public void onReportAddedSuccessfully() {
+                                                ReloadList();
+                                            }
+
+                                            @Override
+                                            public void onReportFailed(String errorMessage) {
+                                                System.out.println();
+                                            }
+                                        });
                                     }
 
                                     @Override
