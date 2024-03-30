@@ -105,7 +105,7 @@ public class AddMedication extends Fragment {
                 repository.addMedication(dto, new MedicationRepository.MedicationsAddCallback() {
                     @Override
                     public void onSuccess(String medicationId) {
-                        _reportsRepository.addHealthProfPatientMedicationReport(loggedInUserId, patientUid, dto, new ReportsRepository.ReportCallback(){
+                        _reportsRepository.addHealthProfPatientAddMedicationReport(loggedInUserId, patientUid, dto, new ReportsRepository.ReportCallback(){
 
                             @Override
                             public void onReportAddedSuccessfully() {
@@ -149,7 +149,7 @@ public class AddMedication extends Fragment {
 
                     @Override
                     public void onDelete(String medicationId) {
-                        _reportsRepository.removedHealthProfPatientMedicationReport(loggedInUserId, userId, medicationId, new ReportsRepository.ReportCallback() {
+                        _reportsRepository.addHealthProfPatientRemovedMedicationReport(loggedInUserId, userId, medicationId, new ReportsRepository.ReportCallback() {
                             @Override
                             public void onReportAddedSuccessfully() {
                                 repository.deleteMedication(medicationId, new MedicationRepository.MedicationUpdateCallback() {

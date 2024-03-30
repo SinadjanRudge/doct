@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,8 +16,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.CheckboxStringProcessor;
 import com.triadss.doctrack2.utils.EditTextName;
 import com.triadss.doctrack2.utils.EditTextStringProcessor;
@@ -39,6 +43,8 @@ public class UpdateMedicalHistory extends Fragment {
     CheckboxStringProcessor pastIllnessProcessor, familyHistoryProcessor;
     EditTextStringProcessor obgyneHistoryProcessor;
     MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
+    String loggedInUserId;
+    ReportsRepository _reportsRepository = new ReportsRepository();
 
     public UpdateMedicalHistory() {
         // Required empty public constructor
@@ -71,6 +77,9 @@ public class UpdateMedicalHistory extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_medical_history, container, false);
 
@@ -113,10 +122,6 @@ public class UpdateMedicalHistory extends Fragment {
                 new EditTextName("PAP Smear",rootView.findViewById(R.id.input_papSmear))
         );
 
-
-//        editSpecifyText1 = rootView.findViewById(R.id.editTextOthers);
-
-
         Button nextButton = rootView.findViewById(R.id.nxtButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +154,6 @@ public class UpdateMedicalHistory extends Fragment {
 
     private MedicalHistoryDto extractDto() {
         MedicalHistoryDto medicalHistoryDto= new MedicalHistoryDto();
-        StringBuilder obgyneHistoryBuilder = new StringBuilder();
 
         //Past Illness
         String pastIllness = pastIllnessProcessor.getString();
@@ -181,7 +185,17 @@ public class UpdateMedicalHistory extends Fragment {
                 medicalHistoryRepo.updateMedicalHistory(dto, new MedicalHistoryRepository.AddUpdateCallback() {
                     @Override
                     public void onSuccess(String medicalHistoryId) {
-                        showMedications();
+                        _reportsRepository.updateHealthProfPatientMedHistoryReport(loggedInUserId, patientUid, new ReportsRepository.ReportCallback() {
+                            @Override
+                            public void onReportAddedSuccessfully() {
+                                showMedications();
+                            }
+
+                            @Override
+                            public void onReportFailed(String errorMessage) {
+
+                            }
+                        });
                     }
 
                     @Override

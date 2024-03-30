@@ -1,29 +1,24 @@
 package com.triadss.doctrack2.repoositories;
 
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
-import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.dto.ReportDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,7 +170,7 @@ public class ReportsRepository {
         });
     }
 
-    public void addHealthProfPatientMedicationReport(String createdBy, String patientUid, MedicationDto medication, ReportCallback callback)
+    public void addHealthProfPatientAddMedicationReport(String createdBy, String patientUid, MedicationDto medication, ReportCallback callback)
     {
 
         patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
@@ -196,7 +191,7 @@ public class ReportsRepository {
         });
     }
 
-    public void removedHealthProfPatientMedicationReport(String createdBy, String patientUid, String medicationUid, ReportCallback callback)
+    public void addHealthProfPatientRemovedMedicationReport(String createdBy, String patientUid, String medicationUid, ReportCallback callback)
     {
 
         patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
@@ -220,6 +215,53 @@ public class ReportsRepository {
                     }
                 });
 
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void updateHealthProfPatientInfoReport(String createdBy, AddPatientDto patient, ReportCallback callback)
+    {
+        addReport(createdBy,
+                "UPDATED PATIENT INFO",
+                String.format("Updated patient info of %s",
+                        patient.getFullName()),
+                callback);
+    }
+
+    public void updateHealthProfPatientMedHistoryReport(String createdBy, String patientUid, ReportCallback callback)
+    {
+        patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
+            @Override
+            public void onSuccess(AddPatientDto patient) {
+                addReport(createdBy,
+                        "UPDATED PATIENT MEDICAL HISTORY",
+                        String.format("Updated patient medical history of %s",
+                                patient.getFullName()),
+                        callback);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void updateHealthProfPatientVitalSignReport(String createdBy, String patientUid, ReportCallback callback)
+    {
+        patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
+            @Override
+            public void onSuccess(AddPatientDto patient) {
+                addReport(createdBy,
+                        "UPDATED PATIENT VITAL SIGNS",
+                        String.format("Updated patient vital signs of %s",
+                                patient.getFullName()),
+                        callback);
             }
 
             @Override
