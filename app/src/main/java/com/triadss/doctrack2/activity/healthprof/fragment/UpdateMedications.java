@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +18,10 @@ import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.AddMedicationAdapter;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +42,8 @@ public class UpdateMedications extends Fragment {
 
     RecyclerView recyclerView;
     MedicationRepository repository;
+    String loggedInUserId;
+    ReportsRepository _reportsRepository = new ReportsRepository();
 
     public UpdateMedications() {
         // Required empty public constructor
@@ -70,6 +76,9 @@ public class UpdateMedications extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
+
         repository = new MedicationRepository();
 
         // Inflate the layout for this fragment
@@ -94,7 +103,18 @@ public class UpdateMedications extends Fragment {
                 repository.addMedication(dto, new MedicationRepository.MedicationsAddCallback() {
                     @Override
                     public void onSuccess(String medicationId) {
-                        updateMedicationList();
+                        _reportsRepository.addHealthProfPatientAddMedicationReport(loggedInUserId, patientUid, dto, new ReportsRepository.ReportCallback(){
+
+                            @Override
+                            public void onReportAddedSuccessfully() {
+                                updateMedicationList();
+                            }
+
+                            @Override
+                            public void onReportFailed(String errorMessage) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -130,14 +150,24 @@ public class UpdateMedications extends Fragment {
 
                     @Override
                     public void onDelete(String medicationId) {
-                        repository.deleteMedication(medicationId, new MedicationRepository.MedicationUpdateCallback() {
+                        _reportsRepository.addHealthProfPatientRemovedMedicationReport(loggedInUserId, userId, medicationId, new ReportsRepository.ReportCallback() {
                             @Override
-                            public void onSuccess() {
-                                updateMedicationList();
+                            public void onReportAddedSuccessfully() {
+                                repository.deleteMedication(medicationId, new MedicationRepository.MedicationUpdateCallback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        updateMedicationList();
+                                    }
+
+                                    @Override
+                                    public void onError(String errorMessage) {
+
+                                    }
+                                });
                             }
 
                             @Override
-                            public void onError(String errorMessage) {
+                            public void onReportFailed(String errorMessage) {
 
                             }
                         });

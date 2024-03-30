@@ -65,7 +65,6 @@ public class MedicalHistoryRepository {
                     .addOnFailureListener(e -> {
                         callback.onError(e.getMessage());
                     });
-            userRef.set(medicalHistories, SetOptions.merge());
         } catch(Exception ex)
         {
             callback.onError(ex.getMessage());
