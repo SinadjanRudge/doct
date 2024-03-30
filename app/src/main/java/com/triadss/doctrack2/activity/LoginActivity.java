@@ -1,6 +1,8 @@
 package com.triadss.doctrack2.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.admin.AdminHome;
 import com.triadss.doctrack2.activity.healthprof.HealthProfHome;
 import com.triadss.doctrack2.activity.patient.PatientHome;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.config.enums.UserRole;
 
 public class LoginActivity extends AppCompatActivity {
@@ -78,6 +81,12 @@ public class LoginActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString(SessionConstants.LoggedInUid, user.getUid());
+                            editor.apply();
+
                             Toast.makeText(LoginActivity.this, "Login Successfully",
                                     Toast.LENGTH_SHORT).show();
 

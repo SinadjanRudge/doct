@@ -2,6 +2,8 @@ package com.triadss.doctrack2.activity.healthprof;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -21,10 +23,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentPendingAdapter;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +45,12 @@ public class HealthProfessionalPending extends Fragment implements IListView {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private ReportsRepository reportsRepository = new ReportsRepository();
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    String loggedInUserId;
 
     public HealthProfessionalPending() {
         // Required empty public constructor
@@ -82,6 +89,9 @@ public class HealthProfessionalPending extends Fragment implements IListView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
+
         // Inflate the layout for this fragment
         appointmentRepository = new AppointmentRepository();
         View rootView = inflater.inflate(R.layout.fragment_health_professional_pending, container, false);
@@ -105,27 +115,47 @@ public class HealthProfessionalPending extends Fragment implements IListView {
                     new HealthProfessionalAppointmentPendingAdapter.AppointmentCallback() {
                         @Override
                         public void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid) {
-                            appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
+                            reportsRepository.addHealthProfRescheduledAppointmentReport(loggedInUserId, appointmentUid, dateTime, new ReportsRepository.ReportCallback() {
                                 @Override
-                                public void onSuccess(String appointmentId) {
-                                    Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
-                                    ReloadList();
+                                public void onReportAddedSuccessfully() {
+                                    appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
+                                        @Override
+                                        public void onSuccess(String appointmentId) {
+                                            Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+                                            ReloadList();
+                                        }
+
+                                        @Override
+                                        public void onError(String errorMessage) {
+                                            Log.e(TAG, "Error updating appointment: " + errorMessage);
+                                        }
+                                    });
                                 }
 
                                 @Override
-                                public void onError(String errorMessage) {
-                                    Log.e(TAG, "Error updating medication: " + errorMessage);
+                                public void onReportFailed(String errorMessage) {
+                                    System.out.println();
                                 }
                             });
                         }
 
                         @Override
                         public void onCancel(String appointmentUid) {
-                            appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                            appointmentRepository.cancelAppointment(appointmentUid, new AppointmentRepository.AppointmentCancelCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
-                                    Toast.makeText(getContext(), appointmentId + " deleted", Toast.LENGTH_SHORT).show();
-                                    ReloadList();
+                                    Toast.makeText(getContext(), appointmentId + " cancelled", Toast.LENGTH_SHORT).show();
+                                    reportsRepository.addHealthProfCancelledAppointmentReport(loggedInUserId, appointmentId, new ReportsRepository.ReportCallback() {
+                                        @Override
+                                        public void onReportAddedSuccessfully() {
+                                            ReloadList();
+                                        }
+
+                                        @Override
+                                        public void onReportFailed(String errorMessage) {
+                                            System.out.println();
+                                        }
+                                    });
                                 }
 
                                 @Override

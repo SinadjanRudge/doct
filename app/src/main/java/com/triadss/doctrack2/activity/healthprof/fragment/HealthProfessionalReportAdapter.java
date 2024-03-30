@@ -10,13 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.patient.fragment.PatientReportAdapter;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.ReportDto;
 
 import java.util.ArrayList;
 
 public class HealthProfessionalReportAdapter extends RecyclerView.Adapter<HealthProfessionalReportAdapter.ViewHolder> {
-    private final String TAG = "PatientMedicationOngoingAdapter";
+    private final String TAG = "HealthProfessionalReportAdapter";
     private ArrayList<ReportDto> reports;
     private Context context;
 

@@ -12,6 +12,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 
 import java.util.ArrayList;
@@ -161,6 +162,27 @@ public class MedicationRepository {
         }
     }
 
+    public void getMedication(String medicationId, MedicationDataFetchCallback callback) {
+        if (user != null) {
+            medicationsCollection.document(medicationId)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            MedicationDto medication = documentSnapshot.toObject(MedicationDto.class);
+                            callback.onSuccess(medication);
+                        } else {
+                            callback.onError("Patient not found");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
+
     public void deleteMedication(String medicationId, MedicationUpdateCallback callback) {
         if(user == null) return;
 
@@ -189,6 +211,13 @@ public class MedicationRepository {
 
         void onError(String errorMessage);
     }
+
+    public interface MedicationDataFetchCallback {
+        void onSuccess(MedicationDto medications);
+
+        void onError(String errorMessage);
+    }
+
     public interface MedicationUpdateCallback {
         void onSuccess();
 
