@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
+import com.triadss.doctrack2.repoositories.PatientRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
 import java.util.function.Function;
@@ -32,10 +38,10 @@ public class UpdateVitalSigns extends Fragment {
     // TODO: Rename and change types of parameters
     private String patientUid;
     private String vitalSignsUid;
-
-    TextView errorBloodPresure, errorTempreture, errorSp02, errorPulse, errorWeight, errorHeight, errorBMI;
+    private String loggedInUserId;
     EditText editBloodPressure, editTemperature, editPulseRate, editOxygenLevel, editWeight, editHeight, editBMI;
     VitalSignsRepository repository = new VitalSignsRepository();
+    ReportsRepository _reportsRepository = new ReportsRepository();
 
     public UpdateVitalSigns() {
         // Required empty public constructor
@@ -68,6 +74,9 @@ public class UpdateVitalSigns extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_vital_signs, container, false);
         Button submit = rootView.findViewById(R.id.updateBtn);
@@ -191,7 +200,17 @@ public class UpdateVitalSigns extends Fragment {
         repository.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
             @Override
             public void onSuccess(String documentId) {
-                showViewPatient();
+                _reportsRepository.updateHealthProfPatientVitalSignReport(loggedInUserId, patientUid, new ReportsRepository.ReportCallback() {
+                    @Override
+                    public void onReportAddedSuccessfully() {
+                        showViewPatient();
+                    }
+
+                    @Override
+                    public void onReportFailed(String errorMessage) {
+
+                    }
+                });
             }
 
             @Override

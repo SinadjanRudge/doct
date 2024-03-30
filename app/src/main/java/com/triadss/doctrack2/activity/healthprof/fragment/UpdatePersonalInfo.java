@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +15,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.repoositories.PatientRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.function.Function;
 
@@ -36,6 +40,8 @@ public class UpdatePersonalInfo extends Fragment {
         editTextEmail, editTextFullname, editTextIdNumber;
     TextView errorAddress, errorPhone, errorAge, errorCourse;
     PatientRepository patientRepository = new PatientRepository();
+    ReportsRepository _reportsRepository = new ReportsRepository();
+    String loggedInUserId;
 
     public UpdatePersonalInfo() {
         // Required empty public constructor
@@ -68,6 +74,9 @@ public class UpdatePersonalInfo extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_record, container, false);
         editTextAddress = rootView.findViewById(R.id.input_address);
@@ -168,6 +177,7 @@ public class UpdatePersonalInfo extends Fragment {
 
         AddPatientDto patientDto = new AddPatientDto();
         patientDto.setUid(patientUid);
+        patientDto.setFullName(editTextFullname.getText().toString());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
         patientDto.setAge(Integer.parseInt(String.valueOf(editTextAge.getText())));
@@ -176,8 +186,18 @@ public class UpdatePersonalInfo extends Fragment {
         patientRepository.updatePatient(patientDto, new PatientRepository.PatientAddUpdateCallback() {
             @Override
             public void onSuccess(String patientId) {
-                Toast.makeText(requireContext(), "Patient information updated successfully", Toast.LENGTH_SHORT).show();
-                showMedicalHistory();
+                _reportsRepository.updateHealthProfPatientInfoReport(loggedInUserId, patientDto, new ReportsRepository.ReportCallback() {
+                    @Override
+                    public void onReportAddedSuccessfully() {
+                        Toast.makeText(requireContext(), "Patient information updated successfully", Toast.LENGTH_SHORT).show();
+                        showMedicalHistory();
+                    }
+
+                    @Override
+                    public void onReportFailed(String errorMessage) {
+
+                    }
+                });
             }
 
             @Override

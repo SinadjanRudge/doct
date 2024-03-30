@@ -344,7 +344,7 @@ public class AppointmentRepository {
 
         appointmentsCollection
                 .document(DocumentId)
-                .update("status", "Canceled")
+                .update(AppointmentsModel.status, AppointmentTypeConstants.CANCELLED)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Appointment added with ID: " + DocumentId);
                     callback.onSuccess(DocumentId);
@@ -366,6 +366,24 @@ public class AppointmentRepository {
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error adding appointment", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
+    public void getAppointment(String appointmentId, AppointmentDataFetchCallback callback)
+    {
+        appointmentsCollection
+                .document(appointmentId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        AppointmentDto appointment = documentSnapshot.toObject(AppointmentDto.class);
+                        callback.onSuccess(appointment);
+                    } else {
+                        callback.onError("Appointment not found");
+                    }
+                })
+                .addOnFailureListener(e -> {
                     callback.onError(e.getMessage());
                 });
     }
@@ -442,6 +460,13 @@ public class AppointmentRepository {
 
         void onError(String errorMessage);
     }
+
+    public interface AppointmentDataFetchCallback {
+        void onSuccess(AppointmentDto appointment);
+
+        void onError(String errorMessage);
+    }
+
     public interface ReportCallback {
         void onSuccess(String appointmentId);
 
