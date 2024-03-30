@@ -80,7 +80,6 @@ public class DeviceFragment extends Fragment {
     }
 
     private void checkIfPairedDevice() {
-//        checkPairedDeviceThread = new Thread(() -> {
             Context context = requireContext();
             Task<List<Node>> nodeListTask = Wearable.getNodeClient(context).getConnectedNodes();
             try {
@@ -90,25 +89,14 @@ public class DeviceFragment extends Fragment {
                     String nodeId = node.getId();
                     boolean isNearby = node.isNearby();
 
-
-                    // Update the widget on the main thread.
                     Handler mainThreadHandler = new Handler(Looper.getMainLooper());
                     mainThreadHandler.post(() -> {
-                        // This code runs on the main thread.
-                        // Update your widget here.
-//                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-//                        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, DeviceFragment.class));
-//                        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.your_widget_layout);
-                        // Update your views here, e.g., views.setTextViewText(R.id.textView, "New Text");
                         wearableDeviceDto.setDeviceId(nodeId);
                         wearableDeviceDto.setDeviceName(nodeName);
                         wearableDeviceDto.setIsNearby(isNearby);
 
                         setDeviceRegisteredViews(wearableDeviceDto);
                     });
-
-
-
                 }
 
                 showPairedDeviceStatus(nodes.size() == 1);
@@ -222,15 +210,26 @@ public class DeviceFragment extends Fragment {
         try {
             Toast.makeText(getContext(), "Syncing...", Toast.LENGTH_SHORT).show();
 
-            wearableDevicesRepo.getWearableDevice(wearableDeviceDto.getDeviceId(), new WearableDeviceRepository.GetWearableDeviceCallback() {
+            wearableDevicesRepo.getWearableDevice(wearableDeviceDto.getDeviceId(), user.getUid(),new WearableDeviceRepository.GetWearableDeviceCallback() {
                 @Override
                 public void onSuccess(WearableDeviceDto wearableDevice) {
-
+                    Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(String errorMessage) {
+                    wearableDeviceDto.setOwnerId(user.getUid());
+                    wearableDevicesRepo.addWearableDevice(wearableDeviceDto, new WearableDeviceRepository.WearableAddCallback() {
+                        @Override
+                        public void onSuccess(String medicationId) {
+                            Toast.makeText(getContext(), "Device Successfully Registered", Toast.LENGTH_SHORT).show();
+                        }
 
+                        @Override
+                        public void onError(String errorMessage) {
+
+                        }
+                    });
                 }
             });
 
@@ -239,8 +238,6 @@ public class DeviceFragment extends Fragment {
                 public void onSuccess(VitalSignsDto vitalSigns) {
                     String jsonData = vitalSigns.toJsonData();
                     sendMessage(jsonData);
-
-                    //* TODO Register device registered if not registered
 
                     //* TODO Update Last Sync
 

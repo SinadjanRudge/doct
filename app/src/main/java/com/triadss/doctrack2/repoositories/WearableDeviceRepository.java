@@ -6,7 +6,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
@@ -25,7 +27,8 @@ public class WearableDeviceRepository {
     private final CollectionReference wearablesCollection = firestore.collection(FireStoreCollection.WEARABLEDEVICES_TABLE);
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
-    public void AddWearableDevice(String userId, WearableDeviceDto wearableDeviceDto, WearableAddCallback callback)
+
+    public void addWearableDevice(WearableDeviceDto wearableDeviceDto, WearableAddCallback callback)
     {
         if(user == null) return;
 
@@ -41,14 +44,19 @@ public class WearableDeviceRepository {
                 });
     }
 
-    public void getWearableDevice(String deviceId, GetWearableDeviceCallback callback) {
+    public void getWearableDevice(String deviceId, String userId, GetWearableDeviceCallback callback) {
         if(user == null) return;
 
-        DocumentReference deviceRef = wearablesCollection.document(deviceId);
-        deviceRef
+        Query query = wearablesCollection
+                .whereEqualTo("deviceId", deviceId)
+                .whereEqualTo("ownerId", userId);
+
+        query
                 .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // Assuming there's only one device for a unique combination of deviceId and ownerId
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                         WearableDeviceDto wearableDevice = documentSnapshot.toObject(WearableDeviceDto.class);
                         callback.onSuccess(wearableDevice);
                     } else {
