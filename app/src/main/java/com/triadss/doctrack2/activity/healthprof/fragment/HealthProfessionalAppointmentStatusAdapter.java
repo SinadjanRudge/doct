@@ -69,7 +69,7 @@ public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Ada
         public void update(AppointmentDto appointment)
         {
             purpose.setText(appointment.getPurpose());
-            identification.setText(appointment.getPatientId());
+            identification.setText(appointment.getPatientIdNumber());
             name.setText(appointment.getNameOfRequester());
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
