@@ -44,30 +44,41 @@ public class WearableDeviceRepository {
                 });
     }
 
-    public void getWearableDevice(String deviceId, String userId, GetWearableDeviceCallback callback) {
-        if(user == null) return;
+    public void updateWearableDevice(String deviceId, String ownerId, WearableDeviceDto updatedDevice, WearableUpdateCallback callback) {
+        if (user == null) return;
 
-        Query query = wearablesCollection
-                .whereEqualTo("deviceId", deviceId)
-                .whereEqualTo("ownerId", userId);
+        CollectionReference wearablesCollection = FirebaseFirestore.getInstance().collection("wearables");
 
-        query
-                .get()
+        Query query = wearablesCollection.whereEqualTo("deviceId", deviceId)
+                .whereEqualTo("ownerId", ownerId);
+
+        query.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
-                        // Assuming there's only one device for a unique combination of deviceId and ownerId
-                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
-                        WearableDeviceDto wearableDevice = documentSnapshot.toObject(WearableDeviceDto.class);
-                        callback.onSuccess(wearableDevice);
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            DocumentReference deviceRef = wearablesCollection.document(documentSnapshot.getId());
+                            deviceRef
+                                    .set(updatedDevice, SetOptions.merge())
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d(TAG, "Wearable device fields updated successfully");
+                                        callback.onSuccess();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Error updating Wearable Device fields", e);
+                                        callback.onError(e.getMessage());
+                                    });
+                        }
                     } else {
-                        callback.onError("Wearable Device not found");
+                        Log.e(TAG, "No matching document found for deviceId: " + deviceId + " and ownerId: " + ownerId);
+                        callback.onError("No matching document found");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error getting Wearable Device", e);
+                    Log.e(TAG, "Error searching for Wearable Device", e);
                     callback.onError(e.getMessage());
                 });
     }
+
 
     public void getWearableDevices(GetWearableDevicesCallback callback) {
         if(user == null) return;
@@ -91,7 +102,7 @@ public class WearableDeviceRepository {
                 });
     }
 
-    public void updateWearableDevice(String deviceId, WearableDeviceDto updatedDevice, WearableUpdateCallback callback) {
+    public void setWearableDevice(String deviceId, WearableDeviceDto updatedDevice, WearableUpdateCallback callback) {
         if(user == null) return;
 
         DocumentReference deviceRef = wearablesCollection.document(deviceId);
@@ -106,6 +117,23 @@ public class WearableDeviceRepository {
                     callback.onError(e.getMessage());
                 });
     }
+
+    public void updateWearableDevice(String deviceId, Map<String, Object> updatedFields, WearableUpdateCallback callback) {
+        if (user == null) return;
+
+        DocumentReference deviceRef = wearablesCollection.document(deviceId);
+        deviceRef
+                .update(updatedFields)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Wearable device fields updated successfully");
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating Wearable Device fields", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
 
     public void deleteWearableDevice(String deviceId, WearableDeleteCallback callback) {
         if(user == null) return;

@@ -16,12 +16,18 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
@@ -65,6 +71,7 @@ public class DeviceFragment extends Fragment {
     private TextView lastSyncVal, deviceNameVal, deviceIDVal, isNearbyVal, noDeviceFound;
     private TableLayout deviceRegisteredTable;
     private static boolean checkOnce = false;
+    private DataClient.OnDataChangedListener dataListener;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_device_with_device, container, false);
@@ -73,7 +80,48 @@ public class DeviceFragment extends Fragment {
         initializeListeners();
         initVitalSigns();
         startContinuousCheck();
+        setupDataClientListener();
         return rootView;
+    }
+
+    private void setupDataClientListener() {
+        dataListener = new DataClient.OnDataChangedListener() {
+            @Override
+            public void onDataChanged(@NonNull DataEventBuffer dataEventBuffer) {
+                for (DataEvent event : dataEventBuffer) {
+                    if (event.getType() == DataEvent.TYPE_CHANGED) {
+                        DataItem dataItem = event.getDataItem();
+                        if (dataItem.getUri().getPath().equals("/wear_to_mobile")) {
+                            DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
+                            String jsonData = dataMap.getString("jsonData");
+                            Log.d(TAG, "Received JSON data: " + jsonData);
+
+                            // Handle the received JSON data here
+                            // For example, update UI or perform other actions
+                        }
+                    }
+                }
+            }
+        };
+
+        Wearable.getDataClient(requireActivity()).addListener(dataListener);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (dataListener != null) {
+            Wearable.getDataClient(requireActivity()).addListener(dataListener);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (dataListener != null) {
+            Wearable.getDataClient(requireActivity()).removeListener(dataListener);
+        }
     }
 
     private void startContinuousCheck() {
@@ -300,7 +348,7 @@ public class DeviceFragment extends Fragment {
 
     private void sendMessage(String jsonData) {
         String jsonDataWithCount = jsonData + " Count: " + count;
-        PutDataMapRequest dataMap = PutDataMapRequest.create("/data_path");
+        PutDataMapRequest dataMap = PutDataMapRequest.create("/mobile_to_wear");
         dataMap.getDataMap().putString("jsonData", jsonDataWithCount);
         PutDataRequest request = dataMap.asPutDataRequest();
         Task<DataItem> putDataTask = Wearable.getDataClient(getContext()).putDataItem(request);
