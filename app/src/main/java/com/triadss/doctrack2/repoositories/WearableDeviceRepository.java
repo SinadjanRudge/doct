@@ -69,15 +69,7 @@ public class WearableDeviceRepository {
         wearablesCollection
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    // Convert query document snapshots to a list of WearableDeviceDto objects
-                    // and pass them to the callback
-                    // For example:
-                    // List<WearableDeviceDto> wearableDevices = new ArrayList<>();
-                    // for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    //     WearableDeviceDto wearableDevice = document.toObject(WearableDeviceDto.class);
-                    //     wearableDevices.add(wearableDevice);
-                    // }
-                    // callback.onSuccess(wearableDevices);
+                    // TODO
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error getting Wearable Devices", e);
