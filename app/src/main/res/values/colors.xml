@@ -2,4 +2,5 @@
 <resources>
 <color name="green">#037006</color>
 <color name="lightgreen">#D5F1E1</color>
+    <color name="white">#FFFFFF</color>
 </resources>

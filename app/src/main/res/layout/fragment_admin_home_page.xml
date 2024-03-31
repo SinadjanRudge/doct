@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/bg_color"
+    android:background="@drawable/bgreen"
     android:layout_height="match_parent">
 
 
@@ -21,7 +21,7 @@
             android:layout_height="165dp"
             android:layout_centerInParent="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/icon_user"
+            android:src="@drawable/user_manage"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
@@ -30,6 +30,7 @@
             android:layout_below="@id/btnManageUsers"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
+            android:textColor="@color/white"
             android:text="Manage Users"
             android:textSize="16sp"/>
     </RelativeLayout>
@@ -49,7 +50,7 @@
             android:layout_height="165dp"
             android:layout_centerInParent="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/reports"
+            android:src="@drawable/view_report"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
@@ -58,6 +59,7 @@
             android:layout_below="@id/btnViewReports"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
+            android:textColor="@color/white"
             android:text="View Reports"
             android:textSize="16sp"/>
     </RelativeLayout>
@@ -66,7 +68,10 @@
         android:id="@+id/welcome_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome Admin!"
+        android:text="Hello Admin!"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"
         android:textSize="24sp"
         android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"/>
@@ -80,8 +85,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="13dp"
         android:background="@null"
+        android:scaleType="fitCenter"
         android:contentDescription="Logout Button"
-        android:src="@drawable/menu" />
+        android:src="@drawable/dot" />
 
 
 </RelativeLayout>
