@@ -42,6 +42,12 @@ import com.triadss.doctrack2.dto.WearableDeviceDto;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 import com.triadss.doctrack2.repoositories.WearableDeviceRepository;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -94,10 +100,10 @@ public class DeviceFragment extends Fragment {
                         if (dataItem.getUri().getPath().equals("/wear_to_mobile")) {
                             DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
                             String jsonData = dataMap.getString("jsonData");
-                            Log.d(TAG, "Received JSON data: " + jsonData);
+                            Log.e(TAG, jsonData.toString());
 
-                            // Handle the received JSON data here
-                            // For example, update UI or perform other actions
+                            updatePulseRate(jsonData);
+                            updateLastSync(jsonData);
                         }
                     }
                 }
@@ -107,7 +113,60 @@ public class DeviceFragment extends Fragment {
         Wearable.getDataClient(requireActivity()).addListener(dataListener);
     }
 
+    private void updatePulseRate(String jsonData){
+        try {
+            // Parse the JSON string
+            JSONObject jsonObject = new JSONObject(jsonData);
+            // Extract the pulseRate value
+            int pulseRate = jsonObject.getInt("pulseRate");
+            vitalSignsDto.setPulseRate(pulseRate);
+            vitalSignsRepo.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback(){
+                @Override
+                public void onSuccess(String vitalSignsId) {
+                    pulseRateValue.setText(pulseRate + "");
+                    Toast.makeText(requireContext(), "Updated Pulse Rate", Toast.LENGTH_SHORT).show();
+                }
 
+                @Override
+                public void onError(String errorMessage) {
+                    Toast.makeText(requireContext(), "Failure Updating Pulse Rate", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(TAG, "Error parsing JSON data: " + e.getMessage());
+        }
+    }
+
+    private void updateLastSync(String jsonData){
+        try {
+            // Parse the JSON string
+            JSONObject jsonObject = new JSONObject(jsonData);
+
+            // Extract the pulseRate value
+            String timeSynced = jsonObject.getString("timeSynced");
+
+            wearableDeviceDto.setTimeSynced(timeSynced);
+            wearableDevicesRepo.updateWearableDevice(
+                    wearableDeviceDto.getDeviceId(),
+                    user.getUid(),
+                    wearableDeviceDto,
+                    new WearableDeviceRepository.WearableUpdateCallback() {
+                        @Override
+                        public void onSuccess() {
+                            lastSyncVal.setText("" + wearableDeviceDto.getTimeSynced());
+                            Toast.makeText(getContext(), "Sync Successful", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            Toast.makeText(requireContext(), "Something's wrong with your wearable", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Error parsing JSON data: " + e.getMessage());
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -123,7 +182,6 @@ public class DeviceFragment extends Fragment {
             Wearable.getDataClient(requireActivity()).removeListener(dataListener);
         }
     }
-
     private void startContinuousCheck() {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
         executor.scheduleAtFixedRate(() -> checkIfPairedDevice(), 0, 10, TimeUnit.SECONDS);
@@ -144,6 +202,8 @@ public class DeviceFragment extends Fragment {
                         wearableDeviceDto.setDeviceId(nodeId);
                         wearableDeviceDto.setDeviceName(nodeName);
                         wearableDeviceDto.setIsNearby(isNearby);
+
+                        // TODO, get the last sync
 
                         setDeviceRegisteredViews(wearableDeviceDto);
 
@@ -268,6 +328,7 @@ public class DeviceFragment extends Fragment {
     }
 
     private void setDeviceRegisteredViews(WearableDeviceDto wearableDeviceDto){
+
         deviceNameVal.setText(wearableDeviceDto.getDeviceName());
         deviceIDVal.setText(wearableDeviceDto.getDeviceId());
         isNearbyVal.setText(wearableDeviceDto.getIsNearby() + "");
@@ -285,7 +346,7 @@ public class DeviceFragment extends Fragment {
             wearableDevicesRepo.getWearableDevice(wearableDeviceDto.getDeviceId(), user.getUid(),new WearableDeviceRepository.GetWearableDeviceCallback() {
                 @Override
                 public void onSuccess(WearableDeviceDto wearableDevice) {
-                    Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override
@@ -310,10 +371,6 @@ public class DeviceFragment extends Fragment {
                 public void onSuccess(VitalSignsDto vitalSigns) {
                     String jsonData = vitalSigns.toJsonData();
                     sendMessage(jsonData);
-
-                    //* TODO Update Last Sync
-
-                    Toast.makeText(getContext(), "Sync Successful", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

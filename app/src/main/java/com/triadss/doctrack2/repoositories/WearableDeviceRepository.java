@@ -10,16 +10,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
-import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
-import com.triadss.doctrack2.config.model.WearableDeviceModel;
 import com.triadss.doctrack2.dto.WearableDeviceDto;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WearableDeviceRepository {
     private static final String TAG = "WearableDeviceRepository";
@@ -107,10 +101,8 @@ public class WearableDeviceRepository {
                 });
     }
 
-    public void updateWearableDevice(String deviceId, String ownerId, WearableDeviceModel updatedDevice, WearableUpdateCallback callback) {
+    public void updateWearableDevice(String deviceId, String ownerId, WearableDeviceDto updatedDevice, WearableUpdateCallback callback) {
         if (user == null) return;
-
-        CollectionReference wearablesCollection = FirebaseFirestore.getInstance().collection("wearables");
 
         Query query = wearablesCollection.whereEqualTo("deviceId", deviceId)
                 .whereEqualTo("ownerId", ownerId);
