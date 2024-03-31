@@ -15,9 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.SessionConstants;
-import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
-import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
@@ -138,7 +136,7 @@ public class UpdateVitalSigns extends Fragment {
         repository.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
             @Override
             public void onSuccess(String documentId) {
-                _reportsRepository.updateHealthProfPatientVitalSignReport(loggedInUserId, patientUid, new ReportsRepository.ReportCallback() {
+                _reportsRepository.addHealthProfUpdatePatientVitalSignReport(loggedInUserId, patientUid, new ReportsRepository.ReportCallback() {
                     @Override
                     public void onReportAddedSuccessfully() {
                         showViewPatient();
