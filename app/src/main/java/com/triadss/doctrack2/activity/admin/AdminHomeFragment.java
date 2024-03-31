@@ -1,19 +1,25 @@
-package com.triadss.doctrack2;
+package com.triadss.doctrack2.activity.admin;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+
+import com.triadss.doctrack2.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link admin_home_page#newInstance} factory method to
+ * Use the {@link AdminHomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class admin_home_page extends Fragment {
+public class AdminHomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +30,7 @@ public class admin_home_page extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public admin_home_page() {
+    public AdminHomeFragment() {
         // Required empty public constructor
     }
 
@@ -37,8 +43,8 @@ public class admin_home_page extends Fragment {
      * @return A new instance of fragment admin_home_page.
      */
     // TODO: Rename and change types and number of parameters
-    public static admin_home_page newInstance(String param1, String param2) {
-        admin_home_page fragment = new admin_home_page();
+    public static AdminHomeFragment newInstance(String param1, String param2) {
+        AdminHomeFragment fragment = new AdminHomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +65,25 @@ public class admin_home_page extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_home_page, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_admin_home_page, container, false);
+        ImageButton manageUsers = rootView.findViewById(R.id.btnManageUsers);
+        ImageButton viewReports = rootView.findViewById(R.id.btnViewReports);
+        manageUsers.setOnClickListener(v -> {
+            replaceFragment(new AdminManageUserAccount());
+        });
+
+        viewReports.setOnClickListener(v -> {
+            replaceFragment(new AdminGenerateReportsPage());
+        });
+
+        return rootView;
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.addToBackStack("toHome");
+        fragmentTransaction.commit();
     }
 }

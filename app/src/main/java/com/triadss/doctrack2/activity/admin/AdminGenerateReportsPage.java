@@ -141,13 +141,13 @@ public class AdminGenerateReportsPage extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {String filter = s.toString();
+                ArrayList<ReportDto> filteredDto = retrievedReports.stream()
+                        .filter(report -> report.getMessage().contains(filter) ||
+                                report.getAction().contains(filter) ||
+                                report.getCreatedByName().contains(filter)
+                        ).collect(Collectors.toCollection(ArrayList::new));
                 recyclerView.setAdapter(new AdminGenerateReportAdapter(getContext(), 
-                    retrievedReports.stream()
-                        .filter(report -> report.getMessage().contains(filter) && 
-                            report.getAction().contains(filter) &&
-                            report.getCreatedByName().contains(filter) 
-                        ).collect(Collectors.toCollection(ArrayList::new))
-                    ));
+                    filteredDto));
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
