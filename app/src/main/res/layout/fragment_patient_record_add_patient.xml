@@ -27,6 +27,7 @@
         tools:ignore="MissingConstraints" />
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="411dp"
         android:layout_height="0dp"
         android:layout_marginTop="90dp"
@@ -61,7 +62,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="570dp"
+                android:layout_height="735dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/white"
@@ -82,6 +83,14 @@
                     android:hint=" enter patient id" />
 
                 <TextView
+                    android:id="@+id/error_patientID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Invalid Patient ID"
+                    android:textColor="#FF0000"
+                    android:textSize="15sp" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -96,6 +105,14 @@
                     android:hint=" enter email" />
 
                 <TextView
+                    android:id="@+id/error_Email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Invalid Email"
+                    android:textColor="#FF0000"
+                    android:textSize="15sp" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -108,6 +125,14 @@
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
                     android:hint=" enter full name" />
+
+                <TextView
+                    android:id="@+id/error_FullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Full Name is Blank"
+                    android:textColor="#FF0000"
+                    android:textSize="15sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -143,8 +168,10 @@
                         android:layout_height="50dp"
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
+                        android:inputType="phone"
                         android:background="@drawable/green_stroke"
                         android:hint=" enter age" />
+
 
                     <EditText
                         android:id="@+id/input_Gender"
@@ -156,6 +183,28 @@
                         android:hint=" enter gender" />
 
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/error_Age"
+                        android:layout_width="182dp"
+                        android:layout_height="wrap_content"
+                        android:text="Age is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/error_Gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Gender is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <TextView
@@ -172,6 +221,14 @@
                     android:background="@drawable/green_stroke"
                     android:hint=" enter address" />
 
+
+                <TextView
+                    android:id="@+id/error_Address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Address is Blank"
+                    android:textColor="#FF0000"
+                    android:textSize="15sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -220,6 +277,29 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/error_DateBirth"
+                        android:layout_width="186dp"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:text="Invalid Date of Birth"
+                        android:textColor="#FF0000"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/error_Status"
+                        android:layout_width="186dp"
+                        android:layout_height="wrap_content"
+                        android:text=" Status is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -232,7 +312,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
+                    android:inputType="phone"
                     android:hint=" enter contact no." />
+
+                <TextView
+                    android:id="@+id/error_Contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=" Contact No. is Blank"
+                    android:textColor="#FF0000"
+                    android:textSize="15sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -260,7 +349,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="50dp"
                     android:orientation="horizontal">
 
                     <EditText
@@ -273,14 +362,37 @@
                         android:hint=" enter course" />
 
                     <EditText
-                        android:id="@+id/input_status"
+                        android:id="@+id/input_Year"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
+                        android:inputType="phone"
                         android:background="@drawable/green_stroke"
                         android:hint=" enter year" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/error_Course"
+                        android:layout_width="182dp"
+                        android:layout_height="wrap_content"
+                        android:text="Course is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/error_Year"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Year is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="15sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -312,7 +424,6 @@
 
         </LinearLayout>
     </ScrollView>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

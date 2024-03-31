@@ -46,18 +46,30 @@ public class WearableDeviceDto {
         this.remainingBattery = remainingBattery;
     }
 
-    public int getDeviceId() {
+    public String getDeviceId() {
         return deviceId;
     }
 
-    public void setDeviceId(int deviceId) {
+    public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
+    public boolean getIsNearby() { return isNearby; }
+    public void setIsNearby(boolean isNearby){
+        this.isNearby = isNearby;
+    }
+    public String getOwnerId(){
+        return ownerId;
+    }
+    public void setOwnerId(String ownerId){
+        this.ownerId = ownerId;
+    }
 
-    private int deviceId;
+    private String deviceId;
     private String deviceName;
     private DateTime timeSynced;
     private String firmwareVersion;
     private String appVersion;
     private int remainingBattery;
+    private boolean isNearby;
+    private String ownerId;
 }

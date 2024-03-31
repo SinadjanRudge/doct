@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +14,9 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.VitalSignsDto;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
 /**
@@ -31,6 +35,8 @@ public class AddVitalSigns extends Fragment {
 
     // TODO: Rename and change types of parameters
     String PatientUid;
+    String loggedInUserId;
+    ReportsRepository _reportsRepository = new ReportsRepository();
 
     public AddVitalSigns() {
         // Required empty public constructor
@@ -40,7 +46,7 @@ public class AddVitalSigns extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param PatientUid Parameter 1.
+     * @param patientUid Parameter 1.
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
@@ -63,6 +69,9 @@ public class AddVitalSigns extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_record_add_vital_signs, container, false);
         Button submit = rootView.findViewById(R.id.submitBtn);
@@ -100,7 +109,17 @@ public class AddVitalSigns extends Fragment {
         vitalSignsRepo.AddVitalSignsCallback(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
             @Override
             public void onSuccess(String vitalSignsId) {
-                backToPatientList();
+                _reportsRepository.addHealthProfPatientVitalSignReport(loggedInUserId, PatientUid, new ReportsRepository.ReportCallback() {
+                    @Override
+                    public void onReportAddedSuccessfully() {
+                        backToPatientList();
+                    }
+
+                    @Override
+                    public void onReportFailed(String errorMessage) {
+
+                    }
+                });
             }
 
             @Override

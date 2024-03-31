@@ -36,7 +36,13 @@
         android:inputType="text" />
 
 
-
+    <TextView
+        android:id="@+id/errorTextPosition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Position is Blank"
+        android:text="Position is Blank"
+        android:textColor="#FF0000" />
 
     <TextView
         android:id="@+id/health_user_name_update"

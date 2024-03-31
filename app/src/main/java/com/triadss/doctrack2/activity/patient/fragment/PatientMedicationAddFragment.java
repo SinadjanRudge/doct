@@ -17,6 +17,7 @@ import android.widget.TimePicker;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
@@ -27,6 +28,7 @@ import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.dto.TimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.sql.Time;
 import java.util.Calendar;
@@ -35,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +61,7 @@ public class PatientMedicationAddFragment extends Fragment {
     private Button button_date, button_time, add_button, clear_button;
     private TextInputEditText medicineInput, noteInput;
     private MedicationRepository medicationRepository;
+    private ReportsRepository _reportsRepository = new ReportsRepository();
 
     public PatientMedicationAddFragment() {
         // Required empty public constructor
@@ -127,17 +131,20 @@ public class PatientMedicationAddFragment extends Fragment {
 
                 // Create and show the Date Picker Dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                    int monthOfYear, int dayOfMonth) {
-                                // Store the selected date
-                                selectedDateTime.setDate(new DateDto(year, monthOfYear, dayOfMonth));
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                            int monthOfYear, int dayOfMonth) {
+                        // Store the selected date
+                        selectedDateTime.setDate(new DateDto(year, monthOfYear, dayOfMonth));
 
-                                // Update the text on the button
-                                button_date.setText(selectedDateTime.getDate().ToString());
-                            }
-                        }, year, month, day);
+                        // Update the text on the button
+                        button_date.setText(selectedDateTime.getDate().ToString());
+                    }
+                }, year, month, day);
+
+                Calendar calendar = Calendar.getInstance();
+                datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
 
                 // Show the Date Picker Dialog
                 datePickerDialog.show();
@@ -157,17 +164,22 @@ public class PatientMedicationAddFragment extends Fragment {
 
                 // Create and show the Time Picker Dialog
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                        new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                // Store the selected time
-
-                                selectedDateTime.setTime(new TimeDto(hourOfDay, minute));
-
-                                // Update the text on the button
-                                button_time.setText(selectedDateTime.getTime().ToString());
+                    new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            // Store the selected time
+                            if (!((hourOfDay >= 8 && hourOfDay < 17) || (hourOfDay == 17 && minute == 0)))
+                            {
+                                Toast.makeText(getActivity(), "Please select a time between 8 AM and 5 PM", Toast.LENGTH_SHORT).show();
+                                return;
                             }
-                        }, hour, minute, false);
+
+                            selectedDateTime.setTime(new TimeDto(hourOfDay, minute));
+
+                            // Update the text on the button
+                            button_time.setText(selectedDateTime.getTime().ToString());
+                        }
+                    }, hour, minute, false);
 
                 // Show the Time Picker Dialog
                 timePickerDialog.show();
@@ -213,15 +225,29 @@ public class PatientMedicationAddFragment extends Fragment {
 
             final String status = MedicationTypeConstants.ONGOING;
 
+            String patientId = FirebaseAuth.getInstance().getUid();
+
             MedicationDto medication = new MedicationDto("",
-                    "", medicine, note, dateTimeOfAppointment, status);
+                    patientId, medicine, note, dateTimeOfAppointment, status);
             medicationRepository.addMedication(medication, new MedicationRepository.MedicationsAddCallback() {
                 @Override
                 public void onSuccess(String medicationId) {
-                    Log.e(TAG, "Successfully added medication with the id of " + medicationId);
+                    _reportsRepository.addPatientAddedMedicationReport(medication, new ReportsRepository.ReportCallback() {
+                        @Override
+                        public void onReportAddedSuccessfully() {
+                            handleClearButtonClick();
 
-                    ViewPager2 vp = getActivity().findViewById(R.id.viewPager); // Fetch ViewPager instance
-                    vp.setCurrentItem(1);
+                            Log.e(TAG, "Successfully added medication with the id of " + medicationId);
+
+                            ViewPager2 vp = getActivity().findViewById(R.id.viewPager); // Fetch ViewPager instance
+                            vp.setCurrentItem(1);
+                        }
+
+                        @Override
+                        public void onReportFailed(String errorMessage) {
+
+                        }
+                    });
                 }
 
                 @Override
