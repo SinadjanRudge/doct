@@ -14,11 +14,11 @@ public class WearableDeviceDto {
         this.deviceName = deviceName;
     }
 
-    public DateTime getTimeSynced() {
+    public String getTimeSynced() {
         return timeSynced;
     }
 
-    public void setTimeSynced(DateTime timeSynced) {
+    public void setTimeSynced(String timeSynced) {
         this.timeSynced = timeSynced;
     }
 
@@ -66,7 +66,7 @@ public class WearableDeviceDto {
 
     private String deviceId;
     private String deviceName;
-    private DateTime timeSynced;
+    private String timeSynced;
     private String firmwareVersion;
     private String appVersion;
     private int remainingBattery;
