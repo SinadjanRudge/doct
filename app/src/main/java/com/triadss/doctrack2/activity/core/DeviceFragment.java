@@ -83,6 +83,8 @@ public class DeviceFragment extends Fragment {
         initVitalSigns();
         startContinuousCheck();
         setupDataClientListener();
+
+        wearableDeviceDto.setOwnerId(auth.getUid());
         return rootView;
     }
 
