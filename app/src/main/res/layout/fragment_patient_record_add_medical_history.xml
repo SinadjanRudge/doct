@@ -87,15 +87,15 @@
 
                     <CheckBox
                         android:id="@+id/checkbox1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
                         android:text="tuberculosis" />
 
                     <CheckBox
                         android:id="@+id/checkbox2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
                         android:text="hypertension" />
 
@@ -109,20 +109,19 @@
 
                     <CheckBox
                         android:id="@+id/checkbox3"
-                        android:layout_width="320dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
-                        android:text="heart dieases" />
+                        android:text="heart diseases" />
 
                     <CheckBox
                         android:id="@+id/checkbox4"
-                        android:layout_width="189dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0."
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
                         android:text="nervous breakdown" />
 
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -131,16 +130,93 @@
 
                     <CheckBox
                         android:id="@+id/checkbox5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
-                        android:text="insomnia" />
+                        android:text="peptic ulcer" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox6"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="kindney diseases" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
                     <CheckBox
                         android:id="@+id/checkbox7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.4"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="bronchial asthma" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox8"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="hernia" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkbox9"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="seizures epilepsy " />
+
+                    <CheckBox
+                        android:id="@+id/checkbox10"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="venereal disease" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkbox11"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="allergic reaction" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox12"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="insomnia" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkbox13"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
                         android:text="none" />
 
                 </LinearLayout>
@@ -151,7 +227,7 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkbox8"
+                        android:id="@+id/checkbox14"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
@@ -166,7 +242,7 @@
                     android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/editTextText"
+                        android:id="@+id/editTextOthers"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginStart="35dp"
@@ -204,6 +280,7 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textViewPrevHos"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
@@ -240,15 +317,15 @@
 
                     <CheckBox
                         android:id="@+id/cb_famHist_diabetes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
                         android:text="diabetes" />
 
                     <CheckBox
                         android:id="@+id/cb_famHist_hyper"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
                         android:text="hypertension" />
 
@@ -256,18 +333,19 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="42dp"
                     android:orientation="horizontal">
 
                     <CheckBox
                         android:id="@+id/cb_famHist_mentalHealthDisorder"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:text="mental health disorder" />
 
                     <CheckBox
                         android:id="@+id/cb_famHist_asthma"
-                        android:layout_width="wrap_content"
+                        android:layout_width="184dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="asthma" />
@@ -282,7 +360,7 @@
                     <CheckBox
                         android:id="@+id/cb_famHist_bleedingDisorder"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:layout_weight="0.5"
                         android:text="bleeding disorder" />
 
@@ -354,10 +432,47 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_menstruation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
-                        android:hint="enter here" />
+                        android:hint="Menstruation" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_gravida"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="Gravida" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_abortion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="Abortion" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_menopause"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="Menopause" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -382,12 +497,12 @@
                 android:layout_marginBottom="50dp"
                 android:backgroundTint="@color/green"
                 android:text="NEXT" />
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="90dp" />
         </LinearLayout>
     </ScrollView>
-
 
 
 </LinearLayout>

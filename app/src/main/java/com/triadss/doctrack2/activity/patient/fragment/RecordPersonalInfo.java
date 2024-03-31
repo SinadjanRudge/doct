@@ -20,6 +20,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.UserModel;
+import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.repoositories.PatientRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,48 +85,37 @@ public class RecordPersonalInfo extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_record_personal_info, container, false);
 
-        fullNameValue = rootView.findViewById(R.id.fullNameValue);
-        ageValue = rootView.findViewById(R.id.ageValue);
-        genderValue = rootView.findViewById(R.id.genderValue);
-        addressValue = rootView.findViewById(R.id.addressValue);
-        statusValue = rootView.findViewById(R.id.statusValue);
-        phoneValue = rootView.findViewById(R.id.phoneValue);
-        courseValue = rootView.findViewById(R.id.courseValue);
-        yearValue = rootView.findViewById(R.id.yearValue);
+        TextView patientId = rootView.findViewById(R.id.value_patientID);
+        TextView patientName = rootView.findViewById(R.id.value_Name);
+        TextView patientEmail = rootView.findViewById(R.id.value_Email);
+        TextView patientAddress = rootView.findViewById(R.id.value_Address);
+        TextView patientAge = rootView.findViewById(R.id.value_Age);
+        TextView patientPhone = rootView.findViewById(R.id.value_ContactNo);
+        TextView patientCourse = rootView.findViewById(R.id.value_Course);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        String userId = currentUser.getUid();
+        String patientUid = currentUser.getUid();
 
-        update(userId);
+        PatientRepository patientRepository = new PatientRepository();
+        patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
+            @Override
+            public void onSuccess(AddPatientDto patient) {
+                patientId.setText(patient.getIdNumber());
+                patientName.setText(patient.getFullName());
+                patientEmail.setText(patient.getEmail());
+                patientAddress.setText(patient.getAddress());
+                patientAge.setText(String.valueOf(patient.getAge()));
+                patientPhone.setText(patient.getPhone());
+                patientCourse.setText(patient.getCourse());
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return rootView;
-    }
-
-    private void update(String userId)
-    {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference userRef = db.collection(FireStoreCollection.USERS_TABLE)
-                                        .document(userId);
-        // Fetch the user document
-        userRef.get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document != null && document.exists()) {
-                            // Retrieve the user role from the document
-                            fullNameValue.setText(document.getString(UserModel.fullName));
-                            ageValue.setText(document.getDouble(UserModel.age).toString());
-                            genderValue.setText(document.getString(UserModel.gender));
-                            addressValue.setText(document.getString(UserModel.address));
-                            statusValue.setText(document.getString(UserModel.status));
-                            phoneValue.setText(document.getString(UserModel.phone));
-                            courseValue.setText(document.getString(UserModel.course));
-                            yearValue.setText(document.getDouble(UserModel.year).toString());
-                        }
-                    } else {
-                        Toast.makeText(getContext(), "Error fetching user role.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 }

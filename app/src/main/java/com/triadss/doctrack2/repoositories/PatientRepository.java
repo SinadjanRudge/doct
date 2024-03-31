@@ -1,27 +1,20 @@
 package com.triadss.doctrack2.repoositories;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
-import android.widget.Toast;
-
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.activity.healthprof.fragment.PatientFragment;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
-import com.triadss.doctrack2.config.constants.DocTrackErrorMessage;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.enums.UserRole;
 import com.triadss.doctrack2.config.model.UserModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
-
+import com.triadss.doctrack2.config.constants.UserRoleConstants;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,6 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 public class PatientRepository {
+    private final String TAG = "PatientRepository";
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private final CollectionReference usersCollection = firestore
+            .collection(FireStoreCollection.USERS_TABLE);
     /**
      * Saves user information to Firestore.
      *
@@ -54,7 +53,7 @@ public class PatientRepository {
             userData.put(UserModel.phone, patientDto.getPhone());
             userData.put(UserModel.course, patientDto.getCourse());
             userData.put(UserModel.idNumber, patientDto.getIdNumber());
-            userData.put(UserModel.createdDate, dateNow);
+            userData.put(UserModel.createdBy, dateNow);
             userData.put(UserModel.updatedDate, dateNow);
             userRef.set(userData, SetOptions.merge());
         } catch(Exception ex)
@@ -65,9 +64,34 @@ public class PatientRepository {
         return true;
     }
 
-    public interface PatientListCallback {
-        void onSuccess(List<AddPatientDto> patients);
-        void onFailure(String errorMessage);
+    public void addPatientCallback(AddPatientDto patient, PatientAddUpdateCallback callback) {
+        if (user != null) {
+            Map<String, Object> patientMap = new HashMap<>();
+            patientMap.put(UserModel.idNumber, patient.getIdNumber());
+            patientMap.put(UserModel.email, patient.getEmail());
+            patientMap.put(UserModel.fullName, patient.getFullName());
+            patientMap.put(UserModel.age, patient.getAge());
+            patientMap.put(UserModel.gender, patient.getGender());
+            patientMap.put(UserModel.address, patient.getAddress());
+            patientMap.put(UserModel.dateOfBirth, patient.getDateOfBirth());
+            patientMap.put(UserModel.status, patient.getStatus());
+            patientMap.put(UserModel.phone, patient.getPhone());
+            patientMap.put(UserModel.course, patient.getCourse());
+            patientMap.put(UserModel.year, patient.getYear());
+            patientMap.put(UserModel.role, UserRoleConstants.Patient);
+
+            usersCollection
+                    .add(patientMap)
+                    .addOnSuccessListener(documentReference -> {
+                        callback.onSuccess(documentReference.getId());
+                    })
+                    .addOnFailureListener(e -> {
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            callback.onError("User is null");
+        }
+
     }
 
     public void getPatientList(PatientListCallback callback){
@@ -83,6 +107,7 @@ public class PatientRepository {
                             String role = document.getString("role");
                             if ("PATIENT".equals(role)) {
                                 AddPatientDto patients = document.toObject(AddPatientDto.class);
+                                patients.setUid(document.getId().toString());
                                 addPatientDtoList.add(patients);
                             }
                         }
@@ -94,4 +119,57 @@ public class PatientRepository {
                 });
     }
 
+    public void updatePatient(AddPatientDto patient, PatientAddUpdateCallback callback) {
+        if(user == null) return;
+
+        DocumentReference patientRef = usersCollection.document(patient.getUid());
+
+        patientRef
+                .update(UserModel.age, patient.getAge(),
+                        UserModel.address, patient.getAddress(),
+                        UserModel.status, patient.getStatus(),
+                        UserModel.phone, patient.getPhone(),
+                        UserModel.course, patient.getCourse(),
+                        UserModel.year, patient.getYear())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Patient Info updated successfully");
+                    callback.onSuccess(patient.getUid());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating Patient Info", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
+    public void getPatient(String patientUid, PatientFetchCallback callback)
+    {
+        usersCollection.document(patientUid)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        AddPatientDto patient = documentSnapshot.toObject(AddPatientDto.class);
+                        callback.onSuccess(patient);
+                    } else {
+                        callback.onError("Patient not found");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    callback.onError(e.getMessage());
+                });
+    }
+
+    public interface PatientAddUpdateCallback {
+        void onSuccess(String patientId);
+        void onError(String errorMessage);
+    }
+
+    public interface PatientFetchCallback {
+        void onSuccess(AddPatientDto patient);
+        void onError(String errorMessage);
+    }
+
+    public interface PatientListCallback {
+        void onSuccess(List<AddPatientDto> patients);
+        void onFailure(String errorMessage);
+    }
 }

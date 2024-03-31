@@ -35,7 +35,25 @@ public class ReportDto {
         this.createdDate = createdDate;
     }
 
+    public String getCreatedByName() {
+        return createdByName;
+    }
+
+    public void setCreatedByName(String createdByName) {
+        this.createdByName = createdByName;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     private String message;
     private Timestamp createdDate;
     private String action;
+    private String createdByName;
+    private String createdBy;
 }

@@ -4,9 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,7 +30,7 @@ public class PatientAppointmentStatusAdapter extends RecyclerView.Adapter<Patien
     @NonNull
     @Override
     public PatientAppointmentStatusAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_status, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_appointment_status, parent, false);
 
         // Passing view to ViewHolder
         PatientAppointmentStatusAdapter.ViewHolder viewHolder = new PatientAppointmentStatusAdapter.ViewHolder(view);
@@ -53,7 +51,7 @@ public class PatientAppointmentStatusAdapter extends RecyclerView.Adapter<Patien
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView purpose,date,time,status;
+        private TextView purpose,date,time,status, idText, nameText;
 
         public ViewHolder(View view) {
             super(view);
@@ -62,12 +60,16 @@ public class PatientAppointmentStatusAdapter extends RecyclerView.Adapter<Patien
             date = (TextView) view.findViewById(R.id.appointment_date);
             time = (TextView) view.findViewById(R.id.appointment_time);
             status = (TextView) view.findViewById(R.id.statustext);
+            idText = view.findViewById(R.id.IDtext);
+            nameText = view.findViewById(R.id.nametext);
         }
 
         public void update(AppointmentDto appointment)
         {
             purpose.setText(appointment.getPurpose());
-            status.setText("Status:\t\t" + appointment.getStatus());
+            status.setText(appointment.getStatus());
+            idText.setText(appointment.getDocumentId());
+            nameText.setText(appointment.getNameOfRequester());
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());

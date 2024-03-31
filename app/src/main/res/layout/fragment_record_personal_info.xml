@@ -6,116 +6,235 @@
     tools:context=".activity.patient.fragment.RecordPersonalInfo">
 
     <!-- TODO: Update blank fragment layout -->
-    <TableLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp"
-        android:stretchColumns="1">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginEnd="35dp"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <TableRow>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:padding="3dip"
+                android:id="@+id/textView_patientID"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Patient ID:" />
+
+            <TextView
+                android:id="@+id/value_patientID"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="Patient ID" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_Email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Email:" />
+
+            <TextView
+                android:id="@+id/value_Email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="Email" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_Name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Name:" />
+
+            <TextView
+                android:id="@+id/value_Name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
                 android:text="Name" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/fullNameValue"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="Test Name" />
-        </TableRow>
-
-        <TableRow>
+                android:id="@+id/textView_Age"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Age:" />
 
             <TextView
-                android:padding="3dip"
+                android:id="@+id/value_Age"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
                 android:text="Age" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/ageValue"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="23" />
-        </TableRow>
-
-        <TableRow>
+                android:id="@+id/textView_Gender"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Gender:" />
 
             <TextView
-                android:padding="3dip"
+                android:id="@+id/value_Gender"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
                 android:text="Gender" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/genderValue"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="Male" />
-        </TableRow>
-
-        <TableRow>
+                android:id="@+id/textView_Address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Address:" />
 
             <TextView
-                android:padding="3dip"
+                android:id="@+id/value_Address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
                 android:text="Address" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/addressValue"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="Lahug, Cebu City" />
-        </TableRow>
-
-        <TableRow>
+                android:id="@+id/textView_dateOfBirth"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Date of Birth:" />
 
             <TextView
-                android:padding="3dip"
+                android:id="@+id/value_dateOfBirth"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="Date of Birth" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_Status"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Status:" />
+
+            <TextView
+                android:id="@+id/value_Status"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
                 android:text="Status" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/statusValue"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="Sample Status" />
-        </TableRow>
-
-        <TableRow>
+                android:id="@+id/textView_ContactNo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Contact No.:" />
 
             <TextView
-                android:padding="3dip"
-                android:text="Cel/Tel No." />
+                android:id="@+id/value_ContactNo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="Contact No" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/phoneValue"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="09000000000" />
-        </TableRow>
-
-        <TableRow>
+                android:id="@+id/textView_Course"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Course:" />
 
             <TextView
-                android:padding="3dip"
+                android:id="@+id/value_Course"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
                 android:text="Course" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/courseValue"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="BSIT" />
-        </TableRow>
-
-        <TableRow>
+                android:id="@+id/textView_Year"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Year:" />
 
             <TextView
-                android:padding="3dip"
+                android:id="@+id/value_Year"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
                 android:text="Year" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/yearValue"
-                android:gravity="right"
-                android:padding="3dip"
-                android:text="2" />
-        </TableRow>
-
-    </TableLayout>
+    </LinearLayout>
 
 </FrameLayout>

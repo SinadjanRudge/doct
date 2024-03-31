@@ -21,9 +21,11 @@ import com.triadss.doctrack2.dto.ReportDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ReportsRepository {
     private final String TAG = "Reports Repository";
@@ -185,8 +187,91 @@ public class ReportsRepository {
             callback.onError("User is null");
         }
     }
+    public void getReportsFromUserFilter(String uid, String find, ReportsFilterCallback callback) {
+        if (user != null) {
+            reportsCollection
+                    .whereEqualTo(ReportModel.createdBy, uid)
+                    .orderBy(ReportModel.createdBy, Query.Direction.DESCENDING)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        List<ReportDto> reports = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            if(Objects.requireNonNull(document.get("message")).toString().toLowerCase().contains(find.toLowerCase()) || Objects.requireNonNull(document.get("action")).toString().toLowerCase().contains(find.toLowerCase())){
+                                ReportDto report = document.toObject(ReportDto.class);
+                                reports.add(report);
+                            }
+                        }
+                        callback.onSuccess(reports);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching medicines", e);
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
+
+    public void getReportsFromDateRange(Date before, Date after, ReportsFetchCallback callback) {
+        if (user != null) {
+            CollectionReference usersCollection = firestore
+                .collection(FireStoreCollection.USERS_TABLE);
+
+            usersCollection
+                .get()
+                .addOnSuccessListener(userQueryDocumentSnapshots -> {
+                        // To get user details
+                        List<AddPatientDto> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : userQueryDocumentSnapshots) {
+                            AddPatientDto user = document.toObject(AddPatientDto.class);
+                            user.setUid(document.getId());
+                            users.add(user);
+                        }
+
+                        reportsCollection
+                            .whereGreaterThanOrEqualTo(ReportModel.createdDate, before)
+                            .whereLessThanOrEqualTo(ReportModel.createdDate, after)
+                            .orderBy(ReportModel.createdDate, Query.Direction.DESCENDING)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                List<ReportDto> reports = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                    ReportDto report = document.toObject(ReportDto.class);
+                                    String fullName = users.stream()
+                                            .filter(user -> user.getUid().equals(report.getCreatedBy()))
+                                            .findFirst().get().getFullName();
+                                    report.setCreatedByName(fullName);
+
+                                    reports.add(report);
+                                }
+
+                                callback.onSuccess(reports);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(TAG, "Error fetching medicines", e);
+                                callback.onError(e.getMessage());
+                            });
+
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching medicines", e);
+                        callback.onError(e.getMessage());
+                    });
+
+
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
 
     public interface ReportsFetchCallback {
+        void onSuccess(List<ReportDto> reports);
+
+        void onError(String errorMessage);
+    }
+    public interface ReportsFilterCallback {
         void onSuccess(List<ReportDto> reports);
 
         void onError(String errorMessage);

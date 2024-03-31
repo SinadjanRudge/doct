@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,8 +10,8 @@
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="297dp"
+        android:layout_width="404dp"
+        android:layout_height="352dp"
         android:padding="15dp">
 
         <TextView
@@ -21,11 +22,10 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="10dp"
-            android:text="ID :"
+            android:text="ID:"
             android:textColor="#000"
             android:textSize="16sp"
             android:textStyle="bold" />
-
 
         <TextView
             android:id="@+id/NAMEtext"
@@ -50,15 +50,15 @@
             android:layout_marginStart="25dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:text="Purpose :"
+            android:text="Purpose:"
             android:textColor="#000"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/calendar"
-            android:layout_width="43dp"
-            android:layout_height="42dp"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
             android:layout_below="@+id/PURPOSEtext"
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
@@ -68,50 +68,49 @@
 
         <TextView
             android:id="@+id/appointment_date"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
+            android:layout_width="140dp"
+            android:layout_height="45dp"
             android:layout_below="@+id/PURPOSEtext"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="30dp"
             android:layout_toEndOf="@+id/calendar"
-            android:text="viewCalendar"
+            android:text="TextView Date"
             android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/baseline_access_time_24"
-            android:layout_width="43dp"
-            android:layout_height="42dp"
-            android:layout_below="@+id/PURPOSEtext"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="30dp"
-            app:tint="@color/green"
-            android:layout_toEndOf="@+id/appointment_date"
-            app:srcCompat="@drawable/baseline_access_time_24" />
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:layout_below="@+id/calendar"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/baseline_access_time_24"
+            app:tint="@color/green" />
 
         <TextView
             android:id="@+id/appointment_time"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/PURPOSEtext"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="30dp"
+            android:layout_width="140dp"
+            android:layout_height="45dp"
+            android:layout_below="@+id/appointment_date"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/baseline_access_time_24"
-            android:text="viewClock" />
+            android:text="TextView Time" />
 
         <Button
-            android:id="@+id/cancel_button"
+            android:id="@+id/reject_button"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/appointment_date"
+            android:layout_below="@+id/appointment_time"
             android:layout_alignParentStart="true"
             android:layout_marginStart="30dp"
             android:layout_marginTop="30dp"
             android:backgroundTint="@color/green"
-            android:text="Cancel" />
-
+            android:text="Reject" />
 
         <Button
-            android:id="@+id/reschedule_button"
+            android:id="@+id/accept_button"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/appointment_time"
@@ -119,42 +118,48 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="30dp"
             android:backgroundTint="@color/green"
-            android:text="Reschedule" />
+            android:text="Accept" />
 
         <TextView
             android:id="@+id/IDtext"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_alignParentTop="true"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="30dp"
             android:layout_marginEnd="25dp"
             android:layout_toEndOf="@+id/idtext"
-            android:text="viewID" />
+            android:text="TextView ID"
+            android:textColor="#000"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/nametext"
-            android:layout_width="264dp"
+            android:layout_width="80dp"
             android:layout_height="30dp"
             android:layout_below="@+id/IDtext"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="25dp"
             android:layout_toEndOf="@+id/NAMEtext"
-            android:text="viewName" />
+            android:text="TextView Name"
+            android:textColor="#000"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/purposetext"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_below="@+id/nametext"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="18dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="25dp"
             android:layout_toEndOf="@+id/PURPOSEtext"
-            android:text="viewPurpose" />
+            android:text="TextView Purpose"
+            android:textColor="#000"
+            android:textSize="16sp" />
+
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
