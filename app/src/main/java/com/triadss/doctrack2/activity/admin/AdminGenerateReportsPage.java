@@ -95,8 +95,8 @@ public class AdminGenerateReportsPage extends Fragment {
         generateReports.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Date startDate = DateDto.fromDatePicker(startDatePicker).ToStartDate();
-                Date endDate = DateDto.fromDatePicker(endDatePicker).ToEndDate();
+                Timestamp startDate = DateDto.fromDatePicker(startDatePicker).ToStartDateTimestamp();
+                Timestamp endDate = DateDto.fromDatePicker(endDatePicker).ToEndDateTimestamp();
                 showReportDialog(startDate, endDate);
             }
         });
@@ -104,7 +104,7 @@ public class AdminGenerateReportsPage extends Fragment {
         return rootView;
     }
 
-    private void showReportDialog(Date startDate, Date endDate) {
+    private void showReportDialog(Timestamp startDate, Timestamp endDate) {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_generate_reports);
         
@@ -119,6 +119,7 @@ public class AdminGenerateReportsPage extends Fragment {
             public void onSuccess(List<ReportDto> reports) {
                 retrievedReports = reports;
                 recyclerView.setAdapter(new AdminGenerateReportAdapter(getContext(), (ArrayList)retrievedReports));
+                dialog.show();
             }
 
             @Override
@@ -140,13 +141,13 @@ public class AdminGenerateReportsPage extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {String filter = s.toString();
+                ArrayList<ReportDto> filteredDto = retrievedReports.stream()
+                        .filter(report -> report.getMessage().contains(filter) ||
+                                report.getAction().contains(filter) ||
+                                report.getCreatedByName().contains(filter)
+                        ).collect(Collectors.toCollection(ArrayList::new));
                 recyclerView.setAdapter(new AdminGenerateReportAdapter(getContext(), 
-                    retrievedReports.stream()
-                        .filter(report -> report.getMessage().contains(filter) && 
-                            report.getAction().contains(filter) &&
-                            report.getCreatedByName().contains(filter) 
-                        ).collect(Collectors.toCollection(ArrayList::new))
-                    ));
+                    filteredDto));
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
@@ -156,6 +157,5 @@ public class AdminGenerateReportsPage extends Fragment {
             dialog.dismiss();
         });
 
-        dialog.show();
     }
 }

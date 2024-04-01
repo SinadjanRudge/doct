@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.admin;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -18,6 +19,7 @@ import com.triadss.doctrack2.activity.healthprof.fragment.AppointmentFragment;
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentFragment;
 import com.triadss.doctrack2.activity.healthprof.fragment.PatientFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
+import com.triadss.doctrack2.activity.patient.fragment.PatientHomeFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientMedicationFragment;
 import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
 import com.triadss.doctrack2.databinding.ActivityAdminHomeBinding;
@@ -30,6 +32,7 @@ public class AdminHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
+        replaceFragment(new AdminHomeFragment());
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -58,12 +61,31 @@ public class AdminHome extends AppCompatActivity {
             }
             return true;
         });
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Back is pressed... Finishing the activity
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
+                boolean isCurrentlyAtHomepage = currentFragment instanceof AdminHomeFragment;
+                if(!isCurrentlyAtHomepage) {
+                    fragmentManager.popBackStack();
+                }
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
+        boolean isCurrentlyAtHomepage = currentFragment instanceof AdminHomeFragment;
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
+        if(isCurrentlyAtHomepage) {
+            fragmentTransaction.addToBackStack("toHome");
+        }
         fragmentTransaction.commit();
     }
 }

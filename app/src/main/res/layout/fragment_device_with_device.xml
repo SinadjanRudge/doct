@@ -9,39 +9,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView9"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="Device Registered"
+            android:textStyle="bold"
+            android:textAlignment="gravity"
+            android:textSize="22sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/NoDeviceFound"
+            android:layout_height="150dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="No Wearable Device Found."
             android:textAlignment="gravity"
             android:textSize="20sp" />
 
+
         <TableLayout
+            android:id="@+id/DeviceTable"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/deviceIdLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:text="DeviceId:" />
-
-                <TextView
-                    android:id="@+id/DeviceIdValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sample Id" />
-            </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
@@ -55,11 +50,107 @@
                     android:text="Last Sync:" />
 
                 <TextView
-                    android:id="@+id/LasySyncValue"
+                    android:id="@+id/LastSyncValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Sample Time" />
+                    android:text="No Time Available" />
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/DeviceNameLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:text="Device Name:" />
+
+                <TextView
+                    android:id="@+id/DeviceNameValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sample Device Name" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/DeviceIDLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:text="Device ID:" />
+
+                <TextView
+                    android:id="@+id/DeviceIDValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sample Device ID" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/IsNearbyLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:text="Is Nearby:" />
+
+                <TextView
+                    android:id="@+id/IsNearbyValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sample Is Nearby" />
+            </TableRow>
+
+        </TableLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="Vital Signs"
+            android:textStyle="bold"
+            android:textAlignment="gravity"
+            android:textSize="22sp" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/BloodPressureLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:text="Blood Pressure:" />
+
+                <TextView
+                    android:id="@+id/BloodPressureValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.8"
+                    android:text="Blood Pressure" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="mmHg" />
             </TableRow>
 
             <TableRow
@@ -67,18 +158,24 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/FirmwareVersionLabel"
+                    android:id="@+id/TemperatureLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.2"
-                    android:text="Firmware Version:" />
+                    android:text="Temperature:" />
 
                 <TextView
-                    android:id="@+id/FirmwareVersionValue"
+                    android:id="@+id/TemperatureValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.8"
+                    android:text="Temperature" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sample Firmware" />
+                    android:layout_weight="0.5"
+                    android:text="&#176;C" />
             </TableRow>
 
             <TableRow
@@ -86,18 +183,24 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/AppVersionLabel"
+                    android:id="@+id/Spo2Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.2"
-                    android:text="App Version:" />
+                    android:text="SpO2:" />
 
                 <TextView
-                    android:id="@+id/AppVersionValue"
+                    android:id="@+id/Spo2Value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.8"
+                    android:text="SpO2" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sample Version" />
+                    android:layout_weight="0.5"
+                    android:text="mm Hg" />
             </TableRow>
 
             <TableRow
@@ -105,18 +208,101 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/RemainingBatteryLabel"
+                    android:id="@+id/PulseRateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.2"
-                    android:text="Remaining Battery" />
+                    android:text="Pulse Rate:" />
 
                 <TextView
-                    android:id="@+id/RemainingBatteryValue"
+                    android:id="@+id/PulseRateValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.8"
+                    android:text="Pulse Rate" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:text="bpm" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/WeightLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="100%" />
+                    android:layout_weight="0.2"
+                    android:text="Weight:" />
+
+                <TextView
+                    android:id="@+id/WeightValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.8"
+                    android:text="Weight" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:text="kg" />
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/HeightLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:text="Height:" />
+
+                <TextView
+                    android:id="@+id/HeightValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.8"
+                    android:text="Height" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:text="cm" />
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/BMILabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:text="BMI" />
+
+                <TextView
+                    android:id="@+id/BMIValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.8"
+                    android:text="BMI" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="mm Hg" />
             </TableRow>
 
         </TableLayout>
@@ -125,27 +311,32 @@
             android:id="@+id/SyncDeviceBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sync Device" />
+            android:text="Sync Device To Smartwatch"
+            android:layout_margin="20dp"/>
 
         <Button
             android:id="@+id/RemoveDeviceBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Remove Device" />
+            android:text="Remove Device"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/receivedMessageTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Received Message:"
+            android:layout_marginTop="16dp"
             android:gravity="center"
+            android:text="Received Message:"
             android:textSize="18sp"
-            android:layout_marginTop="16dp"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/sendMessageBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send message" />
+            android:text="Send message"
+            android:visibility="gone" />
 
     </LinearLayout>
 

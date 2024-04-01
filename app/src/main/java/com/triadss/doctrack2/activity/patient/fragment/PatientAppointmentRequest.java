@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
@@ -17,17 +18,20 @@ import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import com.google.firebase.Timestamp;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 public class PatientAppointmentRequest extends Fragment {
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;
+    private ReportsRepository _reportsRepository = new ReportsRepository();
     private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute;
 
     @Override
@@ -139,7 +143,20 @@ public class PatientAppointmentRequest extends Fragment {
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
             @Override
             public void onSuccess(String appointmentId) {
-                // TODO need to add confirmation UI when appointment is added successfully
+                _reportsRepository.addPatientRequestScheduleReport(appointment, new ReportsRepository.ReportCallback() {
+                    @Override
+                    public void onReportAddedSuccessfully() {
+                        textInputPurpose.setText("");
+                        pickTimeBtn.setText("Select Date");
+                        pickDateButton.setText("Select Time");
+                        Toast.makeText(getContext(), appointmentId + " added", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onReportFailed(String errorMessage) {
+
+                    }
+                });
             }
 
             @Override

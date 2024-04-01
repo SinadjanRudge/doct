@@ -38,47 +38,45 @@ public class DateDto {
         return day;
     }
 
+    public String ToString(boolean isMonth0Index)
+    {
+        return String.format(Locale.getDefault(), "%04d-%02d-%02d", year,
+                month + (isMonth0Index ? 1 : 0)
+                , day);
+    }
+
     public String ToString()
     {
         return String.format(Locale.getDefault(), "%04d-%02d-%02d", year,
-                month + 1, day);
+                month + 1
+                , day);
     }
 
-    public Date ToStartDate()
+    public Timestamp ToStartDateTimestamp()
     {
-        LocalDate localDate = LocalDate.of(year, month+1, day);
+        LocalDate localDate = LocalDate.of(year, month, day);
 
         // Convert LocalDate to LocalDateTime at the start of the day
         LocalDateTime localDateTime = localDate.atStartOfDay();
 
-        // Convert LocalDateTime to Instant
-        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
-        Instant instant = zonedDateTime.toInstant();
-        Date date = Date.from(instant);
-        return date;
+        DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(localDateTime);
+        return dateTimeDto.ToTimestamp();
     }
 
-    public Date ToEndDate()
+    public Timestamp ToEndDateTimestamp()
     {
-        LocalDate localDate = LocalDate.of(year, month+1, day);
+        LocalDate localDate = LocalDate.of(year, month, day);
 
         // Convert LocalDate to LocalDateTime at the start of the day
         LocalDateTime localDateTime = localDate.atTime(LocalTime.MAX);
 
-        // Convert LocalDateTime to Instant
-        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
-        Instant instant = zonedDateTime.toInstant();
-        Date date = Date.from(instant);
-        return date;
+        DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(localDateTime);
+        return dateTimeDto.ToTimestamp();
     }
 
     public static DateDto fromDatePicker(DatePicker datepicker)
     {
-        return new DateDto(datepicker.getYear(), datepicker.getMonth(), datepicker.getDayOfMonth());
-    }
-
-    public Timestamp ToTimestamp()
-    {
-        return new Timestamp(ToStartDate());
+        DateDto extractedDate = new DateDto(datepicker.getYear(), datepicker.getMonth() + 1, datepicker.getDayOfMonth());
+        return extractedDate;
     }
 }

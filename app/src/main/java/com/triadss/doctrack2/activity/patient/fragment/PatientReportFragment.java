@@ -74,8 +74,9 @@ public class PatientReportFragment extends Fragment {
     }
 
     RecyclerView recyclerView;
-   private ReportsRepository repository;
-   private EditText search;
+    private ReportsRepository repository;
+    private EditText search;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

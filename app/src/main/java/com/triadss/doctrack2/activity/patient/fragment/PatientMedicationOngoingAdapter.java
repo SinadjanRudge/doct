@@ -19,6 +19,7 @@ import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +29,7 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
     private ArrayList<MedicationDto> medications;
     private Context context;
     private MedicationRepository medicationRepository;
+    private ReportsRepository _reportsRepository = new ReportsRepository();
 
     public PatientMedicationOngoingAdapter(Context context, ArrayList<MedicationDto> medications) {
         this.context = context;
@@ -67,7 +69,6 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
             time = view.findViewById(R.id.medicationTime);
             complete = view.findViewById(R.id.medicationComplete);
             update = view.findViewById(R.id.medicationUpdate);
-            setupComplete();
         }
 
         public void update(MedicationDto medicationDto) {
@@ -78,7 +79,7 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
             date.setText(dateTime.getDate().ToString());
             time.setText(dateTime.getTime().ToString());
             mediId = medicationDto.getMediId();
-
+            setupComplete(medicationDto);
             update.setOnClickListener(v -> openUpdateDialog(medicationDto));
         }
 
@@ -103,8 +104,19 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                 medicationRepository.updateMedication(mediId, medicationDto, new MedicationRepository.MedicationUpdateCallback() {
                     @Override
                     public void onSuccess() {
-                        updateMedicationsList(medicationDto);
-                        Toast.makeText(context, mediId + " updated", Toast.LENGTH_SHORT).show();
+                        _reportsRepository.addPatientUpdatedMedicationReport(medicationDto, new ReportsRepository.ReportCallback() {
+                            @Override
+                            public void onReportAddedSuccessfully() {
+                                updateMedicationsList(medicationDto);
+                                Toast.makeText(context, mediId + " updated", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onReportFailed(String errorMessage) {
+
+                            }
+                        });
+
                     }
 
                     @Override
@@ -119,13 +131,23 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
             dialog.show();
         }
 
-        private void setupComplete() {
+        private void setupComplete(MedicationDto medication) {
             complete.setOnClickListener(v -> {
                 medicationRepository.updateMedicationStatus(mediId, MedicationTypeConstants.COMPLETED, new MedicationRepository.MedicationUpdateCallback() {
                     @Override
                     public void onSuccess() {
-                        removeItem(mediId);
-                        Log.d(TAG, "Medication status updated successfully");
+                        _reportsRepository.addPatientCompletedMedicationReport(medication, new ReportsRepository.ReportCallback() {
+                            @Override
+                            public void onReportAddedSuccessfully() {
+                                removeItem(mediId);
+                                Log.d(TAG, "Medication status updated successfully");
+                            }
+
+                            @Override
+                            public void onReportFailed(String errorMessage) {
+
+                            }
+                        });
                     }
 
                     @Override

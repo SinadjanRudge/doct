@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.healthprof.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,8 +19,10 @@ import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.AddMedicationAdapter;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +42,10 @@ public class AddMedication extends Fragment {
 
     // TODO: Rename and change types of parameters
     String patientUid;
-
+    String loggedInUserId;
     RecyclerView recyclerView;
     MedicationRepository repository;
+    ReportsRepository _reportsRepository = new ReportsRepository();
 
     public AddMedication() {
         // Required empty public constructor
@@ -74,6 +79,8 @@ public class AddMedication extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         repository = new MedicationRepository();
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_record_add_medication, container, false);
@@ -98,8 +105,18 @@ public class AddMedication extends Fragment {
                 repository.addMedication(dto, new MedicationRepository.MedicationsAddCallback() {
                     @Override
                     public void onSuccess(String medicationId) {
+                        _reportsRepository.addHealthProfPatientAddMedicationReport(loggedInUserId, patientUid, dto, new ReportsRepository.ReportCallback(){
 
-                        updateMedicationList();
+                            @Override
+                            public void onReportAddedSuccessfully() {
+                                updateMedicationList();
+                            }
+
+                            @Override
+                            public void onReportFailed(String errorMessage) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -132,14 +149,24 @@ public class AddMedication extends Fragment {
 
                     @Override
                     public void onDelete(String medicationId) {
-                        repository.deleteMedication(medicationId, new MedicationRepository.MedicationUpdateCallback() {
+                        _reportsRepository.addHealthProfPatientRemovedMedicationReport(loggedInUserId, userId, medicationId, new ReportsRepository.ReportCallback() {
                             @Override
-                            public void onSuccess() {
-                                updateMedicationList();
+                            public void onReportAddedSuccessfully() {
+                                repository.deleteMedication(medicationId, new MedicationRepository.MedicationUpdateCallback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        updateMedicationList();
+                                    }
+
+                                    @Override
+                                    public void onError(String errorMessage) {
+
+                                    }
+                                });
                             }
 
                             @Override
-                            public void onError(String errorMessage) {
+                            public void onReportFailed(String errorMessage) {
 
                             }
                         });

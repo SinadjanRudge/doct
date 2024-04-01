@@ -80,6 +80,13 @@ public class AppointmentDto {
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
     }
+    public String getPatientIdNumber() {
+        return patientIdNumber;
+    }
+
+    public void setPatientIdNumber(String patientIdNumber) {
+        this.patientIdNumber = patientIdNumber;
+    }
 
     private String uid;
     private String nameOfRequester;
@@ -90,5 +97,5 @@ public class AppointmentDto {
     private Timestamp createdAt;
     private String requester;
     private String documentId;
-
+    private String patientIdNumber;
 }
