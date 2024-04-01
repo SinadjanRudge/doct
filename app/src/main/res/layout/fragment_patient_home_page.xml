@@ -17,16 +17,18 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:background="#55000000"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView15"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="5"
-                android:text="Hello Patient,"
+                android:text="Hello Patient"
                 android:textColor="@color/lightgreen"
                 android:textSize="34sp"
                 android:textStyle="bold" />
@@ -44,6 +46,11 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
         <TextView
             android:id="@+id/textView14"
             android:layout_width="match_parent"
@@ -54,231 +61,68 @@
             android:textColor="@color/lightgreen"
             android:textSize="20sp" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/btnLogout"
             android:layout_width="match_parent"
-            android:layout_height="189dp"
+            android:layout_height="wrap_content"
+            android:text="Logout" />
+
+        <TextView
+            android:id="@+id/textView_reminders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+            android:layout_marginEnd="170dp"
+            android:text="Today's reminder"
+            android:textColor="@color/lightgreen"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
-
-                    <ImageView
-                        android:id="@+id/imageView_appointment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginBottom="50dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_color"
-                        app:srcCompat="@drawable/hp_appointment" />
-
-                    <TextView
-                        android:id="@+id/textView_appointment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
-                        android:layout_marginTop="130dp"
-                        android:gravity="center"
-                        android:text="Appointment"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </androidx.cardview.widget.CardView>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
-
-                    <ImageView
-                        android:id="@+id/imageView_medicine"
-                        android:layout_width="137dp"
-                        android:layout_height="107dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginBottom="50dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_color"
-                        app:srcCompat="@drawable/hp_medication" />
-
-                    <TextView
-                        android:id="@+id/textView_med"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
-                        android:layout_marginTop="130dp"
-                        android:gravity="center"
-                        android:text="Medication"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </androidx.cardview.widget.CardView>
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView_pendingAppoitment"
             android:layout_width="match_parent"
-            android:layout_height="189dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="170dp"
+            android:text="Your Pending Appointment"
+            android:textColor="@color/lightgreen"
+            android:textSize="14sp"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
-
-                    <ImageView
-                        android:id="@+id/imageView_device"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginBottom="50dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_color"
-                        app:srcCompat="@drawable/hp_smartwatch"/>
-
-                    <TextView
-                        android:id="@+id/textView_device"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="130dp"
-                        android:gravity="center"
-                        android:text="Device"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </androidx.cardview.widget.CardView>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
-
-                    <ImageView
-                        android:id="@+id/imageView_record"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginBottom="50dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_color"
-                        app:srcCompat="@drawable/hp_report"/>
-
-                    <TextView
-                        android:id="@+id/textView_record"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="130dp"
-                        android:gravity="center"
-                        android:text="Record"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </androidx.cardview.widget.CardView>
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="189dp"
-            android:orientation="horizontal">
+            android:layout_height="250dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_pendingAppointment"
+            android:layout_width="match_parent"
+            android:layout_height="210dp" />
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="210dp"
-                    android:layout_marginBottom="10dp">
+        </ScrollView>
 
-                    <ImageView
-                        android:id="@+id/imageView_report"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginBottom="50dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_color"
-                        app:srcCompat="@drawable/hp_report" />
+        <TextView
+            android:id="@+id/textView_medication"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="170dp"
+            android:text="Your Medication"
+            android:textColor="@color/lightgreen"
+            android:textSize="14sp"/>
 
-                    <TextView
-                        android:id="@+id/textView_report"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="130dp"
-                        android:gravity="center"
-                        android:text="Report"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </androidx.cardview.widget.CardView>
-            </RelativeLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_medication"
+            android:layout_width="match_parent"
+            android:layout_height="250dp" />
+
+        </ScrollView>
+
         </LinearLayout>
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
