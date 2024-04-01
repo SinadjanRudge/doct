@@ -16,9 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.SessionConstants;
-import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
-import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
@@ -40,6 +38,7 @@ public class UpdateVitalSigns extends Fragment {
     private String vitalSignsUid;
     private String loggedInUserId;
     EditText editBloodPressure, editTemperature, editPulseRate, editOxygenLevel, editWeight, editHeight, editBMI;
+    TextView errorBloodPresure, errorTempreture, errorSp02, errorPulse, errorWeight, errorHeight, errorBMI;
     VitalSignsRepository repository = new VitalSignsRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
 
