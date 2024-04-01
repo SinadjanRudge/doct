@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.triadss.doctrack2.R;
@@ -90,7 +91,6 @@ public class HealthProfessionalStatus extends Fragment implements IListView {
 
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
-    private BottomNavigationView bottomNavigationView, PatientbottomNavigationView;
 
     ArrayList<String> Purpose = new ArrayList<>();
     ArrayList<String> Date = new ArrayList<>();
@@ -108,7 +108,6 @@ public class HealthProfessionalStatus extends Fragment implements IListView {
         appointmentRepository = new AppointmentRepository();
         View rootView = inflater.inflate(R.layout.fragment_health_professional_status, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-
         ReloadList();
         return rootView;
     }

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PatientReportAdapter extends RecyclerView.Adapter<PatientReportAdapter.ViewHolder> {
-    private final String TAG = "PatientMedicationOngoingAdapter";
+    private final String TAG = "PatientReportAdapter";
     private ArrayList<ReportDto> reports;
     private Context context;
 
@@ -54,19 +54,17 @@ public class PatientReportAdapter extends RecyclerView.Adapter<PatientReportAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView description, action, date, createdByName;
+        private TextView description, action, date;
         public ViewHolder(View view) {
             super(view);
             description = view.findViewById(R.id.descriptionValue);
             action = view.findViewById(R.id.actionValue);
             date = view.findViewById(R.id.dateValue);
-            createdByName = view.findViewById(R.id.createdByValue);
         }
 
         public void update(ReportDto reportDto) {
             description.setText(reportDto.getMessage());
             action.setText(reportDto.getAction());
-            createdByName.setText(reportDto.getCreatedByName());
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(reportDto.getCreatedDate());
             date.setText(dateTime.ToString());

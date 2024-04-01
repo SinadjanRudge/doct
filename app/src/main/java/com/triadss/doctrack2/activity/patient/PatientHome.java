@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.patient;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,6 +16,7 @@ import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
+import com.triadss.doctrack2.activity.patient.fragment.PatientHomeFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientMedicationFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientReportFragment;
 import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
@@ -34,6 +36,7 @@ public class PatientHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_home);
+        replaceFragment(new PatientHomeFragment());
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -77,12 +80,31 @@ public class PatientHome extends AppCompatActivity {
             }
             return true;
         });
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Back is pressed... Finishing the activity
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
+                boolean isCurrentlyAtHomepage = currentFragment instanceof PatientHomeFragment;
+                if(!isCurrentlyAtHomepage) {
+                    fragmentManager.popBackStack();
+                }
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
+        boolean isCurrentlyAtHomepage = currentFragment instanceof PatientHomeFragment;
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
+        if(isCurrentlyAtHomepage) {
+            fragmentTransaction.addToBackStack("toHome");
+        }
         fragmentTransaction.commit();
     }
 }

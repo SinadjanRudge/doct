@@ -1,6 +1,7 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,22 +9,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PatientAppointmentPending extends Fragment {
+public class PatientAppointmentPending extends Fragment implements IListView {
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
 
@@ -34,15 +34,15 @@ public class PatientAppointmentPending extends Fragment {
         //storage of patient appointment on fire store
         appointmentRepository = new AppointmentRepository();
 
-        View rootView = inflater.inflate(R.layout.activity_patient_appointment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_patient_appointment_pending, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        CallPending();
+        ReloadList();
         CallSomething();
         return rootView;
     }
 
-   public void CallPending() {
+   public void ReloadList() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
@@ -67,7 +67,16 @@ public class PatientAppointmentPending extends Fragment {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             int carl = 2;
+            boolean stop = false;
             public void run() {
+                //When you are not in fragment
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
+                boolean isCurrentlyAtPatientAppointmentPending = currentFragment instanceof PatientAppointmentPending;
+                if(!isCurrentlyAtPatientAppointmentPending) {
+                    stop = true;
+                }
+
                 SharedPreferences sh = getActivity().getApplicationContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
 
                 int a = sh.getInt("PatientPending",9);
@@ -79,11 +88,10 @@ public class PatientAppointmentPending extends Fragment {
                     myEdit.putInt("PatientPending", Integer.parseInt("0"));
 
                     myEdit.apply();
-                    CallPending();
+                    ReloadList();
 
                 }
-              //  Toast.makeText(getContext(), Integer.toString(carl), Toast.LENGTH_SHORT).show();
-                handler.postDelayed(this,1000);
+                if (!stop) handler.postDelayed(this,1000);
             }
         }, 1000);
     }
