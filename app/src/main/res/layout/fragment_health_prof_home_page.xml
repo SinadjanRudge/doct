@@ -121,7 +121,7 @@
             android:layout_height="250dp">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_pendingAppointment"
+                android:id="@+id/recycler_view_pending_appointments"
                 android:layout_width="match_parent"
                 android:layout_height="210dp" />
 
