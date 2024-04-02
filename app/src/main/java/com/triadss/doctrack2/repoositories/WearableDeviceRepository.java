@@ -10,16 +10,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
-import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
-import com.triadss.doctrack2.config.model.WearableDeviceModel;
 import com.triadss.doctrack2.dto.WearableDeviceDto;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WearableDeviceRepository {
     private static final String TAG = "WearableDeviceRepository";
@@ -75,15 +69,7 @@ public class WearableDeviceRepository {
         wearablesCollection
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    // Convert query document snapshots to a list of WearableDeviceDto objects
-                    // and pass them to the callback
-                    // For example:
-                    // List<WearableDeviceDto> wearableDevices = new ArrayList<>();
-                    // for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    //     WearableDeviceDto wearableDevice = document.toObject(WearableDeviceDto.class);
-                    //     wearableDevices.add(wearableDevice);
-                    // }
-                    // callback.onSuccess(wearableDevices);
+                    // TODO
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error getting Wearable Devices", e);
@@ -91,7 +77,7 @@ public class WearableDeviceRepository {
                 });
     }
 
-    public void updateWearableDevice(String deviceId, WearableDeviceDto updatedDevice, WearableUpdateCallback callback) {
+    public void setWearableDevice(String deviceId, WearableDeviceDto updatedDevice, WearableUpdateCallback callback) {
         if(user == null) return;
 
         DocumentReference deviceRef = wearablesCollection.document(deviceId);
@@ -106,6 +92,41 @@ public class WearableDeviceRepository {
                     callback.onError(e.getMessage());
                 });
     }
+
+    public void updateWearableDevice(String deviceId, String ownerId, WearableDeviceDto updatedDevice, WearableUpdateCallback callback) {
+        if (user == null) return;
+
+        Query query = wearablesCollection.whereEqualTo("deviceId", deviceId)
+                .whereEqualTo("ownerId", ownerId);
+
+        query.get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            DocumentReference deviceRef = wearablesCollection.document(documentSnapshot.getId());
+                            deviceRef
+                                    .set(updatedDevice, SetOptions.merge())
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d(TAG, "Wearable device fields updated successfully");
+                                        callback.onSuccess();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Error updating Wearable Device fields", e);
+                                        callback.onError(e.getMessage());
+                                    });
+                        }
+                    } else {
+                        Log.e(TAG, "No matching document found for deviceId: " + deviceId + " and ownerId: " + ownerId);
+                        callback.onError("No matching document found");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error searching for Wearable Device", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
+
 
     public void deleteWearableDevice(String deviceId, WearableDeleteCallback callback) {
         if(user == null) return;

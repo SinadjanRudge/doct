@@ -1,7 +1,6 @@
 package com.triadss.doctrack2.activity.core;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +20,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
@@ -36,27 +39,30 @@ import com.triadss.doctrack2.dto.WearableDeviceDto;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 import com.triadss.doctrack2.repoositories.WearableDeviceRepository;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
+import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
 public class DeviceFragment extends Fragment {
     private static final String TAG = "DEVICE";
+
     private TextView receivedMessageTextView;
-    private Button sendMessageBtn, syncButton;
+    private Button syncButton;
     private int receivedMessageNumber = 1;
-    private int sentMessageCounter = 1;
-    private Handler handler;
     private Receiver messageReceiver;
     private int count = 0;
-    private VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
-    private WearableDeviceRepository wearableDevicesRepo = new WearableDeviceRepository();
+
+    private final VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
+    private final WearableDeviceRepository wearableDevicesRepo = new WearableDeviceRepository();
     private WearableDeviceDto wearableDeviceDto = new WearableDeviceDto();
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private FirebaseUser user = auth.getCurrentUser();
-    VitalSignsDto vitalSignsDto = new VitalSignsDto();
+
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
+    private final FirebaseUser user = auth.getCurrentUser();
+
+    private VitalSignsDto vitalSignsDto = new VitalSignsDto();
 
     //* TextViews for the Vital Signs
     private TextView bloodPressureValue, temperatureValue, spo2Value, pulseRateValue, weightValue, heightValue, BMIValue;
@@ -64,58 +70,150 @@ public class DeviceFragment extends Fragment {
     //* TextViews for the Device Registered
     private TextView lastSyncVal, deviceNameVal, deviceIDVal, isNearbyVal, noDeviceFound;
     private TableLayout deviceRegisteredTable;
+
     private static boolean checkOnce = false;
+
+    private DataClient.OnDataChangedListener dataListener;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_device_with_device, container, false);
         initializeViews(rootView);
-        initializeHandlers();
         initializeListeners();
         initVitalSigns();
         startContinuousCheck();
+        setupDataClientListener();
+
+        wearableDeviceDto.setOwnerId(auth.getUid());
         return rootView;
+    }
+
+    private void initializeListeners() {
+        syncButton.setOnClickListener(v -> handleSyncButtonClick());
+    }
+
+    private void setupDataClientListener() {
+        dataListener = dataEventBuffer -> {
+            for (DataEvent event : dataEventBuffer) {
+                if (event.getType() == DataEvent.TYPE_CHANGED) {
+                    handleDataChangeEvent(event);
+                }
+            }
+        };
+
+        Wearable.getDataClient(requireActivity()).addListener(dataListener);
+    }
+
+    private void handleDataChangeEvent(DataEvent event) {
+        DataItem dataItem = event.getDataItem();
+        if (Objects.equals(dataItem.getUri().getPath(), "/wear_to_mobile")) {
+            DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
+            String jsonData = dataMap.getString("jsonData");
+
+            updatePulseRate(jsonData);
+            updateLastSync(jsonData);
+        }
+    }
+
+    private void updatePulseRate(String jsonData) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            int pulseRate = jsonObject.getInt("pulseRate");
+            vitalSignsDto.setPulseRate(pulseRate);
+            vitalSignsRepo.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
+                @Override
+                public void onSuccess(String vitalSignsId) {
+                    setVitalSignsViews(vitalSignsDto);
+                    Toast.makeText(requireContext(), "Updated Pulse Rate", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    Toast.makeText(requireContext(), "Failure Updating Pulse Rate", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(TAG, "Error parsing JSON data: " + e.getMessage());
+        }
+    }
+
+    private void updateLastSync(String jsonData) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            String timeSynced = jsonObject.getString("timeSynced");
+
+            wearableDeviceDto.setTimeSynced(timeSynced);
+            assert user != null;
+            wearableDevicesRepo.updateWearableDevice(
+                    wearableDeviceDto.getDeviceId(),
+                    user.getUid(),
+                    wearableDeviceDto,
+                    new WearableDeviceRepository.WearableUpdateCallback() {
+                        @Override
+                        public void onSuccess() {
+                            setDeviceRegisteredViews(wearableDeviceDto);
+                            Toast.makeText(getContext(), "Sync Successful", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            Toast.makeText(requireContext(), "Something's wrong with your wearable", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Error parsing JSON data: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (dataListener != null) {
+            Wearable.getDataClient(requireActivity()).addListener(dataListener);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (dataListener != null) {
+            Wearable.getDataClient(requireActivity()).removeListener(dataListener);
+        }
     }
 
     private void startContinuousCheck() {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
-        executor.scheduleAtFixedRate(() -> checkIfPairedDevice(), 0, 10, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(this::checkIfPairedDevice, 0, 10, TimeUnit.SECONDS);
     }
 
     private void checkIfPairedDevice() {
-            Context context = requireContext();
-            Task<List<Node>> nodeListTask = Wearable.getNodeClient(context).getConnectedNodes();
-            try {
-                List<Node> nodes = Tasks.await(nodeListTask);
-                for (Node node : nodes) {
-                    String nodeName = node.getDisplayName();
-                    String nodeId = node.getId();
-                    boolean isNearby = node.isNearby();
+        Context context = requireContext();
+        Task<List<Node>> nodeListTask = Wearable.getNodeClient(context).getConnectedNodes();
+        try {
+            List<Node> nodes = Tasks.await(nodeListTask);
+            for (Node node : nodes) {
+                String nodeName = node.getDisplayName();
+                String nodeId = node.getId();
+                boolean isNearby = node.isNearby();
 
-                    Handler mainThreadHandler = new Handler(Looper.getMainLooper());
-                    mainThreadHandler.post(() -> {
-                        wearableDeviceDto.setDeviceId(nodeId);
-                        wearableDeviceDto.setDeviceName(nodeName);
-                        wearableDeviceDto.setIsNearby(isNearby);
-
-                        setDeviceRegisteredViews(wearableDeviceDto);
-
-                    });
-                }
-
-                showPairedDeviceStatus(nodes.size() == 1);
-            } catch (Exception e) {
-                e.printStackTrace();
+                wearableDeviceDto.setDeviceId(nodeId);
+                wearableDeviceDto.setDeviceName(nodeName);
+                wearableDeviceDto.setIsNearby(isNearby);
             }
-//        });
-    }
 
+            showPairedDeviceStatus(nodes.size() == 1);
+        } catch (Exception e) {
+            Log.e(TAG, "Error: " + e.getMessage());
+        }
+    }
 
     private void showPairedDeviceStatus(boolean isPaired) {
         requireActivity().runOnUiThread(() -> {
+            Handler mainThreadHandler = new Handler(Looper.getMainLooper());
             if (isPaired) {
-                Handler mainThreadHandler = new Handler(Looper.getMainLooper());
                 mainThreadHandler.post(() -> {
-                    if(wearableDeviceDto.getIsNearby()){
+                    if (wearableDeviceDto.getIsNearby()) {
                         noDeviceFound.setVisibility(View.GONE);
                         deviceRegisteredTable.setVisibility(View.VISIBLE);
                     } else {
@@ -123,21 +221,39 @@ public class DeviceFragment extends Fragment {
                         deviceRegisteredTable.setVisibility(View.GONE);
                         Toast.makeText(requireContext(), "No Wearable Device Nearby. Searching...", Toast.LENGTH_SHORT).show();
                     }
-
                 });
-                if(!checkOnce && wearableDeviceDto.getIsNearby()) {
+                if (!checkOnce && wearableDeviceDto.getIsNearby()) {
+                    wearableDevicesRepo.getWearableDevice(wearableDeviceDto.getDeviceId(), Objects.requireNonNull(user).getUid(), new WearableDeviceRepository.GetWearableDeviceCallback() {
+                        @Override
+                        public void onSuccess(WearableDeviceDto wearableDevice) {
+                            wearableDeviceDto = wearableDevice;
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            wearableDevicesRepo.addWearableDevice(wearableDeviceDto, new WearableDeviceRepository.WearableAddCallback() {
+                                @Override
+                                public void onSuccess(String medicationId) {
+                                    Toast.makeText(getContext(), "Device Successfully Registered", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onError(String errorMessage) {
+
+                                }
+                            });
+                        }
+                    });
                     Toast.makeText(requireContext(), "Paired with a smartwatch", Toast.LENGTH_SHORT).show();
                     checkOnce = true;
                 }
-
+                mainThreadHandler.post(() -> setDeviceRegisteredViews(wearableDeviceDto));
             } else {
-                // No paired device connected
-                Handler mainThreadHandler = new Handler(Looper.getMainLooper());
                 mainThreadHandler.post(() -> {
                     noDeviceFound.setVisibility(View.VISIBLE);
                     deviceRegisteredTable.setVisibility(View.GONE);
                 });
-                if(checkOnce) {
+                if (checkOnce) {
                     Toast.makeText(requireContext(), "Please pair a smartwatch", Toast.LENGTH_SHORT).show();
                     checkOnce = false;
                 }
@@ -147,7 +263,6 @@ public class DeviceFragment extends Fragment {
 
     private void initializeViews(View rootView) {
         receivedMessageTextView = rootView.findViewById(R.id.receivedMessageTextView);
-        sendMessageBtn = rootView.findViewById(R.id.sendMessageBtn);
         syncButton = rootView.findViewById(R.id.SyncDeviceBtn);
 
         //* Vital Signs Views
@@ -169,29 +284,9 @@ public class DeviceFragment extends Fragment {
         noDeviceFound = rootView.findViewById(R.id.NoDeviceFound);
     }
 
-    private void initializeHandlers() {
-        handler = new Handler(msg -> {
-            Bundle bundle = msg.getData();
-            String logText = "\nHandled message: " + bundle.getString(BluetoothConstants.MessageKey);
-            receivedMessageTextView.append("\n" + logText);
-            Log.e(TAG, logText);
-            return true;
-        });
-    }
-
-    private void initializeListeners() {
-        sendMessageBtn.setOnClickListener(v -> {
-            String onClickMessage = "I just sent the wearable a message " + sentMessageCounter++;
-            Log.e(TAG, "Send message: " + onClickMessage);
-            new SenderThread(BluetoothConstants.DataPath, onClickMessage).start();
-        });
-
-        syncButton.setOnClickListener(v -> handleSyncButtonClick());
-    }
-
-    private void initVitalSigns(){
-        try{
-            vitalSignsRepo.getVitalSignOfPatient(user.getUid(), new VitalSignsRepository.FetchCallback() {
+    private void initVitalSigns() {
+        try {
+            vitalSignsRepo.getVitalSignOfPatient(Objects.requireNonNull(user).getUid(), new VitalSignsRepository.FetchCallback() {
                 @Override
                 public void onSuccess(VitalSignsDto vitalSigns) {
                     vitalSignsDto = vitalSigns;
@@ -204,68 +299,42 @@ public class DeviceFragment extends Fragment {
                     Toast.makeText(getContext(), "Sync Error: " + errorMessage, Toast.LENGTH_SHORT).show();
                 }
             });
-        }catch (Exception e){
-
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void setVitalSignsViews(VitalSignsDto vitalSigns){
+    private void setVitalSignsViews(VitalSignsDto vitalSigns) {
         bloodPressureValue.setText(vitalSigns.getBloodPressure());
-        temperatureValue.setText(vitalSigns.getTemperature() + "");
-        spo2Value.setText(vitalSigns.getOxygenLevel() + "");
-        pulseRateValue.setText(vitalSigns.getPulseRate() + "");
-        weightValue.setText(vitalSigns.getWeight() + "");
-        heightValue.setText(vitalSigns.getHeight() + "");
-        BMIValue.setText(vitalSigns.getBMI() + "");
+        temperatureValue.setText(String.valueOf(vitalSigns.getTemperature()));
+        spo2Value.setText(String.valueOf(vitalSigns.getOxygenLevel()));
+        pulseRateValue.setText(String.valueOf(vitalSigns.getPulseRate()));
+        weightValue.setText(String.valueOf(vitalSigns.getWeight()));
+        heightValue.setText(String.valueOf(vitalSigns.getHeight()));
+        BMIValue.setText(String.valueOf(vitalSigns.getBMI()));
     }
 
-    private void setDeviceRegisteredViews(WearableDeviceDto wearableDeviceDto){
+    private void setDeviceRegisteredViews(WearableDeviceDto wearableDeviceDto) {
+        lastSyncVal.setText((wearableDeviceDto.getTimeSynced() == null) ? "No Time Available" : wearableDeviceDto.getTimeSynced());
         deviceNameVal.setText(wearableDeviceDto.getDeviceName());
         deviceIDVal.setText(wearableDeviceDto.getDeviceId());
-        isNearbyVal.setText(wearableDeviceDto.getIsNearby() + "");
+        isNearbyVal.setText(String.valueOf(wearableDeviceDto.getIsNearby()));
     }
 
     private void handleSyncButtonClick() {
         try {
-            if(!wearableDeviceDto.getIsNearby()){
+            if (!wearableDeviceDto.getIsNearby()) {
                 Toast.makeText(getContext(), "Can't sync. No Device Nearby Found.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             Toast.makeText(getContext(), "Syncing...", Toast.LENGTH_SHORT).show();
 
-            wearableDevicesRepo.getWearableDevice(wearableDeviceDto.getDeviceId(), user.getUid(),new WearableDeviceRepository.GetWearableDeviceCallback() {
-                @Override
-                public void onSuccess(WearableDeviceDto wearableDevice) {
-                    Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(String errorMessage) {
-                    wearableDeviceDto.setOwnerId(user.getUid());
-                    wearableDevicesRepo.addWearableDevice(wearableDeviceDto, new WearableDeviceRepository.WearableAddCallback() {
-                        @Override
-                        public void onSuccess(String medicationId) {
-                            Toast.makeText(getContext(), "Device Successfully Registered", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onError(String errorMessage) {
-
-                        }
-                    });
-                }
-            });
-
-            vitalSignsRepo.getVitalSignOfPatient(user.getUid(), new VitalSignsRepository.FetchCallback() {
+            vitalSignsRepo.getVitalSignOfPatient(Objects.requireNonNull(user).getUid(), new VitalSignsRepository.FetchCallback() {
                 @Override
                 public void onSuccess(VitalSignsDto vitalSigns) {
                     String jsonData = vitalSigns.toJsonData();
                     sendMessage(jsonData);
-
-                    //* TODO Update Last Sync
-
-                    Toast.makeText(getContext(), "Sync Successful", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -283,7 +352,7 @@ public class DeviceFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         if (messageReceiver != null) {
-            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(messageReceiver);
+            LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(messageReceiver);
             messageReceiver = null;
         }
     }
@@ -300,53 +369,14 @@ public class DeviceFragment extends Fragment {
 
     private void sendMessage(String jsonData) {
         String jsonDataWithCount = jsonData + " Count: " + count;
-        PutDataMapRequest dataMap = PutDataMapRequest.create("/data_path");
+        PutDataMapRequest dataMap = PutDataMapRequest.create("/mobile_to_wear");
         dataMap.getDataMap().putString("jsonData", jsonDataWithCount);
         PutDataRequest request = dataMap.asPutDataRequest();
-        Task<DataItem> putDataTask = Wearable.getDataClient(getContext()).putDataItem(request);
+        Task<DataItem> putDataTask = Wearable.getDataClient(requireContext()).putDataItem(request);
 
         putDataTask.addOnSuccessListener(dataItem -> {
             count++;
             Log.d(TAG, "Data sent successfully");
-        }).addOnFailureListener(e -> {
-            Log.e(TAG, "Failed to send data", e);
-        });
-    }
-
-    private class SenderThread extends Thread {
-        String path;
-        String message;
-
-        SenderThread(String p, String m) {
-            path = p;
-            message = m;
-        }
-
-        public void run() {
-            Task<List<Node>> wearableList = Wearable.getNodeClient(getContext()).getConnectedNodes();
-            try {
-                List<Node> nodes = Tasks.await(wearableList);
-                for (Node node : nodes) {
-                    String nodeId = node.getId();
-                    Task<Integer> sendMessageTask = Wearable.getMessageClient(getActivity())
-                            .sendMessage(node.getId(), path, message.getBytes())
-                            .addOnSuccessListener(o -> {
-                                Log.d("NodeID", nodeId);
-                                Log.d("MessageSent", "Message sent successfully");
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("MessageSent", "Failed to send message", e);
-                            });
-                    try {
-                        Integer result = Tasks.await(sendMessageTask);
-                        sendMessage("Sent Sample Message " + sentMessageCounter++);
-                    } catch (ExecutionException | InterruptedException exception) {
-                        Log.e("DeviceFragment - Exception", exception.getMessage());
-                    }
-                }
-            } catch (ExecutionException | InterruptedException exception) {
-                Log.e("DeviceFragment - Exception", exception.getMessage());
-            }
-        }
+        }).addOnFailureListener(e -> Log.e(TAG, "Failed to send data", e));
     }
 }
