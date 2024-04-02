@@ -58,6 +58,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("com.google.firebase:firebase-firestore:24.10.2")
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("com.google.android.gms:play-services-wearable:18.1.0")
     implementation("com.google.code.gson:gson:2.8.9")
