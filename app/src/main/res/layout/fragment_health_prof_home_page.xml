@@ -118,7 +118,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="245dp">
+            android:layout_height="250dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_pending_appointments"
@@ -129,7 +129,13 @@
 
 
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
 
+
+
+        </ScrollView>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
