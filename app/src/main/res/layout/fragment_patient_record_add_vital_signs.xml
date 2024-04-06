@@ -236,7 +236,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.6"
-                        android:text="Height (m):"
+                        android:text="Height (cm):"
                         android:textSize="16sp" />
 
                     <TextView

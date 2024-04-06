@@ -236,7 +236,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.6"
-                        android:text="Height:"
+                        android:text="Height (cm):"
                         android:textSize="16sp" />
 
                     <TextView
@@ -269,8 +269,9 @@
                         android:layout_height="50dp"
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/green_stroke"
-                        android:hint=" Input here" />
+                        android:enabled="false"
+                        android:text=" 0"
+                        android:background="@drawable/green_stroke" />
 
             </LinearLayout>
 
