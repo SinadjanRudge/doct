@@ -136,13 +136,15 @@ public class ViewPatientRecordFragment extends Fragment {
             vitalSignsRepository.getVitalSignOfPatient(patientUid, new VitalSignsRepository.FetchCallback() {
                 @Override
                 public void onSuccess(VitalSignsDto vitalSigns) {
-                    bloodPressure.setText(vitalSigns.getBloodPressure());
-                    temperature.setText(String.valueOf(vitalSigns.getTemperature()));
-                    spo2.setText(String.valueOf(vitalSigns.getOxygenLevel()));
-                    pulseRate.setText(String.valueOf(vitalSigns.getPulseRate()));
-                    weight.setText(String.valueOf(vitalSigns.getWeight()));
-                    height.setText(String.valueOf(vitalSigns.getHeight()));
-                    BMI.setText(String.valueOf(vitalSigns.getBMI()));
+                    if(vitalSigns != null){
+                        bloodPressure.setText(vitalSigns.getBloodPressure());
+                        temperature.setText(String.valueOf(vitalSigns.getTemperature()));
+                        spo2.setText(String.valueOf(vitalSigns.getOxygenLevel()));
+                        pulseRate.setText(String.valueOf(vitalSigns.getPulseRate()));
+                        weight.setText(String.valueOf(vitalSigns.getWeight()));
+                        height.setText(String.valueOf(vitalSigns.getHeight()));
+                        BMI.setText(String.valueOf(vitalSigns.getBMI()));
+                    }
                 }
 
                 @Override

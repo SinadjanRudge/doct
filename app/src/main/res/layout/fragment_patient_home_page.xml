@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <ScrollView
-        android:layout_height="580dp"
         android:layout_width="match_parent"
+        android:layout_height="730dp"
         android:background="@drawable/bgreen"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
@@ -131,6 +131,10 @@
                     android:layout_height="250dp" />
 
             </ScrollView>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
 
         </LinearLayout>
 
