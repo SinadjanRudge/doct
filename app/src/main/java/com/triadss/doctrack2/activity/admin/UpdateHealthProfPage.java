@@ -68,9 +68,9 @@ public class UpdateHealthProfPage extends Fragment {
 
         updateBtn = rootView.findViewById(R.id.buttonUpdateHealthProf);
         editTextPosition = rootView.findViewById(R.id.editTextPosition);
-        textHealthWorkerName = rootView.findViewById(R.id.health_worker_name_update);
-        textUserName = rootView.findViewById(R.id.health_user_name_update);
-        textGenderUpdate = rootView.findViewById(R.id.health_gender_update);
+        textHealthWorkerName = rootView.findViewById(R.id.healthWorkerName);
+        textUserName = rootView.findViewById(R.id.UserName);
+        textGenderUpdate = rootView.findViewById(R.id.Gender);
 
         editTextPositionInput = rootView.findViewById(R.id.editTextPosition);
 
