@@ -77,6 +77,17 @@
                 android:layout_marginHorizontal="20sp"
                 android:layout_marginTop="5sp">
 
+                <TextView
+                    android:id="@+id/errorAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="Address is Blank"
+                    android:textColor="#FF0000"
+                    android:textSize="13sp" />
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_address"
                     android:layout_width="match_parent"
@@ -100,6 +111,17 @@
                     android:layout_marginTop="36dp"
                     android:hint="@string/phone_no"
                     android:inputType="text" />
+
+                <TextView
+                    android:id="@+id/errorPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="Phone Number is Blank"
+                    android:textColor="#FF0000"
+                    android:textSize="13sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -116,6 +138,17 @@
                     android:layout_marginTop="36dp"
                     android:hint="@string/age"
                     android:inputType="number" />
+
+                <TextView
+                    android:id="@+id/errorAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="Age is Blank"
+                    android:textColor="#FF0000"
+                    android:textSize="13sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -132,6 +165,17 @@
                     android:layout_marginTop="36dp"
                     android:hint="@string/course"
                     android:inputType="text" />
+
+                <TextView
+                    android:id="@+id/errorCourse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:text="Course is Blank"
+                    android:textColor="#FF0000"
+                    android:textSize="13sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
