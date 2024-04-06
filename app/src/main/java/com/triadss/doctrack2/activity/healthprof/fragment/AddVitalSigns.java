@@ -130,6 +130,10 @@ public class AddVitalSigns extends Fragment {
 
         return rootView;
     }
+
+    private double BMICalc(double weight, double height){
+        return weight / Math.pow(height, 2.0);
+    }
     boolean widgetPredicate(Button textSource, Function<String, Boolean> predicate) {
         return predicate.apply(textSource.getText().toString());
     }
