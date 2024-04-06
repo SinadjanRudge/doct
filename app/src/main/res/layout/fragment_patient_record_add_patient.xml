@@ -80,7 +80,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
-                    android:hint=" Enter patient id" />
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:hint="Enter patient id" />
 
                 <TextView
                     android:id="@+id/error_patientID"
@@ -102,7 +104,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
-                    android:hint=" enter email" />
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:hint="Enter email" />
 
                 <TextView
                     android:id="@+id/error_Email"
@@ -124,7 +128,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
-                    android:hint=" Enter full name" />
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:hint="Enter full name" />
 
                 <TextView
                     android:id="@+id/error_FullName"
@@ -170,7 +176,9 @@
                         android:layout_weight="1"
                         android:inputType="phone"
                         android:background="@drawable/green_stroke"
-                        android:hint=" Enter age" />
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:hint="Enter age" />
 
 
                     <EditText
@@ -180,7 +188,9 @@
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/green_stroke"
-                        android:hint=" Enter gender" />
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:hint="Enter gender" />
 
 
                 </LinearLayout>
@@ -219,7 +229,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
-                    android:hint=" Enter address" />
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:hint="Enter address" />
 
 
                 <TextView
@@ -273,7 +285,9 @@
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/green_stroke"
-                        android:hint=" Enter status" />
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:hint="Enter status" />
 
                 </LinearLayout>
 
@@ -313,7 +327,9 @@
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
                     android:inputType="phone"
-                    android:hint=" Enter contact no." />
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:hint="Enter contact no." />
 
                 <TextView
                     android:id="@+id/error_Contact"
@@ -359,7 +375,9 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/green_stroke"
-                        android:hint=" Enter course" />
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:hint="Enter course" />
 
                     <EditText
                         android:id="@+id/input_Year"
@@ -369,7 +387,9 @@
                         android:layout_weight="1"
                         android:inputType="phone"
                         android:background="@drawable/green_stroke"
-                        android:hint=" Enter year" />
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:hint="Enter year" />
 
                 </LinearLayout>
 
