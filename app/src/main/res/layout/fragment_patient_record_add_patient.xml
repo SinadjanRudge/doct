@@ -80,7 +80,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
-                    android:hint=" enter patient id" />
+                    android:hint=" Enter patient id" />
 
                 <TextView
                     android:id="@+id/error_patientID"
@@ -124,7 +124,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
-                    android:hint=" enter full name" />
+                    android:hint=" Enter full name" />
 
                 <TextView
                     android:id="@+id/error_FullName"
@@ -170,7 +170,7 @@
                         android:layout_weight="1"
                         android:inputType="phone"
                         android:background="@drawable/green_stroke"
-                        android:hint=" enter age" />
+                        android:hint=" Enter age" />
 
 
                     <EditText
@@ -180,7 +180,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/green_stroke"
-                        android:hint=" enter gender" />
+                        android:hint=" Enter gender" />
 
 
                 </LinearLayout>
@@ -219,7 +219,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
-                    android:hint=" enter address" />
+                    android:hint=" Enter address" />
 
 
                 <TextView
@@ -273,7 +273,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/green_stroke"
-                        android:hint=" enter status" />
+                        android:hint=" Enter status" />
 
                 </LinearLayout>
 
@@ -313,7 +313,7 @@
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
                     android:inputType="phone"
-                    android:hint=" enter contact no." />
+                    android:hint=" Enter contact no." />
 
                 <TextView
                     android:id="@+id/error_Contact"
@@ -359,7 +359,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/green_stroke"
-                        android:hint=" enter course" />
+                        android:hint=" Enter course" />
 
                     <EditText
                         android:id="@+id/input_Year"
@@ -369,7 +369,7 @@
                         android:layout_weight="1"
                         android:inputType="phone"
                         android:background="@drawable/green_stroke"
-                        android:hint=" enter year" />
+                        android:hint=" Enter year" />
 
                 </LinearLayout>
 
@@ -403,7 +403,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="30dp"
-                android:text="click NEXT to enter Medical History"
+                android:text="Click NEXT to enter Medical History"
                 android:textSize="13sp"
                 tools:ignore="MissingConstraints" />
 
