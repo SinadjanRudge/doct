@@ -3,6 +3,8 @@ package com.triadss.doctrack2.activity.healthprof.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,6 +106,45 @@ public class AddVitalSigns extends Fragment {
         errorHeight.setVisibility(rootView.INVISIBLE);
         errorBMI.setVisibility(rootView.INVISIBLE);
 
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed for auto-calculation
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Not needed for auto-calculation
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String weightStr = editWeight.getText().toString();
+                String heightStr = editHeight.getText().toString();
+
+                double bmi = calculateBMI(weightStr, heightStr);
+                editBMI.setText(String.format("%.2f", bmi));
+            }
+        };
+
+        editWeight.addTextChangedListener(textWatcher);
+        editHeight.addTextChangedListener(textWatcher);
+
+
+        submitButton(submit);
+
+        return rootView;
+    }
+
+    private double calculateBMI(String weightStr, String heightStr){
+        if(weightStr.isEmpty() || heightStr.isEmpty()) return 0;
+
+        double weight = Double.parseDouble(weightStr);
+        double height = Double.parseDouble(heightStr);
+        return (height != 0) ? (weight / Math.pow(height, 2.0) * 10000) : 0.0;
+    }
+
+    private void submitButton(Button submit){
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,12 +168,6 @@ public class AddVitalSigns extends Fragment {
                 }
             }
         });
-
-        return rootView;
-    }
-
-    private double BMICalc(double weight, double height){
-        return weight / Math.pow(height, 2.0);
     }
     boolean widgetPredicate(Button textSource, Function<String, Boolean> predicate) {
         return predicate.apply(textSource.getText().toString());
