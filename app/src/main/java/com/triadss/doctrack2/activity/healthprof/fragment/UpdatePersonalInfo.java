@@ -3,22 +3,24 @@ package com.triadss.doctrack2.activity.healthprof.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
+
+import java.util.function.Function;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +38,7 @@ public class UpdatePersonalInfo extends Fragment {
 
     EditText editTextAddress, editTextPhone, editTextAge, editTextCourse,
         editTextEmail, editTextFullname, editTextIdNumber;
+    TextView errorAddress, errorPhone, errorAge, errorCourse;
     PatientRepository patientRepository = new PatientRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
     String loggedInUserId;
@@ -84,18 +87,67 @@ public class UpdatePersonalInfo extends Fragment {
         editTextFullname = rootView.findViewById(R.id.name);
         editTextIdNumber = rootView.findViewById(R.id.idNumber);
 
+        errorAddress = rootView.findViewById(R.id.errorAddress);
+        errorPhone = rootView.findViewById(R.id.errorPhone);
+        errorAge  = rootView.findViewById(R.id.errorAge);
+        errorCourse  = rootView.findViewById(R.id.errorCourse);
+
+        errorAddress.setVisibility(rootView.INVISIBLE);
+        errorPhone.setVisibility(rootView.INVISIBLE);
+        errorAge.setVisibility(rootView.INVISIBLE);
+        errorCourse.setVisibility(rootView.INVISIBLE);
+
         populatePersonalInfo();
 
         Button nextButton = rootView.findViewById(R.id.nxtButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updatePersonalInfo();
-                showMedicalHistory();
+                Function<String, Boolean> isNotEmptyPredicate = (val) -> !val.isEmpty();
+                if(widgetPredicate(editTextAddress, isNotEmptyPredicate)
+                && widgetPredicate(editTextPhone, isNotEmptyPredicate)
+                && widgetPredicate(editTextAge, isNotEmptyPredicate)
+                && widgetPredicate(editTextCourse, isNotEmptyPredicate)
+                )
+                {
+                    updatePersonalInfo();
+                    showMedicalHistory();
+                }
+                else
+                {
+                    showTextViewWhenTrue(editTextAddress, (value) -> value.isEmpty(), errorAddress);
+                    showTextViewWhenTrue(editTextPhone, (value) -> value.isEmpty(), errorPhone);
+                    showTextViewWhenTrue(editTextAge, (value) -> value.isEmpty(), errorAge);
+                    showTextViewWhenTrue(editTextCourse, (value) -> value.isEmpty(), errorCourse);
+                }
             }
         });
 
         return rootView;
+    }
+    boolean widgetPredicate(Button textSource, Function<String, Boolean> predicate) {
+        return predicate.apply(textSource.getText().toString());
+    }
+
+    boolean widgetPredicate(EditText textSource, Function<String, Boolean> predicate) {
+        return predicate.apply(textSource.getText().toString());
+    }
+
+    void showTextViewWhenTrue(EditText textSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        showTextViewWhenTrue(textSource.getText().toString(), predicate, messageWidget);
+    }
+
+    void showTextViewWhenTrue(Button buttonSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        showTextViewWhenTrue(buttonSource.getText().toString(), predicate, messageWidget);
+    }
+
+    void showTextViewWhenTrue(String textSource, Function<String, Boolean> predicate, TextView messageWidget) {
+        if(predicate.apply(textSource))
+        {
+            messageWidget.setVisibility(View.VISIBLE);
+        } else {
+            messageWidget.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void populatePersonalInfo()

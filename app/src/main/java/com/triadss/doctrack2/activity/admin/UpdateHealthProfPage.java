@@ -108,7 +108,8 @@ public class UpdateHealthProfPage extends Fragment {
                                 }
                             });
                         }
-                        else if(editTextPositionInput.getText().toString().isEmpty()) errorTextPosition.setVisibility(rootView.VISIBLE); else errorTextPosition.setVisibility(rootView.GONE);
+                        else if(editTextPositionInput.getText().toString().isEmpty()) errorTextPosition.setVisibility(rootView.VISIBLE);
+                        else errorTextPosition.setVisibility(rootView.GONE);
                     }
                 });
             }
