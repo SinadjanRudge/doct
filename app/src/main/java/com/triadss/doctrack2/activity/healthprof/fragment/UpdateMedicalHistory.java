@@ -3,17 +3,17 @@ package com.triadss.doctrack2.activity.healthprof.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.SessionConstants;
@@ -43,6 +43,9 @@ public class UpdateMedicalHistory extends Fragment {
     CheckboxStringProcessor pastIllnessProcessor, familyHistoryProcessor;
     EditTextStringProcessor obgyneHistoryProcessor;
     MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
+    EditText otherPastIllnessText, otherFamilyHistoryText;
+    CheckBox pastillness, cb_famHist_others;
+    TextView errorPassIllness, errorFamilyHistory;
     String loggedInUserId;
     ReportsRepository _reportsRepository = new ReportsRepository();
 
@@ -99,8 +102,19 @@ public class UpdateMedicalHistory extends Fragment {
                 rootView.findViewById(R.id.allergicReaction),
                 rootView.findViewById(R.id.insomnia)
         );
-
         editPrevHospitalization = rootView.findViewById(R.id.input_previous_hospitalization);
+
+        pastillness = rootView.findViewById(R.id.otherPastIllness);
+        cb_famHist_others = rootView.findViewById(R.id.cb_famHist_others);
+
+        otherPastIllnessText = rootView.findViewById(R.id.otherPastIllnessText);
+        otherFamilyHistoryText = rootView.findViewById(R.id.otherFamilyHistoryText);
+
+        errorPassIllness = rootView.findViewById(R.id.errorPassIllness);
+        errorFamilyHistory = rootView.findViewById(R.id.errorFamilyHistory);
+
+        errorPassIllness.setVisibility(rootView.INVISIBLE);
+        errorFamilyHistory.setVisibility(rootView.INVISIBLE);
 
         familyHistoryProcessor = new CheckboxStringProcessor(
                 rootView.findViewById(R.id.cb_famHist_others),
@@ -126,7 +140,22 @@ public class UpdateMedicalHistory extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateMedicalHistory();
+                if(((pastillness.isChecked() && !otherPastIllnessText.getText().toString().isEmpty())
+                        && (cb_famHist_others.isChecked() && !otherFamilyHistoryText.getText().toString().isEmpty()))
+                        || (!pastillness.isChecked() && (cb_famHist_others.isChecked() && !otherFamilyHistoryText.getText().toString().isEmpty()))
+                        || (!cb_famHist_others.isChecked() && (pastillness.isChecked() && !otherPastIllnessText.getText().toString().isEmpty()))
+                        || (!pastillness.isChecked() && !cb_famHist_others.isChecked())
+                ) {
+                    errorPassIllness.setVisibility(rootView.INVISIBLE);
+                    errorFamilyHistory.setVisibility(rootView.INVISIBLE);
+                    updateMedicalHistory();
+                }
+                else {
+                    if(pastillness.isChecked() && otherPastIllnessText.getText().toString().isEmpty()) errorPassIllness.setVisibility(rootView.VISIBLE);
+                    else errorPassIllness.setVisibility(rootView.INVISIBLE);
+                    if(cb_famHist_others.isChecked() && otherFamilyHistoryText.getText().toString().isEmpty()) errorFamilyHistory.setVisibility(rootView.VISIBLE);
+                    else errorFamilyHistory.setVisibility(rootView.INVISIBLE);
+                }
             }
         });
 
