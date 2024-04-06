@@ -3,6 +3,8 @@ package com.triadss.doctrack2.activity.healthprof.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,6 +106,30 @@ public class UpdateVitalSigns extends Fragment {
         errorHeight.setVisibility(rootView.INVISIBLE);
         errorBMI.setVisibility(rootView.INVISIBLE);
 
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed for auto-calculation
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Not needed for auto-calculation
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String weightStr = editWeight.getText().toString();
+                String heightStr = editHeight.getText().toString();
+
+                double bmi = calculateBMI(weightStr, heightStr);
+                editBMI.setText(String.format("%.2f", bmi));
+            }
+        };
+
+        editWeight.addTextChangedListener(textWatcher);
+        editHeight.addTextChangedListener(textWatcher);
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,6 +159,14 @@ public class UpdateVitalSigns extends Fragment {
         populatePersonalInfo();
 
         return rootView;
+    }
+
+    private double calculateBMI(String weightStr, String heightStr){
+        if(weightStr.isEmpty() || heightStr.isEmpty()) return 0;
+
+        double weight = Double.parseDouble(weightStr);
+        double height = Double.parseDouble(heightStr);
+        return (height != 0) ? (weight / Math.pow(height, 2.0) * 10000) : 0.0;
     }
     boolean widgetPredicate(Button textSource, Function<String, Boolean> predicate) {
         return predicate.apply(textSource.getText().toString());
@@ -165,14 +199,16 @@ public class UpdateVitalSigns extends Fragment {
 
             @Override
             public void onSuccess(VitalSignsDto vitalSigns) {
-                editBloodPressure.setText(vitalSigns.getBloodPressure());
-                editTemperature.setText(String.valueOf(vitalSigns.getTemperature()));
-                editOxygenLevel.setText(String.valueOf(vitalSigns.getOxygenLevel()));
-                editPulseRate.setText(String.valueOf(vitalSigns.getPulseRate()));
-                editWeight.setText(String.valueOf(vitalSigns.getWeight()));
-                editHeight.setText(String.valueOf(vitalSigns.getHeight()));
-                editBMI.setText(String.valueOf(vitalSigns.getBMI()));
-                vitalSignsUid = vitalSigns.getUid();
+                if(vitalSigns != null){
+                    editBloodPressure.setText(vitalSigns.getBloodPressure());
+                    editTemperature.setText(String.valueOf(vitalSigns.getTemperature()));
+                    editOxygenLevel.setText(String.valueOf(vitalSigns.getOxygenLevel()));
+                    editPulseRate.setText(String.valueOf(vitalSigns.getPulseRate()));
+                    editWeight.setText(String.valueOf(vitalSigns.getWeight()));
+                    editHeight.setText(String.valueOf(vitalSigns.getHeight()));
+                    editBMI.setText(String.valueOf(vitalSigns.getBMI()));
+                    vitalSignsUid = vitalSigns.getUid();
+                }
             }
 
             @Override
@@ -199,7 +235,7 @@ public class UpdateVitalSigns extends Fragment {
         repository.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
             @Override
             public void onSuccess(String documentId) {
-                _reportsRepository.updateHealthProfPatientVitalSignReport(loggedInUserId, patientUid, new ReportsRepository.ReportCallback() {
+                _reportsRepository.addHealthProfUpdatePatientVitalSignReport(loggedInUserId, patientUid, new ReportsRepository.ReportCallback() {
                     @Override
                     public void onReportAddedSuccessfully() {
                         showViewPatient();

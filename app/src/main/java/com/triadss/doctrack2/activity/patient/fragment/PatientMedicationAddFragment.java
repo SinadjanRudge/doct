@@ -28,6 +28,7 @@ import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.dto.TimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.sql.Time;
 import java.util.Calendar;
@@ -60,6 +61,7 @@ public class PatientMedicationAddFragment extends Fragment {
     private Button button_date, button_time, add_button, clear_button;
     private TextInputEditText medicineInput, noteInput;
     private MedicationRepository medicationRepository;
+    private ReportsRepository _reportsRepository = new ReportsRepository();
 
     public PatientMedicationAddFragment() {
         // Required empty public constructor
@@ -230,10 +232,22 @@ public class PatientMedicationAddFragment extends Fragment {
             medicationRepository.addMedication(medication, new MedicationRepository.MedicationsAddCallback() {
                 @Override
                 public void onSuccess(String medicationId) {
-                    Log.e(TAG, "Successfully added medication with the id of " + medicationId);
+                    _reportsRepository.addPatientAddedMedicationReport(medication, new ReportsRepository.ReportCallback() {
+                        @Override
+                        public void onReportAddedSuccessfully() {
+                            handleClearButtonClick();
 
-                    ViewPager2 vp = getActivity().findViewById(R.id.viewPager); // Fetch ViewPager instance
-                    vp.setCurrentItem(1);
+                            Log.e(TAG, "Successfully added medication with the id of " + medicationId);
+
+                            ViewPager2 vp = getActivity().findViewById(R.id.viewPager); // Fetch ViewPager instance
+                            vp.setCurrentItem(1);
+                        }
+
+                        @Override
+                        public void onReportFailed(String errorMessage) {
+
+                        }
+                    });
                 }
 
                 @Override

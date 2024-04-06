@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:layout_width="409dp"
-            android:layout_height="729dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/bgreen"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +36,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="5"
-                    android:text="Hello Patient"
+                    android:text="Hello Doc,"
                     android:textColor="@color/lightgreen"
                     android:textSize="34sp"
                     android:textStyle="bold" />
@@ -50,7 +50,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:cropToPadding="false"
-                    app:srcCompat="@drawable/menu_three_dots" />
+                    app:srcCompat="@drawable/dot" />
 
             </LinearLayout>
 
@@ -61,19 +61,44 @@
 
             <TextView
                 android:id="@+id/textView14"
-                android:layout_width="match_parent"
+                android:layout_width="384dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="170dp"
-                android:text="Welcome to Doctrack"
+                android:text="Your patients await your expert care."
                 android:textColor="@color/lightgreen"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/btnLogout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Logout" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:text="Appointment :"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/pendingAppointmentCountVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/lightgreen"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView_reminders"
@@ -95,7 +120,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="170dp"
-                android:text="Your Pending Appointment"
+                android:text="Pending Appointment"
                 android:textColor="@color/lightgreen"
                 android:textSize="14sp" />
 
@@ -104,37 +129,16 @@
                 android:layout_height="250dp">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView_pendingAppointment"
+                    android:id="@+id/recycler_view_pending_appointments"
                     android:layout_width="match_parent"
                     android:layout_height="210dp" />
-
-            </ScrollView>
-
-            <TextView
-                android:id="@+id/textView_medication"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="170dp"
-                android:text="Your Medication"
-                android:textColor="@color/lightgreen"
-                android:textSize="14sp" />
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="250dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView_medication"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp" />
 
             </ScrollView>
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="200dp" />
+
 
         </LinearLayout>
 

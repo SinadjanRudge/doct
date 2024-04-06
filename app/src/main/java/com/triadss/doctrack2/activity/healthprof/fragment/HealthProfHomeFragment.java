@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.patient.fragment.PatientHomeAppointmentAdapter;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
@@ -82,7 +83,7 @@ public class HealthProfHomeFragment extends Fragment {
         loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_health_professional_home_page, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_health_prof_home_page, container, false);
         recyclerView= rootView.findViewById(R.id.recycler_view_pending_appointments);
         pendingAppointmentCountVal = rootView.findViewById(R.id.pendingAppointmentCountVal);
 
@@ -100,61 +101,7 @@ public class HealthProfHomeFragment extends Fragment {
                 recyclerView.setLayoutManager(linearLayoutManager);
                 pendingAppointmentCountVal.setText(String.valueOf(appointments.size()));
 
-                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments,
-                        new HealthProfessionalAppointmentPendingAdapter.AppointmentCallback() {
-                            @Override
-                            public void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid) {
-                                reportsRepository.addHealthProfRescheduledAppointmentReport(loggedInUserId, appointmentUid, dateTime, new ReportsRepository.ReportCallback() {
-                                    @Override
-                                    public void onReportAddedSuccessfully() {
-                                        appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
-                                            @Override
-                                            public void onSuccess(String appointmentId) {
-                                                Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
-                                                ReloadList();
-                                            }
-
-                                            @Override
-                                            public void onError(String errorMessage) {
-                                                Log.e(TAG, "Error updating appointment: " + errorMessage);
-                                            }
-                                        });
-                                    }
-
-                                    @Override
-                                    public void onReportFailed(String errorMessage) {
-                                        System.out.println();
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancel(String appointmentUid) {
-                                appointmentRepository.cancelAppointment(appointmentUid, new AppointmentRepository.AppointmentCancelCallback() {
-                                    @Override
-                                    public void onSuccess(String appointmentId) {
-                                        Toast.makeText(getContext(), appointmentId + " cancelled", Toast.LENGTH_SHORT).show();
-                                        reportsRepository.addHealthProfCancelledAppointmentReport(loggedInUserId, appointmentId, new ReportsRepository.ReportCallback() {
-                                            @Override
-                                            public void onReportAddedSuccessfully() {
-                                                ReloadList();
-                                            }
-
-                                            @Override
-                                            public void onReportFailed(String errorMessage) {
-                                                System.out.println();
-                                            }
-                                        });
-                                    }
-
-                                    @Override
-                                    public void onError(String errorMessage) {
-                                        Log.e(TAG, "Error deleting appointment: " + errorMessage);
-                                    }
-                                });
-                            }
-                        });
-
+                PatientHomeAppointmentAdapter adapter = new PatientHomeAppointmentAdapter(getContext(), (ArrayList)appointments);
                 recyclerView.setAdapter(adapter);
             }
 

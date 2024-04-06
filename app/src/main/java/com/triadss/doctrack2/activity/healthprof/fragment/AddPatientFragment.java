@@ -193,7 +193,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                 Function<String, Boolean> containsDotCom = (val) -> val.contains(".com");
                 Function<String, Boolean> containsAtSign = (val) -> val.contains("@");
                 Function<String, Boolean> notContainsSelectDate = (val) -> !val.contains("Select Date");
-                Function<String, Boolean> lengthAtleast6 = (val) -> val.length() <= 6;
+                Function<String, Boolean> lengthAtleast6 = (val) -> val.length() >= 6;
 
                 if(widgetPredicate(input_Email, isNotEmptyPredicate)
                     && widgetPredicate(input_Email, containsDotCom)

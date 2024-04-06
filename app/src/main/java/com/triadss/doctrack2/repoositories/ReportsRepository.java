@@ -224,7 +224,7 @@ public class ReportsRepository {
         });
     }
 
-    public void updateHealthProfPatientInfoReport(String createdBy, AddPatientDto patient, ReportCallback callback)
+    public void addHealthProfUpdatePatientInfoReport(String createdBy, AddPatientDto patient, ReportCallback callback)
     {
         addReport(createdBy,
                 "UPDATED PATIENT INFO",
@@ -233,7 +233,7 @@ public class ReportsRepository {
                 callback);
     }
 
-    public void updateHealthProfPatientMedHistoryReport(String createdBy, String patientUid, ReportCallback callback)
+    public void addHealthProfUpdatePatientMedHistoryReport(String createdBy, String patientUid, ReportCallback callback)
     {
         patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
             @Override
@@ -252,7 +252,7 @@ public class ReportsRepository {
         });
     }
 
-    public void updateHealthProfPatientVitalSignReport(String createdBy, String patientUid, ReportCallback callback)
+    public void addHealthProfUpdatePatientVitalSignReport(String createdBy, String patientUid, ReportCallback callback)
     {
         patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
             @Override
@@ -269,6 +269,55 @@ public class ReportsRepository {
 
             }
         });
+    }
+
+    //PATIENT REPOSITORY
+    public void addPatientRequestScheduleReport(AppointmentDto appointment, ReportCallback callback)
+    {
+        String userId = user.getUid();
+        addReport(userId,
+                "REQUESTED APPOINTMENT",
+                String.format("Requested Appointment for %s at %s",
+                        appointment.getPurpose(),
+                        DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString()),
+                callback);
+
+    }
+
+    public void addPatientAddedMedicationReport(MedicationDto medication, ReportCallback callback)
+    {
+        String userId = user.getUid();
+
+        addReport(userId,
+                "ADDED MEDICATION",
+                String.format("Added medication %s at %s",
+                        medication.getMedicine(),
+                        DateTimeDto.ToDateTimeDto(medication.getTimestamp()).ToString()),
+                callback);
+    }
+
+    public void addPatientCompletedMedicationReport(MedicationDto medication, ReportCallback callback)
+    {
+        String userId = user.getUid();
+
+        addReport(userId,
+                "COMPLETED MEDICATION",
+                String.format("COMPLETED medication %s at %s",
+                        medication.getMedicine(),
+                        DateTimeDto.ToDateTimeDto(medication.getTimestamp()).ToString()),
+                callback);
+    }
+
+    public void addPatientUpdatedMedicationReport(MedicationDto medication, ReportCallback callback)
+    {
+        String userId = user.getUid();
+
+        addReport(userId,
+                "UPDATED MEDICATION",
+                String.format("Updated medication %s at %s",
+                        medication.getMedicine(),
+                        DateTimeDto.ToDateTimeDto(medication.getTimestamp()).ToString()),
+                callback);
     }
 
     public void addReport(String createdBy, String action, String message, ReportCallback callback)
