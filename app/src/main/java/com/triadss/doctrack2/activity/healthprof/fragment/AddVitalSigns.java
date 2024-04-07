@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.triadss.doctrack2.R;
@@ -231,6 +232,9 @@ public class AddVitalSigns extends Fragment {
 
     private void backToPatientList() {
         // Replace the current fragment with the patient list fragment
-        requireActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
+        transaction.replace(R.id.frame_layout, new PatientFragment());
+        transaction.commit();
     }
 }

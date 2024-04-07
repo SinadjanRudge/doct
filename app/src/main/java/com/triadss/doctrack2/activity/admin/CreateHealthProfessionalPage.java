@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.activity.admin;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +14,10 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;
 
@@ -40,6 +45,7 @@ public class CreateHealthProfessionalPage extends Fragment {
     View rootView;
     private EditText editTextPositionInput, editTextUserNameInput, editTextPasswordInput, editTextAppointmentIDInput, editTextGenderInput;
     private EditText editTextEmailInput, editTextNameInput;
+    private SharedPreferences sharedPref;
 
     public CreateHealthProfessionalPage() {
         // Required empty public constructor
@@ -78,7 +84,7 @@ public class CreateHealthProfessionalPage extends Fragment {
 
         // Inflate the layout for this fragment
         rootView =  inflater.inflate(R.layout.fragment_admin_manage_user_accounts_create_health_professional, container, false);
-
+        sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
         healthProfRepository = new HealthProfRepository();
         editTextNameInput = rootView.findViewById(R.id.editTextHWN);
         editTextPositionInput = rootView.findViewById(R.id.editTextPosition);
@@ -189,11 +195,26 @@ public class CreateHealthProfessionalPage extends Fragment {
             String fullName = editTextNameInput.getText().toString();
             String email = editTextEmailInput.getText().toString();
 
+            String currentEmail = sharedPref.getString(SessionConstants.Email, "");
+            String currentPassword = sharedPref.getString(SessionConstants.Password, "");
+
             HealthProfDto healthProfdto = new HealthProfDto(fullName, Position,UserName, email, Password, Gender);
             healthProfRepository.addHealthProf(healthProfdto,new HealthProfRepository.HealthProAddCallback(){
 
                 @Override
                 public void onSuccess(String healthProfId) {
+                    // Sign in the old user
+                    FirebaseAuth.getInstance().signInWithEmailAndPassword(currentEmail, currentPassword)
+                            .addOnCompleteListener(signInTask -> {
+                                if (signInTask.isSuccessful()) {
+                                    FirebaseUser oldUser = signInTask.getResult().getUser();
+                                    if (oldUser != null) {
+                                        // Old user signed in successfully, do something
+                                    }
+                                } else {
+                                    // Handle sign-in failure
+                                }
+                            });
                     Log.e(TAG, "Successfully added medication with the id of " + healthProfId);
                     editTextNameInput.setText("");
                     editTextPositionInput.setText("");

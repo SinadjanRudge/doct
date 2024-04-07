@@ -3,6 +3,7 @@ package com.triadss.doctrack2.activity.healthprof.fragment;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -14,12 +15,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.activity.patient.fragment.PatientHomeAppointmentAdapter;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
@@ -53,6 +56,7 @@ public class HealthProfHomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Button logoutButton;
 
     public HealthProfHomeFragment() {
         // Required empty public constructor
@@ -86,6 +90,13 @@ public class HealthProfHomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_health_prof_home_page, container, false);
         recyclerView= rootView.findViewById(R.id.recycler_view_pending_appointments);
         pendingAppointmentCountVal = rootView.findViewById(R.id.pendingAppointmentCountVal);
+        logoutButton = rootView.findViewById(R.id.btnLogout);
+
+        logoutButton.setOnClickListener(view -> {
+            auth.signOut();
+            Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(loginIntent);
+        });
 
         ReloadList();
 
