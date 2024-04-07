@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
@@ -105,10 +106,11 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
      *                           saved state as given here.
      * @return The View for the fragment's UI, or null.
      */
+    private SharedPreferences sharedPref;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
         loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
 
         _patientRepository = new PatientRepository();
@@ -275,6 +277,9 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setYear(Integer.parseInt(String.valueOf(input_Year.getText())));
         patientDto.setStatus(String.valueOf(input_Status.getText()).trim());
 
+        String email =sharedPref.getString(SessionConstants.Email, "");
+        String password = sharedPref.getString(SessionConstants.Password, "");
+
         try {
             FirebaseAuth newAuth = FirebaseAuth.getInstance();
             newAuth.createUserWithEmailAndPassword(patientDto.getEmail(), patientDto.getIdNumber()).addOnCompleteListener(task -> {
@@ -288,9 +293,25 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             _patientRepository.addPatientCallback(patientDto, new PatientRepository.PatientAddUpdateCallback() {
                                 @Override
                                 public void onSuccess(String patientId) {
+
                                     _reportsRepository.addHealthProfPatientInfoReport(loggedInUserId, patientDto, new ReportsRepository.ReportCallback() {
                                         @Override
                                         public void onReportAddedSuccessfully() {
+
+                                            newAuth.signOut();
+
+                                            // Sign in the old user
+                                            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                                                    .addOnCompleteListener(signInTask -> {
+                                                        if (signInTask.isSuccessful()) {
+                                                            FirebaseUser oldUser = signInTask.getResult().getUser();
+                                                            if (oldUser != null) {
+                                                                // Old user signed in successfully, do something
+                                                            }
+                                                        } else {
+                                                            // Handle sign-in failure
+                                                        }
+                                                    });
                                             showMedicalHistory(patientId);
 
                                         }
@@ -300,6 +321,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
                                         }
                                     });
+
                                 }
 
                                 @Override

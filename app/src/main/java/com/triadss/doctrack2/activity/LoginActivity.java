@@ -84,7 +84,10 @@ public class LoginActivity extends AppCompatActivity {
 
                             SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPref.edit();
+
                             editor.putString(SessionConstants.LoggedInUid, user.getUid());
+                            editor.putString(SessionConstants.Password, password);
+                            editor.putString(SessionConstants.Email, email);
                             editor.apply();
 
                             Toast.makeText(LoginActivity.this, "Login Successfully",

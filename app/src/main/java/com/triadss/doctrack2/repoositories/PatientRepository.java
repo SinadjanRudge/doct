@@ -123,8 +123,6 @@ public class PatientRepository {
     }
 
     public void updatePatient(AddPatientDto patient, PatientAddUpdateCallback callback) {
-        if(user == null) return;
-
         DocumentReference patientRef = usersCollection.document(patient.getUid());
 
         patientRef
