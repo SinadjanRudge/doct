@@ -86,7 +86,10 @@ public class AppointmentRepository {
 
             @Override
             public void onSuccess(List<AddPatientDto> patients) {
+                Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
+
                 appointmentsCollection.orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
+                        .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
                         .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
                         .whereEqualTo(AppointmentsModel.patientId, patientUid)
                         .get()
@@ -130,14 +133,19 @@ public class AppointmentRepository {
                             if (task.isSuccessful()) {
                                 List<AppointmentDto> appointments = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    if(document.get("status").toString().equals("Canceled") || document.get("status").toString().equals("Completed")) {
-                                        AppointmentDto appointment = document.toObject(AppointmentDto.class);
-                                        appointment.setDocumentId(document.getId().toString());
-                                        String idNumber = patients
-                                                .stream()
-                                                .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
-                                                .findFirst().orElse(null).getIdNumber();
-                                        appointment.setPatientIdNumber(idNumber);
+                                    AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                                    appointment.setDocumentId(document.getId().toString());
+                                    String idNumber = patients
+                                            .stream()
+                                            .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
+                                            .findFirst().orElse(null).getIdNumber();
+                                    appointment.setPatientIdNumber(idNumber);
+                                    if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) && appointment.getDateOfAppointment().compareTo(DateTimeDto.GetCurrentTimeStamp()) == -1)
+                                    {
+                                        appointment.setStatus(AppointmentTypeConstants.COMPLETED);
+                                    }
+                                    if(appointment.getStatus().equals(AppointmentTypeConstants.CANCELLED) || appointment.getStatus().equals(AppointmentTypeConstants.COMPLETED)) {
+
                                         appointments.add(appointment);
                                     }
                                 }
