@@ -322,12 +322,12 @@ public class ReportsRepository {
 
     public void addReport(String createdBy, String action, String message, ReportCallback callback)
     {
-        if (user == null) {
-            if (callback != null) {
-                callback.onReportFailed("Current user not found");
-            }
-            return;
-        }
+//        if (user == null) {
+//            if (callback != null) {
+//                callback.onReportFailed("Current user not found");
+//            }
+//            return;
+//        }
 
         LocalDateTime currentDate = LocalDateTime.now();
         Timestamp currentTimeStamp  = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
