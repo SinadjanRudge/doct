@@ -75,6 +75,14 @@
             </LinearLayout>
 
         </FrameLayout>
+        <TextView
+            android:id="@+id/errorMedication"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="70dp"
+            android:text="Medication is Blank."
+            android:textColor="#FF0000"
+            android:textSize="14sp" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -115,6 +123,14 @@
             </LinearLayout>
 
         </FrameLayout>
+        <TextView
+            android:id="@+id/errorNote"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:text="Note is Blank."
+            android:textColor="#FF0000"
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -131,6 +147,7 @@
                 android:backgroundTint="@color/green"
                 app:icon="@drawable/calendar" />
 
+
             <Button
                 android:id="@+id/button_time"
                 android:layout_width="wrap_content"
@@ -140,6 +157,31 @@
                 android:text="Select Time"
                 android:backgroundTint="@color/green"
                 app:icon="@drawable/baseline_access_time_24" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/errorSelecteDate"
+                android:layout_width="200dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="10dp"
+                android:text="Pls Select indicated Date."
+                android:textColor="#FF0000"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:id="@+id/errorSelectTime"
+                android:layout_width="200dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="10dp"
+                android:text="Pls Select indicated Time."
+                android:textColor="#FF0000"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
