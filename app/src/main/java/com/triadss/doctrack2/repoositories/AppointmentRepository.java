@@ -9,6 +9,7 @@ import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.type.DateTime;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.AppointmentsModel;
@@ -409,12 +410,14 @@ public class AppointmentRepository {
 
                             Map<String, Object> data = new HashMap<>();
                             data.put("action", action.toString());
-                            data.put("createdBy", document.get("createdAt"));
-                            data.put("createdDate", document.get("patientId"));
+                            data.put("createdBy", document.get("patientId"));
+                            data.put("createdDate", document.get("createdAt"));
+
                             data.put("idNumber", document.getId().toString());
                             data.put("message", "Appointment ID:  " + document.getId() + "  has been  " + action.toString()+"ED");
                             data.put("updatedBy", document.get("patientId").toString());
-                            data.put("updatedDate", document.get("createdAt"));
+                            data.put("updatedDate", DateTimeDto.GetCurrentTimeStamp());
+
                             reportsCollection
                                     .add(data)
                                     .addOnSuccessListener(documentReference -> {
