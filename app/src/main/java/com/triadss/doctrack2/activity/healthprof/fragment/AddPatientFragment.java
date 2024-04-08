@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
@@ -209,6 +208,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                     && widgetPredicate(input_Status, isNotEmptyPredicate)
                     && widgetPredicate(editTextPhone, isNotEmptyPredicate)
                     && widgetPredicate(input_Year, isNotEmptyPredicate)
+                    && widgetPredicate(input_Gender,isNotEmptyPredicate)
                     && widgetPredicate(getBirthDate, notContainsSelectDate)
                     && widgetPredicate(editTextIdNumber, lengthAtleast6)
                 ) {
@@ -265,7 +265,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
      * It also displays appropriate toast messages based on the success or failure of the registration process.
      */
     private void createPatient() {
-        AddPatientDto patientDto = new AddPatientDto();
+        AddPatientDto patientDto = new AddPatientDto(); //add gender
         patientDto.setEmail(String.valueOf(input_Email.getText()).trim());
         patientDto.setFullName(String.valueOf(editTextFullName.getText()).trim());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
@@ -276,6 +276,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setDateOfBirth(birthDate.ToStartDateTimestamp());
         patientDto.setYear(Integer.parseInt(String.valueOf(input_Year.getText())));
         patientDto.setStatus(String.valueOf(input_Status.getText()).trim());
+        patientDto.setGender(String.valueOf(input_Gender.getText()).trim());
 
         String email =sharedPref.getString(SessionConstants.Email, "");
         String password = sharedPref.getString(SessionConstants.Password, "");
