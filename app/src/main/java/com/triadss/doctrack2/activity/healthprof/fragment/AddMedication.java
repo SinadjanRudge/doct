@@ -102,6 +102,8 @@ public class AddMedication extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!inputMedicine.getText().toString().isEmpty() && !inputNote.getText().toString().isEmpty()) {
+                    errorMedicationNm.setVisibility(rootView.INVISIBLE);
+                    errorNote.setVisibility(rootView.INVISIBLE);
                     MedicationDto dto = new MedicationDto("", patientUid,
                             inputMedicine.getText().toString(),
                             inputNote.getText().toString(),

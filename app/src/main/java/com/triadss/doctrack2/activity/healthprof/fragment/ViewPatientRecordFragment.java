@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.ViewMedicationAdapter;
 import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
@@ -74,6 +75,11 @@ public class ViewPatientRecordFragment extends Fragment {
             TextView patientAge = rootView.findViewById(R.id.value_Age);
             TextView patientPhone = rootView.findViewById(R.id.value_ContactNo);
             TextView patientCourse = rootView.findViewById(R.id.value_Course);
+            TextView patientGender = rootView.findViewById(R.id.value_Gender);
+            TextView patientYear = rootView.findViewById(R.id.value_Year);
+            TextView patientStatus = rootView.findViewById(R.id.value_Status);
+            TextView patientdateofBirth = rootView.findViewById(R.id.value_dateOfBirth);
+
             patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback(){
 
                 @Override
@@ -85,6 +91,10 @@ public class ViewPatientRecordFragment extends Fragment {
                     patientAge.setText(String.valueOf(patient.getAge()));
                     patientPhone.setText(patient.getPhone());
                     patientCourse.setText(patient.getCourse());
+                    patientYear.setText(String.valueOf(patient.getYear()));
+                    patientGender.setText(patient.getGender());
+                    patientStatus.setText(patient.getGender());
+                    patientdateofBirth.setText(DateTimeDto.ToDateTimeDto(patient.getDateOfBirth()).ToString());
                 }
 
                 @Override

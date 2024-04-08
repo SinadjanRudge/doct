@@ -130,8 +130,7 @@ public class PatientRepository {
                         UserModel.address, patient.getAddress(),
                         UserModel.status, patient.getStatus(),
                         UserModel.phone, patient.getPhone(),
-                        UserModel.course, patient.getCourse(),
-                        UserModel.year, patient.getYear())
+                        UserModel.course, patient.getCourse())
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "Patient Info updated successfully");
                     callback.onSuccess(patient.getUid());
