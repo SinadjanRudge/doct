@@ -207,9 +207,9 @@ public class PatientMedicationAddFragment extends Fragment {
                 String test = button_time.getText().toString();
                 // Handle confirmation button click
                 if(!medicineInput.getText().toString().isEmpty() && !noteInput.getText().toString().isEmpty()
-                && button_date.getText().toString() != "Select Date" && button_time.getText().toString() != "Select Time") {
-                    noteInput.setVisibility(rootView.INVISIBLE);
-                    noteInput.setVisibility(rootView.INVISIBLE);
+                && !button_date.getText().toString().equals("Select Date") && !button_time.getText().toString().equals("Select Time")) {
+                    errorMedication.setVisibility(rootView.INVISIBLE);
+                    errorNote.setVisibility(rootView.INVISIBLE);
                     errorSelecteDate.setVisibility(rootView.INVISIBLE);
                     errorSelectTime.setVisibility(rootView.INVISIBLE);
                     handleConfirmationButtonClick();
@@ -230,6 +230,10 @@ public class PatientMedicationAddFragment extends Fragment {
     }
 
     private void handleClearButtonClick() {
+        errorMedication.setVisibility(rootView.INVISIBLE);
+        errorNote.setVisibility(rootView.INVISIBLE);
+        errorSelecteDate.setVisibility(rootView.INVISIBLE);
+        errorSelectTime.setVisibility(rootView.INVISIBLE);
         medicineInput.setText("");
         noteInput.setText("");
         selectedDateTime.setDate(null);
