@@ -1,10 +1,16 @@
 package com.triadss.doctrack2.activity.healthprof;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,11 +23,13 @@ import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfHomeFragment
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentFragment;
 import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalReportFragment;
 import com.triadss.doctrack2.activity.patient.fragment.PatientHomeFragment;
+import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
 import com.triadss.doctrack2.activity.healthprof.fragment.AppointmentFragment;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
 import com.triadss.doctrack2.activity.healthprof.fragment.PatientFragment;
 import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
+import com.triadss.doctrack2.notification.NotificationService;
 
 public class HealthProfHome extends AppCompatActivity {
 
@@ -50,6 +58,7 @@ public class HealthProfHome extends AppCompatActivity {
             } else if (item.getItemId() == R.id.record_menu) {
                 replaceFragment(new RecordFragment());
             } else if (item.getItemId() == R.id.report_menu) {
+                scheduleNotification(getNotification( "1 second delay" ) , 1000 ) ;
                 replaceFragment(new HealthProfessionalReportFragment());
             } else if (item.getItemId() == R.id.temp_logout) {
                 FirebaseAuth.getInstance().signOut();
@@ -94,5 +103,26 @@ public class HealthProfHome extends AppCompatActivity {
             fragmentTransaction.addToBackStack("toHome");
         }
         fragmentTransaction.commit();
+    }
+
+    private void scheduleNotification (Notification notification , int delay) {
+        Intent notificationIntent = new Intent( this, NotificationService.class);
+        notificationIntent.putExtra(NotificationService.NOTIFICATION_ID , 1 );
+        notificationIntent.putExtra(NotificationService.NOTIFICATION , notification);
+        PendingIntent pendingIntent = PendingIntent. getBroadcast ( this,
+                0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT );
+        long futureInMillis = SystemClock.elapsedRealtime () + delay;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE );
+        assert alarmManager != null;
+        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent);
+    }
+    private Notification getNotification (String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( this, NotificationConstants.DEFAULT_NOTIFICATION_CHANNEL_ID ) ;
+        builder.setContentTitle( "Scheduled Notification" ) ;
+        builder.setContentText(content) ;
+        builder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
+        builder.setAutoCancel( true ) ;
+        builder.setChannelId( NotificationConstants.NOTIFICATION_CHANNEL_ID ) ;
+        return builder.build() ;
     }
 }
