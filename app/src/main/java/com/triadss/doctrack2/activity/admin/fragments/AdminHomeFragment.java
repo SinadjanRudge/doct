@@ -1,6 +1,5 @@
-package com.triadss.doctrack2.activity.admin;
+package com.triadss.doctrack2.activity.admin.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.admin.AdminGenerateReportsPage;
+import com.triadss.doctrack2.activity.admin.AdminManageUserAccount;
 
 /**
  * A simple {@link Fragment} subclass.

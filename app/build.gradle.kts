@@ -9,7 +9,6 @@ plugins {
 android {
     namespace = "com.triadss.doctrack2"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.triadss.doctrack2"
         minSdk = 26
@@ -28,7 +27,7 @@ android {
                 "proguard-rules.pro"
             )
             debug {
-                isDebuggable = false
+                isDebuggable = true
             }
         }
     }
@@ -45,6 +44,8 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+
 }
 
 dependencies {

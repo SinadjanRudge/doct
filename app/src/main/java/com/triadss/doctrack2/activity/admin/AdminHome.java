@@ -8,23 +8,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
-import com.triadss.doctrack2.activity.core.DeviceFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.AppointmentFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.PatientFragment;
-import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
-import com.triadss.doctrack2.activity.patient.fragment.PatientHomeFragment;
-import com.triadss.doctrack2.activity.patient.fragment.PatientMedicationFragment;
-import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
+import com.triadss.doctrack2.activity.admin.fragments.AdminHomeFragment;
 import com.triadss.doctrack2.databinding.ActivityAdminHomeBinding;
-import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
-import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
 public class AdminHome extends AppCompatActivity {
 

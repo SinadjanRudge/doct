@@ -13,16 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.activity.healthprof.fragment.AddVitalSigns;
-import com.triadss.doctrack2.activity.healthprof.fragment.AddPatientFragment;
-import com.triadss.doctrack2.dto.AddPatientDto;
-import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.activity.admin.adapters.HealthProfessionalAdapter;
 import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;
-import com.triadss.doctrack2.repoositories.PatientRepository;
 
 import java.util.ArrayList;
 import java.util.List;

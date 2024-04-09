@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.admin;
+package com.triadss.doctrack2.activity.admin.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
