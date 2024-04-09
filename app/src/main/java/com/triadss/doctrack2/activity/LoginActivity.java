@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                                         .setConstraints(constraints)
                                         .build();
                                 WorkManager.getInstance(this)
-                                        .enqueueUniquePeriodicWork(NotificationConstants.NOTIFICATION_TAG, ExistingPeriodicWorkPolicy.UPDATE, notifWorkRequest);
+                                        .enqueueUniquePeriodicWork(NotificationConstants.NOTIFICATION_TAG, ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, notifWorkRequest);
 
                                 UserRole userRole = UserRole.valueOf(userRoleString);
                                 redirectBasedOnUserRole(userRole);
