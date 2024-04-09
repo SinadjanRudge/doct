@@ -11,6 +11,13 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,8 +30,12 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.admin.AdminHome;
 import com.triadss.doctrack2.activity.healthprof.HealthProfHome;
 import com.triadss.doctrack2.activity.patient.PatientHome;
+import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.config.enums.UserRole;
+import com.triadss.doctrack2.notification.NotificationBackgroundWorker;
+
+import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -120,6 +131,21 @@ public class LoginActivity extends AppCompatActivity {
                             // Retrieve the user role from the document
                             String userRoleString = document.getString("role");
                             if (userRoleString != null) {
+                                //Prepare periodic background
+                                Constraints constraints = new Constraints.Builder()
+                                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                                        .build();
+
+                                PeriodicWorkRequest notifWorkRequest = new PeriodicWorkRequest.Builder(NotificationBackgroundWorker.class, 5, TimeUnit.SECONDS)
+                                        .setInputData(new Data.Builder()
+                                                .putString(NotificationConstants.RECEIVER_ID, userId)
+                                                .build()
+                                        )
+                                        .setConstraints(constraints)
+                                        .build();
+                                WorkManager.getInstance(this)
+                                        .enqueueUniquePeriodicWork(NotificationConstants.NOTIFICATION_TAG, ExistingPeriodicWorkPolicy.UPDATE, notifWorkRequest);
+
                                 UserRole userRole = UserRole.valueOf(userRoleString);
                                 redirectBasedOnUserRole(userRole);
                             }
