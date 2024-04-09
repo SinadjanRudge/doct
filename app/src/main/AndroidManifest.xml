@@ -10,6 +10,8 @@
         android:usesPermissionFlags="neverForLocation"/>
     <uses-permission android:name="android.hardware.bluetooth"/>
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -74,6 +76,7 @@
                 <data android:scheme="wear" android:host="*" android:pathPrefix="/my_path" />
             </intent-filter>
         </service>
+        <receiver android:name="com.triadss.doctrack2.notification.NotificationService" />
     </application>
 
 </manifest>
