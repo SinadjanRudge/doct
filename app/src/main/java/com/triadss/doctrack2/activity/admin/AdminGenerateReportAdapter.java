@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +54,7 @@ public class AdminGenerateReportAdapter extends RecyclerView.Adapter<AdminGenera
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView description, action, date, createdBy;
+
         public ViewHolder(View view) {
             super(view);
             description = view.findViewById(R.id.descriptionValue);

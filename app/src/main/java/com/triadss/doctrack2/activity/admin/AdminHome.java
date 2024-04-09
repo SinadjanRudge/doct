@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,8 +51,7 @@ public class AdminHome extends AppCompatActivity {
             }
             if (item.getItemId() == R.id.report_menu) {
                 replaceFragment(new AdminGenerateReportsPage());
-            }
-            else if (item.getItemId() == R.id.temp_logout) {
+            } else if (item.getItemId() == R.id.temp_logout) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
@@ -69,7 +67,7 @@ public class AdminHome extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
                 boolean isCurrentlyAtHomepage = currentFragment instanceof AdminHomeFragment;
-                if(!isCurrentlyAtHomepage) {
+                if (!isCurrentlyAtHomepage) {
                     fragmentManager.popBackStack();
                 }
             }
@@ -83,7 +81,7 @@ public class AdminHome extends AppCompatActivity {
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
-        if(isCurrentlyAtHomepage) {
+        if (isCurrentlyAtHomepage) {
             fragmentTransaction.addToBackStack("toHome");
         }
         fragmentTransaction.commit();

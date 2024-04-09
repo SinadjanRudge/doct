@@ -83,12 +83,11 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnCompleteListener(this, task -> {
                         progressBar.setVisibility(View.GONE);
 
-                        ButtonManager.enableButton(buttonLogin);
-
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+                            SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey,
+                                    Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPref.edit();
 
                             editor.putString(SessionConstants.LoggedInUid, user.getUid());
@@ -105,8 +104,11 @@ public class LoginActivity extends AppCompatActivity {
 
                         } else {
                             FirebaseAuthException e = (FirebaseAuthException) task.getException();
-                            Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT)
+                                    .show();
                         }
+
+                        ButtonManager.enableButton(buttonLogin);
                     });
         });
     }

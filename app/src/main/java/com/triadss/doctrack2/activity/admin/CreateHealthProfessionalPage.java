@@ -22,12 +22,8 @@ import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;
 
 import java.util.function.Function;
+import com.triadss.doctrack2.helper.ButtonManager;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CreateHealthProfessionalPage#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CreateHealthProfessionalPage extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -43,7 +39,8 @@ public class CreateHealthProfessionalPage extends Fragment {
     private Button buttonSubmit;
     TextView errorTextEmail, errorTextHWN, errorTextPosition, errorTextUser, errorTextPassword, errorTextGender;
     View rootView;
-    private EditText editTextPositionInput, editTextUserNameInput, editTextPasswordInput, editTextAppointmentIDInput, editTextGenderInput;
+    private EditText editTextPositionInput, editTextUserNameInput, editTextPasswordInput, editTextAppointmentIDInput,
+            editTextGenderInput;
     private EditText editTextEmailInput, editTextNameInput;
     private SharedPreferences sharedPref;
 
@@ -80,10 +77,11 @@ public class CreateHealthProfessionalPage extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        rootView =  inflater.inflate(R.layout.fragment_admin_manage_user_accounts_create_health_professional, container, false);
+        rootView = inflater.inflate(R.layout.fragment_admin_manage_user_accounts_create_health_professional, container,
+                false);
         sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
         healthProfRepository = new HealthProfRepository();
         editTextNameInput = rootView.findViewById(R.id.editTextHWN);
@@ -112,6 +110,7 @@ public class CreateHealthProfessionalPage extends Fragment {
         setupConfirmationButton();
         return rootView;
     }
+
     private void setupConfirmationButton() {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,25 +119,16 @@ public class CreateHealthProfessionalPage extends Fragment {
                 Function<String, Boolean> containsDotCom = (val) -> val.contains(".com");
                 Function<String, Boolean> containsAtSign = (val) -> val.contains("@");
 
-                if(widgetPredicate(editTextEmailInput, containsDotCom)
-                && widgetPredicate(editTextEmailInput, containsAtSign)
-                && widgetPredicate(editTextEmailInput, isNotEmptyPredicate)
-                && widgetPredicate(editTextNameInput, isNotEmptyPredicate)
-                && widgetPredicate(editTextPositionInput, isNotEmptyPredicate)
-                && widgetPredicate(editTextUserNameInput, isNotEmptyPredicate)
-                && widgetPredicate(editTextPasswordInput, isNotEmptyPredicate)
-                && widgetPredicate(editTextGenderInput, isNotEmptyPredicate)
-                )
-                {
+                if (widgetPredicate(editTextEmailInput, containsDotCom)
+                        && widgetPredicate(editTextEmailInput, containsAtSign)
+                        && widgetPredicate(editTextEmailInput, isNotEmptyPredicate)
+                        && widgetPredicate(editTextNameInput, isNotEmptyPredicate)
+                        && widgetPredicate(editTextPositionInput, isNotEmptyPredicate)
+                        && widgetPredicate(editTextUserNameInput, isNotEmptyPredicate)
+                        && widgetPredicate(editTextPasswordInput, isNotEmptyPredicate)
+                        && widgetPredicate(editTextGenderInput, isNotEmptyPredicate)) {
                     handleConfirmationButtonClick();
-                }
-                // Handle confirmation button click
-                /*if(editTextEmailInput.getText().toString().contains("@") && editTextEmailInput.getText().toString().contains(".com") && !editTextEmailInput.getText().toString().isEmpty() &&
-                !editTextNameInput.getText().toString().isEmpty() && !editTextPositionInput.getText().toString().isEmpty() && !editTextUserNameInput.getText().toString().isEmpty() &&
-                !editTextPasswordInput.getText().toString().isEmpty() && !editTextGenderInput.getText().toString().isEmpty()) {
-                    handleConfirmationButtonClick();
-                }*/
-                else {
+                } else {
                     showTextViewWhenTrue(editTextEmailInput, (value) -> !value.contains("@")
                             || !value.contains(".com")
                             || value.isEmpty(), errorTextEmail);
@@ -147,15 +137,6 @@ public class CreateHealthProfessionalPage extends Fragment {
                     showTextViewWhenTrue(editTextUserNameInput, (value) -> value.isEmpty(), errorTextUser);
                     showTextViewWhenTrue(editTextPasswordInput, (value) -> value.isEmpty(), errorTextPassword);
                     showTextViewWhenTrue(editTextGenderInput, (value) -> value.isEmpty(), errorTextGender);
-
-
-                    /*if(!editTextEmailInput.getText().toString().contains("@") || !editTextEmailInput.getText().toString().contains(".com") || editTextEmailInput.getText().toString().isEmpty())
-                        errorTextEmail.setVisibility(rootView.VISIBLE); else errorTextEmail.setVisibility(rootView.GONE);
-                    if(editTextNameInput.getText().toString().isEmpty()) errorTextHWN.setVisibility(rootView.VISIBLE); else errorTextHWN.setVisibility(rootView.GONE);
-                    if(editTextPositionInput.getText().toString().isEmpty()) errorTextPosition.setVisibility(rootView.VISIBLE); else errorTextPosition.setVisibility(rootView.GONE);
-                    if(editTextUserNameInput.getText().toString().isEmpty()) errorTextUser.setVisibility(rootView.VISIBLE); else errorTextUser.setVisibility(rootView.GONE);
-                    if(editTextPasswordInput.getText().toString().isEmpty()) errorTextPassword.setVisibility(rootView.VISIBLE); else errorTextPassword.setVisibility(rootView.GONE);
-                    if(editTextGenderInput.getText().toString().isEmpty()) errorTextGender.setVisibility(rootView.VISIBLE); else errorTextGender.setVisibility(rootView.GONE);*/
                 }
             }
         });
@@ -178,8 +159,7 @@ public class CreateHealthProfessionalPage extends Fragment {
     }
 
     void showTextViewWhenTrue(String textSource, Function<String, Boolean> predicate, TextView messageWidget) {
-        if(predicate.apply(textSource))
-        {
+        if (predicate.apply(textSource)) {
             messageWidget.setVisibility(View.VISIBLE);
         } else {
             messageWidget.setVisibility(View.GONE);
@@ -188,6 +168,7 @@ public class CreateHealthProfessionalPage extends Fragment {
 
     private void handleConfirmationButtonClick() {
         try {
+            ButtonManager.disableButton(buttonSubmit);
             String Position = editTextPositionInput.getText().toString();
             String UserName = editTextUserNameInput.getText().toString();
             String Password = editTextPasswordInput.getText().toString();
@@ -198,8 +179,8 @@ public class CreateHealthProfessionalPage extends Fragment {
             String currentEmail = sharedPref.getString(SessionConstants.Email, "");
             String currentPassword = sharedPref.getString(SessionConstants.Password, "");
 
-            HealthProfDto healthProfdto = new HealthProfDto(fullName, Position,UserName, email, Password, Gender);
-            healthProfRepository.addHealthProf(healthProfdto,new HealthProfRepository.HealthProAddCallback(){
+            HealthProfDto healthProfdto = new HealthProfDto(fullName, Position, UserName, email, Password, Gender);
+            healthProfRepository.addHealthProf(healthProfdto, new HealthProfRepository.HealthProAddCallback() {
 
                 @Override
                 public void onSuccess(String healthProfId) {
@@ -222,18 +203,21 @@ public class CreateHealthProfessionalPage extends Fragment {
                     editTextPasswordInput.setText("");
                     editTextGenderInput.setText("");
                     editTextEmailInput.setText("");
-                    Toast.makeText(getContext(), "Added Professional Health Account Created", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getContext(), "Added Professional Health Account Created", Toast.LENGTH_SHORT)
+                            .show();
+                    ButtonManager.enableButton(buttonSubmit);
                     getActivity().onBackPressed();
                 }
 
                 @Override
                 public void onFailure(String errorMessage) {
-                        Log.e(TAG, "Failure in adding medication in the document");
+                    Log.e(TAG, "Failure in adding medication in the document");
+                    ButtonManager.enableButton(buttonSubmit);
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage());
+            ButtonManager.enableButton(buttonSubmit);
         }
     }
 }
