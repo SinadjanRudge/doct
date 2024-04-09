@@ -1,8 +1,14 @@
 package com.triadss.doctrack2.activity.patient.fragment;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,26 +18,31 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.Fragment;
+
+import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.NotificationDTO;
+import com.triadss.doctrack2.notification.NotificationService;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
-
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
+import com.triadss.doctrack2.repoositories.NotificationRepository;
+import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.google.firebase.Timestamp;
-import com.triadss.doctrack2.repoositories.ReportsRepository;
-
 public class PatientAppointmentRequest extends Fragment {
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;
+    private NotificationRepository notificationRepository;
     private ReportsRepository _reportsRepository = new ReportsRepository();
+    private NotificationDTO notifyDto;
     private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute;
 
     @Override
@@ -139,6 +150,17 @@ public class PatientAppointmentRequest extends Fragment {
 
         AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, status);
+        notificationRepository.pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
+            @Override
+            public void onSuccess(String appointmentId) {
+                scheduleNotification(getNotification( "1 second delay" ) , 1000 );
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
 
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
             @Override
@@ -164,5 +186,26 @@ public class PatientAppointmentRequest extends Fragment {
                 // Handle error, if needed
             }
         });
+    }
+    public void scheduleNotification (Notification notification , int delay) {
+        Intent notificationIntent = new Intent( getContext(), NotificationService.class);
+        notificationIntent.putExtra(NotificationService.NOTIFICATION_ID , 1 );
+        notificationIntent.putExtra(NotificationService.NOTIFICATION , notification);
+        PendingIntent pendingIntent = PendingIntent. getBroadcast ( getContext(),
+                0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT );
+        long futureInMillis = SystemClock.elapsedRealtime () + delay;
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        assert alarmManager != null;
+        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent);
+    }
+
+    public Notification getNotification (String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( getContext(), NotificationConstants.DEFAULT_NOTIFICATION_CHANNEL_ID ) ;
+        builder.setContentTitle( "Scheduled Notification" ) ;
+        builder.setContentText(content) ;
+        builder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
+        builder.setAutoCancel( true ) ;
+        builder.setChannelId( NotificationConstants.NOTIFICATION_CHANNEL_ID ) ;
+        return builder.build() ;
     }
 }
