@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.healthprof;
+package com.triadss.doctrack2.activity.healthprof.fragments.appointments;
 
 import android.os.Bundle;
 

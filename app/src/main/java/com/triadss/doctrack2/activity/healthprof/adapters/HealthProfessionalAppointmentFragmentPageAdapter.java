@@ -6,9 +6,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.triadss.doctrack2.activity.healthprof.HealthProfessionalPending;
-import com.triadss.doctrack2.activity.healthprof.HealthProfessionalStatus;
-import com.triadss.doctrack2.activity.healthprof.HealthProfessionalUpcoming;
+import com.triadss.doctrack2.activity.healthprof.fragments.appointments.HealthProfessionalPending;
+import com.triadss.doctrack2.activity.healthprof.fragments.appointments.HealthProfessionalStatus;
+import com.triadss.doctrack2.activity.healthprof.fragments.appointments.HealthProfessionalUpcoming;
 
 public class HealthProfessionalAppointmentFragmentPageAdapter extends FragmentStateAdapter {
 
