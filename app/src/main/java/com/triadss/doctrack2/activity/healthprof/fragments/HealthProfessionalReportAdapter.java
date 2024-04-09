@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.healthprof.fragment;
+package com.triadss.doctrack2.activity.healthprof.fragments;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.activity.patient.fragment.PatientReportAdapter;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.ReportDto;
 

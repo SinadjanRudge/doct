@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.healthprof.fragment;
+package com.triadss.doctrack2.activity.healthprof.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.PatientFragmentAdapter;

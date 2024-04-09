@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.healthprof.fragment;
+package com.triadss.doctrack2.activity.healthprof.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,12 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.VitalSignsDto;
@@ -27,25 +26,25 @@ import java.util.function.Function;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link AddVitalSigns#newInstance} factory method to
+ * Use the {@link UpdateVitalSigns#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddVitalSigns extends Fragment {
-
-    FirebaseAuth mAuth;
-    EditText editBloodPressure, editTemperature, editPulseRate, editOxygenLevel, editWeight, editHeight, editBMI;
-    TextView errorBloodPresure, errorTempreture, errorSp02, errorPulse, errorWeight, errorHeight, errorBMI;
+public class UpdateVitalSigns extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PATIENT_UID = "patientUid";
 
     // TODO: Rename and change types of parameters
-    String PatientUid;
-    String loggedInUserId;
+    private String patientUid;
+    private String vitalSignsUid;
+    private String loggedInUserId;
+    EditText editBloodPressure, editTemperature, editPulseRate, editOxygenLevel, editWeight, editHeight, editBMI;
+    TextView errorBloodPresure, errorTempreture, errorSp02, errorPulse, errorWeight, errorHeight, errorBMI;
+    VitalSignsRepository repository = new VitalSignsRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
 
-    public AddVitalSigns() {
+    public UpdateVitalSigns() {
         // Required empty public constructor
     }
 
@@ -57,8 +56,8 @@ public class AddVitalSigns extends Fragment {
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddVitalSigns newInstance(String patientUid) {
-        AddVitalSigns fragment = new AddVitalSigns();
+    public static UpdateVitalSigns newInstance(String patientUid) {
+        UpdateVitalSigns fragment = new UpdateVitalSigns();
         Bundle args = new Bundle();
         args.putString(PATIENT_UID, patientUid);
         fragment.setArguments(args);
@@ -69,7 +68,7 @@ public class AddVitalSigns extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            PatientUid = getArguments().getString(PATIENT_UID);
+            patientUid = getArguments().getString(PATIENT_UID);
         }
     }
 
@@ -80,8 +79,8 @@ public class AddVitalSigns extends Fragment {
         loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_patient_record_add_vital_signs, container, false);
-        Button submit = rootView.findViewById(R.id.submitBtn);
+        View rootView = inflater.inflate(R.layout.fragment_update_vital_signs, container, false);
+        Button submit = rootView.findViewById(R.id.updateBtn);
 
         editBloodPressure = rootView.findViewById(R.id.input_bloodPressure);
         editTemperature = rootView.findViewById(R.id.input_temperature);
@@ -131,34 +130,21 @@ public class AddVitalSigns extends Fragment {
         editWeight.addTextChangedListener(textWatcher);
         editHeight.addTextChangedListener(textWatcher);
 
-
-        submitButton(submit);
-
-        return rootView;
-    }
-
-    private double calculateBMI(String weightStr, String heightStr){
-        if(weightStr.isEmpty() || heightStr.isEmpty()) return 0;
-
-        double weight = Double.parseDouble(weightStr);
-        double height = Double.parseDouble(heightStr);
-        return (height != 0) ? (weight / Math.pow(height, 2.0) * 10000) : 0.0;
-    }
-
-    private void submitButton(Button submit){
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Function<String, Boolean> isNotEmptyPredicate = (val) -> !val.isEmpty();
                 if(widgetPredicate(editBloodPressure, isNotEmptyPredicate)
-                        && widgetPredicate(editTemperature, isNotEmptyPredicate)
-                        && widgetPredicate(editPulseRate, isNotEmptyPredicate)
-                        && widgetPredicate(editOxygenLevel, isNotEmptyPredicate)
-                        && widgetPredicate(editWeight, isNotEmptyPredicate)
-                        && widgetPredicate(editHeight, isNotEmptyPredicate)
-                        && widgetPredicate(editBMI, isNotEmptyPredicate)) {
-                    createVitalSigns(PatientUid);
-                }else {
+                    && widgetPredicate(editTemperature, isNotEmptyPredicate)
+                    && widgetPredicate(editPulseRate, isNotEmptyPredicate)
+                    && widgetPredicate(editOxygenLevel, isNotEmptyPredicate)
+                    && widgetPredicate(editWeight, isNotEmptyPredicate)
+                    && widgetPredicate(editHeight, isNotEmptyPredicate)
+                    && widgetPredicate(editBMI, isNotEmptyPredicate))
+                {
+                    updateVitalSigns();
+                }
+                else {
                     showTextViewWhenTrue(editBloodPressure, (value) -> value.isEmpty(), errorBloodPresure);
                     showTextViewWhenTrue(editTemperature, (value) -> value.isEmpty(), errorTempreture);
                     showTextViewWhenTrue(editOxygenLevel, (value) -> value.isEmpty(), errorSp02);
@@ -169,6 +155,18 @@ public class AddVitalSigns extends Fragment {
                 }
             }
         });
+
+        populatePersonalInfo();
+
+        return rootView;
+    }
+
+    private double calculateBMI(String weightStr, String heightStr){
+        if(weightStr.isEmpty() || heightStr.isEmpty()) return 0;
+
+        double weight = Double.parseDouble(weightStr);
+        double height = Double.parseDouble(heightStr);
+        return (height != 0) ? (weight / Math.pow(height, 2.0) * 10000) : 0.0;
     }
     boolean widgetPredicate(Button textSource, Function<String, Boolean> predicate) {
         return predicate.apply(textSource.getText().toString());
@@ -194,26 +192,53 @@ public class AddVitalSigns extends Fragment {
             messageWidget.setVisibility(View.INVISIBLE);
         }
     }
-    
-    private void createVitalSigns(String PatientUid) {
+
+    private void populatePersonalInfo()
+    {
+        repository.getVitalSignOfPatient(patientUid, new VitalSignsRepository.FetchCallback() {
+
+            @Override
+            public void onSuccess(VitalSignsDto vitalSigns) {
+                if(vitalSigns != null){
+                    editBloodPressure.setText(vitalSigns.getBloodPressure());
+                    editTemperature.setText(String.valueOf(vitalSigns.getTemperature()));
+                    editOxygenLevel.setText(String.valueOf(vitalSigns.getOxygenLevel()));
+                    editPulseRate.setText(String.valueOf(vitalSigns.getPulseRate()));
+                    editWeight.setText(String.valueOf(vitalSigns.getWeight()));
+                    editHeight.setText(String.valueOf(vitalSigns.getHeight()));
+                    editBMI.setText(String.valueOf(vitalSigns.getBMI()));
+                    vitalSignsUid = vitalSigns.getUid();
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                System.out.println();
+            }
+        });
+    }
+
+    private void updateVitalSigns()
+    {
+
         VitalSignsDto vitalSignsDto = new VitalSignsDto();
         vitalSignsDto.setBloodPressure(String.valueOf(editBloodPressure.getText()).trim());
         vitalSignsDto.setTemperature(Double.parseDouble(String.valueOf(editTemperature.getText()).trim()));
         vitalSignsDto.setPulseRate(Integer.parseInt(String.valueOf(editPulseRate.getText()).trim()));
         vitalSignsDto.setOxygenLevel(Integer.parseInt(String.valueOf(editOxygenLevel.getText()).trim()));
-        vitalSignsDto.setWeight(Integer.parseInt(String.valueOf(editWeight.getText())));
-        vitalSignsDto.setHeight(Integer.parseInt(String.valueOf(editHeight.getText()).trim()));
+        vitalSignsDto.setWeight(Double.parseDouble(String.valueOf(editWeight.getText())));
+        vitalSignsDto.setHeight(Double.parseDouble(String.valueOf(editHeight.getText())));
         vitalSignsDto.setBMI(Double.parseDouble(String.valueOf(editBMI.getText()).trim()));
-        vitalSignsDto.setPatientId(PatientUid);
+        vitalSignsDto.setPatientId(patientUid);
+        vitalSignsDto.setUid(vitalSignsUid);
 
-        VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
-        vitalSignsRepo.AddVitalSignsCallback(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
+        repository.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
             @Override
-            public void onSuccess(String vitalSignsId) {
-                _reportsRepository.addHealthProfPatientVitalSignReport(loggedInUserId, PatientUid, new ReportsRepository.ReportCallback() {
+            public void onSuccess(String documentId) {
+                _reportsRepository.addHealthProfUpdatePatientVitalSignReport(loggedInUserId, patientUid, new ReportsRepository.ReportCallback() {
                     @Override
                     public void onReportAddedSuccessfully() {
-                        backToPatientList();
+                        showViewPatient();
                     }
 
                     @Override
@@ -224,17 +249,17 @@ public class AddVitalSigns extends Fragment {
             }
 
             @Override
-            public void onError(String errorMessage) {
-                
+            public void onError(String message) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void backToPatientList() {
-        // Replace the current fragment with the patient list fragment
+    private void showViewPatient() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, new PatientFragment());
+        transaction.replace(R.id.frame_layout, ViewPatientRecordFragment.newInstance(patientUid));
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 }

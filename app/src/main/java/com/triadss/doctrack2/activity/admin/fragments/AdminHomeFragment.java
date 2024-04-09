@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.activity.admin.AdminGenerateReportsPage;
-import com.triadss.doctrack2.activity.admin.AdminManageUserAccount;
+import com.triadss.doctrack2.activity.admin.pages.AdminGenerateReportsPage;
 
 /**
  * A simple {@link Fragment} subclass.

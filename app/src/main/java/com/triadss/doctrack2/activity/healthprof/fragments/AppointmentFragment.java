@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.healthprof.fragment;
+package com.triadss.doctrack2.activity.healthprof.fragments;
 
 import android.os.Bundle;
 
@@ -9,11 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;

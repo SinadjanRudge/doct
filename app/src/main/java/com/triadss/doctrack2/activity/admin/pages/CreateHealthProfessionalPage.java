@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.admin;
+package com.triadss.doctrack2.activity.admin.pages;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.admin;
+package com.triadss.doctrack2.activity.admin.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.admin.pages.CreateHealthProfessionalPage;
+import com.triadss.doctrack2.activity.admin.pages.UpdateHealthProfPage;
+import com.triadss.doctrack2.activity.admin.pages.ViewHealthProfPage;
 import com.triadss.doctrack2.activity.admin.adapters.HealthProfessionalAdapter;
 import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;

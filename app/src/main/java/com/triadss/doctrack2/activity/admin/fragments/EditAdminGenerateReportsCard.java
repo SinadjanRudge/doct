@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.admin;
+package com.triadss.doctrack2.activity.admin.fragments;
 
 import android.os.Bundle;
 

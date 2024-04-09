@@ -1,6 +1,5 @@
-package com.triadss.doctrack2.activity.admin;
+package com.triadss.doctrack2.activity.admin.pages;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.admin.fragments.AdminManageUserAccount;
 import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;
 
