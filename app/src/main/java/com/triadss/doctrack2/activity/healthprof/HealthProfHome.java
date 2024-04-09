@@ -121,6 +121,6 @@ public class HealthProfHome extends AppCompatActivity {
         builder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
         builder.setAutoCancel( true ) ;
         builder.setChannelId( NotificationConstants.NOTIFICATION_CHANNEL_ID ) ;
-        return builder.build() ;
+        return builder.build();
     }
 }
