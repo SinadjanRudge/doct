@@ -15,7 +15,7 @@ import com.triadss.doctrack2.R;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfessionalAppointmentStatusAdapter;
+import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalAppointmentStatusAdapter;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;

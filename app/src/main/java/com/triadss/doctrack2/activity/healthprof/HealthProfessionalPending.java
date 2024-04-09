@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 
-import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfessionalAppointmentPendingAdapter;
+import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalAppointmentPendingAdapter;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;

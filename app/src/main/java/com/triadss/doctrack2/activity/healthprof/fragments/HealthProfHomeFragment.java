@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
-import com.triadss.doctrack2.activity.patient.fragment.PatientHomeAppointmentAdapter;
+import com.triadss.doctrack2.activity.patient.adapters.PatientHomeAppointmentAdapter;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;

@@ -15,7 +15,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.activity.admin.fragments.AdminHomeFragment;
 import com.triadss.doctrack2.activity.admin.fragments.AdminManageUserAccount;
-import com.triadss.doctrack2.activity.admin.pages.AdminGenerateReportsPage;
+import com.triadss.doctrack2.activity.admin.fragments.AdminGenerateReportsPage;
 import com.triadss.doctrack2.databinding.ActivityAdminHomeBinding;
 
 public class AdminHome extends AppCompatActivity {

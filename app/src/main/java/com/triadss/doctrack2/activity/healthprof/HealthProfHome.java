@@ -20,13 +20,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
-import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfessionalAppointmentFragment;
-import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfessionalReportFragment;
+import com.triadss.doctrack2.activity.healthprof.fragments.appointments.HealthProfessionalAppointmentFragment;
+import com.triadss.doctrack2.activity.healthprof.fragments.reports.HealthProfessionalReportFragment;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
-import com.triadss.doctrack2.activity.healthprof.fragments.PatientFragment;
-import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
+import com.triadss.doctrack2.activity.healthprof.fragments.patient.PatientFragment;
+import com.triadss.doctrack2.activity.patient.fragments.records.RecordFragment;
 import com.triadss.doctrack2.notification.NotificationService;
 
 public class HealthProfHome extends AppCompatActivity {

@@ -17,7 +17,7 @@ import com.triadss.doctrack2.R;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfessionalAppointmentUpcomingAdapter;
+import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalAppointmentUpcomingAdapter;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
