@@ -10,7 +10,7 @@ public class ButtonManager {
 
     public static void enableButton(Button button) {
         button.setEnabled(true);
-        button.setAlpha(1f); // Reset button alpha
+        button.setAlpha(1f);
     }
 
     public static void toggleButton(Button button) {

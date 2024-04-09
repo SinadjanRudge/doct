@@ -25,6 +25,7 @@ import com.triadss.doctrack2.activity.healthprof.HealthProfHome;
 import com.triadss.doctrack2.activity.patient.PatientHome;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.config.enums.UserRole;
+import com.triadss.doctrack2.helper.ButtonManager;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -76,9 +77,14 @@ public class LoginActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 return;
             }
+
+            ButtonManager.disableButton(buttonLogin);
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
                         progressBar.setVisibility(View.GONE);
+
+                        ButtonManager.enableButton(buttonLogin);
+
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
 
