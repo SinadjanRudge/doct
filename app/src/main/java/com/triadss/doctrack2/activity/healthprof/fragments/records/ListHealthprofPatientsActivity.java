@@ -1,4 +1,4 @@
-package com.triadss.doctrack2;
+package com.triadss.doctrack2.activity.healthprof.fragments.records;
 
 import android.app.Activity;
 

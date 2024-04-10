@@ -22,7 +22,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.healthprof.fragments.appointments.HealthProfessionalAppointmentFragment;
-import com.triadss.doctrack2.activity.healthprof.fragments.records.HealthProfessionalReportFragment;
+import com.triadss.doctrack2.activity.healthprof.fragments.reports.HealthProfessionalReportFragment;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
 import com.triadss.doctrack2.activity.core.DeviceFragment;

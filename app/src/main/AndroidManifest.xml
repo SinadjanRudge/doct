@@ -24,7 +24,7 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
         <activity
-            android:name=".ListHealthprofPatientActivity"
+            android:name=".activity.healthprof.fragments.records.ListHealthprofPatientActivity"
             android:exported="false" />
         <activity
             android:name=".activity.admin.AdminHome"

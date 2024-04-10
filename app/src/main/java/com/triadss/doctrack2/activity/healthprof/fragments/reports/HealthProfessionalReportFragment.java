@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.healthprof.fragments.records;
+package com.triadss.doctrack2.activity.healthprof.fragments.reports;
 
 import android.content.Context;
 import android.content.SharedPreferences;

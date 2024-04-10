@@ -1,8 +1,10 @@
-package com.triadss.doctrack2;
+package com.triadss.doctrack2.activity.healthprof.fragments.records;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.triadss.doctrack2.R;
 
 public class ListHealthprofPatientActivity extends AppCompatActivity {
 

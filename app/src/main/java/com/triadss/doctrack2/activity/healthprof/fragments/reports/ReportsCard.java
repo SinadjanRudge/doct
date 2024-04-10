@@ -1,4 +1,4 @@
-package com.triadss.doctrack2;
+package com.triadss.doctrack2.activity.healthprof.fragments.reports;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.triadss.doctrack2.R;
 
 /**
  * A simple {@link Fragment} subclass.
