@@ -20,7 +20,8 @@ public class NotificationRepository {
     String TAG = "NotificationRepository";
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
-    String userId = currentUser.getUid();
+    //String userId = currentUser.getUid();
+    private FirebaseUser user = mAuth.getCurrentUser();
     NotificationDTO notification = new NotificationDTO();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference notifyCollection = firestore
@@ -31,8 +32,8 @@ public class NotificationRepository {
 
     }
     public NotificationDTO fetchUserNotification(String userId) {
-        this.userId = userId;
-        if(!userId.isEmpty()) {
+        //this.userId = userId;
+        if(!user.getUid().isEmpty()) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("notifications")
                     .whereEqualTo("receiver", "userId")
@@ -52,8 +53,9 @@ public class NotificationRepository {
     }
     public void pushUserNotification(NotificationDTO notifyDto, NotificationAddCallback callback)
     {
+        notifyDto.setReciver(user.getUid());
         FirebaseAuth user = FirebaseAuth.getInstance();
-        if (!userId.isEmpty()) {
+        if (!user.getUid().isEmpty()) {
             String notify = user.getUid();
             Map<String, Object> notifyMap = new HashMap<>();
             notifyMap.put(NotificationModel.receiver,notifyDto.getReciver());
@@ -61,14 +63,14 @@ public class NotificationRepository {
             notifyMap.put(NotificationModel.title,notifyDto.getTitle());
             notifyMap.put(NotificationModel.dateSent,notifyDto.getDataSent());
             notifyCollection
-                    .document(userId)
+                    .document(user.getUid())
                     .set(notifyMap)
                     .addOnSuccessListener(documentReference -> {
-                        Log.d(TAG,"Notification "+ userId +" add Successfully");
-                        callback.onSuccess(userId);
+                        Log.d(TAG,"Notification "+ user.getUid() +" add Successfully");
+                        callback.onSuccess(user.getUid());
                     }).addOnFailureListener(e->{
                             Log.d(TAG,"Notification add Failed", e);
-                        callback.onError(userId);
+                        callback.onError(user.getUid());
                     });
         }else {
             Log.d(TAG,"Notification add Failed");

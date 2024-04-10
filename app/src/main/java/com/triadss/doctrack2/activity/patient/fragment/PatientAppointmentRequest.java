@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.NotificationDTO;
@@ -32,6 +33,8 @@ import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -150,10 +153,20 @@ public class PatientAppointmentRequest extends Fragment {
 
         AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, status);
+
+        notifyDto = new NotificationDTO();
+        notifyDto.setTitle("Patient New Appointment Request on " + pickDateButton.getText().toString() +" "+ pickTimeBtn.getText().toString());
+        notifyDto.setContent(textInputPurpose.getText().toString());
+        LocalDateTime currentDate = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DocTrackConstant.AUDIT_DATE_FORMAT);
+        String dateNow = currentDate.format(formatter);
+
+        notifyDto.setDataSent(java.sql.Timestamp.valueOf(dateNow));
+        notificationRepository = new NotificationRepository();
         notificationRepository.pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
             @Override
             public void onSuccess(String appointmentId) {
-                scheduleNotification(getNotification( "1 second delay" ) , 1000 );
+                //scheduleNotification(getNotification( "1 second delay" ) , 1000 );
             }
 
             @Override
