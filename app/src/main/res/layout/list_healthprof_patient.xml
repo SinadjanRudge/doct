@@ -8,7 +8,7 @@
     app:cardCornerRadius="3dp"
     app:cardElevation="3dp"
     app:contentPadding="5dp"
-    tools:context=".ListHealthprofPatientsActivity">
+    tools:context=".activity.healthprof.fragments.records.ListHealthprofPatientsActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
