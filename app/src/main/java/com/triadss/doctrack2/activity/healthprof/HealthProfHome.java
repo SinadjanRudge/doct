@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +22,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.healthprof.fragments.appointments.HealthProfessionalAppointmentFragment;
-import com.triadss.doctrack2.activity.healthprof.fragments.reports.HealthProfessionalReportFragment;
+import com.triadss.doctrack2.activity.healthprof.fragments.records.HealthProfessionalReportFragment;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
@@ -107,12 +108,18 @@ public class HealthProfHome extends AppCompatActivity {
         Intent notificationIntent = new Intent( this, NotificationService.class);
         notificationIntent.putExtra(NotificationService.NOTIFICATION_ID , 1 );
         notificationIntent.putExtra(NotificationService.NOTIFICATION , notification);
-        PendingIntent pendingIntent = PendingIntent. getBroadcast ( this,
-                0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT );
-        long futureInMillis = SystemClock.elapsedRealtime () + delay;
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE );
-        assert alarmManager != null;
-        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent);
+        try{
+            PendingIntent pendingIntent = PendingIntent. getBroadcast ( this,
+                    0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE );
+            long futureInMillis = SystemClock.elapsedRealtime () + delay;
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE );
+            assert alarmManager != null;
+            alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent);
+        } catch(Exception e){
+            Log.e("HealthProfHome", e.getMessage());
+        }
+
+
     }
     private Notification getNotification (String content) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder( this, NotificationConstants.DEFAULT_NOTIFICATION_CHANNEL_ID ) ;

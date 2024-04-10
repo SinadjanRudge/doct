@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.activity.patient.fragments.reports;
+package com.triadss.doctrack2.activity.patient.fragments.records;
 
 import android.os.Bundle;
 import android.text.Editable;

@@ -18,7 +18,7 @@ import com.triadss.doctrack2.activity.core.DeviceFragment;
 import com.triadss.doctrack2.activity.patient.fragments.appointments.PatientAppointmentFragment;
 import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
 import com.triadss.doctrack2.activity.patient.fragments.medications.PatientMedicationFragment;
-import com.triadss.doctrack2.activity.patient.fragments.reports.PatientReportFragment;
+import com.triadss.doctrack2.activity.patient.fragments.records.PatientReportFragment;
 import com.triadss.doctrack2.activity.patient.fragments.records.RecordFragment;
 import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
