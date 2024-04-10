@@ -105,10 +105,11 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
      *                           saved state as given here.
      * @return The View for the fragment's UI, or null.
      */
+    private SharedPreferences sharedPref;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
         loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
 
         _patientRepository = new PatientRepository();
@@ -149,16 +150,16 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         error_Course = rootView.findViewById(R.id.error_Course);
         error_DateBirth = rootView.findViewById(R.id.error_DateBirth);
 
-        error_patientID.setVisibility(rootView.GONE);
-        error_Email.setVisibility(rootView.GONE);
-        error_FullName.setVisibility(rootView.GONE);
-        error_Age.setVisibility(rootView.GONE);
-        error_Gender.setVisibility(rootView.GONE);
-        error_Address.setVisibility(rootView.GONE);
-        error_Status.setVisibility(rootView.GONE);
-        error_Contact.setVisibility(rootView.GONE);
-        error_Year.setVisibility(rootView.GONE);
-        error_Course.setVisibility(rootView.GONE);
+        error_patientID.setVisibility(rootView.INVISIBLE);
+        error_Email.setVisibility(rootView.INVISIBLE);
+        error_FullName.setVisibility(rootView.INVISIBLE);
+        error_Age.setVisibility(rootView.INVISIBLE);
+        error_Gender.setVisibility(rootView.INVISIBLE);
+        error_Address.setVisibility(rootView.INVISIBLE);
+        error_Status.setVisibility(rootView.INVISIBLE);
+        error_Contact.setVisibility(rootView.INVISIBLE);
+        error_Year.setVisibility(rootView.INVISIBLE);
+        error_Course.setVisibility(rootView.INVISIBLE);
         error_DateBirth.setVisibility(rootView.INVISIBLE);
 
         getBirthDate.setOnClickListener((View.OnClickListener) v -> {
@@ -207,28 +208,25 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                     && widgetPredicate(input_Status, isNotEmptyPredicate)
                     && widgetPredicate(editTextPhone, isNotEmptyPredicate)
                     && widgetPredicate(input_Year, isNotEmptyPredicate)
+                    && widgetPredicate(input_Gender,isNotEmptyPredicate)
                     && widgetPredicate(getBirthDate, notContainsSelectDate)
                     && widgetPredicate(editTextIdNumber, lengthAtleast6)
                 ) {
-
-                    int teest = editTextIdNumber.getText().toString().length();
                     createPatient();
                 }
                 else {
-                    int teest = editTextIdNumber.getText().toString().length();
-                    showTextViewWhenTrue(input_Email, (value) -> value.contains("@")
-                            || value.contains(".com")
+                    showTextViewWhenTrue(input_Email, (value) -> !value.contains("@")
+                            || !value.contains(".com")
                             || value.isEmpty(), error_Email);
                     showTextViewWhenTrue(editTextAddress, (value) -> value.isEmpty(), error_Address);
                     showTextViewWhenTrue(editTextPhone, (value) -> value.isEmpty(), error_Contact);
                     showTextViewWhenTrue(editTextAge, (value) -> value.isEmpty(), error_Age);
                     showTextViewWhenTrue(editTextCourse, (value) -> value.isEmpty(), error_Course);
-                    showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty() || value.length() >= 6, error_patientID);
+                    showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty() || (value.length() < 6), error_patientID);
                     showTextViewWhenTrue(editTextFullName, (value) -> value.isEmpty(), error_FullName);
                     showTextViewWhenTrue(input_Status, (value) -> value.isEmpty(), error_Status);
                     showTextViewWhenTrue(input_Year, (value) -> value.isEmpty(), error_Year);
                     showTextViewWhenTrue(input_Gender, (value) -> value.isEmpty(), error_Gender);
-                    showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty(), error_patientID);
                     showTextViewWhenTrue(getBirthDate, (value) -> value.contains("Select Date"), error_DateBirth);
                 }
             }
@@ -258,7 +256,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         {
             messageWidget.setVisibility(View.VISIBLE);
         } else {
-            messageWidget.setVisibility(View.GONE);
+            messageWidget.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -267,7 +265,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
      * It also displays appropriate toast messages based on the success or failure of the registration process.
      */
     private void createPatient() {
-        AddPatientDto patientDto = new AddPatientDto();
+        AddPatientDto patientDto = new AddPatientDto(); //add gender
         patientDto.setEmail(String.valueOf(input_Email.getText()).trim());
         patientDto.setFullName(String.valueOf(editTextFullName.getText()).trim());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
@@ -278,6 +276,10 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setDateOfBirth(birthDate.ToStartDateTimestamp());
         patientDto.setYear(Integer.parseInt(String.valueOf(input_Year.getText())));
         patientDto.setStatus(String.valueOf(input_Status.getText()).trim());
+        patientDto.setGender(String.valueOf(input_Gender.getText()).trim());
+
+        String email =sharedPref.getString(SessionConstants.Email, "");
+        String password = sharedPref.getString(SessionConstants.Password, "");
 
         try {
             FirebaseAuth newAuth = FirebaseAuth.getInstance();
@@ -292,9 +294,25 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             _patientRepository.addPatientCallback(patientDto, new PatientRepository.PatientAddUpdateCallback() {
                                 @Override
                                 public void onSuccess(String patientId) {
+
                                     _reportsRepository.addHealthProfPatientInfoReport(loggedInUserId, patientDto, new ReportsRepository.ReportCallback() {
                                         @Override
                                         public void onReportAddedSuccessfully() {
+
+                                            newAuth.signOut();
+
+                                            // Sign in the old user
+                                            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                                                    .addOnCompleteListener(signInTask -> {
+                                                        if (signInTask.isSuccessful()) {
+                                                            FirebaseUser oldUser = signInTask.getResult().getUser();
+                                                            if (oldUser != null) {
+                                                                // Old user signed in successfully, do something
+                                                            }
+                                                        } else {
+                                                            // Handle sign-in failure
+                                                        }
+                                                    });
                                             showMedicalHistory(patientId);
 
                                         }
@@ -304,6 +322,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
                                         }
                                     });
+
                                 }
 
                                 @Override

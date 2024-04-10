@@ -8,10 +8,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
+import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.repoositories.MedicationRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +38,13 @@ public class PatientHomeFragment extends Fragment{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private MedicationRepository medicationRepository = new MedicationRepository();
+    private AppointmentRepository appointmentRepository = new AppointmentRepository();
+    private RecyclerView medicationRecyclerView;
+    private RecyclerView appointmentRecyclerView;
+
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
     public PatientHomeFragment(){
         //Required empty constructor
@@ -64,6 +82,9 @@ public class PatientHomeFragment extends Fragment{
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_patient_home_page, container, false);
 
+        medicationRecyclerView = rootview.findViewById(R.id.recyclerView_medication);
+        appointmentRecyclerView = rootview.findViewById(R.id.recyclerView_pendingAppointment);
+
         Button button = rootview.findViewById(R.id.btnLogout);
         button.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
@@ -71,6 +92,48 @@ public class PatientHomeFragment extends Fragment{
             startActivity(intent);
             requireActivity().finish();
         });
+
+        loadMedications();
+        loadAppointments();
+
         return rootview;
+    }
+
+    public void loadMedications()
+    {
+        medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING, new MedicationRepository.MedicationFetchCallback() {
+            @Override
+            public void onSuccess(List<MedicationDto> medications) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                medicationRecyclerView.setLayoutManager(linearLayoutManager);
+
+                PatientHomeMedicationAdapter adapter = new PatientHomeMedicationAdapter(getContext(), (ArrayList)medications);
+                medicationRecyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void loadAppointments()
+    {
+        appointmentRepository.getAllPatientPendingAppointments(currentUser.getUid(), new AppointmentRepository.AppointmentPatientPendingFetchCallback() {
+            @Override
+            public void onSuccess(List<AppointmentDto> appointments) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                appointmentRecyclerView.setLayoutManager(linearLayoutManager);
+
+                PatientHomeAppointmentAdapter adapter = new PatientHomeAppointmentAdapter(getContext(), (ArrayList)appointments);
+                appointmentRecyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
     }
 }

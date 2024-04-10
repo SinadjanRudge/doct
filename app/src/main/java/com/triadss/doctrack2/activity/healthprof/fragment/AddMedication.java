@@ -3,17 +3,17 @@ package com.triadss.doctrack2.activity.healthprof.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
@@ -92,38 +92,53 @@ public class AddMedication extends Fragment {
         EditText inputMedicine = rootView.findViewById(R.id.input_medicine);
         EditText inputNote = rootView.findViewById(R.id.input_note);
 
+        TextView errorMedicationNm = rootView.findViewById(R.id.errorMedicationNm);
+        TextView errorNote = rootView.findViewById(R.id.errorNote);
+        errorMedicationNm.setVisibility(rootView.INVISIBLE);
+        errorNote.setVisibility(rootView.INVISIBLE);
+
         Button addMedication = rootView.findViewById(R.id.btn_addMedicine);
         addMedication.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MedicationDto dto = new MedicationDto("", patientUid,
-                        inputMedicine.getText().toString(),
-                        inputNote.getText().toString(),
-                        Timestamp.now(),
-                        MedicationTypeConstants.ONGOING);
+                if (!inputMedicine.getText().toString().isEmpty() && !inputNote.getText().toString().isEmpty()) {
+                    errorMedicationNm.setVisibility(rootView.INVISIBLE);
+                    errorNote.setVisibility(rootView.INVISIBLE);
+                    MedicationDto dto = new MedicationDto("", patientUid,
+                            inputMedicine.getText().toString(),
+                            inputNote.getText().toString(),
+                            Timestamp.now(),
+                            MedicationTypeConstants.ONGOING);
 
-                repository.addMedication(dto, new MedicationRepository.MedicationsAddCallback() {
-                    @Override
-                    public void onSuccess(String medicationId) {
-                        _reportsRepository.addHealthProfPatientAddMedicationReport(loggedInUserId, patientUid, dto, new ReportsRepository.ReportCallback(){
+                    repository.addMedication(dto, new MedicationRepository.MedicationsAddCallback() {
+                        @Override
+                        public void onSuccess(String medicationId) {
+                            _reportsRepository.addHealthProfPatientAddMedicationReport(loggedInUserId, patientUid, dto, new ReportsRepository.ReportCallback() {
 
-                            @Override
-                            public void onReportAddedSuccessfully() {
-                                updateMedicationList();
-                            }
+                                @Override
+                                public void onReportAddedSuccessfully() {
+                                    updateMedicationList();
+                                }
 
-                            @Override
-                            public void onReportFailed(String errorMessage) {
+                                @Override
+                                public void onReportFailed(String errorMessage) {
 
-                            }
-                        });
-                    }
+                                }
+                            });
+                        }
 
-                    @Override
-                    public void onError(String errorMessage) {
-                        System.out.println();
-                    }
-                });
+                        @Override
+                        public void onError(String errorMessage) {
+                            System.out.println();
+                        }
+                    });
+                }
+                else{
+                    if(inputMedicine.getText().toString().isEmpty()) errorMedicationNm.setVisibility(rootView.VISIBLE);
+                    else if (!inputMedicine.getText().toString().isEmpty()) errorMedicationNm.setVisibility(rootView.INVISIBLE);
+                    if(inputNote.getText().toString().isEmpty()) errorNote.setVisibility(rootView.VISIBLE);
+                    else if (!inputNote.getText().toString().isEmpty()) errorNote.setVisibility(rootView.INVISIBLE);
+                }
             }
         });
 

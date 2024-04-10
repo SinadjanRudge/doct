@@ -85,7 +85,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycleview_patient_list"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="500dp"
                 android:layout_below="@id/search_bar_patient"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"

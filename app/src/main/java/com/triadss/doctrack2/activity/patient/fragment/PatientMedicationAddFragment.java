@@ -3,41 +3,32 @@ package com.triadss.doctrack2.activity.patient.fragment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
-import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.dto.TimeDto;
-import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
-import java.sql.Time;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import android.util.Log;
-import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +52,8 @@ public class PatientMedicationAddFragment extends Fragment {
     private Button button_date, button_time, add_button, clear_button;
     private TextInputEditText medicineInput, noteInput;
     private MedicationRepository medicationRepository;
+    private View rootView;
+    private TextView errorMedication, errorNote, errorSelecteDate, errorSelectTime;
     private ReportsRepository _reportsRepository = new ReportsRepository();
 
     public PatientMedicationAddFragment() {
@@ -99,7 +92,7 @@ public class PatientMedicationAddFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_patient_medication_add, container, false);
+        rootView = inflater.inflate(R.layout.fragment_patient_medication_add, container, false);
 
         medicationRepository = new MedicationRepository();
 
@@ -109,6 +102,16 @@ public class PatientMedicationAddFragment extends Fragment {
         noteInput = rootView.findViewById(R.id.noteInput);
         add_button = rootView.findViewById(R.id.add_button);
         clear_button = rootView.findViewById(R.id.clear_button);
+
+        errorMedication  = rootView.findViewById(R.id.errorMedication);
+        errorNote  = rootView.findViewById(R.id.errorNote);
+        errorSelecteDate  = rootView.findViewById(R.id.errorSelecteDate);
+        errorSelectTime  = rootView.findViewById(R.id.errorSelectTime);
+
+        errorMedication.setVisibility(rootView.INVISIBLE);
+        errorNote.setVisibility(rootView.INVISIBLE);
+        errorSelecteDate.setVisibility(rootView.INVISIBLE);
+        errorSelectTime.setVisibility(rootView.INVISIBLE);
 
         setupDatePicker();
         setupTimePicker();
@@ -200,13 +203,37 @@ public class PatientMedicationAddFragment extends Fragment {
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String test = button_time.getText().toString();
                 // Handle confirmation button click
-                handleConfirmationButtonClick();
+                if(!medicineInput.getText().toString().isEmpty() && !noteInput.getText().toString().isEmpty()
+                && !button_date.getText().toString().equals("Select Date") && !button_time.getText().toString().equals("Select Time")) {
+                    errorMedication.setVisibility(rootView.INVISIBLE);
+                    errorNote.setVisibility(rootView.INVISIBLE);
+                    errorSelecteDate.setVisibility(rootView.INVISIBLE);
+                    errorSelectTime.setVisibility(rootView.INVISIBLE);
+                    handleConfirmationButtonClick();
+                }
+                else
+                {
+                    if(medicineInput.getText().toString().isEmpty())  errorMedication.setVisibility(rootView.VISIBLE);
+                    else errorMedication.setVisibility(rootView.INVISIBLE);
+                    if (noteInput.getText().toString().isEmpty()) errorNote.setVisibility(rootView.VISIBLE);
+                    else errorNote.setVisibility(rootView.INVISIBLE);
+                    if( button_date.getText().toString().equals("Select Date")) errorSelecteDate.setVisibility(rootView.VISIBLE);
+                    else errorSelecteDate.setVisibility(rootView.INVISIBLE);
+                    if ( button_time.getText().toString().equals("Select Time")) errorSelectTime.setVisibility(rootView.VISIBLE);
+                    else errorSelectTime.setVisibility(rootView.INVISIBLE);
+                }
             }
         });
     }
 
     private void handleClearButtonClick() {
+        errorMedication.setVisibility(rootView.INVISIBLE);
+        errorNote.setVisibility(rootView.INVISIBLE);
+        errorSelecteDate.setVisibility(rootView.INVISIBLE);
+        errorSelectTime.setVisibility(rootView.INVISIBLE);
         medicineInput.setText("");
         noteInput.setText("");
         selectedDateTime.setDate(null);

@@ -14,6 +14,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
+import com.triadss.doctrack2.utils.CheckboxStringProcessor;
+import com.triadss.doctrack2.utils.EditTextStringProcessor;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,10 +86,22 @@ public class RecordMedicalHistory extends Fragment {
         medicalHistoryRepository.getMedicalHistoryOfPatient(patientUid, new MedicalHistoryRepository.FetchCallback() {
             @Override
             public void onSuccess(MedicalHistoryDto medicalHistory) {
-                patientPastIllness.setText(medicalHistory.getPastIllness());
+                String SplitDelimiter = "\\|";
+
+                List<String> separatedPastIllness = CheckboxStringProcessor.StringToSeparatedValues(SplitDelimiter, medicalHistory.getPastIllness());
+                String pastIllnessString = CheckboxStringProcessor.SeparatedValuesToString(", ", separatedPastIllness);
+                patientPastIllness.setText(pastIllnessString);
                 patientPrevHospitalization.setText(medicalHistory.getPrevOperation());
-                patientFamilyHistory.setText(medicalHistory.getFamilyHist());
-                patientOBGyneHistory.setText(medicalHistory.getObgyneHist());
+
+                List<String> separatedMedicalHistory = CheckboxStringProcessor.StringToSeparatedValues(SplitDelimiter, medicalHistory.getFamilyHist());
+                String medicalHistoryString = CheckboxStringProcessor.SeparatedValuesToString(", ", separatedMedicalHistory);
+                patientFamilyHistory.setText(medicalHistoryString);
+
+                List<String> separatedOBGyneHistory = EditTextStringProcessor.StringToSeparatedValues(SplitDelimiter, medicalHistory.getObgyneHist());
+                Map<String, String> mappedOBGyneHistory = EditTextStringProcessor.SeparatedValuesToMap(":", separatedOBGyneHistory);
+                List<String> processedOBGyneHistory = EditTextStringProcessor.MapToSeparatedValues(": ", mappedOBGyneHistory);
+                String obgyneString = EditTextStringProcessor.SeparatedValuesToString("\n", processedOBGyneHistory);
+                patientOBGyneHistory.setText(obgyneString);
             }
 
             @Override
