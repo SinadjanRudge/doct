@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -96,12 +98,36 @@ public class PatientHomeFragment extends Fragment{
             requireActivity().finish();
         });
 
+        ImageView menuImageView = rootview.findViewById(R.id.menu);
+        menuImageView.setOnClickListener(v -> showPopupMenu(v));
+
         loadMedications();
         loadAppointments();
 
         return rootview;
     }
 
+    public void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_item1) {
+
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(requireContext(), LoginActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
+                return true;
+//                return true;
+            } else {
+                return false;
+            }
+        });
+        popupMenu.inflate(R.menu.patient_popup_menu);
+        popupMenu.show();
+    }
+
+
+        
     public void loadMedications()
     {
         medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING, new MedicationRepository.MedicationFetchCallback() {
