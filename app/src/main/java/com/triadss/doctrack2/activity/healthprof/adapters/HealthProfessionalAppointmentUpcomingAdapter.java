@@ -83,6 +83,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             reject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Dialog dialog = new Dialog(context);
                     dialog.setContentView(R.layout.dialog_cancel_appointment_confirmation);
 
