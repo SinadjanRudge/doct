@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,16 +20,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
-import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfHomeFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalReportFragment;
-import com.triadss.doctrack2.activity.patient.fragment.PatientHomeFragment;
+import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
+import com.triadss.doctrack2.activity.healthprof.fragments.appointments.HealthProfessionalAppointmentFragment;
+import com.triadss.doctrack2.activity.healthprof.fragments.reports.HealthProfessionalReportFragment;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
-import com.triadss.doctrack2.activity.healthprof.fragment.AppointmentFragment;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.PatientFragment;
-import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
+import com.triadss.doctrack2.activity.healthprof.fragments.patient.PatientFragment;
+import com.triadss.doctrack2.activity.patient.fragments.records.RecordFragment;
 import com.triadss.doctrack2.notification.NotificationService;
 
 public class HealthProfHome extends AppCompatActivity {
@@ -58,7 +57,7 @@ public class HealthProfHome extends AppCompatActivity {
             } else if (item.getItemId() == R.id.record_menu) {
                 replaceFragment(new RecordFragment());
             } else if (item.getItemId() == R.id.report_menu) {
-                scheduleNotification(getNotification( "1 second delay" ) , 1000 ) ;
+                //scheduleNotification(getNotification( "1 second delay" ) , 1000 ) ;
                 replaceFragment(new HealthProfessionalReportFragment());
             } else if (item.getItemId() == R.id.temp_logout) {
                 FirebaseAuth.getInstance().signOut();
@@ -109,12 +108,18 @@ public class HealthProfHome extends AppCompatActivity {
         Intent notificationIntent = new Intent( this, NotificationService.class);
         notificationIntent.putExtra(NotificationService.NOTIFICATION_ID , 1 );
         notificationIntent.putExtra(NotificationService.NOTIFICATION , notification);
-        PendingIntent pendingIntent = PendingIntent. getBroadcast ( this,
-                0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT );
-        long futureInMillis = SystemClock.elapsedRealtime () + delay;
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE );
-        assert alarmManager != null;
-        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent);
+        try{
+            PendingIntent pendingIntent = PendingIntent. getBroadcast ( this,
+                    0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE );
+            long futureInMillis = SystemClock.elapsedRealtime () + delay;
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context. ALARM_SERVICE );
+            assert alarmManager != null;
+            alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent);
+        } catch(Exception e){
+            Log.e("HealthProfHome", e.getMessage());
+        }
+
+
     }
     private Notification getNotification (String content) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder( this, NotificationConstants.DEFAULT_NOTIFICATION_CHANNEL_ID ) ;
