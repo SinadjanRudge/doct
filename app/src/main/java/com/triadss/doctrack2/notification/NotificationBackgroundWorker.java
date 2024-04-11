@@ -63,7 +63,6 @@ public class NotificationBackgroundWorker extends Worker {
 
         // Do the work here--in this case, upload the images.
         Log.e("TEST", "Running Work for " + receiverUserUid);
-        Toast.makeText(context, "Running Work for " + receiverUserUid, Toast.LENGTH_SHORT).show();
         //scheduleNotification(getNotification("1 second delay"), 1000);
         DateTimeDto datetimedto = new DateTimeDto();
         getnotify.fetchUserNotification(receiverUserUid, new NotificationRepository.FetchNotificationAddCallback() {
@@ -72,7 +71,7 @@ public class NotificationBackgroundWorker extends Worker {
 
                 for (NotificationDTO notifyDti : notificationList
                 ) {
-                    if (receiverUserUid == notifyDti.getReciver()) {
+                    if (receiverUserUid.equals(notifyDti.getReciver())) {
                         datetimedto.GetCurrentTimeStamp();//lastrequestdate
                         sharedPref = sharedPref.getString(SessionConstants.SessionPreferenceKey,Context.MODE_PRIVATE);
                         scheduleNotification(getNotification("1 second delay"), 1000);
