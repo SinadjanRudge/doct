@@ -11,6 +11,13 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,8 +30,13 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.admin.AdminHome;
 import com.triadss.doctrack2.activity.healthprof.HealthProfHome;
 import com.triadss.doctrack2.activity.patient.PatientHome;
+import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.config.enums.UserRole;
+import com.triadss.doctrack2.helper.ButtonManager;
+import com.triadss.doctrack2.notification.NotificationBackgroundWorker;
+
+import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -76,15 +88,22 @@ public class LoginActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 return;
             }
+
+            ButtonManager.disableButton(buttonLogin);
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
                         progressBar.setVisibility(View.GONE);
+
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+                            SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey,
+                                    Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPref.edit();
+
                             editor.putString(SessionConstants.LoggedInUid, user.getUid());
+                            editor.putString(SessionConstants.Password, password);
+                            editor.putString(SessionConstants.Email, email);
                             editor.apply();
 
                             Toast.makeText(LoginActivity.this, "Login Successfully",
@@ -96,8 +115,11 @@ public class LoginActivity extends AppCompatActivity {
 
                         } else {
                             FirebaseAuthException e = (FirebaseAuthException) task.getException();
-                            Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT)
+                                    .show();
                         }
+
+                        ButtonManager.enableButton(buttonLogin);
                     });
         });
     }
@@ -117,6 +139,22 @@ public class LoginActivity extends AppCompatActivity {
                             // Retrieve the user role from the document
                             String userRoleString = document.getString("role");
                             if (userRoleString != null) {
+                                // Prepare periodic background
+                                Constraints constraints = new Constraints.Builder()
+                                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                                        .build();
+
+                                PeriodicWorkRequest notifWorkRequest = new PeriodicWorkRequest.Builder(
+                                        NotificationBackgroundWorker.class, 5, TimeUnit.SECONDS)
+                                        .setInputData(new Data.Builder()
+                                                .putString(NotificationConstants.RECEIVER_ID, userId)
+                                                .build())
+                                        .setConstraints(constraints)
+                                        .build();
+                                WorkManager.getInstance(this)
+                                        .enqueueUniquePeriodicWork(NotificationConstants.NOTIFICATION_TAG,
+                                                ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, notifWorkRequest);
+
                                 UserRole userRole = UserRole.valueOf(userRoleString);
                                 redirectBasedOnUserRole(userRole);
                             }

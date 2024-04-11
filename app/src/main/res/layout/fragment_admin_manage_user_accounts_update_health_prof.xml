@@ -15,63 +15,159 @@
         android:textStyle="bold"
         android:layout_marginBottom="24dp"/>
 
-    <TextView
-        android:id="@+id/health_worker_name_update"
-        android:layout_width="387dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:clickable="false"
-        android:focusable="false"
-        android:longClickable="false"
-        android:padding="16dp"
-        android:text="Health Worker Name"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
 
-    <EditText
-        android:id="@+id/editTextPosition"
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="59dp"
-        android:hint="Position"
-        android:inputType="text" />
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:clickable="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:padding="16dp"
+                android:text="Full Name:"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/healthWorkerName"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:clickable="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:padding="16dp"
+                android:text="Health Worker Name"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:clickable="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:padding="16dp"
+                android:text="Username:"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/UserName"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:clickable="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:padding="16dp"
+                android:text="UserName"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:clickable="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:padding="16dp"
+                android:text="Gender:"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/Gender"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:clickable="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:padding="16dp"
+                android:text="Gender"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:clickable="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:padding="16dp"
+                android:text="Position:"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/editTextPosition"
+                    android:layout_width="match_parent"
+                    android:layout_height="59dp"
+                    android:hint="Position"
+                    android:inputType="text" />
+
+                <TextView
+                    android:id="@+id/errorTextPosition"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Position is Blank"
+                    android:text="Position is Blank"
+                    android:textColor="#FF0000" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/Position"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:clickable="false"
+                android:focusable="false"
+                android:longClickable="false"
+                android:padding="16dp"
+                android:text="Position"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </TableRow>
+
+    </TableLayout>
 
 
-    <TextView
-        android:id="@+id/errorTextPosition"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Position is Blank"
-        android:text="Position is Blank"
-        android:textColor="#FF0000" />
-
-    <TextView
-        android:id="@+id/health_user_name_update"
-        android:layout_width="387dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:clickable="false"
-        android:focusable="false"
-        android:longClickable="false"
-        android:padding="16dp"
-        android:text="UserName"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
 
 
 
-
-    <TextView
-        android:id="@+id/health_gender_update"
-        android:layout_width="388dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:clickable="false"
-        android:focusable="false"
-        android:longClickable="false"
-        android:padding="16dp"
-        android:text="Gender"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
 
     <Button
         android:id="@+id/buttonUpdateHealthProf"

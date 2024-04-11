@@ -36,6 +36,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.BluetoothConstants;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.dto.WearableDeviceDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 import com.triadss.doctrack2.repoositories.WearableDeviceRepository;
 
@@ -330,21 +331,26 @@ public class DeviceFragment extends Fragment {
 
             Toast.makeText(getContext(), "Syncing...", Toast.LENGTH_SHORT).show();
 
+            ButtonManager.disableButton(syncButton);
+
             vitalSignsRepo.getVitalSignOfPatient(Objects.requireNonNull(user).getUid(), new VitalSignsRepository.FetchCallback() {
                 @Override
                 public void onSuccess(VitalSignsDto vitalSigns) {
                     String jsonData = vitalSigns.toJsonData();
                     sendMessage(jsonData);
+                    ButtonManager.enableButton(syncButton);
                 }
 
                 @Override
                 public void onError(String errorMessage) {
                     Log.e(TAG, "Failure in fetching patient's vital signs");
                     Toast.makeText(getContext(), "Sync Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    ButtonManager.enableButton(syncButton);
                 }
             });
         } catch (Exception e) {
             Log.e(TAG, "Exception: " + e.getMessage());
+            ButtonManager.enableButton(syncButton);
         }
     }
 

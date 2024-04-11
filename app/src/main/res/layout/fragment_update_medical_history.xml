@@ -103,7 +103,7 @@
                         android:layout_width="320dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="heart dieases" />
+                        android:text="heart diseases" />
 
                     <CheckBox
                         android:id="@+id/nervousBreakdown"
@@ -231,7 +231,14 @@
                         android:textSize="15sp" />
 
                 </LinearLayout>
-
+                <TextView
+                    android:id="@+id/errorPassIllness"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="Pls Specify your pass Illness."
+                    android:layout_marginStart="35dp"
+                    android:textColor="#FF0000"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -398,6 +405,14 @@
                         android:textSize="15sp" />
 
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/errorFamilyHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="Pls Specify your Family Illness History."
+                    android:layout_marginStart="35dp"
+                    android:textColor="#FF0000"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
