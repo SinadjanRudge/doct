@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 import androidx.fragment.app.Fragment;
@@ -159,6 +160,8 @@ public class PatientAppointmentRequest extends Fragment {
         AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, status);
 
+        ButtonManager.disableButton(confirmButton);
+
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
             @Override
             public void onSuccess(String appointmentId) {
@@ -169,18 +172,20 @@ public class PatientAppointmentRequest extends Fragment {
                         pickTimeBtn.setText("Select Date");
                         pickDateButton.setText("Select Time");
                         Toast.makeText(getContext(), appointmentId + " added", Toast.LENGTH_SHORT).show();
+
+                        ButtonManager.enableButton(confirmButton);
                     }
 
                     @Override
                     public void onReportFailed(String errorMessage) {
-
+                        ButtonManager.enableButton(confirmButton);
                     }
                 });
             }
 
             @Override
             public void onError(String errorMessage) {
-                // Handle error, if needed
+                ButtonManager.enableButton(confirmButton);
             }
         });
     }
