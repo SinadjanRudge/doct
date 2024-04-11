@@ -90,14 +90,6 @@ public class PatientHomeFragment extends Fragment{
         medicationRecyclerView = rootview.findViewById(R.id.recyclerView_medication);
         appointmentRecyclerView = rootview.findViewById(R.id.recyclerView_pendingAppointment);
 
-        Button button = rootview.findViewById(R.id.btnLogout);
-        button.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(requireContext(), LoginActivity.class);
-            startActivity(intent);
-            requireActivity().finish();
-        });
-
         ImageView menuImageView = rootview.findViewById(R.id.menu);
         menuImageView.setOnClickListener(v -> showPopupMenu(v));
 
@@ -127,7 +119,7 @@ public class PatientHomeFragment extends Fragment{
     }
 
 
-        
+
     public void loadMedications()
     {
         medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING, new MedicationRepository.MedicationFetchCallback() {
