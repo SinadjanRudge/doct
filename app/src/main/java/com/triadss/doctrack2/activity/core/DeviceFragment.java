@@ -350,6 +350,7 @@ public class DeviceFragment extends Fragment {
             });
         } catch (Exception e) {
             Log.e(TAG, "Exception: " + e.getMessage());
+            ButtonManager.enableButton(syncButton);
         }
     }
 
