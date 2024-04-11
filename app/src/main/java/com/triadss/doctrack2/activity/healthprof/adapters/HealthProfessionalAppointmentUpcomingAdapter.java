@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 
 import java.util.ArrayList;
 
@@ -83,6 +84,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             reject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Dialog dialog = new Dialog(context);
                     dialog.setContentView(R.layout.dialog_cancel_appointment_confirmation);
 
@@ -99,7 +101,13 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                     yes.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            ButtonManager.disableButton(yes);
+                            ButtonManager.disableButton(no);
+
                             callback.onReject(appointments.get(getAdapterPosition()).getUid());
+
+                            ButtonManager.enableButton(yes);
+                            ButtonManager.enableButton(no);
                             dialog.dismiss();
                         }
                     });
@@ -113,8 +121,10 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ButtonManager.disableButton(accept);
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
                     callback.onAccept(appointment.getUid());
+                    ButtonManager.enableButton(accept);
                 }
             });
         }

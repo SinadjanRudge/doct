@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 
+import com.triadss.doctrack2.helper.ButtonManager;
+
 public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
@@ -40,7 +42,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         button.setOnClickListener(v -> {
+            ButtonManager.disableButton(button);
             FirebaseAuth.getInstance().signOut();
+
+            ButtonManager.enableButton(button);
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
             finish();

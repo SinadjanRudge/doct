@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,7 +53,6 @@ public class HealthProfHomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private Button logoutButton;
 
     public HealthProfHomeFragment() {
         // Required empty public constructor
@@ -85,17 +86,31 @@ public class HealthProfHomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_health_prof_home_page, container, false);
         recyclerView= rootView.findViewById(R.id.recycler_view_pending_appointments);
         pendingAppointmentCountVal = rootView.findViewById(R.id.pendingAppointmentCountVal);
-        logoutButton = rootView.findViewById(R.id.btnLogout);
 
-        logoutButton.setOnClickListener(view -> {
-            auth.signOut();
-            Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(loginIntent);
-        });
+        ImageView menuImageView = rootView.findViewById(R.id.menu);
+        menuImageView.setOnClickListener(v -> showPopupMenu(v));
 
         ReloadList();
 
         return rootView;
+    }
+
+    public void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_item1) {
+
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(requireContext(), LoginActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
+                return true;
+            } else {
+                return false;
+            }
+        });
+        popupMenu.inflate(R.menu.healthprof_popup_menu);
+        popupMenu.show();
     }
 
     public void ReloadList() {

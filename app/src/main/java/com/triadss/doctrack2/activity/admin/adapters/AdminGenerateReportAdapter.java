@@ -46,6 +46,7 @@ public class AdminGenerateReportAdapter extends RecyclerView.Adapter<AdminGenera
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView description, action, date, createdBy;
+
         public ViewHolder(View view) {
             super(view);
             description = view.findViewById(R.id.descriptionValue);

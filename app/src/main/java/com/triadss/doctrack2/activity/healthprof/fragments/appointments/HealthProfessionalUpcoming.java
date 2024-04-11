@@ -21,6 +21,7 @@ import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalAppo
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
