@@ -15,11 +15,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.core.DeviceFragment;
-import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
-import com.triadss.doctrack2.activity.patient.fragment.PatientHomeFragment;
-import com.triadss.doctrack2.activity.patient.fragment.PatientMedicationFragment;
-import com.triadss.doctrack2.activity.patient.fragment.PatientReportFragment;
-import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
+import com.triadss.doctrack2.activity.patient.fragments.appointments.PatientAppointmentFragment;
+import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
+import com.triadss.doctrack2.activity.patient.fragments.medications.PatientMedicationFragment;
+import com.triadss.doctrack2.activity.patient.fragments.records.PatientReportFragment;
+import com.triadss.doctrack2.activity.patient.fragments.records.RecordFragment;
 import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
 public class PatientHome extends AppCompatActivity {
