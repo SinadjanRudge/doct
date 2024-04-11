@@ -1,18 +1,17 @@
 package com.triadss.doctrack2.dto;
-
-import java.sql.Timestamp;
+import com.google.firebase.Timestamp;
 
 public class NotificationDTO {
-    private String content, reciver, tile;
-    private Timestamp dataSent;
+    private String content, reciver, title;
+    private Timestamp dateSent;
     public String getContent(){return content;}
     public void setContent(String content){ this.content = content;}
-    public Timestamp getDataSent() {
-        return dataSent;
+    public Timestamp getDateSent() {
+        return dateSent;
     }
-    public void setDataSent(Timestamp dataSent) {this.dataSent = dataSent;}
+    public void setDateSent(Timestamp dataSent) {this.dateSent = dataSent;}
     public String getReciver(){return reciver;}
     public void setReciver(String reciver){ this.reciver = reciver;}
-    public String getTitle(){return tile;}
-    public void setTitle(String tile){ this.tile = tile;}
+    public String getTitle(){return title;}
+    public void setTitle(String tile){ this.title = tile;}
 }

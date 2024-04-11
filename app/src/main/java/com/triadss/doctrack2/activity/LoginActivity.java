@@ -32,9 +32,7 @@ import com.triadss.doctrack2.activity.patient.PatientHome;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.config.enums.UserRole;
-import com.triadss.doctrack2.dto.NotificationDTO;
 import com.triadss.doctrack2.notification.NotificationBackgroundWorker;
-import com.triadss.doctrack2.repoositories.NotificationRepository;
 
 import java.util.concurrent.TimeUnit;
 
@@ -49,8 +47,6 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
 
     ProgressBar progressBar;
-    NotificationRepository getnotify = new NotificationRepository();
-    NotificationDTO notifyDti = new NotificationDTO();
 
     @Override
     public void onStart() {
@@ -138,7 +134,10 @@ public class LoginActivity extends AppCompatActivity {
                                 Constraints constraints = new Constraints.Builder()
                                         .setRequiredNetworkType(NetworkType.CONNECTED)
                                         .build();
-                                notifyDti = getnotify.fetchUserNotification(userId);
+
+/*                              SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                String test = sharedPref.getString("",""); // last request*/
                                 PeriodicWorkRequest notifWorkRequest = new PeriodicWorkRequest.Builder(NotificationBackgroundWorker.class, 15, TimeUnit.MINUTES)
                                         .setInputData(new Data.Builder()
                                                 .putString(NotificationConstants.RECEIVER_ID, userId)

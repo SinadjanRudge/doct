@@ -12,8 +12,9 @@ import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.NotificationModel;
 import com.triadss.doctrack2.dto.NotificationDTO;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NotificationRepository {
@@ -23,6 +24,7 @@ public class NotificationRepository {
     //String userId = currentUser.getUid();
     private FirebaseUser user = mAuth.getCurrentUser();
     NotificationDTO notification = new NotificationDTO();
+    List<NotificationDTO> notificationList = new ArrayList<NotificationDTO>();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference notifyCollection = firestore
             .collection(FireStoreCollection.NOTIFICATION_TABLE);
@@ -31,25 +33,31 @@ public class NotificationRepository {
     {
 
     }
-    public NotificationDTO fetchUserNotification(String userId) {
+    public void fetchUserNotification(String userId, FetchNotificationAddCallback callback) {
         //this.userId = userId;
-        if(!user.getUid().isEmpty()) {
+        if(!userId.isEmpty()) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("notifications")
-                    .whereEqualTo("receiver", "userId")
+                    .whereEqualTo("receiver", userId)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                notification.setReciver(document.getString("reciver"));
-                                notification.setContent(document.getString("content"));
-                                notification.setDataSent((Timestamp) document.get("dataSent"));
-                                notification.setTitle(document.getString("tile"));
+                                notification = new NotificationDTO();
+                                notification.setReciver(document.getString(NotificationModel.receiver));
+                                notification.setContent(document.getString(NotificationModel.content));
+                                notification.setDateSent(document.getTimestamp(NotificationModel.dateSent));
+                                notification.setTitle(document.getString(NotificationModel.title));
+                                notificationList.add(notification);
                             }
+                            callback.onSuccess(notificationList);
                         }
+                    })
+                    .addOnFailureListener(e->{
+                        Log.d(TAG,"Fetch Notification Error on " + userId);
+                        callback.onError(e.getMessage());
                     });
         }
-        return notification;
     }
     public void pushUserNotification(NotificationDTO notifyDto, NotificationAddCallback callback)
     {
@@ -61,10 +69,9 @@ public class NotificationRepository {
             notifyMap.put(NotificationModel.receiver,notifyDto.getReciver());
             notifyMap.put(NotificationModel.content,notifyDto.getContent());
             notifyMap.put(NotificationModel.title,notifyDto.getTitle());
-            notifyMap.put(NotificationModel.dateSent,notifyDto.getDataSent());
+            notifyMap.put(NotificationModel.dateSent,notifyDto.getDateSent());
             notifyCollection
-                    .document(user.getUid())
-                    .set(notifyMap)
+                    .add(notifyMap)
                     .addOnSuccessListener(documentReference -> {
                         Log.d(TAG,"Notification "+ user.getUid() +" add Successfully");
                         callback.onSuccess(user.getUid());
@@ -79,6 +86,12 @@ public class NotificationRepository {
 
     public interface NotificationAddCallback {
         void onSuccess(String appointmentId);
+
+        void onError(String errorMessage);
+    }
+    public  interface FetchNotificationAddCallback
+    {
+        void onSuccess(List<NotificationDTO> notificationList);
 
         void onError(String errorMessage);
     }
