@@ -109,7 +109,6 @@ public class PatientHomeFragment extends Fragment{
                 startActivity(intent);
                 requireActivity().finish();
                 return true;
-//                return true;
             } else {
                 return false;
             }
