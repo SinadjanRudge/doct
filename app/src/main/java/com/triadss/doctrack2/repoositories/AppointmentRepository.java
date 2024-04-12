@@ -100,6 +100,7 @@ public class AppointmentRepository {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     AppointmentDto appointment = document.toObject(AppointmentDto.class);
                                     appointment.setDocumentId(document.getId().toString());
+                                    appointment.setUid(document.getId().toString());
                                     String idNumber = patients
                                             .stream()
                                             .filter(patient -> patient.getUid().equals(appointment.getPatientId()))

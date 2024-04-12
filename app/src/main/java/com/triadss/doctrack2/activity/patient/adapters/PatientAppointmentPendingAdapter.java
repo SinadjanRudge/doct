@@ -86,12 +86,30 @@ public class PatientAppointmentPendingAdapter
             documentId = (TextView) view.findViewById(R.id.IDtext);
             patientName = view.findViewById(R.id.nametext);
 
+          
+
+        }
+
+        public void update(AppointmentDto appointment) {
+            purpose.setText(appointment.getPurpose());
+            DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
+            date.setText(dateTimeDto.getDate().ToString());
+            time.setText(dateTimeDto.getTime().ToString());
+            documentId.setText(appointment.getPatientIdNumber());
+            patientName.setText(appointment.getNameOfRequester());
+
+            reschedule.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
+                    showUpdateDialog(appointment);
+                }
+            });
+
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Toast.makeText(itemView.getContext(), purpose.getText(),
-                    // Toast.LENGTH_SHORT).show();
-                    Toast.makeText(itemView.getContext(), documentId.getText(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(itemView.getContext(), appointment.getDocumentId(), Toast.LENGTH_SHORT).show();
                     android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(itemView.getContext());
 
                     alertDialog.setTitle("Canceling");
@@ -111,7 +129,7 @@ public class PatientAppointmentPendingAdapter
                             Button yesButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
                             ButtonManager.disableButton(yesButton);
 
-                            appointmentRepository.cancelAppointment(documentId.getText().toString(),
+                            appointmentRepository.cancelAppointment(appointment.getDocumentId(),
                                     new AppointmentRepository.AppointmentCancelCallback() {
                                         @Override
                                         public void onSuccess(String appointmentId) {
@@ -131,7 +149,7 @@ public class PatientAppointmentPendingAdapter
                                             ButtonManager.enableButton(yesButton);
                                         }
                                     });
-                            appointmentRepository.addReport(documentId.getText().toString(), "CANCEL",
+                            appointmentRepository.addReport(appointment.getDocumentId(), "CANCEL",
                                     new AppointmentRepository.ReportCallback() {
                                         @Override
                                         public void onSuccess(String appointmentId) {
@@ -152,24 +170,6 @@ public class PatientAppointmentPendingAdapter
                     });
                     alertDialog.show();
 
-                }
-            });
-
-        }
-
-        public void update(AppointmentDto appointment) {
-            purpose.setText(appointment.getPurpose());
-            DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
-            date.setText(dateTimeDto.getDate().ToString());
-            time.setText(dateTimeDto.getTime().ToString());
-            documentId.setText(appointment.getPatientIdNumber());
-            patientName.setText(appointment.getNameOfRequester());
-
-            reschedule.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-                    showUpdateDialog(appointment);
                 }
             });
         }
