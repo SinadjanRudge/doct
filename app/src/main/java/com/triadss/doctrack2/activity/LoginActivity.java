@@ -17,7 +17,6 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +32,7 @@ import com.triadss.doctrack2.activity.patient.PatientHome;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.config.enums.UserRole;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.notification.NotificationBackgroundWorker;
 
 import java.util.concurrent.TimeUnit;
@@ -56,6 +56,9 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             fetchUserRole(currentUser.getUid());
+        } else
+        {
+            WorkManager.getInstance(this).cancelAllWorkByTag(NotificationConstants.NOTIFICATION_WORKER_TAG);
         }
     }
 
@@ -87,32 +90,39 @@ public class LoginActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 return;
             }
+
+            ButtonManager.disableButton(buttonLogin);
             mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, task -> {
-                        progressBar.setVisibility(View.GONE);
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
+                .addOnCompleteListener(this, task -> {
+                    progressBar.setVisibility(View.GONE);
 
-                            SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPref.edit();
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
 
-                            editor.putString(SessionConstants.LoggedInUid, user.getUid());
-                            editor.putString(SessionConstants.Password, password);
-                            editor.putString(SessionConstants.Email, email);
-                            editor.apply();
+                        SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey,
+                                Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
 
-                            Toast.makeText(LoginActivity.this, "Login Successfully",
-                                    Toast.LENGTH_SHORT).show();
+                        editor.putString(SessionConstants.LoggedInUid, user.getUid());
+                        editor.putString(SessionConstants.Password, password);
+                        editor.putString(SessionConstants.Email, email);
+                        editor.apply();
 
-                            if (user != null) {
-                                fetchUserRole(user.getUid());
-                            }
+                        Toast.makeText(LoginActivity.this, "Login Successfully",
+                                Toast.LENGTH_SHORT).show();
 
-                        } else {
-                            FirebaseAuthException e = (FirebaseAuthException) task.getException();
-                            Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        if (user != null) {
+                            fetchUserRole(user.getUid());
                         }
-                    });
+
+                    } else {
+                        FirebaseAuthException e = (FirebaseAuthException) task.getException();
+                        Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    ButtonManager.enableButton(buttonLogin);
+                });
         });
     }
 
@@ -131,20 +141,22 @@ public class LoginActivity extends AppCompatActivity {
                             // Retrieve the user role from the document
                             String userRoleString = document.getString("role");
                             if (userRoleString != null) {
-                                //Prepare periodic background
+                                // Prepare periodic background
                                 Constraints constraints = new Constraints.Builder()
                                         .setRequiredNetworkType(NetworkType.CONNECTED)
                                         .build();
 
-                                PeriodicWorkRequest notifWorkRequest = new PeriodicWorkRequest.Builder(NotificationBackgroundWorker.class, 5, TimeUnit.SECONDS)
+                                PeriodicWorkRequest notifWorkRequest = new PeriodicWorkRequest.Builder(
+                                        NotificationBackgroundWorker.class, 15, TimeUnit.MINUTES)
                                         .setInputData(new Data.Builder()
                                                 .putString(NotificationConstants.RECEIVER_ID, userId)
-                                                .build()
-                                        )
+                                                .build())
+                                        .addTag(NotificationConstants.NOTIFICATION_WORKER_TAG)
                                         .setConstraints(constraints)
                                         .build();
                                 WorkManager.getInstance(this)
-                                        .enqueueUniquePeriodicWork(NotificationConstants.NOTIFICATION_TAG, ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, notifWorkRequest);
+                                        .enqueueUniquePeriodicWork(NotificationConstants.NOTIFICATION_TAG,
+                                                ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, notifWorkRequest);
 
                                 UserRole userRole = UserRole.valueOf(userRoleString);
                                 redirectBasedOnUserRole(userRole);
@@ -156,6 +168,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 
     private void redirectBasedOnUserRole(UserRole userRole) {
         switch (userRole) {

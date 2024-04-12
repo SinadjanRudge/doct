@@ -20,6 +20,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.patient.PatientFragment;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.VitalSignsDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
@@ -44,6 +45,7 @@ public class AddVitalSigns extends Fragment {
     String PatientUid;
     String loggedInUserId;
     ReportsRepository _reportsRepository = new ReportsRepository();
+    private Button submit;
 
     public AddVitalSigns() {
         // Required empty public constructor
@@ -206,6 +208,8 @@ public class AddVitalSigns extends Fragment {
         vitalSignsDto.setBMI(Double.parseDouble(String.valueOf(editBMI.getText()).trim()));
         vitalSignsDto.setPatientId(PatientUid);
 
+        ButtonManager.disableButton(submit);
+
         VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
         vitalSignsRepo.AddVitalSignsCallback(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
             @Override
@@ -218,14 +222,14 @@ public class AddVitalSigns extends Fragment {
 
                     @Override
                     public void onReportFailed(String errorMessage) {
-
+                        ButtonManager.enableButton(submit);
                     }
                 });
             }
 
             @Override
             public void onError(String errorMessage) {
-                
+                ButtonManager.enableButton(submit);
             }
         });
     }

@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
@@ -42,7 +43,7 @@ public class UpdatePersonalInfo extends Fragment {
     PatientRepository patientRepository = new PatientRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
     String loggedInUserId;
-
+    private Button nextButton;
     public UpdatePersonalInfo() {
         // Required empty public constructor
     }
@@ -111,7 +112,6 @@ public class UpdatePersonalInfo extends Fragment {
                 )
                 {
                     updatePersonalInfo();
-                    showMedicalHistory();
                 }
                 else
                 {
@@ -174,7 +174,6 @@ public class UpdatePersonalInfo extends Fragment {
 
     private void updatePersonalInfo()
     {
-
         AddPatientDto patientDto = new AddPatientDto();
         patientDto.setUid(patientUid);
         patientDto.setFullName(editTextFullname.getText().toString());
@@ -183,6 +182,8 @@ public class UpdatePersonalInfo extends Fragment {
         patientDto.setAge(Integer.parseInt(String.valueOf(editTextAge.getText())));
         patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
         
+        ButtonManager.disableButton(nextButton);
+
         patientRepository.updatePatient(patientDto, new PatientRepository.PatientAddUpdateCallback() {
             @Override
             public void onSuccess(String patientId) {
@@ -195,7 +196,7 @@ public class UpdatePersonalInfo extends Fragment {
 
                     @Override
                     public void onReportFailed(String errorMessage) {
-
+                        ButtonManager.enableButton(nextButton);
                     }
                 });
             }
@@ -203,6 +204,7 @@ public class UpdatePersonalInfo extends Fragment {
             @Override
             public void onError(String errorMessage) {
                 Toast.makeText(requireContext(), "Failed to update patient information: " + errorMessage, Toast.LENGTH_SHORT).show();
+                ButtonManager.enableButton(nextButton);
             }
         });
     }
