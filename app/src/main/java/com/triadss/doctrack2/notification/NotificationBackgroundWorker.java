@@ -77,15 +77,19 @@ public class NotificationBackgroundWorker extends Worker {
             @Override
             public void onSuccess(List<NotificationDTO> notificationList) { // fetch notification data
                 for (NotificationDTO notifyDti : notificationList) {
-                    if (receiverUserUid.equals(notifyDti.getReciver())) {
-                        scheduleNotification("1 Sec delay", 1000);
-                    }
+                    scheduleNotification(notifyDti, 1000);
                 }
+
+                //Update Notification
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(SessionConstants.LastRequestDate, datetimedto.GetCurrentTimeStamp().toString());
+                editor.apply();
             }
 
             @Override
             public void onError(String errorMessage) {
                 // Handle error if needed
+                System.out.println();
             }
         });
 
@@ -95,11 +99,11 @@ public class NotificationBackgroundWorker extends Worker {
 
 
     // Modify the scheduleNotification method to accept notification content
-    public void scheduleNotification(String notificationContent, int delay) {
+    public void scheduleNotification(NotificationDTO dto, int delay) {
         Intent notificationIntent = new Intent(context, NotificationService.class);
         notificationIntent.putExtra(NotificationService.NOTIFICATION_ID, 1);
 
-        notificationIntent.putExtra(NotificationService.NOTIFICATION, getNotification(notificationContent));
+        notificationIntent.putExtra(NotificationService.NOTIFICATION, getNotification(dto));
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
@@ -109,11 +113,11 @@ public class NotificationBackgroundWorker extends Worker {
     }
 
     // Modify the getNotification method to accept content parameter
-    public Notification getNotification(String content) {
+    public Notification getNotification(NotificationDTO dto) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationConstants.DEFAULT_NOTIFICATION_CHANNEL_ID);
-        builder.setContentTitle("Scheduled Notification");
+        builder.setContentTitle(dto.getTitle());
         // Use the custom content for the notification
-        builder.setContentText(content);
+        builder.setContentText(dto.getContent());
         builder.setSmallIcon(R.drawable.ic_launcher_foreground);
         builder.setAutoCancel(true);
         builder.setChannelId(NotificationConstants.NOTIFICATION_CHANNEL_ID);

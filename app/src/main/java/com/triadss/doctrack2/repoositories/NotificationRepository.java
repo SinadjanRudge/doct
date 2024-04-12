@@ -56,7 +56,6 @@ public class NotificationRepository {
             notifyCollection
                     .whereEqualTo("receiver", userId)
                     .whereGreaterThanOrEqualTo("dateSent", startDate)
-                    .whereLessThanOrEqualTo("dateSent", endDate)
                     .orderBy("dateSent", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(task -> {
