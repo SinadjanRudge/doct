@@ -98,6 +98,9 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                             getBindingAdapterPosition();
                             SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
                             SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                            
+                            Button yesButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            ButtonManager.disableButton(yesButton);
 
                             appointmentRepository.cancelAppointment(documentId.getText().toString(), new AppointmentRepository.AppointmentCancelCallback() {
                                 @Override
@@ -111,7 +114,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                                 }
                                 @Override
                                 public void onError(String errorMessage) {
-
+                                    ButtonManager.enableButton(yesButton);
                                 }
                             });
                             appointmentRepository.addReport(documentId.getText().toString(),"CANCEL", new AppointmentRepository.ReportCallback() {
@@ -151,7 +154,6 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                 public void onClick(View v) {
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
                     showUpdateDialog(appointment);
-                    System.out.println();
                 }
             });
         }
@@ -224,6 +226,8 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                     {
                         SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
                         SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                        ButtonManager.disableButton(confirmBtn);
+
                         appointmentRepository.rescheduleAppointment(dto.getDocumentId(), selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
 
                             @Override
@@ -233,7 +237,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                             }
                             @Override
                             public void onError(String errorMessage) {
-
+                                ButtonManager.enableButton(confirmBtn);
                             }
                         });
                         appointmentRepository.addReport(dto.getDocumentId(),"RESCHEDULE", new AppointmentRepository.ReportCallback() {
