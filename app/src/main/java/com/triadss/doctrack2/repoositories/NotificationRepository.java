@@ -61,7 +61,7 @@ public class NotificationRepository {
         }
     }
 
-    public void NotifyRejectedAppointment(string appointmentId, NotificationPushedCallback callback)
+    public void NotifyRejectedAppointment(String appointmentId, NotificationPushedCallback callback)
     {
         appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
@@ -90,7 +90,7 @@ public class NotificationRepository {
         });
     }
 
-    public void NotifyAcceptedAppointment(string appointmentId)
+    public void NotifyAcceptedAppointment(String appointmentId)
     {
         appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
@@ -118,7 +118,7 @@ public class NotificationRepository {
         });
     }
 
-    public void NotifyCancelledAppointmentToHealthProf(string appointmentId)
+    public void NotifyCancelledAppointmentToHealthProf(String appointmentId)
     {
         appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
@@ -146,7 +146,7 @@ public class NotificationRepository {
         });
     }
 
-    public void NotifyCancelledAppointmentToPatient(string appointmentId)
+    public void NotifyCancelledAppointmentToPatient(String appointmentId)
     {
         appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
@@ -174,7 +174,7 @@ public class NotificationRepository {
         });
     }
 
-    public void NotifyReschedAppointmentToHealthProf(string appointmentId, DateTimeDto newDate)
+    public void NotifyReschedAppointmentToHealthProf(String appointmentId, DateTimeDto newDate, NotificationPushedCallback callback)
     {
         appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
@@ -189,6 +189,7 @@ public class NotificationRepository {
                 pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
                     @Override
                     public void onSuccess(String userId) {
+                        callback.onNotificationDone();
                     }
 
                     @Override
@@ -204,7 +205,7 @@ public class NotificationRepository {
         });
     }
 
-    public void NotifyReschedAppointmentToPatient(string appointmentId, DateTimeDto newDate)
+    public void NotifyReschedAppointmentToPatient(String appointmentId, DateTimeDto newDate, NotificationPushedCallback callback)
     {
         appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
@@ -219,6 +220,7 @@ public class NotificationRepository {
                 pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
                     @Override
                     public void onSuccess(String userId) {
+                        callback.onNotificationDone();
                     }
 
                     @Override

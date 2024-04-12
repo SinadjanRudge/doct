@@ -226,18 +226,24 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                     {
                         SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
                         SharedPreferences.Editor myEdit = sharedPreferences.edit();
-                        appointmentRepository.rescheduleAppointment(dto.getDocumentId(), selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
-
+                        notificationRepository.NotifyRescheduledAppointmentToPatient(dto.getDocumentId(), selectedDateTime.ToTimestamp(), new NotificationRepository.NotificationPushedCallback() {
                             @Override
-                            public void onSuccess(String appointmentId) {
-                                Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }
-                            @Override
-                            public void onError(String errorMessage) {
+                            public void onNotificationDone() {
+                                appointmentRepository.rescheduleAppointment(dto.getDocumentId(), selectedDateTime.ToTimestamp(), new AppointmentRepository.AppointmentRescheduleCallback() {
 
+                                    @Override
+                                    public void onSuccess(String appointmentId) {
+                                        Toast.makeText(itemView.getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                    }
+                                    @Override
+                                    public void onError(String errorMessage) {
+
+                                    }
+                                });
                             }
                         });
+                        
                         appointmentRepository.addReport(dto.getDocumentId(),"RESCHEDULE", new AppointmentRepository.ReportCallback() {
                             @Override
                             public void onSuccess(String appointmentId) {

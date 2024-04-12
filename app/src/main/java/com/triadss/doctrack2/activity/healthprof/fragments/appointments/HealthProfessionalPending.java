@@ -119,16 +119,21 @@ public class HealthProfessionalPending extends Fragment implements IListView {
                             reportsRepository.addHealthProfRescheduledAppointmentReport(loggedInUserId, appointmentUid, dateTime, new ReportsRepository.ReportCallback() {
                                 @Override
                                 public void onReportAddedSuccessfully() {
-                                    appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
+                                    notificationRepository.NotifyRescheduledAppointmentToPatient(appointmentUid, dateTime, new NotificationRepository.NotificationPushedCallback() {
                                         @Override
-                                        public void onSuccess(String appointmentId) {
-                                            Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
-                                            ReloadList();
-                                        }
+                                        public void onNotificationDone() {
+                                            appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
+                                                @Override
+                                                public void onSuccess(String appointmentId) {
+                                                    Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+                                                    ReloadList();
+                                                }
 
-                                        @Override
-                                        public void onError(String errorMessage) {
-                                            Log.e(TAG, "Error updating appointment: " + errorMessage);
+                                                @Override
+                                                public void onError(String errorMessage) {
+                                                    Log.e(TAG, "Error updating appointment: " + errorMessage);
+                                                }
+                                            });
                                         }
                                     });
                                 }
