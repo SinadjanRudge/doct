@@ -8,13 +8,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
@@ -77,7 +77,7 @@ public class NotificationBackgroundWorker extends Worker {
         // Create a new Timestamp object using the extracted seconds
         Timestamp startDate = new Timestamp(seconds, 0); // The nanoseconds part is set to 0
 
-        Log.e("TEST", "Running Work for " + receiverUserUid + " since " + DateTimeDto.ToDateTimeDto(startDate).ToString());
+        Log.e("TEST", "Running Work for " + receiverUserUid + " since " + DateTimeDto.ToDateTimeDto(startDate).ToString() + " seconds " + lastRequestDate);
         // scheduleNotification(getNotification("1 second delay"), 1000);
 
         getnotify.fetchUserNotification(receiverUserUid, lastRequestDate, new NotificationRepository.FetchNotificationAddCallback() {
