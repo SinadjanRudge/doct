@@ -17,7 +17,6 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -144,8 +143,15 @@ public class LoginActivity extends AppCompatActivity {
                                         .setRequiredNetworkType(NetworkType.CONNECTED)
                                         .build();
 
+                                /*
+                                 * SharedPreferences sharedPref =
+                                 * getSharedPreferences(SessionConstants.SessionPreferenceKey,
+                                 * Context.MODE_PRIVATE);
+                                 * SharedPreferences.Editor editor = sharedPref.edit();
+                                 * String test = sharedPref.getString("",""); // last request
+                                 */
                                 PeriodicWorkRequest notifWorkRequest = new PeriodicWorkRequest.Builder(
-                                        NotificationBackgroundWorker.class, 5, TimeUnit.SECONDS)
+                                        NotificationBackgroundWorker.class, 15, TimeUnit.MINUTES)
                                         .setInputData(new Data.Builder()
                                                 .putString(NotificationConstants.RECEIVER_ID, userId)
                                                 .build())
@@ -165,6 +171,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 
     private void redirectBasedOnUserRole(UserRole userRole) {
         switch (userRole) {

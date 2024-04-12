@@ -23,6 +23,7 @@ import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.ArrayList;
@@ -82,10 +83,11 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+            Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey,
+                Context.MODE_PRIVATE);
         loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
-        
+
         appointmentRepository = new AppointmentRepository();
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_health_professional_upcoming, container, false);
@@ -98,6 +100,8 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
     public void ReloadList() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = auth.getCurrentUser();
+
+        NotificationRepository notificationRepository = new NotificationRepository();
 
         appointmentRepository.getOngoingAppointments(new AppointmentRepository.AppointmentFetchCallback() {
             @Override
@@ -113,6 +117,7 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                             appointmentRepository.acceptAppointment(appointmentUid, currentUser.getUid(), new AppointmentRepository.AppointmentAddCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
+                                    notificationRepository.NotifyAcceptedAppointment(appointmentId);    
 
                                     reportsRepository.addHealthProfAcceptedAppointmentReport(loggedInUserId, appointmentId, new ReportsRepository.ReportCallback() {
                                         @Override
@@ -138,15 +143,20 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                             reportsRepository.addHealthProfRejectedAppointmentReport(loggedInUserId, appointmentUid, new ReportsRepository.ReportCallback() {
                                 @Override
                                 public void onReportAddedSuccessfully() {
-                                    appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                                    notificationRepository.NotifyRejectedAppointment(appointmentUid, new NotificationRepository.NotificationPushedCallback() {
                                         @Override
-                                        public void onSuccess(String appointmentId) {
-                                            ReloadList();
-                                        }
+                                        public void onNotificationDone() {
+                                            appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                                                @Override
+                                                public void onSuccess(String appointmentId) {
+                                                    ReloadList();
+                                                }
 
-                                        @Override
-                                        public void onError(String errorMessage) {
-                                            System.out.println();
+                                                @Override
+                                                public void onError(String errorMessage) {
+                                                    System.out.println();
+                                                }
+                                            });
                                         }
                                     });
                                 }
@@ -156,7 +166,6 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                                     System.out.println();
                                 }
                             });
-
                         }
                     });
 
