@@ -74,11 +74,10 @@ public class PatientAppointmentPendingAdapter
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView purpose, date, time, documentId, patientName;
-        private Button reschedule;
+        private Button reschedule, cancel;
 
         public ViewHolder(View view) {
             super(view);
-            Button cancel;
             purpose = (TextView) view.findViewById(R.id.purposetext);
             date = (TextView) view.findViewById(R.id.appointment_date);
             time = (TextView) view.findViewById(R.id.appointment_time);
