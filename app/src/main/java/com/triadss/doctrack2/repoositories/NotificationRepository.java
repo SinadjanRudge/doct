@@ -15,13 +15,9 @@ import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.NotificationDTO;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class NotificationRepository {
@@ -254,6 +250,7 @@ public class NotificationRepository {
     }
 
     public void pushUserNotification(NotificationDTO notifyDto, NotificationAddCallback callback) {
+        notifyDto.setReciver(user.getUid());
         FirebaseAuth user = FirebaseAuth.getInstance();
         if (!user.getUid().isEmpty()) {
             String notify = user.getUid();
