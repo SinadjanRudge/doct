@@ -28,6 +28,7 @@ public class NotificationRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference notifyCollection = firestore
             .collection(FireStoreCollection.NOTIFICATION_TABLE);
+    private AppointmentRepository appointmentRepository = new AppointmentRepository();
 
     public NotificationRepository()
     {
@@ -59,6 +60,63 @@ public class NotificationRepository {
                     });
         }
     }
+
+    public void NotifyRejectedAppointment(string appointmentId)
+    {
+        appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
+            @Override
+            public void onSuccess(AppointmentDto appointment) {
+                NotificationDTO notifyDto = new NotificationDTO();
+                notifyDto.setTitle("Appointment Request Rejection");
+                notifyDto.setContent("Appointment Request on " + DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString() + " was rejected");
+                notifyDto.setDateSent(DateTimeDto.GetCurrentTimeStamp());
+                notifyDto.setReciver(appointment.getPatientId());
+                pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
+                    @Override
+                    public void onSuccess(String appointmentId) {
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void NotifyAcceptedAppointment(string appointmentId)
+    {
+        appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
+            @Override
+            public void onSuccess(AppointmentDto appointment) {
+                NotificationDTO notifyDto = new NotificationDTO();
+                notifyDto.setTitle("Appointment Request Accepted");
+                notifyDto.setContent("Appointment Request on " + DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString() + " was accepted");
+                notifyDto.setDateSent(DateTimeDto.GetCurrentTimeStamp());
+                notifyDto.setReciver(appointment.getPatientId());
+                pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
+                    @Override
+                    public void onSuccess(String appointmentId) {
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
     public void pushUserNotification(NotificationDTO notifyDto, NotificationAddCallback callback)
     {
         notifyDto.setReciver(user.getUid());

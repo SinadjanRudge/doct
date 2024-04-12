@@ -112,6 +112,7 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                             appointmentRepository.acceptAppointment(appointmentUid, currentUser.getUid(), new AppointmentRepository.AppointmentAddCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
+                                    notificationRepository.NotifyAcceptedAppointment(appointmentId);    
 
                                     reportsRepository.addHealthProfAcceptedAppointmentReport(loggedInUserId, appointmentId, new ReportsRepository.ReportCallback() {
                                         @Override
@@ -137,9 +138,12 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                             reportsRepository.addHealthProfRejectedAppointmentReport(loggedInUserId, appointmentUid, new ReportsRepository.ReportCallback() {
                                 @Override
                                 public void onReportAddedSuccessfully() {
+                                    notificationRepository.NotifyRejectedAppointment(appointmentId);
+
                                     appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
                                         @Override
                                         public void onSuccess(String appointmentId) {
+
                                             ReloadList();
                                         }
 
