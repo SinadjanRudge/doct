@@ -61,7 +61,7 @@ public class NotificationRepository {
         }
     }
 
-    public void NotifyRejectedAppointment(string appointmentId)
+    public void NotifyRejectedAppointment(string appointmentId, NotificationPushedCallback callback)
     {
         appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
             @Override
@@ -73,7 +73,8 @@ public class NotificationRepository {
                 notifyDto.setReciver(appointment.getPatientId());
                 pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
                     @Override
-                    public void onSuccess(String appointmentId) {
+                    public void onSuccess(String userId) {
+                        callback.onNotificationDone();
                     }
 
                     @Override
@@ -102,6 +103,122 @@ public class NotificationRepository {
                 pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
                     @Override
                     public void onSuccess(String appointmentId) {
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void NotifyCancelledAppointmentToHealthProf(string appointmentId)
+    {
+        appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
+            @Override
+            public void onSuccess(AppointmentDto appointment) {
+                NotificationDTO notifyDto = new NotificationDTO();
+                notifyDto.setTitle("Appointment Cancelled by Patient");
+                notifyDto.setContent("Appointment Request on " + DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString() + " was cancelled");
+                notifyDto.setDateSent(DateTimeDto.GetCurrentTimeStamp());
+                notifyDto.setReciver(appointment.getHealthProfId());
+                pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
+                    @Override
+                    public void onSuccess(String userId) {
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void NotifyCancelledAppointmentToPatient(string appointmentId)
+    {
+        appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
+            @Override
+            public void onSuccess(AppointmentDto appointment) {
+                NotificationDTO notifyDto = new NotificationDTO();
+                notifyDto.setTitle("Appointment Cancelled by Health Professional");
+                notifyDto.setContent("Appointment Request on " + DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString() + " was cancelled");
+                notifyDto.setDateSent(DateTimeDto.GetCurrentTimeStamp());
+                notifyDto.setReciver(appointment.getPatientId());
+                pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
+                    @Override
+                    public void onSuccess(String userId) {
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void NotifyReschedAppointmentToHealthProf(string appointmentId, DateTimeDto newDate)
+    {
+        appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
+            @Override
+            public void onSuccess(AppointmentDto appointment) {
+                NotificationDTO notifyDto = new NotificationDTO();
+                notifyDto.setTitle("Appointment Rescheduled by Patient");
+                notifyDto.setContent("Appointment Request Rescheduled from " + 
+                    DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString() + 
+                    " to " + newDate.ToString());
+                notifyDto.setDateSent(DateTimeDto.GetCurrentTimeStamp());
+                notifyDto.setReciver(appointment.getHealthProfId());
+                pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
+                    @Override
+                    public void onSuccess(String userId) {
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+    }
+
+    public void NotifyReschedAppointmentToPatient(string appointmentId, DateTimeDto newDate)
+    {
+        appointmentRepository.getAppointment(appointmentId, new AppointmentRepository.AppointmentDataFetchCallback() {
+            @Override
+            public void onSuccess(AppointmentDto appointment) {
+                NotificationDTO notifyDto = new NotificationDTO();
+                notifyDto.setTitle("Appointment Rescheduled by Patient");
+                notifyDto.setContent("Appointment Request Rescheduled from " + 
+                    DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString() + 
+                    " to " + newDate.ToString());
+                notifyDto.setDateSent(DateTimeDto.GetCurrentTimeStamp());
+                notifyDto.setReciver(appointment.getPatientId());
+                pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
+                    @Override
+                    public void onSuccess(String userId) {
                     }
 
                     @Override
@@ -152,6 +269,11 @@ public class NotificationRepository {
         void onSuccess(List<NotificationDTO> notificationList);
 
         void onError(String errorMessage);
+    }
+
+    public interface NotificationPushedCallback
+    {
+        void onNotificationDone();
     }
 
 }

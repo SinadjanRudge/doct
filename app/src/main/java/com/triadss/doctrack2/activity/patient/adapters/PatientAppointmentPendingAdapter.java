@@ -32,6 +32,7 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
     AppointmentRepository appointmentRepository;
     ArrayList<AppointmentDto> appointments;
     Context context;
+    NotificationRepository notificationRepository = new NotificationRepository();
 
     // Constructor for initialization
     public PatientAppointmentPendingAdapter(Context context, ArrayList<AppointmentDto> appointments) {
@@ -102,7 +103,8 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                             appointmentRepository.cancelAppointment(documentId.getText().toString(), new AppointmentRepository.AppointmentCancelCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
-
+                                    notificationRepository.NotifyCancelledAppointmentToHealthProf(appointmentId);
+                                    
                                     android.app.AlertDialog.Builder progressDialog = new AlertDialog.Builder(itemView.getContext());
 
                                     progressDialog.setTitle("Canceled");

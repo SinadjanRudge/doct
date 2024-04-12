@@ -46,6 +46,7 @@ public class HealthProfessionalPending extends Fragment implements IListView {
     private static final String ARG_PARAM2 = "param2";
 
     private ReportsRepository reportsRepository = new ReportsRepository();
+    private NotificationRepository notifcationRepository = new NotificationRepository();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -144,6 +145,8 @@ public class HealthProfessionalPending extends Fragment implements IListView {
                             appointmentRepository.cancelAppointment(appointmentUid, new AppointmentRepository.AppointmentCancelCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
+                                    notifcationRepository.NotifyCancelledAppointmentToPatient(appointmentId);
+
                                     Toast.makeText(getContext(), appointmentId + " cancelled", Toast.LENGTH_SHORT).show();
                                     reportsRepository.addHealthProfCancelledAppointmentReport(loggedInUserId, appointmentId, new ReportsRepository.ReportCallback() {
                                         @Override

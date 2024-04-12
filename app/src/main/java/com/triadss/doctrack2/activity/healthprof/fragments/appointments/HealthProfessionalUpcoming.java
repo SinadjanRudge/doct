@@ -138,19 +138,22 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                             reportsRepository.addHealthProfRejectedAppointmentReport(loggedInUserId, appointmentUid, new ReportsRepository.ReportCallback() {
                                 @Override
                                 public void onReportAddedSuccessfully() {
-                                    notificationRepository.NotifyRejectedAppointment(appointmentId);
-
-                                    appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                                    notificationRepository.NotifyRejectedAppointment(appointmentId, new NotificationPushedCallback() {
                                         @Override
-                                        public void onSuccess(String appointmentId) {
+                                        public void onNotificationDone()
+                                        [
+                                            appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                                                @Override
+                                                public void onSuccess(String appointmentId) {
+                                                    ReloadList();
+                                                }
 
-                                            ReloadList();
-                                        }
-
-                                        @Override
-                                        public void onError(String errorMessage) {
-                                            System.out.println();
-                                        }
+                                                @Override
+                                                public void onError(String errorMessage) {
+                                                    System.out.println();
+                                                }
+                                            });
+                                        ]
                                     });
                                 }
 
@@ -159,7 +162,6 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                                     System.out.println();
                                 }
                             });
-
                         }
                     });
 
