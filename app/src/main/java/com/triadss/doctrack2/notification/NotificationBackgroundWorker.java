@@ -60,57 +60,64 @@ public class NotificationBackgroundWorker extends Worker {
     @Override
     public Result doWork() {
         String receiverUserUid = getInputData().getString(NotificationConstants.RECEIVER_ID);
-
-        // Do the work here--in this case, upload the images.
-        Log.e("TEST", "Running Work for " + receiverUserUid);
-        //scheduleNotification(getNotification("1 second delay"), 1000);
         DateTimeDto datetimedto = new DateTimeDto();
-        getnotify.fetchUserNotification(receiverUserUid, new NotificationRepository.FetchNotificationAddCallback() {
+
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        String lastRequestDate = sharedPref.getString(SessionConstants.LastRequestDate, null);
+        if (lastRequestDate == null) {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(SessionConstants.LastRequestDate, datetimedto.GetCurrentTimeStamp().toString());
+            editor.apply();
+        }
+
+        Log.e("TEST", "Running Work for " + receiverUserUid);
+        // scheduleNotification(getNotification("1 second delay"), 1000);
+
+        getnotify.fetchUserNotification(receiverUserUid, lastRequestDate, new NotificationRepository.FetchNotificationAddCallback() {
             @Override
             public void onSuccess(List<NotificationDTO> notificationList) { // fetch notification data
-
-                for (NotificationDTO notifyDti : notificationList
-                ) {
+                for (NotificationDTO notifyDti : notificationList) {
                     if (receiverUserUid.equals(notifyDti.getReciver())) {
-                        datetimedto.GetCurrentTimeStamp();//lastrequestdate
-//                        sharedPref = sharedPref.getString(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
-
-
-                        // TODO
-                        sharedPref = context.getSharedPreferences(SessionConstants.SessionPreferenceKey,
-                                Context.MODE_PRIVATE);
-                        scheduleNotification(getNotification("1 second delay"), 1000);
+                        scheduleNotification("1 Sec delay", 1000);
                     }
                 }
             }
 
             @Override
             public void onError(String errorMessage) {
-
+                // Handle error if needed
             }
         });
+
         // Indicate whether the work finished successfully with the Result
         return Result.success();
     }
-    public void scheduleNotification (Notification notification , int delay) {
-        Intent notificationIntent = new Intent( context, NotificationService.class);
-        notificationIntent.putExtra(NotificationService.NOTIFICATION_ID , 1 );
-        notificationIntent.putExtra(NotificationService.NOTIFICATION , notification);
-        PendingIntent pendingIntent = PendingIntent. getBroadcast ( context,
-                0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT );
-        long futureInMillis = SystemClock.elapsedRealtime () + delay;
+
+
+    // Modify the scheduleNotification method to accept notification content
+    public void scheduleNotification(String notificationContent, int delay) {
+        Intent notificationIntent = new Intent(context, NotificationService.class);
+        notificationIntent.putExtra(NotificationService.NOTIFICATION_ID, 1);
+
+        notificationIntent.putExtra(NotificationService.NOTIFICATION, getNotification(notificationContent));
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
-        alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
-    public Notification getNotification (String content) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder( context, NotificationConstants.DEFAULT_NOTIFICATION_CHANNEL_ID ) ;
-        builder.setContentTitle( "Scheduled Notification" ) ;
-        builder.setContentText(content) ;
-        builder.setSmallIcon(R.drawable. ic_launcher_foreground ) ;
-        builder.setAutoCancel( true ) ;
-        builder.setChannelId( NotificationConstants.NOTIFICATION_CHANNEL_ID ) ;
-        return builder.build() ;
+    // Modify the getNotification method to accept content parameter
+    public Notification getNotification(String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationConstants.DEFAULT_NOTIFICATION_CHANNEL_ID);
+        builder.setContentTitle("Scheduled Notification");
+        // Use the custom content for the notification
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.ic_launcher_foreground);
+        builder.setAutoCancel(true);
+        builder.setChannelId(NotificationConstants.NOTIFICATION_CHANNEL_ID);
+        return builder.build();
     }
+
 }

@@ -83,10 +83,11 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+            Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey,
+                Context.MODE_PRIVATE);
         loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
-        
+
         appointmentRepository = new AppointmentRepository();
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_health_professional_upcoming, container, false);
@@ -142,21 +143,22 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                             reportsRepository.addHealthProfRejectedAppointmentReport(loggedInUserId, appointmentUid, new ReportsRepository.ReportCallback() {
                                 @Override
                                 public void onReportAddedSuccessfully() {
+                                    notificationRepository.NotifyRejectedAppointment(appointmentUid, new NotificationRepository.NotificationPushedCallback() {
+                                        @Override
+                                        public void onNotificationDone() {
+                                            appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                                                @Override
+                                                public void onSuccess(String appointmentId) {
+                                                    ReloadList();
+                                                }
 
-                                    notificationRepository.NotifyRejectedAppointment(appointmentUid);
-
-//                                    appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
-//                                        @Override
-//                                        public void onSuccess(String appointmentId) {
-//
-//                                            ReloadList();
-//                                        }
-//
-//                                        @Override
-//                                        public void onError(String errorMessage) {
-//                                            System.out.println();
-//                                        }
-//                                    });
+                                                @Override
+                                                public void onError(String errorMessage) {
+                                                    System.out.println();
+                                                }
+                                            });
+                                        }
+                                    });
                                 }
 
                                 @Override
@@ -164,7 +166,6 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                                     System.out.println();
                                 }
                             });
-
                         }
                     });
 

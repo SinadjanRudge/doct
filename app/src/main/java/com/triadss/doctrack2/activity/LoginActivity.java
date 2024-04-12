@@ -172,6 +172,8 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+
+
     private void redirectBasedOnUserRole(UserRole userRole) {
         switch (userRole) {
             case ADMIN:
