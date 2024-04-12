@@ -250,7 +250,6 @@ public class NotificationRepository {
     }
 
     public void pushUserNotification(NotificationDTO notifyDto, NotificationAddCallback callback) {
-        notifyDto.setReciver(user.getUid());
         FirebaseAuth user = FirebaseAuth.getInstance();
         if (!user.getUid().isEmpty()) {
             String notify = user.getUid();
