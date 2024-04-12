@@ -70,7 +70,14 @@ public class NotificationBackgroundWorker extends Worker {
             editor.apply();
         }
 
-        Log.e("TEST", "Running Work for " + receiverUserUid + " since " + lastRequestDate);
+        // Extract the seconds part from the lastRequestDate string
+        String secondsStr = lastRequestDate.substring(lastRequestDate.indexOf("seconds=") + 8, lastRequestDate.indexOf(","));
+        long seconds = Long.parseLong(secondsStr);
+
+        // Create a new Timestamp object using the extracted seconds
+        Timestamp startDate = new Timestamp(seconds, 0); // The nanoseconds part is set to 0
+
+        Log.e("TEST", "Running Work for " + receiverUserUid + " since " + DateTimeDto.ToDateTimeDto(startDate).ToString());
         // scheduleNotification(getNotification("1 second delay"), 1000);
 
         getnotify.fetchUserNotification(receiverUserUid, lastRequestDate, new NotificationRepository.FetchNotificationAddCallback() {
