@@ -37,6 +37,7 @@ public class PatientAppointmentPendingAdapter
     ArrayList<AppointmentDto> appointments;
     Context context;
     NotificationRepository notificationRepository = new NotificationRepository();
+    private Button cancel;
 
     // Constructor for initialization
     public PatientAppointmentPendingAdapter(Context context, ArrayList<AppointmentDto> appointments) {
