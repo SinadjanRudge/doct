@@ -62,7 +62,7 @@ public class NotificationBackgroundWorker extends Worker {
         String receiverUserUid = getInputData().getString(NotificationConstants.RECEIVER_ID);
         DateTimeDto datetimedto = new DateTimeDto();
 
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
         String lastRequestDate = sharedPref.getString(SessionConstants.LastRequestDate, null);
         if (lastRequestDate == null) {
             SharedPreferences.Editor editor = sharedPref.edit();
@@ -70,7 +70,7 @@ public class NotificationBackgroundWorker extends Worker {
             editor.apply();
         }
 
-        Log.e("TEST", "Running Work for " + receiverUserUid);
+        Log.e("TEST", "Running Work for " + receiverUserUid + " since " + lastRequestDate);
         // scheduleNotification(getNotification("1 second delay"), 1000);
 
         getnotify.fetchUserNotification(receiverUserUid, lastRequestDate, new NotificationRepository.FetchNotificationAddCallback() {
