@@ -78,6 +78,8 @@ public class NotificationBackgroundWorker extends Worker {
             public void onSuccess(List<NotificationDTO> notificationList) { // fetch notification data
                 for (NotificationDTO notifyDti : notificationList) {
                     scheduleNotification(notifyDti, 1000);
+                    Log.e("TEST", "Found notifcation" + notifyDti.getTitle() + " at " + 
+                        DateTimeDto.ToDateTimeDto(notifyDti.getDateSent()).ToString());
                 }
 
                 //Update Notification
