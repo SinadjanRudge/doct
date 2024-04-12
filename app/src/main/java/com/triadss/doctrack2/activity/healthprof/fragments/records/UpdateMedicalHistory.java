@@ -19,6 +19,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.medications.UpdateMedications;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.CheckboxStringProcessor;

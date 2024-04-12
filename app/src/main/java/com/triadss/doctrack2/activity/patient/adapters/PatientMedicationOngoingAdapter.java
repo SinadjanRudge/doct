@@ -18,6 +18,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
@@ -101,7 +102,7 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                 medicationDto.setMedicine(updatedMedication);
                 medicationDto.setNote(updatedNote);
 
-                ButtonManager.disableButton(updateBtn); 
+                ButtonManager.disableButton(updateBtn);
 
                 medicationRepository.updateMedication(mediId, medicationDto, new MedicationRepository.MedicationUpdateCallback() {
                     @Override

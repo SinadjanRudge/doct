@@ -18,6 +18,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.medications.AddMedication;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.CheckboxStringProcessor;
@@ -45,6 +46,7 @@ public class AddMedicalHistory extends Fragment {
     String patientUid;
     String loggedInUserId;
     ReportsRepository _reportsRepository = new ReportsRepository();
+    private Button nextButton;
 
     public AddMedicalHistory() {
         // Required empty public constructor
@@ -83,7 +85,7 @@ public class AddMedicalHistory extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_record_add_medical_history, container, false);
-        Button nextButton = rootView.findViewById(R.id.nxtButton);
+        nextButton = rootView.findViewById(R.id.nxtButton);
 
         pastIllnessProcessor = new CheckboxStringProcessor(
                 rootView.findViewById(R.id.otherPastIllness),

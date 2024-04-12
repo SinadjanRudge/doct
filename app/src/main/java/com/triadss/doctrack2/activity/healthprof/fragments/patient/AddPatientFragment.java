@@ -32,6 +32,7 @@ import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
@@ -107,6 +108,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
      * @return The View for the fragment's UI, or null.
      */
     private SharedPreferences sharedPref;
+    private Button nextButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -186,7 +188,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
             datePickerDialog.show();
         });
 
-        Button nextButton = rootView.findViewById(R.id.nextBtn);
+        nextButton = rootView.findViewById(R.id.nextBtn);
         nextButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

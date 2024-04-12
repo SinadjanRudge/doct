@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
@@ -42,7 +43,7 @@ public class UpdatePersonalInfo extends Fragment {
     PatientRepository patientRepository = new PatientRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
     String loggedInUserId;
-
+    private Button nextButton;
     public UpdatePersonalInfo() {
         // Required empty public constructor
     }

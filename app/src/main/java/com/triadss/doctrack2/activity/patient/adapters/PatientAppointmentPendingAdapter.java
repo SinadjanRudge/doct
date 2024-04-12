@@ -24,6 +24,7 @@ import com.triadss.doctrack2.dto.TimeDto;
 
 import java.util.ArrayList;
 
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 
 // Extends the Adapter class to RecyclerView.Adapter
@@ -98,7 +99,9 @@ public class PatientAppointmentPendingAdapter extends RecyclerView.Adapter<Patie
                             getBindingAdapterPosition();
                             SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
                             SharedPreferences.Editor myEdit = sharedPreferences.edit();
-                            
+
+                            AlertDialog alertDialog = (AlertDialog) dialog;
+
                             Button yesButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
                             ButtonManager.disableButton(yesButton);
 

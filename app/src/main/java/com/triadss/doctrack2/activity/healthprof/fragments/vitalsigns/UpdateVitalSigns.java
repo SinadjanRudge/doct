@@ -20,6 +20,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.records.ViewPatientRecordFragment;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.VitalSignsDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
@@ -44,6 +45,7 @@ public class UpdateVitalSigns extends Fragment {
     TextView errorBloodPresure, errorTempreture, errorSp02, errorPulse, errorWeight, errorHeight, errorBMI;
     VitalSignsRepository repository = new VitalSignsRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
+    private Button submit;
 
     public UpdateVitalSigns() {
         // Required empty public constructor
@@ -81,7 +83,7 @@ public class UpdateVitalSigns extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_vital_signs, container, false);
-        Button submit = rootView.findViewById(R.id.updateBtn);
+        submit = rootView.findViewById(R.id.updateBtn);
 
         editBloodPressure = rootView.findViewById(R.id.input_bloodPressure);
         editTemperature = rootView.findViewById(R.id.input_temperature);
