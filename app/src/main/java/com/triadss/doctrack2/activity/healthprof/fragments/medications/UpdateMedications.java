@@ -22,6 +22,7 @@ import com.triadss.doctrack2.activity.healthprof.fragments.vitalsigns.UpdateVita
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
@@ -111,6 +112,8 @@ public class UpdateMedications extends Fragment {
                             Timestamp.now(),
                             MedicationTypeConstants.ONGOING);
 
+                    ButtonManager.disableButton(addMedication);
+
                     repository.addMedication(dto, new MedicationRepository.MedicationsAddCallback() {
                         @Override
                         public void onSuccess(String medicationId) {
@@ -119,18 +122,19 @@ public class UpdateMedications extends Fragment {
                                 @Override
                                 public void onReportAddedSuccessfully() {
                                     updateMedicationList();
+                                    ButtonManager.enableButton(addMedication);
                                 }
 
                                 @Override
                                 public void onReportFailed(String errorMessage) {
-
+                                    ButtonManager.enableButton(addMedication);
                                 }
                             });
                         }
 
                         @Override
                         public void onError(String errorMessage) {
-                            System.out.println();
+                            ButtonManager.enableButton(addMedication);
                         }
                     });
                 }

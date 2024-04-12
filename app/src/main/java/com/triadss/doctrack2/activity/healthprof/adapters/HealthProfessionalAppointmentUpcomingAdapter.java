@@ -105,9 +105,6 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                             ButtonManager.disableButton(no);
 
                             callback.onReject(appointments.get(getAdapterPosition()).getUid());
-
-                            ButtonManager.enableButton(yes);
-                            ButtonManager.enableButton(no);
                             dialog.dismiss();
                         }
                     });
@@ -124,7 +121,6 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                     ButtonManager.disableButton(accept);
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
                     callback.onAccept(appointment.getUid());
-                    ButtonManager.enableButton(accept);
                 }
             });
         }
