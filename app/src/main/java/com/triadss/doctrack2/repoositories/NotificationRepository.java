@@ -70,7 +70,11 @@ public class NotificationRepository {
                             Log.d(TAG, "Fetch Notification Error on " + userId);
                             callback.onError(task.getException().getMessage());
                         }
-                    });
+                    })
+                    .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error on NotificationWork", e);
+                    callback.onError(e.getMessage());
+            });
         }
     }
 
