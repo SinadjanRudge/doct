@@ -111,7 +111,6 @@ public class UpdatePersonalInfo extends Fragment {
                 )
                 {
                     updatePersonalInfo();
-                    showMedicalHistory();
                 }
                 else
                 {
@@ -174,7 +173,6 @@ public class UpdatePersonalInfo extends Fragment {
 
     private void updatePersonalInfo()
     {
-
         AddPatientDto patientDto = new AddPatientDto();
         patientDto.setUid(patientUid);
         patientDto.setFullName(editTextFullname.getText().toString());
@@ -183,6 +181,8 @@ public class UpdatePersonalInfo extends Fragment {
         patientDto.setAge(Integer.parseInt(String.valueOf(editTextAge.getText())));
         patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
         
+        ButtonManager.disableButton(nextButton);
+
         patientRepository.updatePatient(patientDto, new PatientRepository.PatientAddUpdateCallback() {
             @Override
             public void onSuccess(String patientId) {
@@ -195,7 +195,7 @@ public class UpdatePersonalInfo extends Fragment {
 
                     @Override
                     public void onReportFailed(String errorMessage) {
-
+                        ButtonManager.enableButton(nextButton);
                     }
                 });
             }
@@ -203,6 +203,7 @@ public class UpdatePersonalInfo extends Fragment {
             @Override
             public void onError(String errorMessage) {
                 Toast.makeText(requireContext(), "Failed to update patient information: " + errorMessage, Toast.LENGTH_SHORT).show();
+                ButtonManager.enableButton(nextButton);
             }
         });
     }

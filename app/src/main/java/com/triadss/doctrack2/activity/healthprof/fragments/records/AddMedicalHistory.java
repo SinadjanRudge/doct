@@ -179,6 +179,8 @@ public class AddMedicalHistory extends Fragment {
         medicalHistoryDto.setObgyneHist(obgyneHistory);
 
         MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
+        ButtonManager.disableButton(nextButton);
+
         medicalHistoryRepo.AddMedicalHistory(userId, medicalHistoryDto, new MedicalHistoryRepository.AddUpdateCallback() {
             @Override
             public void onSuccess(String medicalHistoryId) {
@@ -190,14 +192,14 @@ public class AddMedicalHistory extends Fragment {
 
                     @Override
                     public void onReportFailed(String errorMessage) {
-
+                        ButtonManager.enableButton(nextButton);
                     }
                 });
             }
 
             @Override
             public void onError(String errorMessage) {
-                System.out.println();
+                ButtonManager.enableButton(nextButton);
             }
         });
 

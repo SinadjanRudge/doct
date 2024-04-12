@@ -69,6 +69,7 @@ public class AddMedicationAdapter
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ButtonManager.disableButton(delete);
                     callback.onDelete(medication.getMediId());
                 }
             });

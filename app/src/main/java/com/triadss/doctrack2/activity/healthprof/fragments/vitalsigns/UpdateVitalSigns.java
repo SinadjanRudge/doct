@@ -233,6 +233,8 @@ public class UpdateVitalSigns extends Fragment {
         vitalSignsDto.setPatientId(patientUid);
         vitalSignsDto.setUid(vitalSignsUid);
 
+        ButtonManager.disableButton(submit);
+
         repository.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
             @Override
             public void onSuccess(String documentId) {
@@ -244,7 +246,7 @@ public class UpdateVitalSigns extends Fragment {
 
                     @Override
                     public void onReportFailed(String errorMessage) {
-
+                        ButtonManager.enableButton(submit);
                     }
                 });
             }
@@ -252,6 +254,7 @@ public class UpdateVitalSigns extends Fragment {
             @Override
             public void onError(String message) {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                ButtonManager.enableButton(submit);
             }
         });
     }

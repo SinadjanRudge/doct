@@ -110,6 +110,7 @@ public class AddMedication extends Fragment {
                             inputNote.getText().toString(),
                             Timestamp.now(),
                             MedicationTypeConstants.ONGOING);
+                    ButtonManager.disableButton(addMedication);
 
                     repository.addMedication(dto, new MedicationRepository.MedicationsAddCallback() {
                         @Override
@@ -119,18 +120,19 @@ public class AddMedication extends Fragment {
                                 @Override
                                 public void onReportAddedSuccessfully() {
                                     updateMedicationList();
+                                    ButtonManager.enableButton(addMedication);
                                 }
 
                                 @Override
                                 public void onReportFailed(String errorMessage) {
-
+                                    ButtonManager.enableButton(addMedication);
                                 }
                             });
                         }
 
                         @Override
                         public void onError(String errorMessage) {
-                            System.out.println();
+                            ButtonManager.enableButton(addMedication);
                         }
                     });
                 }

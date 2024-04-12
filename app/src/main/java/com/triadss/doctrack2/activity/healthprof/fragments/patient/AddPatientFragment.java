@@ -281,7 +281,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
         String email =sharedPref.getString(SessionConstants.Email, "");
         String password = sharedPref.getString(SessionConstants.Password, "");
-
+        ButtonManager.disableButton(nextButton);
         try {
             FirebaseAuth newAuth = FirebaseAuth.getInstance();
             newAuth.createUserWithEmailAndPassword(patientDto.getEmail(), patientDto.getIdNumber()).addOnCompleteListener(task -> {
@@ -320,7 +320,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
                                         @Override
                                         public void onReportFailed(String errorMessage) {
-
+                                            ButtonManager.enableButton(nextButton);
                                         }
                                     });
 
@@ -328,6 +328,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
                                 @Override
                                 public void onError(String errorMessage) {
+                                    ButtonManager.enableButton(nextButton);
                                 }
                             });
                             Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
@@ -339,16 +340,20 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             newAuth.getCurrentUser().delete();
                             Toast.makeText(getContext(), "Failed to create user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                        ButtonManager.enableButton(nextButton);
+
                     }
                 } else {
                     FirebaseAuthException e = (FirebaseAuthException) task.getException();
                     Toast.makeText(getContext(), "Failed to create user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    ButtonManager.enableButton(nextButton);
                 }
             });
         } catch (Exception e) {
             // GENERIC ERROR HANDLER
             Toast.makeText(getContext(), DocTrackErrorMessage.GENERIC_ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+            ButtonManager.enableButton(nextButton);
         }
     }
 

@@ -49,6 +49,7 @@ public class UpdateMedicalHistory extends Fragment {
     TextView errorPassIllness, errorFamilyHistory;
     String loggedInUserId;
     ReportsRepository _reportsRepository = new ReportsRepository();
+    Button nextButton;
 
     public UpdateMedicalHistory() {
         // Required empty public constructor
@@ -137,7 +138,7 @@ public class UpdateMedicalHistory extends Fragment {
                 new EditTextName("PAP Smear",rootView.findViewById(R.id.input_papSmear))
         );
 
-        Button nextButton = rootView.findViewById(R.id.nxtButton);
+        nextButton = rootView.findViewById(R.id.nxtButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,7 +178,7 @@ public class UpdateMedicalHistory extends Fragment {
 
             @Override
             public void onError(String errorMessage) {
-
+                
             }
         });
     }
@@ -207,6 +208,7 @@ public class UpdateMedicalHistory extends Fragment {
     private void updateMedicalHistory()
     {
         MedicalHistoryDto dto = extractDto();
+        ButtonManager.disableButton(nextButton);
         medicalHistoryRepo.getMedicalHistoryIdOfUser(patientUid, new MedicalHistoryRepository.StringFetchCallback()
         {
             @Override
@@ -223,7 +225,7 @@ public class UpdateMedicalHistory extends Fragment {
 
                             @Override
                             public void onReportFailed(String errorMessage) {
-
+                                ButtonManager.enableButton(nextButton);
                             }
                         });
                     }
@@ -231,12 +233,15 @@ public class UpdateMedicalHistory extends Fragment {
                     @Override
                     public void onError(String message) {
                         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                        ButtonManager.enableButton(nextButton);
                     }
                 });
             }
 
             @Override
             public void onError(String errorMessage) {
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                ButtonManager.enableButton(nextButton);
 
             }
         });
