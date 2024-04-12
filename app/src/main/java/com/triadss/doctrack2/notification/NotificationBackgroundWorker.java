@@ -40,7 +40,7 @@ public class NotificationBackgroundWorker extends Worker {
     }
 
 
-/*Do Work:
+/*Do Work: TODO
     1. Fetch lastRequestDate
     2. Fetch new Notifications for user
     3. Notify each notifications received
@@ -73,7 +73,12 @@ public class NotificationBackgroundWorker extends Worker {
                 ) {
                     if (receiverUserUid.equals(notifyDti.getReciver())) {
                         datetimedto.GetCurrentTimeStamp();//lastrequestdate
-                        sharedPref = sharedPref.getString(SessionConstants.SessionPreferenceKey,Context.MODE_PRIVATE);
+//                        sharedPref = sharedPref.getString(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
+
+
+                        // TODO
+                        sharedPref = context.getSharedPreferences(SessionConstants.SessionPreferenceKey,
+                                Context.MODE_PRIVATE);
                         scheduleNotification(getNotification("1 second delay"), 1000);
                     }
                 }
