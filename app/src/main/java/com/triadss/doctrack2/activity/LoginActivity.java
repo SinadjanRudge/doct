@@ -17,7 +17,6 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,6 +56,9 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             fetchUserRole(currentUser.getUid());
+        } else
+        {
+            WorkManager.getInstance(this).cancelAllWorkByTag(NotificationConstants.NOTIFICATION_WORKER_TAG);
         }
     }
 
@@ -91,36 +93,36 @@ public class LoginActivity extends AppCompatActivity {
 
             ButtonManager.disableButton(buttonLogin);
             mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, task -> {
-                        progressBar.setVisibility(View.GONE);
+                .addOnCompleteListener(this, task -> {
+                    progressBar.setVisibility(View.GONE);
 
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
 
-                            SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey,
-                                    Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPref.edit();
+                        SharedPreferences sharedPref = getSharedPreferences(SessionConstants.SessionPreferenceKey,
+                                Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
 
-                            editor.putString(SessionConstants.LoggedInUid, user.getUid());
-                            editor.putString(SessionConstants.Password, password);
-                            editor.putString(SessionConstants.Email, email);
-                            editor.apply();
+                        editor.putString(SessionConstants.LoggedInUid, user.getUid());
+                        editor.putString(SessionConstants.Password, password);
+                        editor.putString(SessionConstants.Email, email);
+                        editor.apply();
 
-                            Toast.makeText(LoginActivity.this, "Login Successfully",
-                                    Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Login Successfully",
+                                Toast.LENGTH_SHORT).show();
 
-                            if (user != null) {
-                                fetchUserRole(user.getUid());
-                            }
-
-                        } else {
-                            FirebaseAuthException e = (FirebaseAuthException) task.getException();
-                            Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT)
-                                    .show();
+                        if (user != null) {
+                            fetchUserRole(user.getUid());
                         }
 
-                        ButtonManager.enableButton(buttonLogin);
-                    });
+                    } else {
+                        FirebaseAuthException e = (FirebaseAuthException) task.getException();
+                        Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    ButtonManager.enableButton(buttonLogin);
+                });
         });
     }
 
@@ -145,10 +147,11 @@ public class LoginActivity extends AppCompatActivity {
                                         .build();
 
                                 PeriodicWorkRequest notifWorkRequest = new PeriodicWorkRequest.Builder(
-                                        NotificationBackgroundWorker.class, 5, TimeUnit.SECONDS)
+                                        NotificationBackgroundWorker.class, 15, TimeUnit.MINUTES)
                                         .setInputData(new Data.Builder()
                                                 .putString(NotificationConstants.RECEIVER_ID, userId)
                                                 .build())
+                                        .addTag(NotificationConstants.NOTIFICATION_WORKER_TAG)
                                         .setConstraints(constraints)
                                         .build();
                                 WorkManager.getInstance(this)
@@ -165,6 +168,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 
     private void redirectBasedOnUserRole(UserRole userRole) {
         switch (userRole) {

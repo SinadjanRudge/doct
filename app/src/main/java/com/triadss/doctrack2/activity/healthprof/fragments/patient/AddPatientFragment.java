@@ -32,6 +32,7 @@ import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
@@ -107,6 +108,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
      * @return The View for the fragment's UI, or null.
      */
     private SharedPreferences sharedPref;
+    private Button nextButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -186,7 +188,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
             datePickerDialog.show();
         });
 
-        Button nextButton = rootView.findViewById(R.id.nextBtn);
+        nextButton = rootView.findViewById(R.id.nextBtn);
         nextButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -281,7 +283,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
         String email =sharedPref.getString(SessionConstants.Email, "");
         String password = sharedPref.getString(SessionConstants.Password, "");
-
+        ButtonManager.disableButton(nextButton);
         try {
             FirebaseAuth newAuth = FirebaseAuth.getInstance();
             newAuth.createUserWithEmailAndPassword(patientDto.getEmail(), patientDto.getIdNumber()).addOnCompleteListener(task -> {
@@ -320,7 +322,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
                                         @Override
                                         public void onReportFailed(String errorMessage) {
-
+                                            ButtonManager.enableButton(nextButton);
                                         }
                                     });
 
@@ -328,6 +330,7 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
                                 @Override
                                 public void onError(String errorMessage) {
+                                    ButtonManager.enableButton(nextButton);
                                 }
                             });
                             Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
@@ -339,16 +342,20 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             newAuth.getCurrentUser().delete();
                             Toast.makeText(getContext(), "Failed to create user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                        ButtonManager.enableButton(nextButton);
+
                     }
                 } else {
                     FirebaseAuthException e = (FirebaseAuthException) task.getException();
                     Toast.makeText(getContext(), "Failed to create user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    ButtonManager.enableButton(nextButton);
                 }
             });
         } catch (Exception e) {
             // GENERIC ERROR HANDLER
             Toast.makeText(getContext(), DocTrackErrorMessage.GENERIC_ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+            ButtonManager.enableButton(nextButton);
         }
     }
 

@@ -28,6 +28,7 @@ import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.ArrayList;
@@ -46,11 +47,13 @@ public class HealthProfessionalPending extends Fragment implements IListView {
     private static final String ARG_PARAM2 = "param2";
 
     private ReportsRepository reportsRepository = new ReportsRepository();
+    private NotificationRepository notifcationRepository = new NotificationRepository();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     String loggedInUserId;
+    private NotificationRepository notificationRepository;
 
     public HealthProfessionalPending() {
         // Required empty public constructor
@@ -118,16 +121,21 @@ public class HealthProfessionalPending extends Fragment implements IListView {
                             reportsRepository.addHealthProfRescheduledAppointmentReport(loggedInUserId, appointmentUid, dateTime, new ReportsRepository.ReportCallback() {
                                 @Override
                                 public void onReportAddedSuccessfully() {
-                                    appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
+                                    notificationRepository.NotifyRescheduledAppointmentToPatient(appointmentUid, dateTime, new NotificationRepository.NotificationPushedCallback() {
                                         @Override
-                                        public void onSuccess(String appointmentId) {
-                                            Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
-                                            ReloadList();
-                                        }
+                                        public void onNotificationDone() {
+                                            appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
+                                                @Override
+                                                public void onSuccess(String appointmentId) {
+                                                    Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
+                                                    ReloadList();
+                                                }
 
-                                        @Override
-                                        public void onError(String errorMessage) {
-                                            Log.e(TAG, "Error updating appointment: " + errorMessage);
+                                                @Override
+                                                public void onError(String errorMessage) {
+                                                    Log.e(TAG, "Error updating appointment: " + errorMessage);
+                                                }
+                                            });
                                         }
                                     });
                                 }
@@ -144,6 +152,8 @@ public class HealthProfessionalPending extends Fragment implements IListView {
                             appointmentRepository.cancelAppointment(appointmentUid, new AppointmentRepository.AppointmentCancelCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
+                                    notifcationRepository.NotifyCancelledAppointmentToPatient(appointmentId);
+
                                     Toast.makeText(getContext(), appointmentId + " cancelled", Toast.LENGTH_SHORT).show();
                                     reportsRepository.addHealthProfCancelledAppointmentReport(loggedInUserId, appointmentId, new ReportsRepository.ReportCallback() {
                                         @Override

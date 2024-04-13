@@ -25,6 +25,7 @@ import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.dto.TimeDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
@@ -256,6 +257,9 @@ public class PatientMedicationAddFragment extends Fragment {
 
             MedicationDto medication = new MedicationDto("",
                     patientId, medicine, note, dateTimeOfAppointment, status);
+
+            ButtonManager.disableButton(add_button);
+
             medicationRepository.addMedication(medication, new MedicationRepository.MedicationsAddCallback() {
                 @Override
                 public void onSuccess(String medicationId) {
@@ -265,6 +269,7 @@ public class PatientMedicationAddFragment extends Fragment {
                             handleClearButtonClick();
 
                             Log.e(TAG, "Successfully added medication with the id of " + medicationId);
+                            ButtonManager.enableButton(add_button);
 
                             ViewPager2 vp = getActivity().findViewById(R.id.viewPager); // Fetch ViewPager instance
                             vp.setCurrentItem(1);
@@ -272,7 +277,7 @@ public class PatientMedicationAddFragment extends Fragment {
 
                         @Override
                         public void onReportFailed(String errorMessage) {
-
+                            ButtonManager.enableButton(add_button);
                         }
                     });
                 }
@@ -280,11 +285,13 @@ public class PatientMedicationAddFragment extends Fragment {
                 @Override
                 public void onError(String errorMessage) {
                     Log.e(TAG, "Failure in adding medication in the document");
+                    ButtonManager.enableButton(add_button);
                 }
             });
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
+            ButtonManager.enableButton(add_button);
         }
     }
 }

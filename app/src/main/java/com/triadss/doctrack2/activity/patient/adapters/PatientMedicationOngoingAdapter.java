@@ -18,6 +18,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
@@ -101,6 +102,8 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                 medicationDto.setMedicine(updatedMedication);
                 medicationDto.setNote(updatedNote);
 
+                ButtonManager.disableButton(updateBtn);
+
                 medicationRepository.updateMedication(mediId, medicationDto, new MedicationRepository.MedicationUpdateCallback() {
                     @Override
                     public void onSuccess() {
@@ -109,11 +112,12 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                             public void onReportAddedSuccessfully() {
                                 updateMedicationsList(medicationDto);
                                 Toast.makeText(context, mediId + " updated", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
                             }
 
                             @Override
                             public void onReportFailed(String errorMessage) {
-
+                                ButtonManager.enableButton(updateBtn);
                             }
                         });
 
@@ -122,10 +126,10 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                     @Override
                     public void onError(String errorMessage) {
                         Log.e(TAG, "Error updating medication: " + errorMessage);
+                        ButtonManager.enableButton(updateBtn);
                     }
                 });
 
-                dialog.dismiss();
             });
 
             dialog.show();
@@ -133,6 +137,8 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
 
         private void setupComplete(MedicationDto medication) {
             complete.setOnClickListener(v -> {
+                ButtonManager.disableButton(complete);
+
                 medicationRepository.updateMedicationStatus(mediId, MedicationTypeConstants.COMPLETED, new MedicationRepository.MedicationUpdateCallback() {
                     @Override
                     public void onSuccess() {
@@ -145,7 +151,7 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
 
                             @Override
                             public void onReportFailed(String errorMessage) {
-
+                                ButtonManager.enableButton(complete);
                             }
                         });
                     }
@@ -153,6 +159,8 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                     @Override
                     public void onError(String errorMessage) {
                         Log.e(TAG, "Error updating medication status: " + errorMessage);
+                        ButtonManager.enableButton(complete);
+
                     }
                 });
                 Toast.makeText(context, medicine.getText() + " has been completed.", Toast.LENGTH_SHORT).show();

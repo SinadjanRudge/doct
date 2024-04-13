@@ -14,6 +14,8 @@ public class NotificationService extends BroadcastReceiver {
     public static String NOTIFICATION = "notification" ;
     public static String NOTIFICATION_CHANNEL_NAME = "notification" ;
 
+
+
     public void onReceive (Context context , Intent intent) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context. NOTIFICATION_SERVICE ) ;
         Notification notification = intent.getParcelableExtra( NOTIFICATION ) ;

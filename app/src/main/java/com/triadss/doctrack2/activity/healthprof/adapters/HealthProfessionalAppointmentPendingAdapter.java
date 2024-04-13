@@ -19,6 +19,7 @@ import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.TimeDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 
 import java.util.ArrayList;
 
@@ -95,6 +96,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ButtonManager.disableButton(cancel);
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
                     appointmentCallbacks.onCancel(appointment.getUid());
                 }
@@ -153,6 +155,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             });
 
             confirm.setOnClickListener(v -> {
+                ButtonManager.disableButton(confirm);
                 appointmentCallbacks.onRescheduleConfirmed(selectedDateTime, dto.getDocumentId());
                 dialog.dismiss();
             });
