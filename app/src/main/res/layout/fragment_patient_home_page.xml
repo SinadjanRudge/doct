@@ -63,7 +63,7 @@
 
         <Button
             android:id="@+id/btnLogout"
-            android:layout_width="match_parent"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="Logout" />
 
@@ -91,16 +91,10 @@
             android:textColor="@color/lightgreen"
             android:textSize="14sp"/>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="250dp">
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_pendingAppointment"
             android:layout_width="match_parent"
             android:layout_height="210dp" />
-
-        </ScrollView>
 
         <TextView
             android:id="@+id/textView_medication"
@@ -113,16 +107,11 @@
             android:textColor="@color/lightgreen"
             android:textSize="14sp"/>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="250dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_medication"
             android:layout_width="match_parent"
             android:layout_height="250dp" />
-
-        </ScrollView>
 
         </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
