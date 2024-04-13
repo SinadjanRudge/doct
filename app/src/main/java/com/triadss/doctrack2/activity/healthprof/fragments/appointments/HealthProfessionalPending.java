@@ -53,7 +53,7 @@ public class HealthProfessionalPending extends Fragment implements IListView {
     private String mParam1;
     private String mParam2;
     String loggedInUserId;
-    private NotificationRepository notificationRepository;
+    private NotificationRepository notificationRepository = new NotificationRepository();
 
     public HealthProfessionalPending() {
         // Required empty public constructor

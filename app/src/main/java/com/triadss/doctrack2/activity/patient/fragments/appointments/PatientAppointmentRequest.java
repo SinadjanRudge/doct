@@ -45,7 +45,7 @@ public class PatientAppointmentRequest extends Fragment {
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;
-    private NotificationRepository notificationRepository;
+    private NotificationRepository notificationRepository = new NotificationRepository();
     private ReportsRepository _reportsRepository = new ReportsRepository();
     private NotificationDTO notifyDto;
     private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute;
@@ -196,7 +196,6 @@ public class PatientAppointmentRequest extends Fragment {
         notifyDto.setContent(textInputPurpose.getText().toString());
         DateTimeDto datedto = new DateTimeDto();
         notifyDto.setDateSent(datedto.GetCurrentTimeStamp());
-        notificationRepository = new NotificationRepository();
         notificationRepository.pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
             @Override
             public void onSuccess(String appointmentId) {
