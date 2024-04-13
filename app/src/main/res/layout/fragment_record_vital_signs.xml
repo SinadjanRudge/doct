@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.patient.fragment.RecordVitalSigns">
+    tools:context=".activity.patient.fragments.records.RecordVitalSigns">
 
     <!-- TODO: Update blank fragment layout -->
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginEnd="35dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:background="@color/white"
         android:orientation="vertical">
 

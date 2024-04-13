@@ -52,7 +52,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="311dp"
+                android:layout_height="390dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="20dp"
@@ -72,6 +72,14 @@
                     android:layout_height="50dp"
                     android:background="@drawable/green_stroke"
                     android:hint=" Input here" />
+
+                <TextView
+                    android:id="@+id/errorBloodPresure"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Blood Pressure is Blank"
+                    android:textColor="#FF0000"
+                    android:textSize="14sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -124,6 +132,30 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:layout_height="19dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/errorTempreture"
+                        android:layout_width="117dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Tempreture is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/errorSp02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Sp02 is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:orientation="horizontal">
@@ -139,8 +171,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:layout_weight="0.7"
-                        android:text="Weight:"
+                        android:layout_weight="0.54"
+                        android:text="Weight (kg):"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -173,6 +205,30 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/errorPulse"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Pulse rate is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/errorWeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Weight is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:orientation="horizontal">
 
@@ -180,14 +236,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.6"
-                        android:text="Height:"
+                        android:text="Height (cm):"
                         android:textSize="16sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.85"
                         android:text="BMI:"
                         android:textSize="16sp" />
 
@@ -211,11 +267,37 @@
                         android:id="@+id/input_bmi"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
+                        android:enabled="false"
+                        android:text=" 0"
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/green_stroke"
-                        android:hint=" Input here" />
+                        android:background="@drawable/green_stroke"  />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/errorHeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Height is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/errorBMI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="BMI is Blank"
+                        android:textColor="#FF0000"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
             </LinearLayout>

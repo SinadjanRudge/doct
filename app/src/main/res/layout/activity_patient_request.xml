@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.patient.fragment.PatientAppointmentRequest"
+    tools:context=".activity.patient.fragments.appointments.PatientAppointmentRequest"
     tools:ignore="HardcodedText">
 
     <!--make sure to give the appropriate IDs to textView
@@ -49,6 +49,36 @@
             android:backgroundTint="@color/green"
             app:icon="@drawable/baseline_access_time_24" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="horizontal">
+
+        <!-- Error TextView for date selection -->
+        <TextView
+            android:id="@+id/dateErrorText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/holo_red_dark"
+            android:text="Please select a date"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <!-- Error TextView for time selection -->
+        <TextView
+            android:id="@+id/timeErrorText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/holo_red_dark"
+            android:text="Please select a time"
+            android:gravity="center"
+            android:visibility="gone" />
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/confirmbutton"
