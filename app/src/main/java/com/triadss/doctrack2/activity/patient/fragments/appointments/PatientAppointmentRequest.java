@@ -190,24 +190,6 @@ public class PatientAppointmentRequest extends Fragment {
         AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, status);
 
-        notifyDto = new NotificationDTO();
-        notifyDto.setTitle("Patient New Appointment Request on " + pickDateButton.getText().toString() + " "
-                + pickTimeBtn.getText().toString());
-        notifyDto.setContent(textInputPurpose.getText().toString());
-        DateTimeDto datedto = new DateTimeDto();
-        notifyDto.setDateSent(datedto.GetCurrentTimeStamp());
-        notificationRepository.pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
-            @Override
-            public void onSuccess(String appointmentId) {
-                // scheduleNotification(getNotification( "1 second delay" ) , 1000 );
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-
-            }
-        });
-
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
             @Override
             public void onSuccess(String appointmentId) {

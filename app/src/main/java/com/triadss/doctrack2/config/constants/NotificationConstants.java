@@ -6,5 +6,6 @@ public class NotificationConstants {
     public static final String NOTIFICATION_TAG = "DOCTRACKNOTIFTAG" ;
     public static final String RECEIVER_ID = "RECEIVER_ID" ;
     public static final String NOTIFICATION_WORKER_TAG = "DOCTRACKNOTIFWORKER";
+    public static final String NOTIFICATION_GROUP = "DOCTRACKNOTIFGROUP";
 
 }
