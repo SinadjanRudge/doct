@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.admin;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -7,22 +8,15 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
-import com.triadss.doctrack2.activity.core.DeviceFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.AppointmentFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.HealthProfessionalAppointmentFragment;
-import com.triadss.doctrack2.activity.healthprof.fragment.PatientFragment;
-import com.triadss.doctrack2.activity.patient.fragment.PatientAppointmentFragment;
-import com.triadss.doctrack2.activity.patient.fragment.PatientMedicationFragment;
-import com.triadss.doctrack2.activity.patient.fragment.RecordFragment;
+import com.triadss.doctrack2.activity.admin.fragments.AdminHomeFragment;
+import com.triadss.doctrack2.activity.admin.fragments.AdminManageUserAccount;
+import com.triadss.doctrack2.activity.admin.fragments.AdminGenerateReportsPage;
 import com.triadss.doctrack2.databinding.ActivityAdminHomeBinding;
-import com.triadss.doctrack2.databinding.ActivityHealthProfHomeBinding;
-import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
 
 public class AdminHome extends AppCompatActivity {
 
@@ -30,6 +24,7 @@ public class AdminHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
+        replaceFragment(new AdminHomeFragment());
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -49,8 +44,7 @@ public class AdminHome extends AppCompatActivity {
             }
             if (item.getItemId() == R.id.report_menu) {
                 replaceFragment(new AdminGenerateReportsPage());
-            }
-            else if (item.getItemId() == R.id.temp_logout) {
+            } else if (item.getItemId() == R.id.temp_logout) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
@@ -58,12 +52,31 @@ public class AdminHome extends AppCompatActivity {
             }
             return true;
         });
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Back is pressed... Finishing the activity
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
+                boolean isCurrentlyAtHomepage = currentFragment instanceof AdminHomeFragment;
+                if (!isCurrentlyAtHomepage) {
+                    fragmentManager.popBackStack();
+                }
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
+        boolean isCurrentlyAtHomepage = currentFragment instanceof AdminHomeFragment;
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
+        if (isCurrentlyAtHomepage) {
+            fragmentTransaction.addToBackStack("toHome");
+        }
         fragmentTransaction.commit();
     }
 }

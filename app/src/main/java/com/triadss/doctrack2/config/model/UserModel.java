@@ -1,4 +1,4 @@
-package com.triadss.doctrack2.config.model;
+ package com.triadss.doctrack2.config.model;
 
 /**
  * This class represents the USER model in FireStore.
@@ -23,7 +23,7 @@ public class UserModel extends AuditModel {
     public static final String dateOfBirth = "dateOfBirth";
     public static final String deviceId = "deviceId";
     public static final String age = "age";
-    public static final String year = "age";
+    public static final String year = "year";
     public static final String gender = "gender";
     public static final String status = "status";
 }

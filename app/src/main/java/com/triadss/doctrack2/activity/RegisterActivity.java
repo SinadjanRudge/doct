@@ -26,6 +26,8 @@ import com.triadss.doctrack2.dto.AuthDto;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.triadss.doctrack2.helper.ButtonManager;
+
 public class RegisterActivity extends AppCompatActivity {
 
     TextInputEditText editTextEmail, editTextPassword;
@@ -40,12 +42,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     TextView textView;
 
-    /**
-     * Lifecycle method called when the activity is starting.
-     * Checks if there is a currently authenticated user. If so, redirects the user to the main activity and finishes the current activity.
-     *
-     * @Deprecated - for testing only
-     */
     @Override
     @Deprecated
     public void onStart() {
@@ -58,11 +54,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Initializes the activity and sets up UI components.
-     *
-     * @param savedInstanceState A Bundle containing the activity's previously saved state, if available.
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,14 +70,15 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         textView = findViewById(R.id.loginNow);
 
-
         // Attach TextWatcher to email EditText
         editTextEmail.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -97,10 +89,12 @@ public class RegisterActivity extends AppCompatActivity {
         // Attach TextWatcher to password EditText
         editTextPassword.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -115,6 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         buttonReg.setOnClickListener(v -> {
+            ButtonManager.disableButton(buttonReg);
             progressBar.setVisibility(View.VISIBLE);
             AuthDto authDto = new AuthDto();
             authDto.setEmail(String.valueOf(editTextEmail.getText()).trim());
@@ -126,15 +121,21 @@ public class RegisterActivity extends AppCompatActivity {
             } else {
                 progressBar.setVisibility(View.GONE);
             }
+
+            ButtonManager.enableButton(buttonReg);
         });
     }
 
     /**
-     * Registers a new user with the provided authentication information using Firebase Authentication.
-     * Upon successful registration, the user's account is created, and the role is set to "USER" in the Firestore database.
-     * If registration is unsuccessful, an authentication failed message is displayed.
+     * Registers a new user with the provided authentication information using
+     * Firebase Authentication.
+     * Upon successful registration, the user's account is created, and the role is
+     * set to "USER" in the Firestore database.
+     * If registration is unsuccessful, an authentication failed message is
+     * displayed.
      *
-     * @param authDto An AuthDto object containing the user's email and password for registration.
+     * @param authDto An AuthDto object containing the user's email and password for
+     *                registration.
      */
     private void register(AuthDto authDto) {
         mAuth.createUserWithEmailAndPassword(authDto.getEmail(), authDto.getPassword())
@@ -237,15 +238,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Displays a validation error message for a TextInputEditText within a TextInputLayout.
+     * Displays a validation error message for a TextInputEditText within a
+     * TextInputLayout.
      *
      * @param errorMessage      The error message to be displayed.
      * @param textInputEditText The TextInputEditText associated with the error.
-     * @param textInputLayout   The TextInputLayout containing the TextInputEditText.
+     * @param textInputLayout   The TextInputLayout containing the
+     *                          TextInputEditText.
      */
     private void showValidationError(String errorMessage,
-                                     TextInputEditText textInputEditText,
-                                     TextInputLayout textInputLayout) {
+            TextInputEditText textInputEditText,
+            TextInputLayout textInputLayout) {
         textInputLayout.setErrorEnabled(true);
         textInputLayout.setError(errorMessage);
         textInputEditText.requestFocus();
@@ -255,7 +258,8 @@ public class RegisterActivity extends AppCompatActivity {
      * Hides the validation error for a TextInputLayout by disabling error display
      * and setting the error text to null.
      *
-     * @param textInputLayout The TextInputLayout for which the validation error is to be hidden.
+     * @param textInputLayout The TextInputLayout for which the validation error is
+     *                        to be hidden.
      */
     private void hideValidationError(TextInputLayout textInputLayout) {
         textInputLayout.setErrorEnabled(false);

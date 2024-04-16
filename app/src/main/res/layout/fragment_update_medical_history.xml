@@ -77,14 +77,14 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkbox1"
+                        android:id="@+id/tuborculosis"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="tuberculosis" />
 
                     <CheckBox
-                        android:id="@+id/checkbox2"
+                        android:id="@+id/hypertension"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -99,14 +99,14 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkbox3"
+                        android:id="@+id/heartDiseases"
                         android:layout_width="320dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="heart dieases" />
+                        android:text="heart diseases" />
 
                     <CheckBox
-                        android:id="@+id/checkbox4"
+                        android:id="@+id/nervousBreakdown"
                         android:layout_width="189dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0."
@@ -121,14 +121,14 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkbox5"
+                        android:id="@+id/pelpticUlcer"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
                         android:text="peptic ulcer" />
 
                     <CheckBox
-                        android:id="@+id/checkbox6"
+                        android:id="@+id/kidneyDiseases"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
@@ -142,14 +142,14 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkbox7"
+                        android:id="@+id/bronchialAsthma"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
                         android:text="bronchial asthma" />
 
                     <CheckBox
-                        android:id="@+id/checkbox8"
+                        android:id="@+id/hernia"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
@@ -163,14 +163,14 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkbox9"
+                        android:id="@+id/seizuresEpilepsy"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
                         android:text="seizures epilepsy " />
 
                     <CheckBox
-                        android:id="@+id/checkbox10"
+                        android:id="@+id/venerealDiseases"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
@@ -184,14 +184,14 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkbox11"
+                        android:id="@+id/allergicReaction"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
                         android:text="allergic reaction" />
 
                     <CheckBox
-                        android:id="@+id/checkbox12"
+                        android:id="@+id/insomnia"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
@@ -199,19 +199,6 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/checkbox13"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:text="none" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -219,7 +206,7 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkbox14"
+                        android:id="@+id/otherPastIllness"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
@@ -234,7 +221,7 @@
                     android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/editTextOthers"
+                        android:id="@+id/otherPastIllnessText"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginStart="35dp"
@@ -244,7 +231,14 @@
                         android:textSize="15sp" />
 
                 </LinearLayout>
-
+                <TextView
+                    android:id="@+id/errorPassIllness"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="Pls Specify your pass Illness."
+                    android:layout_marginStart="35dp"
+                    android:textColor="#FF0000"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -272,7 +266,7 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textViewPrevHos"
+                        android:id="@+id/input_previous_hospitalization"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
@@ -291,7 +285,6 @@
                 android:textColor="#000000"
                 android:textSize="18sp" />
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -309,15 +302,15 @@
 
                     <CheckBox
                         android:id="@+id/cb_famHist_diabetes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.2"
-                        android:text="diabetes" />
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="diabetes mellitus " />
 
                     <CheckBox
                         android:id="@+id/cb_famHist_hyper"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
                         android:text="hypertension" />
 
@@ -329,17 +322,18 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/cb_famHist_mentalHealthDisorder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="mental health disorder" />
+                        android:id="@+id/cb_famHist_cancer"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="allergic reaction" />
 
                     <CheckBox
-                        android:id="@+id/cb_famHist_asthma"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/cb_famHist_seizureDisorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
-                        android:text="asthma" />
+                        android:text="insomnia" />
 
                 </LinearLayout>
 
@@ -349,18 +343,34 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/cb_famHist_bleedingDisorder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="bleeding disorder" />
+                        android:id="@+id/cb_famHist_mentalHealthDisorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="mental health disorder" />
 
                     <CheckBox
-                        android:id="@+id/cb_famHist_none"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="none" />
+                        android:id="@+id/cb_famHist_asthma"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="bronchial asthma" />
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb_famHist_bleedingDisorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="bleeding disorder" />
 
                 </LinearLayout>
 
@@ -371,8 +381,8 @@
 
                     <CheckBox
                         android:id="@+id/cb_famHist_others"
-                        android:layout_width="47dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
                         android:layout_weight="1"
                         android:text="others, pls. specify." />
 
@@ -385,19 +395,26 @@
                     android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/editText_specify"
+                        android:id="@+id/otherFamilyHistoryText"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginStart="35dp"
                         android:ems="10"
+                        android:hint="enter here"
                         android:inputType="text"
-                        android:text="enter here"
                         android:textSize="15sp" />
 
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/errorFamilyHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="Pls Specify your Family Illness History."
+                    android:layout_marginStart="35dp"
+                    android:textColor="#FF0000"
+                    android:textSize="14sp" />
 
             </LinearLayout>
-
 
             <TextView
                 android:id="@+id/myTextView7"
@@ -408,7 +425,6 @@
                 android:text="OB-Gyn History"
                 android:textColor="#000000"
                 android:textSize="18sp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -422,11 +438,11 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_menstruation"
+                        android:id="@+id/input_menarche"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
-                        android:hint="Menstruation" />
+                        android:hint="Menarche" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -434,7 +450,19 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_gravida"
+                        android:id="@+id/input_lmp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="LMP" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_gravida"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
@@ -446,7 +474,19 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_abortion"
+                        android:id="@+id/input_para"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="Para" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_abortion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
@@ -458,16 +498,26 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_menopause"
+                        android:id="@+id/input_menopause"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/green_stroke"
                         android:hint="Menopause" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_papSmear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/green_stroke"
+                        android:hint="Pap Smear (Result)" />
+                </com.google.android.material.textfield.TextInputLayout>
+
             </LinearLayout>
-
-
             <TextView
                 android:id="@+id/noteForButton"
                 android:layout_width="wrap_content"

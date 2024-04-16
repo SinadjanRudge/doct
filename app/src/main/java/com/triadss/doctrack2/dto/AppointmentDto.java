@@ -16,6 +16,8 @@ public class AppointmentDto {
         this.status = status;
     }
 
+
+
     public String getNameOfRequester() {
         return nameOfRequester;
     }
@@ -80,6 +82,21 @@ public class AppointmentDto {
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
     }
+    public String getPatientIdNumber() {
+        return patientIdNumber;
+    }
+
+    public void setPatientIdNumber(String patientIdNumber) {
+        this.patientIdNumber = patientIdNumber;
+    }
+
+    public String getHealthProfId() {
+        return healthProfId;
+    }
+
+    public void setHealthProfId(String healthProfId) {
+        this.healthProfId = healthProfId;
+    }
 
     private String uid;
     private String nameOfRequester;
@@ -90,5 +107,6 @@ public class AppointmentDto {
     private Timestamp createdAt;
     private String requester;
     private String documentId;
-
+    private String patientIdNumber;
+    private String healthProfId;
 }
