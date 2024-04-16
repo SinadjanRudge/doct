@@ -134,45 +134,45 @@ public class PatientAppointmentRequest extends Fragment {
     private boolean isInputsNotValid() {
         dateErrorText.setVisibility(View.GONE);
         timeErrorText.setVisibility(View.GONE);
-
+        boolean invalidTime = selectedHour < 8 || selectedHour > 17;
+        boolean invalid = false;
         if (TextUtils.isEmpty(textInputPurpose.getText().toString()) &&
-                (selectedYear == 0 || selectedMonth == 0 || selectedDay == 0 ||
-                        selectedHour == 0 || selectedMinute == 0)) {
+                (selectedYear == 0 || selectedMonth == 0 || selectedDay == 0) && invalidTime) {
             Toast.makeText(getContext(), "Please enter a purpose and select a valid date and time", Toast.LENGTH_SHORT)
                     .show();
 
             textInputPurpose.setError("Purpose cannot be empty");
             dateErrorText.setVisibility(View.VISIBLE);
             timeErrorText.setVisibility(View.VISIBLE);
-            return true;
+            invalid = true;
         }
 
         if (TextUtils.isEmpty(textInputPurpose.getText().toString())) {
             textInputPurpose.setError("Purpose cannot be empty");
             Toast.makeText(getContext(), "Please enter a purpose", Toast.LENGTH_SHORT).show();
-            return true;
+            invalid = true;
         }
 
         if ((selectedYear == 0 || selectedMonth == 0 || selectedDay == 0)
-                && (selectedHour == 0 || selectedMinute == 0)) {
+                && invalidTime) {
             Toast.makeText(getContext(), "Please select a valid date and time", Toast.LENGTH_SHORT).show();
             dateErrorText.setVisibility(View.VISIBLE);
             timeErrorText.setVisibility(View.VISIBLE);
-            return true;
+            invalid = true;
         }
 
         if (selectedYear == 0 || selectedMonth == 0 || selectedDay == 0) {
             Toast.makeText(getContext(), "Please select a valid date", Toast.LENGTH_SHORT).show();
             dateErrorText.setVisibility(View.VISIBLE);
-            return true;
+            invalid = true;
         }
 
-        if (selectedHour == 0 || selectedMinute == 0) {
+        if (invalidTime) {
             Toast.makeText(getContext(), "Please select a valid time", Toast.LENGTH_SHORT).show();
             timeErrorText.setVisibility(View.VISIBLE);
-            return true;
+            invalid = true;
         }
-        return false;
+        return invalid;
     }
 
     private void handleConfirmationButtonClick() {
