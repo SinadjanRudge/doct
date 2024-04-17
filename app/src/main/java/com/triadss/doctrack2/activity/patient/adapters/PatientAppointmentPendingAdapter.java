@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
+import com.triadss.doctrack2.utils.AppointmentFunctions;
+
+import org.w3c.dom.Text;
 
 // Extends the Adapter class to RecyclerView.Adapter
 // and implement the unimplemented methods
@@ -179,6 +182,8 @@ public class PatientAppointmentPendingAdapter
 
             Button dateBtn = dialog.findViewById(R.id.dateBtn);
             TextView updateDate = dialog.findViewById(R.id.updateDate);
+            TextView dateErrorText = dialog.findViewById(R.id.dateErrorText);
+            TextView timeErrorText = dialog.findViewById(R.id.timeErrorText);
 
             Button timeBtn = dialog.findViewById(R.id.timeBtn);
             TextView updateTime = dialog.findViewById(R.id.updateTime);
@@ -228,12 +233,33 @@ public class PatientAppointmentPendingAdapter
             });
 
             confirmBtn.setOnClickListener(v -> {
+                dateErrorText.setVisibility(View.GONE);
+                timeErrorText.setVisibility(View.GONE);
+
+                boolean inputInvalid = false;
+
+                if (selectedDateTime.getDate() == null ||  selectedDateTime.getDate().getYear() == 0 || selectedDateTime.getDate().getMonth() == 0 || selectedDateTime.getDate().getDay() == 0) {
+                    Toast.makeText(context, "Please select a valid date", Toast.LENGTH_SHORT).show();
+                    dateErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
+
+                if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
+                    Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
+                    timeErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
+
+                if(inputInvalid)
+                {
+                    return;
+                }
 
                 String newDateNewTime = updateDate.getText().toString() + " " + updateTime.getText().toString();
                 if (updateDate.getText().toString().equals("Date") || updateTime.getText().toString().equals("Time")) {
                     Toast.makeText(itemView.getContext(), "Error: must select date and time", Toast.LENGTH_SHORT)
                             .show();
-                } else {
+                }else {
                     if (newDateNewTime.compareTo(oldDateOldTime) <= 0) {
                         Toast.makeText(itemView.getContext(), "Error: selected date and time must be higher",
                                 Toast.LENGTH_SHORT).show();
