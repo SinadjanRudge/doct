@@ -10,7 +10,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,13 +44,13 @@
                 app:layout_constraintVertical_bias="0.036" />
 
             <LinearLayout
-                android:layout_width="386dp"
-                android:layout_height="87dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/search_bar_patient"
-                    android:layout_width="278dp"
+                    android:layout_width="321dp"
                     android:layout_height="57dp"
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="5dp"
@@ -62,8 +65,8 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/patient_add_btn"
-                    android:layout_width="70dp"
-                    android:layout_height="53dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center|center_horizontal"
                     android:background="@drawable/green_stroke"
                     android:gravity="center"
@@ -85,7 +88,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycleview_patient_list"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/search_bar_patient"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
@@ -94,6 +97,7 @@
                 android:background="@drawable/bg_color"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
+                android:textColor="@color/material_dynamic_secondary99"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -104,7 +108,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="120dp" />
+                android:layout_height="411dp" />
 
         </LinearLayout>
     </ScrollView>
