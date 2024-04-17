@@ -28,6 +28,7 @@ import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.ReportDto;
+import com.triadss.doctrack2.dto.TimeDto;
 
 import java.util.Date;
 import java.util.Map;
