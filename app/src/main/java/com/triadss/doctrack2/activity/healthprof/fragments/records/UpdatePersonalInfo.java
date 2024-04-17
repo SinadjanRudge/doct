@@ -100,7 +100,7 @@ public class UpdatePersonalInfo extends Fragment {
 
         populatePersonalInfo();
 
-        Button nextButton = rootView.findViewById(R.id.nxtButton);
+        nextButton = rootView.findViewById(R.id.nxtButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

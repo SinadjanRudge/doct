@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -112,6 +113,8 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
 
                         if (user != null) {
+                            ButtonManager.enableButton(buttonLogin);
+
                             fetchUserRole(user.getUid());
                         }
 
@@ -119,9 +122,14 @@ public class LoginActivity extends AppCompatActivity {
                         FirebaseAuthException e = (FirebaseAuthException) task.getException();
                         Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT)
                                 .show();
+                        ButtonManager.enableButton(buttonLogin);
+
                     }
 
+                }).addOnFailureListener(e -> {
+                    Log.e("ERROR TAG", e.getMessage());
                     ButtonManager.enableButton(buttonLogin);
+
                 });
         });
     }

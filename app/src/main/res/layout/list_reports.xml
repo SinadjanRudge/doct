@@ -23,8 +23,9 @@
 
             <TextView
                 android:id="@+id/descriptionValue"
-                android:layout_width="240dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Accepted appointment of test-patient at 2024-03-25 09:53" />
         </TableRow>
 

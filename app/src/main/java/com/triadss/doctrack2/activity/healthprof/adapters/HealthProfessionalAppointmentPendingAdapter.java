@@ -20,6 +20,7 @@ import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.TimeDto;
 import com.triadss.doctrack2.helper.ButtonManager;
+import com.triadss.doctrack2.utils.AppointmentFunctions;
 
 import java.util.ArrayList;
 
@@ -113,14 +114,17 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
             Button timeBtn = dialog.findViewById(R.id.timeBtn);
             TextView updateTime = dialog.findViewById(R.id.updateTime);
+            TextView dateErrorText = dialog.findViewById(R.id.dateErrorText);
+            TextView timeErrorText = dialog.findViewById(R.id.timeErrorText);
 
             Button confirm = dialog.findViewById(R.id.confirmbutton);
 
-            DateTimeDto selectedDateTime = DateTimeDto.ToDateTimeDto(dto.getDateOfAppointment());
+            DateTimeDto selectedDateTime = new DateTimeDto();
+            DateTimeDto dateOfAppointment = DateTimeDto.ToDateTimeDto(dto.getDateOfAppointment());
 
             dateBtn.setOnClickListener((View.OnClickListener) v -> {
                 // Get the current date
-                DateDto dateDto = selectedDateTime.getDate();
+                DateDto dateDto = dateOfAppointment.getDate();
 
                 // Create and show the Date Picker Dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(context,
@@ -138,7 +142,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
             timeBtn.setOnClickListener(v -> {
                 // Get the current time
-                TimeDto timeDto = selectedDateTime.getTime();
+                TimeDto timeDto = dateOfAppointment.getTime();
 
                 // Create and show the Time Picker Dialog
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context,
@@ -155,6 +159,28 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             });
 
             confirm.setOnClickListener(v -> {
+                dateErrorText.setVisibility(View.GONE);
+                timeErrorText.setVisibility(View.GONE);
+
+                boolean inputInvalid = false;
+
+                if (selectedDateTime.getDate() == null ||  selectedDateTime.getDate().getYear() == 0 || selectedDateTime.getDate().getMonth() == 0 || selectedDateTime.getDate().getDay() == 0) {
+                    Toast.makeText(context, "Please select a valid date", Toast.LENGTH_SHORT).show();
+                    dateErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
+
+                if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
+                    Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
+                    timeErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
+
+                if(inputInvalid)
+                {
+                    return;
+                }
+
                 ButtonManager.disableButton(confirm);
                 appointmentCallbacks.onRescheduleConfirmed(selectedDateTime, dto.getDocumentId());
                 dialog.dismiss();
