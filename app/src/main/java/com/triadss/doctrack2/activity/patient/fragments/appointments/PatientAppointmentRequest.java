@@ -36,6 +36,7 @@ import com.triadss.doctrack2.notification.NotificationService;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
+import com.triadss.doctrack2.utils.AppointmentFunctions;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -134,7 +135,7 @@ public class PatientAppointmentRequest extends Fragment {
     private boolean isInputsNotValid() {
         dateErrorText.setVisibility(View.GONE);
         timeErrorText.setVisibility(View.GONE);
-        boolean invalidTime = selectedHour < 8 || selectedHour > 17;
+        boolean invalidTime = AppointmentFunctions.IsValidHour(selectedHour);
         boolean invalid = false;
         if (TextUtils.isEmpty(textInputPurpose.getText().toString()) &&
                 (selectedYear == 0 || selectedMonth == 0 || selectedDay == 0) && invalidTime) {
@@ -189,7 +190,7 @@ public class PatientAppointmentRequest extends Fragment {
 
         AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, status);
-         ButtonManager.disableButton(confirmButton);
+        ButtonManager.disableButton(confirmButton);
 
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
             @Override
