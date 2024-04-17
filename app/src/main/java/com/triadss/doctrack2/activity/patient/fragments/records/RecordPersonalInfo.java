@@ -14,7 +14,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.repoositories.PatientRepository;
+
+import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,6 +88,10 @@ public class RecordPersonalInfo extends Fragment {
         TextView patientAge = rootView.findViewById(R.id.value_Age);
         TextView patientPhone = rootView.findViewById(R.id.value_ContactNo);
         TextView patientCourse = rootView.findViewById(R.id.value_Course);
+        TextView patientGender = rootView.findViewById(R.id.value_Gender);
+        TextView patientDateOfBirth = rootView.findViewById(R.id.value_dateOfBirth);
+        TextView patientStatus = rootView.findViewById(R.id.value_Status);
+        TextView patientYear = rootView.findViewById(R.id.value_Year);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -101,6 +108,10 @@ public class RecordPersonalInfo extends Fragment {
                 patientAge.setText(String.valueOf(patient.getAge()));
                 patientPhone.setText(patient.getPhone());
                 patientCourse.setText(patient.getCourse());
+                patientGender.setText(patient.getGender());
+                patientDateOfBirth.setText(DateTimeDto.ToDateTimeDto(patient.getDateOfBirth()).ToString());
+                patientStatus.setText(patient.getStatus());
+                patientYear.setText(String.valueOf(patient.getYear()));
             }
 
             @Override
