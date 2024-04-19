@@ -87,9 +87,6 @@ public class PatientAppointmentPendingAdapter
             reschedule = (Button) itemView.findViewById(R.id.reschedule_button);
             documentId = (TextView) view.findViewById(R.id.IDtext);
             patientName = view.findViewById(R.id.nametext);
-
-          
-
         }
 
         public void update(AppointmentDto appointment) {

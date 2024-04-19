@@ -1,6 +1,8 @@
 package com.triadss.doctrack2.activity.patient.adapters;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,13 +16,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.dto.TimeDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
+import com.triadss.doctrack2.utils.AppointmentFunctions;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -88,22 +96,79 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
             Dialog dialog = new Dialog(context);
             dialog.setContentView(R.layout.dialog_update_medication);
 
-            TextInputEditText medicationEditText = dialog.findViewById(R.id.medicineValue);
-            TextInputEditText noteEditText = dialog.findViewById(R.id.noteValue);
-            Button updateBtn = dialog.findViewById(R.id.updateBtn);
+            Button dateBtn = dialog.findViewById(R.id.dateBtn);
+            Button selectTime = dialog.findViewById(R.id.timeBtn);
+            TextView dateErrorText = dialog.findViewById(R.id.dateErrorText);
+            TextView timeErrorText = dialog.findViewById(R.id.timeErrorText);
 
-            medicationEditText.setText(medicationDto.getMedicine());
-            noteEditText.setText(medicationDto.getNote());
+            TextView medicationDate = dialog.findViewById(R.id.updateDate);
+            TextView medicationTime = dialog.findViewById(R.id.updateTime);
+
+            DateTimeDto selectedDateTime = new DateTimeDto();
+            DateTimeDto medicationTimestamp = DateTimeDto.ToDateTimeDto(medicationDto.getTimestamp());
+
+            Button updateBtn = dialog.findViewById(R.id.updateBtn);
+            dateBtn.setOnClickListener((View.OnClickListener) v -> {
+                // Get the current date
+                DateDto date = medicationTimestamp.getDate();
+
+                // Create and show the Date Picker Dialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                        (view, year1, monthOfYear, dayOfMonth) -> {
+                            // Store the selected date
+                            selectedDateTime.setDate(new DateDto(year1, monthOfYear + 1, dayOfMonth));
+
+                            // Update the text on the button
+                            medicationDate.setText(selectedDateTime.getDate().ToString(false));
+                        }, date.getYear(), date.getMonth(), date.getDay());
+                // Show the Date Picker Dialog
+                datePickerDialog.show();
+            });
+
+            selectTime.setOnClickListener(v -> {
+                // Get the current time
+                TimeDto time = medicationTimestamp.getTime();
+
+                // Create and show the Time Picker Dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(context,
+                        (view, hourOfDay, minute1) -> {
+                            // Store the selected time
+                            selectedDateTime.setTime(new TimeDto(hourOfDay, minute1));
+
+                            // Update the text on the button
+                            medicationTime.setText(selectedDateTime.getTime().ToString());
+                        }, time.getHour(), time.getMinute(), false);
+
+                // Show the Time Picker Dialog
+                timePickerDialog.show();
+            });
 
             updateBtn.setOnClickListener(v -> {
-                String updatedMedication = medicationEditText.getText().toString();
-                String updatedNote = noteEditText.getText().toString();
+                dateErrorText.setVisibility(View.GONE);
+                timeErrorText.setVisibility(View.GONE);
 
-                medicationDto.setMedicine(updatedMedication);
-                medicationDto.setNote(updatedNote);
+                boolean inputInvalid = false;
+
+                if (selectedDateTime.getDate() == null ||  selectedDateTime.getDate().getYear() == 0 || selectedDateTime.getDate().getMonth() == 0 || selectedDateTime.getDate().getDay() == 0) {
+                    Toast.makeText(context, "Please select a valid date", Toast.LENGTH_SHORT).show();
+                    dateErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
+
+                if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
+                    Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
+                    timeErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
+
+                if(inputInvalid)
+                {
+                    return;
+                }
+
+                medicationDto.setTimestamp(selectedDateTime.ToTimestamp());
 
                 ButtonManager.disableButton(updateBtn);
-
                 medicationRepository.updateMedication(mediId, medicationDto, new MedicationRepository.MedicationUpdateCallback() {
                     @Override
                     public void onSuccess() {
