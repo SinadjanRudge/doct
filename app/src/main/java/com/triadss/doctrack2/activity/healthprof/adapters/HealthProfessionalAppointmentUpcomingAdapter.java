@@ -118,9 +118,31 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ButtonManager.disableButton(accept);
-                    Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
-                    callback.onAccept(appointment.getUid());
+                    Dialog dialog = new Dialog(context);
+                    dialog.setContentView(R.layout.dialog_accept_appointment_confirmation);
+
+                    Button yes = dialog.findViewById(R.id.yesBtn);
+                    Button no = dialog.findViewById(R.id.noBtn);
+
+                    no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ButtonManager.disableButton(accept);
+                            Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
+                            callback.onAccept(appointment.getUid());
+
+                            dialog.dismiss();
+                        }
+                    });
+
+                    dialog.show();
                 }
             });
         }

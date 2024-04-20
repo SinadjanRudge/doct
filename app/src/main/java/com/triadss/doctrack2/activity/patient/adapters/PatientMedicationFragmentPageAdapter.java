@@ -23,16 +23,13 @@ public class PatientMedicationFragmentPageAdapter extends FragmentStateAdapter {
         switch (position){
             case 0:
                 return new PatientMedicationCompletedFragment();
-            case 1:
-                return new PatientMedicationOngoingFragment();
-
             default:
-                return new PatientMedicationAddFragment();
+                return new PatientMedicationOngoingFragment();
         }
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 2;
     }
 }

@@ -182,8 +182,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                 }
 
                 ButtonManager.disableButton(confirm);
-                appointmentCallbacks.onRescheduleConfirmed(selectedDateTime, dto.getDocumentId());
-                dialog.dismiss();
+                appointmentCallbacks.onRescheduleConfirmed(selectedDateTime, dto.getDocumentId(), dialog);
             });
 
             dialog.show();
@@ -193,7 +192,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
 
     public interface AppointmentCallback {
-        void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid);
+        void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid, Dialog dialog);
         void onCancel(String appointmentUid);
     }
 }

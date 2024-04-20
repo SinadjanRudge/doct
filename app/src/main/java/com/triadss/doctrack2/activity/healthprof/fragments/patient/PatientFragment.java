@@ -17,12 +17,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.PatientFragmentAdapter;
+import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.healthprof.fragments.records.ViewPatientRecordFragment;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.repoositories.PatientRepository;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +91,11 @@ public class PatientFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient, container, false);
+
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
+        });
 
         addPatient = rootView.findViewById(R.id.patient_add_btn);
 
