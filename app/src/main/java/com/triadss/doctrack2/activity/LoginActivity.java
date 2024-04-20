@@ -132,18 +132,13 @@ public class LoginActivity extends AppCompatActivity {
                             // Check the error code for specific cases
                             if (errorCode != null) {
                                 switch (errorCode) {
-                                        //User not found
-                                    case "ERROR_USER_NOT_FOUND":
-                                        // Incorrect email format
-                                        Toast.makeText(LoginActivity.this, "Email is incorrect.", Toast.LENGTH_SHORT).show();
-                                        break;
                                     case "ERROR_INVALID_EMAIL":
                                         // Incorrect email format
                                         Toast.makeText(LoginActivity.this, "Email is incorrect.", Toast.LENGTH_SHORT).show();
                                         break;
-                                    case "ERROR_WRONG_PASSWORD":
+                                    case "ERROR_INVALID_CREDENTIAL":
                                         // Incorrect password
-                                        Toast.makeText(LoginActivity.this, "Password is incorrect.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "Email or Password is incorrect.", Toast.LENGTH_SHORT).show();
                                         break;
                                     default:
                                         // Other errors
