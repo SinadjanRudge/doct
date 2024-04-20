@@ -10,10 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.adapters.PatientMedicationFragmentPageAdapter;
 import com.triadss.doctrack2.contracts.IListView;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,6 +70,11 @@ public class PatientMedicationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_medication, container, false);
+
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
+        });
 
         TabLayout tabLayout = rootView.findViewById(R.id.tabLayout);
         ViewPager2 viewPager = rootView.findViewById(R.id.viewPager);

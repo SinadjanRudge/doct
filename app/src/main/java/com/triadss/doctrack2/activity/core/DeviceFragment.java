@@ -29,16 +29,19 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.config.constants.BluetoothConstants;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.dto.WearableDeviceDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 import com.triadss.doctrack2.repoositories.WearableDeviceRepository;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,6 +82,12 @@ public class DeviceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_device_with_device, container, false);
+
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
+        });
+
         initializeViews(rootView);
         initializeListeners();
         initVitalSigns();

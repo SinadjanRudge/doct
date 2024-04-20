@@ -12,12 +12,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.adapters.PatientReportAdapter;
 import com.triadss.doctrack2.dto.ReportDto;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +84,11 @@ public class PatientReportFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerViewReports);
         search = (EditText) rootView.findViewById(R.id.search_bar);
 
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
+        });
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
 
@@ -129,20 +137,21 @@ public class PatientReportFragment extends Fragment {
                     }
                 });
             } else {
-            repository.getReportsFromUserFilter(user.getUid(),search.getText().toString().toLowerCase() ,new ReportsRepository.ReportsFilterCallback() {
-                @Override
-                public void onSuccess(List<ReportDto> reports) {
+                repository.getReportsFromUserFilter(user.getUid(),search.getText().toString().toLowerCase() ,new ReportsRepository.ReportsFilterCallback() {
+                    @Override
+                    public void onSuccess(List<ReportDto> reports) {
 
-                    PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    recyclerView.setAdapter(pageAdapter);
-                }
-                @Override
-                public void onError(String errorMessage) {
+                        PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        recyclerView.setAdapter(pageAdapter);
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
 
-                }
-            }); }
+                    }
+                });
+            }
         }
         public void beforeTextChanged(CharSequence s, int start, int count, int after){
         }
