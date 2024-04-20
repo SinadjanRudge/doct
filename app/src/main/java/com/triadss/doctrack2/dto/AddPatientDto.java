@@ -21,8 +21,6 @@ public class AddPatientDto implements Parcelable {
 
     private String phone;
 
-    private int Age;
-
     private String uid;
 
     public String getUid() {
@@ -121,21 +119,12 @@ public class AddPatientDto implements Parcelable {
         this.idNumber = idNumber;
     }
 
-    public int getAge() {
-        return Age;
-    }
-
-    public void setAge(int age) {
-        Age = age;
-    }
-
     public AddPatientDto(Parcel in) {
         // Read fields from Parcel
         idNumber = in.readString();
         fullName = in.readString();
         email = in.readString();
         address = in.readString();
-        Age = in.readInt();
         phone = in.readString();
         course = in.readString();
     }
@@ -164,7 +153,6 @@ public class AddPatientDto implements Parcelable {
         dest.writeString(fullName);
         dest.writeString(email);
         dest.writeString(address);
-        dest.writeInt(Age);
         dest.writeString(phone);
         dest.writeString(course);
     }

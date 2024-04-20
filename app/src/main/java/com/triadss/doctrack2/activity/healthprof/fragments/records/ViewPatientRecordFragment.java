@@ -80,7 +80,6 @@ public class ViewPatientRecordFragment extends Fragment {
             TextView patientName = rootView.findViewById(R.id.value_Name);
             TextView patientEmail = rootView.findViewById(R.id.value_Email);
             TextView patientAddress = rootView.findViewById(R.id.value_Address);
-            TextView patientAge = rootView.findViewById(R.id.value_Age);
             TextView patientPhone = rootView.findViewById(R.id.value_ContactNo);
             TextView patientCourse = rootView.findViewById(R.id.value_Course);
             TextView patientGender = rootView.findViewById(R.id.value_Gender);
@@ -96,7 +95,6 @@ public class ViewPatientRecordFragment extends Fragment {
                     patientName.setText(patient.getFullName());
                     patientEmail.setText(patient.getEmail());
                     patientAddress.setText(patient.getAddress());
-                    patientAge.setText(String.valueOf(patient.getAge()));
                     patientPhone.setText(patient.getPhone());
                     patientCourse.setText(patient.getCourse());
                     patientYear.setText(String.valueOf(patient.getYear()));

@@ -54,8 +54,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    EditText input_Email, editTextAddress, editTextPhone, editTextAge, editTextCourse, editTextIdNumber, editTextFullName, input_Status, input_contactNo, input_Year, input_Gender;
-    TextView error_patientID, error_Email, error_FullName, error_Age, error_Gender, error_Address, error_Status, error_Contact, error_Year, error_Course, error_DateBirth;
+     EditText input_Email, editTextAddress, editTextPhone, editTextCourse, editTextIdNumber, editTextFullName, input_Status, input_contactNo, input_Year, input_Gender;
+    TextView error_patientID, error_Email, error_FullName, error_Gender, error_Address, error_Status, error_Contact, error_Year, error_Course, error_DateBirth;
     Button getBirthDate;
     DateDto birthDate;
     FirebaseAuth mAuth;
@@ -132,7 +132,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         input_Email = rootView.findViewById(R.id.input_Email);
         editTextAddress = rootView.findViewById(R.id.input_address);
         editTextPhone = rootView.findViewById(R.id.input_contactNo);
-        editTextAge = rootView.findViewById(R.id.input_Age);
         editTextCourse = rootView.findViewById(R.id.input_course);
         editTextIdNumber = rootView.findViewById(R.id.input_patientID);
         editTextFullName = rootView.findViewById(R.id.input_fullName);
@@ -144,7 +143,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         error_patientID = rootView.findViewById(R.id.error_patientID);
         error_Email = rootView.findViewById(R.id.error_Email);
         error_FullName = rootView.findViewById(R.id.error_FullName);
-        error_Age = rootView.findViewById(R.id.error_Age);
         error_Gender = rootView.findViewById(R.id.error_Gender);
         error_Address = rootView.findViewById(R.id.error_Address);
         error_Status = rootView.findViewById(R.id.error_Status);
@@ -156,7 +154,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         error_patientID.setVisibility(rootView.INVISIBLE);
         error_Email.setVisibility(rootView.INVISIBLE);
         error_FullName.setVisibility(rootView.INVISIBLE);
-        error_Age.setVisibility(rootView.INVISIBLE);
         error_Gender.setVisibility(rootView.INVISIBLE);
         error_Address.setVisibility(rootView.INVISIBLE);
         error_Status.setVisibility(rootView.INVISIBLE);
@@ -204,7 +201,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                     && widgetPredicate(input_Email, containsAtSign)
                     && widgetPredicate(editTextAddress, isNotEmptyPredicate)
                     && widgetPredicate(editTextPhone, isNotEmptyPredicate)
-                    && widgetPredicate(editTextAge, isNotEmptyPredicate)
                     && widgetPredicate(editTextCourse, isNotEmptyPredicate)
                     && widgetPredicate(editTextIdNumber, isNotEmptyPredicate)
                     && widgetPredicate(editTextFullName, isNotEmptyPredicate)
@@ -223,7 +219,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             || value.isEmpty(), error_Email);
                     showTextViewWhenTrue(editTextAddress, (value) -> value.isEmpty(), error_Address);
                     showTextViewWhenTrue(editTextPhone, (value) -> value.isEmpty(), error_Contact);
-                    showTextViewWhenTrue(editTextAge, (value) -> value.isEmpty(), error_Age);
                     showTextViewWhenTrue(editTextCourse, (value) -> value.isEmpty(), error_Course);
                     showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty() || (value.length() < 6), error_patientID);
                     showTextViewWhenTrue(editTextFullName, (value) -> value.isEmpty(), error_FullName);
@@ -273,7 +268,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setFullName(String.valueOf(editTextFullName.getText()).trim());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
-        patientDto.setAge(Integer.parseInt(String.valueOf(editTextAge.getText())));
         patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
         patientDto.setIdNumber(String.valueOf(editTextIdNumber.getText()).trim());
         patientDto.setDateOfBirth(birthDate.ToStartDateTimestamp());
@@ -356,42 +350,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
             Toast.makeText(getContext(), DocTrackErrorMessage.GENERIC_ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
             ButtonManager.enableButton(nextButton);
-        }
-    }
-
-    /**
-     * Creates a report for a patient and saves it to Firestore.
-     *
-     * @param userId     The ID of the user for whom the report is created.
-     * @param patientDto The DTO (Data Transfer Object) containing patient information.
-     */
-    private void createReport(String userId, AddPatientDto patientDto) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference recordRef = db.collection(FireStoreCollection.REPORTS_TABLE).document(userId);
-        LocalDateTime currentDate = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DocTrackConstant.AUDIT_DATE_FORMAT);
-        String dateNow = currentDate.format(formatter);
-
-        Map<String, Object> recordData = new HashMap<>();
-        recordData.put(ReportModel.action, "ADD");
-        recordData.put(ReportModel.message, String.format("Patient id:%s name:%s has been created", userId, patientDto.getFullName()));
-        recordData.put(ReportModel.idNumber, patientDto.getIdNumber());
-        recordData.put(ReportModel.createdBy, dateNow);
-        recordData.put(ReportModel.updatedDate, dateNow);
-
-        // Check if mAuth and mContext are not null
-        if (mAuth != null && mAuth.getCurrentUser() != null && getContext() != null) {
-            recordRef.set(recordData, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {
-                        // Show success message if needed
-                        Toast.makeText(getContext(), "Report document added successfully", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        // Show error message
-                        Toast.makeText(getContext(), "Failed to add report: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        } else {
-            Toast.makeText(getContext(), "Failed to add report: ", Toast.LENGTH_SHORT).show();
         }
     }
 
