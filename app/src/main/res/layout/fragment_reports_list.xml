@@ -30,7 +30,7 @@
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="5dp"
                 android:background="@drawable/green_stroke"
-                android:hint=" Search Patient Name"
+                android:hint=" Search Reports"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.115"

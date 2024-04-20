@@ -132,6 +132,53 @@ public class AppointmentRepository {
 
 
     }
+
+
+    public void getAllPatientPendingAppointmentsRecent(String patientUid, int count, AppointmentPatientPendingFetchCallback callback) {
+        patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
+
+            @Override
+            public void onSuccess(List<AddPatientDto> patients) {
+                Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
+
+                appointmentsCollection
+                        .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
+                        .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
+                        .whereEqualTo(AppointmentsModel.patientId, patientUid)
+                        .orderBy(AppointmentsModel.createdAt, Query.Direction.ASCENDING)
+                        .limit(count)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                List<AppointmentDto> appointments = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                                    appointment.setDocumentId(document.getId().toString());
+                                    appointment.setUid(document.getId().toString());
+                                    String idNumber = patients
+                                            .stream()
+                                            .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
+                                            .findFirst().orElse(null).getIdNumber();
+                                    appointment.setPatientIdNumber(idNumber);
+                                    appointments.add(appointment);
+                                }
+                                callback.onSuccess(appointments);
+                            } else {
+                                Log.e(TAG, "Error getting appointments", task.getException());
+                                callback.onError(task.getException().getMessage());
+                            }
+                        });
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+
+            }
+        });
+
+
+    }
+
     public void getAllPatientStatusAppointments(String patientUid, AppointmentPatientStatusFetchCallback callback) {
         patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
             @Override
@@ -322,6 +369,55 @@ public class AppointmentRepository {
                             .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
                             .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
                             .orderBy(AppointmentsModel.dateOfAppointment, Query.Direction.DESCENDING)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                List<AppointmentDto> appointments = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                    AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                                    appointment.setUid(document.getId());
+                                    appointment.setDocumentId(document.getId());
+                                    String idNumber = patients
+                                            .stream()
+                                            .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
+                                            .findFirst().orElse(null).getIdNumber();
+                                    appointment.setPatientIdNumber(idNumber);
+
+                                    appointments.add(appointment);
+                                }
+                                callback.onSuccess(appointments);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(TAG, "Error fetching medicines", e);
+                                callback.onError(e.getMessage());
+                            });
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+
+                }
+            });
+
+
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
+
+    public void getPendingAppointmentsForHealthProfRecent(String healthProfId, int count, AppointmentFetchCallback callback)
+    {
+        if (user != null) {
+            patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
+                @Override
+                public void onSuccess(List<AddPatientDto> patients) {
+                    Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
+                    appointmentsCollection
+                            .whereEqualTo(AppointmentsModel.healthProfId, healthProfId)
+                            .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
+                            .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
+                            .orderBy(AppointmentsModel.dateOfAppointment, Query.Direction.ASCENDING)
+                            .limit(count)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 List<AppointmentDto> appointments = new ArrayList<>();
