@@ -56,12 +56,13 @@ public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragment
         TextView name;
         TextView idNumber;
         Button viewRecord;
+        View view;
 
         public PatientFragmentViewHolder(@NonNull View itemView) {
             super(itemView);
-            viewRecord = itemView.findViewById(R.id.viewPatientRecord);
             name = itemView.findViewById(R.id.textView_patientName);
             idNumber = itemView.findViewById(R.id.textView_patientId);
+            view = itemView;
         }
 
         public void update(AddPatientDto patient)
@@ -69,7 +70,7 @@ public class PatientFragmentAdapter extends RecyclerView.Adapter<PatientFragment
             name.setText(patient.getFullName());
             idNumber.setText(patient.getIdNumber());
 
-            viewRecord.setOnClickListener(v -> {
+            view.setOnClickListener(v -> {
                 callback.onPatientView(patient.getUid());
             });
         }
