@@ -6,35 +6,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_color">
 
-    <TextView
-        android:id="@+id/textview_vital_signs"
-        android:layout_width="407dp"
-        android:layout_height="81dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:background="@drawable/btn_green"
-        android:gravity="center"
-        android:text="Medication List"
-        android:textColor="@color/lightgreen"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
-
     <ScrollView
         android:layout_width="0dp"
-        android:layout_height="652dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.478"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_vital_signs"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/linearLayout3"
@@ -47,6 +25,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.319">
+
+            <TextView
+                android:id="@+id/textview_vital_signs"
+                android:layout_width="match_parent"
+                android:layout_height="81dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_green"
+                android:gravity="center"
+                android:text="Medication List"
+                android:textColor="@color/lightgreen"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:ignore="MissingConstraints" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -121,14 +116,7 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_color"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_bar_patient"
-                app:layout_constraintVertical_bias="1.0"
-                tools:ignore="MissingConstraints" />
+                android:paddingRight="5dp" />
 
             <Button
                 android:id="@+id/nextBtn"
@@ -137,13 +125,12 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="25dp"
                 android:backgroundTint="@color/green"
                 android:text="NEXT" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="250dp" />
+                android:layout_height="95dp" />
         </LinearLayout>
     </ScrollView>
 
