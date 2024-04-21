@@ -542,101 +542,110 @@ public class AppointmentRepository {
         selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
         selectedDateTime.setTime(new TimeDto(8, 0));
 
-        Timestamp EightToNine = selectedDateTime.ReschedToTimestamp();  selectedDateTime.setTime(new TimeDto(9, 0));
-        Timestamp NineToTen = selectedDateTime.ReschedToTimestamp();  selectedDateTime.setTime(new TimeDto(10, 0));
-        Timestamp TenToEleven = selectedDateTime.ReschedToTimestamp();  selectedDateTime.setTime(new TimeDto(11, 0));
-        Timestamp ElevenToTwelve = selectedDateTime.ReschedToTimestamp();  selectedDateTime.setTime(new TimeDto(12, 15));
-        Timestamp TwelveToOne = selectedDateTime.ReschedToTimestamp();  selectedDateTime.setTime(new TimeDto(13, 15));
-        Timestamp OneToTwo = selectedDateTime.ReschedToTimestamp();  selectedDateTime.setTime(new TimeDto(14, 0));
-        Timestamp TwoToThree = selectedDateTime.ReschedToTimestamp();  selectedDateTime.setTime(new TimeDto(15, 0));
-        Timestamp ThreeToFour = selectedDateTime.ReschedToTimestamp();  selectedDateTime.setTime(new TimeDto(16, 0));
-        Timestamp FourToFive = selectedDateTime.ReschedToTimestamp();
+        Timestamp EightToNine = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(9, 35));
+        Timestamp NineToTen = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(10, 30));
+        Timestamp TenToEleven = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(11, 30));
+        Timestamp ElevenToTwelve = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(12, 15));
+        Timestamp TwelveToOne = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(13, 30));
+        Timestamp OneToTwo = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(14, 0));
+        Timestamp TwoToThree = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(15, 0));
+        Timestamp ThreeToFour = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(16, 30));
+        Timestamp FourToFive = selectedDateTime.ToTimestampForTimePicker();
 
-            appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
-                    .whereEqualTo("status", "Ongoing")
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
 
-                        boolean freespaceA = true; boolean freespaceB = true; boolean freespaceC = true; boolean freespaceD = true;
-                        boolean freespaceE = true; boolean freespaceF = true; boolean freespaceG = true; boolean freespaceH = true;
-                        boolean freespaceI = true;
-                        ArrayList<String> TimeSlotList = new ArrayList<>();
-                        ArrayList<String> FreeTimeSlotList = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+        appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
+                .whereEqualTo("status", "Pending")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
 
-                            if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(EightToNine))) {
+                    boolean freespaceA = true; boolean freespaceB = true; boolean freespaceC = true; boolean freespaceD = true;
+                    boolean freespaceE = true; boolean freespaceF = true; boolean freespaceG = true; boolean freespaceH = true;
+                    boolean freespaceI = true;
+                    ArrayList<String> TimeSlotList = new ArrayList<>();
+                    ArrayList<String> FreeTimeSlotList = new ArrayList<>();
 
-                                freespaceA = false;
+//                        TimeSlotList.add(String.valueOf(Timeyear));
+//                        TimeSlotList.add(String.valueOf(Timemonth));
+//                        TimeSlotList.add(String.valueOf(Timeday));
+//                        selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
+//                        selectedDateTime.setTime(new TimeDto(15, 33));
+//                        TimeSlotList.add(String.valueOf(selectedDateTime.ToTimestampForTimePicker()));
 
-                            } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(NineToTen))) {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
 
-                                freespaceB = false;
+                        if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(EightToNine))) {
 
-                            } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(TenToEleven))) {
+                            freespaceA = false;
 
-                                freespaceC = false;
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(NineToTen))) {
 
-                            } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(ElevenToTwelve))) {
+                            freespaceB = false;
 
-                                freespaceD = false;
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(TenToEleven))) {
 
-                            } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(TwelveToOne))) {
+                            freespaceC = false;
 
-                                freespaceE = false;
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(ElevenToTwelve))) {
 
-                            } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(OneToTwo))) {
+                            freespaceD = false;
 
-                                freespaceF = false;
-                            } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(TwoToThree))) {
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(TwelveToOne))) {
 
-                                freespaceG = false;
+                            freespaceE = false;
 
-                            } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(ThreeToFour))) {
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(OneToTwo))) {
 
-                                freespaceH = false;
+                            freespaceF = false;
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(TwoToThree))) {
 
-                            } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(FourToFive))) {
+                            freespaceG = false;
 
-                                freespaceI = false;
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(ThreeToFour))) {
 
-                            }
+                            freespaceH = false;
 
-                           // TimeSlotList.add(String.valueOf(document.get("dateOfAppointment")));
-                        }
-                        if(goal.equals("Sunday")){
-                             freespaceA = false;  freespaceB = false;  freespaceC = false;  freespaceD = false;
-                             freespaceE = false;  freespaceF = false;  freespaceG = false;  freespaceH = false;
-                             freespaceI = false;
-                        }
-                        if(goal.equals("Saturday")){
-                             freespaceE = false; freespaceF = false;  freespaceG = false;  freespaceH = false;
-                             freespaceI = false;
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(FourToFive))) {
+
+                            freespaceI = false;
+
                         }
 
-                        if(freespaceA) {TimeSlotList.add("8:00 am - 9:00 am");} else {TimeSlotList.add("Occupied");}
+                        // TimeSlotList.add(String.valueOf(document.get("dateOfAppointment")));
+                    }
+                    if(goal.equals("Sunday")){
+                        freespaceA = false;  freespaceB = false;  freespaceC = false;  freespaceD = false;
+                        freespaceE = false;  freespaceF = false;  freespaceG = false;  freespaceH = false;
+                        freespaceI = false;
+                    }
+                    if(goal.equals("Saturday")){
+                        freespaceE = false; freespaceF = false;  freespaceG = false;  freespaceH = false;
+                        freespaceI = false;
+                    }
 
-                        if(freespaceB) {TimeSlotList.add("9:00 am - 10:00 am");} else{TimeSlotList.add("Occupied");}
+                    if(freespaceA) {TimeSlotList.add("8:00 am - 9:00 am");} else {TimeSlotList.add("Not available");}
 
-                        if(freespaceC) {TimeSlotList.add("10:00 am - 11:00 am");} else{TimeSlotList.add("Occupied");}
+                    if(freespaceB) {TimeSlotList.add("9:00 am - 10:00 am");} else{TimeSlotList.add("Not available");}
 
-                        if(freespaceD) {TimeSlotList.add("11:00 am - 12:00 pm");} else{TimeSlotList.add("Occupied");}
+                    if(freespaceC) {TimeSlotList.add("10:00 am - 11:00 am");} else{TimeSlotList.add("Not available");}
 
-                        if(freespaceE) {TimeSlotList.add("12:00 pm - 1:00 pm");} else{TimeSlotList.add("Occupied");}
+                    if(freespaceD) {TimeSlotList.add("11:00 am - 12:00 pm");} else{TimeSlotList.add("Not available");}
 
-                        if(freespaceF) {TimeSlotList.add("1:00 pm - 2:00 pm");} else{TimeSlotList.add("Occupied");}
+                    if(freespaceE) {TimeSlotList.add("12:00 pm - 1:00 pm");} else{TimeSlotList.add("Not available");}
 
-                        if(freespaceG) {TimeSlotList.add("2:00 pm - 3:00 pm");} else{TimeSlotList.add("Occupied");}
+                    if(freespaceF) {TimeSlotList.add("1:00 pm - 2:00 pm");} else{TimeSlotList.add("Not available");}
 
-                        if(freespaceH) {TimeSlotList.add("3:00 pm - 4:00 pm");} else{TimeSlotList.add("Occupied");}
+                    if(freespaceG) {TimeSlotList.add("2:00 pm - 3:00 pm");} else{TimeSlotList.add("Not available");}
 
-                        if(freespaceI) {TimeSlotList.add("4:00 pm - 5:00 pm");} else{TimeSlotList.add("Occupied");}
+                    if(freespaceH) {TimeSlotList.add("3:00 pm - 4:00 pm");} else{TimeSlotList.add("Not available");}
 
-                        callback.onSuccess(TimeSlotList);
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Error fetching medicines", e);
-                        callback.onError(e.getMessage());
-                    });
+                    if(freespaceI) {TimeSlotList.add("4:00 pm - 5:00 pm");} else{TimeSlotList.add("Not available");}
+
+                    callback.onSuccess(TimeSlotList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching medicines", e);
+                    callback.onError(e.getMessage());
+                });
     }
 
     public interface AppointmentCancelCallback {
