@@ -97,16 +97,16 @@ public class PatientAppointmentPendingAdapter
             TimePick = "12:00";
         }
         if(TimePick.equals("1:00 pm - 2:00 pm")){
-            TimePick = "1:00";
+            TimePick = "13:00";
         }
         if(TimePick.equals("2:00 pm - 3:00 pm")){
-            TimePick = "2:00";
+            TimePick = "14:00";
         }
         if(TimePick.equals("3:00 pm - 4:00 pm")){
-            TimePick = "3:00";
+            TimePick = "15:00";
         }
         if(TimePick.equals("4:00 pm - 5:00 pm")){
-            TimePick = "4:00";
+            TimePick = "16:00";
         }
         this.TimePick = TimePick;
     }
@@ -423,12 +423,12 @@ public class PatientAppointmentPendingAdapter
                         ButtonManager.disableButton(confirmBtn);
 
                         notificationRepository.NotifyRescheduledAppointmentToPatient(dto.getDocumentId(),
-                                DateTimeDto.ToDateTimeDto(selectedDateTime.ToTimestamp()),
+                                DateTimeDto.ToDateTimeDto(selectedDateTime.ToTimestampForTimePicker()),
                                 new NotificationRepository.NotificationPushedCallback() {
                                     @Override
                                     public void onNotificationDone() {
                                         appointmentRepository.rescheduleAppointment(dto.getDocumentId(),
-                                                selectedDateTime.ToTimestamp(),
+                                                selectedDateTime.ToTimestampForTimePicker(),
                                                 new AppointmentRepository.AppointmentRescheduleCallback() {
 
                                                     @Override
