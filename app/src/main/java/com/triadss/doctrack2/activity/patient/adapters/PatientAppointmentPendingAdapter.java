@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
@@ -148,7 +149,7 @@ public class PatientAppointmentPendingAdapter
                                             ButtonManager.enableButton(yesButton);
                                         }
                                     });
-                            appointmentRepository.addReport(appointment.getDocumentId(), "CANCEL",
+                            appointmentRepository.addReport(appointment.getDocumentId(), ReportConstants.CANCELLED_APPOINTMENT,
                                     new AppointmentRepository.ReportCallback() {
                                         @Override
                                         public void onSuccess(String appointmentId) {
@@ -290,7 +291,7 @@ public class PatientAppointmentPendingAdapter
                                     }
                                 });
 
-                        appointmentRepository.addReport(dto.getDocumentId(), "RESCHEDULE",
+                        appointmentRepository.addReport(dto.getDocumentId(), ReportConstants.RESCHEDULED_APPOINTMENT,
                                 new AppointmentRepository.ReportCallback() {
                                     @Override
                                     public void onSuccess(String appointmentId) {
