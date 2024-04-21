@@ -62,7 +62,7 @@ public class PatientHomeMedicationAdapter extends RecyclerView.Adapter<PatientHo
 
         public void update(MedicationDto medication)
         {
-            medName.setText(medication.getNote());
+            medName.setText(medication.getMedicine());
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(medication.getTimestamp());
             this.time.setText(dateTime.ToString());
