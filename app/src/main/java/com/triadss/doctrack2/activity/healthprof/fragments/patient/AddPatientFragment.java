@@ -119,7 +119,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_record_add_patient, container, false);
-        TextView toolbar = rootView.findViewById(R.id.textview_personal_information);
 
         // Enable the back button
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
@@ -156,11 +155,11 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         error_FullName.setVisibility(rootView.INVISIBLE);
         error_Gender.setVisibility(rootView.INVISIBLE);
         error_Address.setVisibility(rootView.INVISIBLE);
-        error_Status.setVisibility(rootView.INVISIBLE);
         error_Contact.setVisibility(rootView.INVISIBLE);
         error_Year.setVisibility(rootView.INVISIBLE);
         error_Course.setVisibility(rootView.INVISIBLE);
         error_DateBirth.setVisibility(rootView.INVISIBLE);
+        error_Status.setVisibility(rootView.INVISIBLE);
 
         getBirthDate.setOnClickListener((View.OnClickListener) v -> {
             // Get the current date

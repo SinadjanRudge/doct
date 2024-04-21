@@ -38,6 +38,12 @@ public class DateTimeDto {
         return new Timestamp(extractedDate);
     }
 
+    public Timestamp ToTimestampForTimePicker()
+    {
+        Date extractedDate = new Date(date.getYear() - 1900,
+                date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute());
+        return new Timestamp(extractedDate);
+    }
     public String ToString() {
         return date.ToString() + " " + time.ToString();
     }
