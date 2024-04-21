@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.adapters.PatientAppointmentFragmentPageAdapter;
+import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.utils.FragmentFunctions;
 
@@ -89,7 +90,7 @@ public class PatientAppointmentFragment extends Fragment {
 
         FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
         homeBtn.setOnClickListener(view -> {
-            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new PatientHomeFragment());
         });
 
         pageAdapter = new PatientAppointmentFragmentPageAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
@@ -121,15 +122,15 @@ public class PatientAppointmentFragment extends Fragment {
             @Override
             public  void onPageSelected(int position)
             {
-                super.onPageSelected(position);
-                tabLayout.selectTab(tabLayout.getTabAt(position));
+            super.onPageSelected(position);
+            tabLayout.selectTab(tabLayout.getTabAt(position));
 
-                Fragment fragment = getParentFragmentManager().findFragmentByTag("f" + position);
-                boolean fragmentIsListView = fragment instanceof IListView;
-                boolean fragmentIsNotNull = fragment != null;
-                if (fragmentIsNotNull && fragmentIsListView) {
-                    ((IListView) fragment).ReloadList();
-                }
+            Fragment fragment = getParentFragmentManager().findFragmentByTag("f" + position);
+            boolean fragmentIsListView = fragment instanceof IListView;
+            boolean fragmentIsNotNull = fragment != null;
+            if (fragmentIsNotNull && fragmentIsListView) {
+                ((IListView) fragment).ReloadList();
+            }
             }
         });
 

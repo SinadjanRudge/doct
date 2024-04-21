@@ -129,14 +129,10 @@ public class AppointmentRepository {
 
             }
         });
-
-
     }
-
 
     public void getAllPatientPendingAppointmentsRecent(String patientUid, int count, AppointmentPatientPendingFetchCallback callback) {
         patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
-
             @Override
             public void onSuccess(List<AddPatientDto> patients) {
                 Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
@@ -175,8 +171,6 @@ public class AppointmentRepository {
 
             }
         });
-
-
     }
 
     public void getAllPatientStatusAppointments(String patientUid, AppointmentPatientStatusFetchCallback callback) {

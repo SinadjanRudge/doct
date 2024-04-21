@@ -15,6 +15,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.adapters.PatientMedicationFragmentPageAdapter;
+import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.utils.FragmentFunctions;
 
@@ -73,7 +74,7 @@ public class PatientMedicationFragment extends Fragment {
 
         FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
         homeBtn.setOnClickListener(view -> {
-            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new PatientHomeFragment());
         });
 
         TabLayout tabLayout = rootView.findViewById(R.id.tabLayout);

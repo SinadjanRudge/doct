@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.adapters.PatientReportAdapter;
+import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
 import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.dto.ReportDto;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
@@ -92,7 +93,7 @@ public class PatientReportFragment extends Fragment {
 
         FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
         homeBtn.setOnClickListener(view -> {
-            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new PatientHomeFragment());
         });
 
         appointmentToggle = rootView.findViewById(R.id.appointmentToggle);
