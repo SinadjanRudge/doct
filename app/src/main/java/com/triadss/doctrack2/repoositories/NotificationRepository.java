@@ -102,7 +102,7 @@ public class NotificationRepository {
 
             @Override
             public void onError(String errorMessage) {
-
+                System.out.println();
             }
         });
     }
