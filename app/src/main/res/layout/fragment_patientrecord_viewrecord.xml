@@ -389,6 +389,146 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView_bloodPressure"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.8"-->
+<!--                        android:text="Blood Pressure:" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/value_bloodPressure"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.4"-->
+<!--                        android:text="BP1" />-->
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView_temperature"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.8"-->
+<!--                        android:text="Temperature:" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/value_temperature"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.4"-->
+<!--                        android:text="T1" />-->
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView_SpO2"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.8"-->
+<!--                        android:text="SpO2:" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/value_SpO2"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.4"-->
+<!--                        android:text="SP02_1" />-->
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView_pulseRate"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.8"-->
+<!--                        android:text="Pulse Rate:" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/value_pulseRate"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.4"-->
+<!--                        android:text="PR" />-->
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView_weight"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.8"-->
+<!--                        android:text="Weight:" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/value_weight"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.4"-->
+<!--                        android:text="W1" />-->
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView_height"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.8"-->
+<!--                        android:text="Height:" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/value_height"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.4"-->
+<!--                        android:text="H1" />-->
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView_BMI"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.8"-->
+<!--                        android:text="BMI:" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/value_BMI"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="0.4"-->
+<!--                        android:text="BMI1" />-->
+<!--                </LinearLayout>-->
+                <!-- Blood Pressure -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -396,19 +536,48 @@
 
                     <TextView
                         android:id="@+id/textView_bloodPressure"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.8"
                         android:text="Blood Pressure:" />
 
                     <TextView
-                        android:id="@+id/value_bloodPressure"
-                        android:layout_width="match_parent"
+                        android:id="@+id/value_bp1"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.4"
-                        android:text="Blood Pressure" />
+                        android:layout_weight="0.2"
+                        android:text="BP1" />
+
+                    <TextView
+                        android:id="@+id/value_bp2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="BP2" />
+
+                    <TextView
+                        android:id="@+id/value_bp3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="BP3" />
+
+                    <TextView
+                        android:id="@+id/value_bp4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="BP4" />
+
+                    <TextView
+                        android:id="@+id/value_bp5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="BP5" />
                 </LinearLayout>
 
+                <!-- Temperature -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -416,19 +585,49 @@
 
                     <TextView
                         android:id="@+id/textView_temperature"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.8"
                         android:text="Temperature:" />
 
                     <TextView
-                        android:id="@+id/value_temperature"
-                        android:layout_width="match_parent"
+                        android:id="@+id/value_temp1"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.4"
-                        android:text="Temperature" />
+                        android:layout_weight="0.2"
+                        android:text="T1" />
+
+                    <TextView
+                        android:id="@+id/value_temp2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="T2" />
+
+                    <TextView
+                        android:id="@+id/value_temp3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="T3" />
+
+                    <TextView
+                        android:id="@+id/value_temp4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="T4" />
+
+                    <TextView
+                        android:id="@+id/value_temp5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="T5" />
+
                 </LinearLayout>
 
+                <!-- SpO2 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -436,19 +635,45 @@
 
                     <TextView
                         android:id="@+id/textView_SpO2"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.8"
-                        android:text="SpO2:" />
+                        android:text="Sp02" />
 
                     <TextView
-                        android:id="@+id/value_SpO2"
-                        android:layout_width="match_parent"
+                        android:id="@+id/value_spo2_1"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.4"
-                        android:text="SpO2" />
+                        android:layout_weight="0.2"
+                        android:text="0" />
+                    <TextView
+                        android:id="@+id/value_spo2_2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="0" />
+                    <TextView
+                        android:id="@+id/value_spo2_3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="0" />
+                    <TextView
+                        android:id="@+id/value_spo2_4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="0" />
+                    <TextView
+                        android:id="@+id/value_spo2_5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="0" />
+
                 </LinearLayout>
 
+                <!-- Pulse Rate -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -456,39 +681,49 @@
 
                     <TextView
                         android:id="@+id/textView_pulseRate"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.8"
                         android:text="Pulse Rate:" />
 
                     <TextView
-                        android:id="@+id/value_pulseRate"
-                        android:layout_width="match_parent"
+                        android:id="@+id/value_pulseRate1"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.4"
-                        android:text="Pulse Rate" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                        android:layout_weight="0.2"
+                        android:text="PR1" />
 
                     <TextView
-                        android:id="@+id/textView_weight"
-                        android:layout_width="match_parent"
+                        android:id="@+id/value_pulseRate2"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.8"
-                        android:text="Weight:" />
+                        android:layout_weight="0.2"
+                        android:text="PR2" />
 
                     <TextView
-                        android:id="@+id/value_weight"
-                        android:layout_width="match_parent"
+                        android:id="@+id/value_pulseRate3"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.4"
-                        android:text="Weight" />
+                        android:layout_weight="0.2"
+                        android:text="PR3" />
+
+                    <TextView
+                        android:id="@+id/value_pulseRate4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="PR4" />
+
+                    <TextView
+                        android:id="@+id/value_pulseRate5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="PR5" />
+
                 </LinearLayout>
 
+                <!-- Height -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -496,19 +731,98 @@
 
                     <TextView
                         android:id="@+id/textView_height"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.8"
                         android:text="Height:" />
 
                     <TextView
-                        android:id="@+id/value_height"
-                        android:layout_width="match_parent"
+                        android:id="@+id/value_height1"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.4"
-                        android:text="Height" />
+                        android:layout_weight="0.2"
+                        android:text="H1" />
+
+                    <TextView
+                        android:id="@+id/value_height2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="H2" />
+
+                    <TextView
+                        android:id="@+id/value_height3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="H3" />
+
+
+                    <TextView
+                        android:id="@+id/value_height4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="H4" />
+
+                    <TextView
+                        android:id="@+id/value_height5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="H5" />
                 </LinearLayout>
 
+                <!-- Weight -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView_weight"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.8"
+                        android:text="Height:" />
+
+                    <TextView
+                        android:id="@+id/value_weight1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="W1" />
+
+                    <TextView
+                        android:id="@+id/value_weight2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="W2" />
+
+                    <TextView
+                        android:id="@+id/value_weight3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="W3" />
+
+                    <TextView
+                        android:id="@+id/value_weight4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="W4" />
+
+                    <TextView
+                        android:id="@+id/value_weight5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="W5" />
+                </LinearLayout>
+
+                <!-- BMI -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -516,17 +830,47 @@
 
                     <TextView
                         android:id="@+id/textView_BMI"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.8"
                         android:text="BMI:" />
 
                     <TextView
-                        android:id="@+id/value_BMI"
-                        android:layout_width="match_parent"
+                        android:id="@+id/value_BMI1"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.4"
-                        android:text="BMI" />
+                        android:layout_weight="0.2"
+                        android:text="BMI1" />
+
+                    <TextView
+                        android:id="@+id/value_BMI2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="BMI2" />
+
+
+                    <TextView
+                        android:id="@+id/value_BMI3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="BMI3" />
+
+                    <TextView
+                        android:id="@+id/value_BMI4"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="BMI4" />
+
+                    <TextView
+                        android:id="@+id/value_BMI5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:text="BMI5" />
+
                 </LinearLayout>
 
             </LinearLayout>

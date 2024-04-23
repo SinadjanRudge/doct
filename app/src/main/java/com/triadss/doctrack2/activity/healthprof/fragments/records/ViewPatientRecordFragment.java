@@ -142,13 +142,13 @@ public class ViewPatientRecordFragment extends Fragment {
             });
 
             //Patient Vital Signs
-            TextView bloodPressure = rootView.findViewById(R.id.value_bloodPressure);
-            TextView temperature = rootView.findViewById(R.id.value_temperature);
-            TextView spo2 = rootView.findViewById(R.id.value_SpO2);
-            TextView pulseRate = rootView.findViewById(R.id.value_pulseRate);
-            TextView weight = rootView.findViewById(R.id.value_weight);
-            TextView height = rootView.findViewById(R.id.value_height);
-            TextView BMI = rootView.findViewById(R.id.value_BMI);
+            TextView bloodPressure = rootView.findViewById(R.id.value_bp1);
+            TextView temperature = rootView.findViewById(R.id.value_temp1);
+            TextView spo2 = rootView.findViewById(R.id.value_spo2_1);
+            TextView pulseRate = rootView.findViewById(R.id.value_pulseRate1);
+            TextView weight = rootView.findViewById(R.id.value_weight1);
+            TextView height = rootView.findViewById(R.id.value_height1);
+            TextView BMI = rootView.findViewById(R.id.value_BMI1);
             vitalSignsRepository.getVitalSignOfPatient(patientUid, new VitalSignsRepository.FetchCallback() {
                 @Override
                 public void onSuccess(VitalSignsDto vitalSigns) {
