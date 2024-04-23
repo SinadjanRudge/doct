@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,27 +22,17 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.records.AddMedicalHistory;
-import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.DocTrackErrorMessage;
-import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.constants.SessionConstants;
-import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +46,9 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-     EditText input_Email, editTextAddress, editTextPhone, editTextCourse, editTextIdNumber, editTextFullName, input_Status, input_contactNo, input_Year, input_Gender;
-    TextView error_patientID, error_Email, error_FullName, error_Gender, error_Address, error_Status, error_Contact, error_Year, error_Course, error_DateBirth;
+    EditText input_Email, editTextAddress, editTextPhone, editTextIdNumber, editTextFullName;
+    TextView error_patientID, error_Email, error_FullName, error_Address, error_Contact, error_DateBirth;
+    Spinner input_Status, input_course, input_Year, input_Gender;
     Button getBirthDate;
     DateDto birthDate;
     FirebaseAuth mAuth;
@@ -131,35 +124,54 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         input_Email = rootView.findViewById(R.id.input_Email);
         editTextAddress = rootView.findViewById(R.id.input_address);
         editTextPhone = rootView.findViewById(R.id.input_contactNo);
-        editTextCourse = rootView.findViewById(R.id.input_course);
+        input_course = rootView.findViewById(R.id.input_course);
+        ArrayAdapter<CharSequence> courseAdapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.course,
+                android.R.layout.simple_spinner_item
+        );
+        courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        input_course.setAdapter(courseAdapter);
+
         editTextIdNumber = rootView.findViewById(R.id.input_patientID);
         editTextFullName = rootView.findViewById(R.id.input_fullName);
         getBirthDate = rootView.findViewById(R.id.selectBirthDate);
-        input_Status = rootView.findViewById(R.id.input_Status);
         input_Year = rootView.findViewById(R.id.input_Year);
+        ArrayAdapter<CharSequence> yearAdapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.year,
+                android.R.layout.simple_spinner_item
+        );
+        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        input_Year.setAdapter(yearAdapter);
+
         input_Gender = rootView.findViewById(R.id.input_Gender);
+        ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.gender,
+                android.R.layout.simple_spinner_item
+        );
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        input_Gender.setAdapter(genderAdapter);
+
+        input_Status = rootView.findViewById(R.id.input_Status);
+        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(requireContext(),
+            R.array.civilStatus,
+            android.R.layout.simple_spinner_item
+        );
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        input_Status.setAdapter(statusAdapter);
 
         error_patientID = rootView.findViewById(R.id.error_patientID);
         error_Email = rootView.findViewById(R.id.error_Email);
         error_FullName = rootView.findViewById(R.id.error_FullName);
-        error_Gender = rootView.findViewById(R.id.error_Gender);
         error_Address = rootView.findViewById(R.id.error_Address);
-        error_Status = rootView.findViewById(R.id.error_Status);
         error_Contact = rootView.findViewById(R.id.error_Contact);
-        error_Year = rootView.findViewById(R.id.error_Year);
-        error_Course = rootView.findViewById(R.id.error_Course);
         error_DateBirth = rootView.findViewById(R.id.error_DateBirth);
 
         error_patientID.setVisibility(rootView.INVISIBLE);
         error_Email.setVisibility(rootView.INVISIBLE);
         error_FullName.setVisibility(rootView.INVISIBLE);
-        error_Gender.setVisibility(rootView.INVISIBLE);
         error_Address.setVisibility(rootView.INVISIBLE);
         error_Contact.setVisibility(rootView.INVISIBLE);
-        error_Year.setVisibility(rootView.INVISIBLE);
-        error_Course.setVisibility(rootView.INVISIBLE);
         error_DateBirth.setVisibility(rootView.INVISIBLE);
-        error_Status.setVisibility(rootView.INVISIBLE);
 
         getBirthDate.setOnClickListener((View.OnClickListener) v -> {
             // Get the current date
@@ -200,13 +212,9 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                     && widgetPredicate(input_Email, containsAtSign)
                     && widgetPredicate(editTextAddress, isNotEmptyPredicate)
                     && widgetPredicate(editTextPhone, isNotEmptyPredicate)
-                    && widgetPredicate(editTextCourse, isNotEmptyPredicate)
                     && widgetPredicate(editTextIdNumber, isNotEmptyPredicate)
                     && widgetPredicate(editTextFullName, isNotEmptyPredicate)
-                    && widgetPredicate(input_Status, isNotEmptyPredicate)
                     && widgetPredicate(editTextPhone, isNotEmptyPredicate)
-                    && widgetPredicate(input_Year, isNotEmptyPredicate)
-                    && widgetPredicate(input_Gender,isNotEmptyPredicate)
                     && widgetPredicate(getBirthDate, notContainsSelectDate)
                     && widgetPredicate(editTextIdNumber, lengthAtleast6)
                 ) {
@@ -218,12 +226,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             || value.isEmpty(), error_Email);
                     showTextViewWhenTrue(editTextAddress, (value) -> value.isEmpty(), error_Address);
                     showTextViewWhenTrue(editTextPhone, (value) -> value.isEmpty(), error_Contact);
-                    showTextViewWhenTrue(editTextCourse, (value) -> value.isEmpty(), error_Course);
                     showTextViewWhenTrue(editTextIdNumber, (value) -> value.isEmpty() || (value.length() < 6), error_patientID);
                     showTextViewWhenTrue(editTextFullName, (value) -> value.isEmpty(), error_FullName);
-                    showTextViewWhenTrue(input_Status, (value) -> value.isEmpty(), error_Status);
-                    showTextViewWhenTrue(input_Year, (value) -> value.isEmpty(), error_Year);
-                    showTextViewWhenTrue(input_Gender, (value) -> value.isEmpty(), error_Gender);
                     showTextViewWhenTrue(getBirthDate, (value) -> value.contains("Select Date"), error_DateBirth);
                 }
             }
@@ -267,12 +271,12 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setFullName(String.valueOf(editTextFullName.getText()).trim());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
-        patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
+        patientDto.setCourse(String.valueOf(input_course.getSelectedItem()).trim());
         patientDto.setIdNumber(String.valueOf(editTextIdNumber.getText()).trim());
         patientDto.setDateOfBirth(birthDate.ToStartDateTimestamp());
-        patientDto.setYear(Integer.parseInt(String.valueOf(input_Year.getText())));
-        patientDto.setStatus(String.valueOf(input_Status.getText()).trim());
-        patientDto.setGender(String.valueOf(input_Gender.getText()).trim());
+        patientDto.setYear(Integer.parseInt(String.valueOf(input_Year.getSelectedItem())));
+        patientDto.setStatus(String.valueOf(input_Status.getSelectedItem()).trim());
+        patientDto.setGender(String.valueOf(input_Gender.getSelectedItem()).trim());
 
         String email =sharedPref.getString(SessionConstants.Email, "");
         String password = sharedPref.getString(SessionConstants.Password, "");
