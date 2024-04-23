@@ -174,15 +174,12 @@
                         android:text="Address:"
                         android:textSize="15sp" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/input_address"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="@drawable/green_stroke"
-                        android:hint="Enter address"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp" />
-
+                        android:hint="Address"
+                        android:text="" />
 
                     <TextView
                         android:id="@+id/error_Address"
@@ -314,35 +311,12 @@
                             android:layout_marginEnd="10dp"
                             android:layout_weight="1.05" />
 
-                        <!--                        <EditText-->
-                        <!--                            android:id="@+id/input_course"-->
-                        <!--                            android:layout_width="match_parent"-->
-                        <!--                            android:layout_height="50dp"-->
-                        <!--                            android:layout_marginEnd="10dp"-->
-                        <!--                            android:layout_weight="1"-->
-                        <!--                            android:background="@drawable/green_stroke"-->
-                        <!--                            android:hint="Enter course"-->
-                        <!--                            android:paddingStart="8dp"-->
-                        <!--                            android:paddingEnd="8dp" />-->
-
                         <Spinner
                             android:id="@+id/input_Year"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_weight="0.85" />
-
-                        <!--                        <EditText-->
-                        <!--                            android:id="@+id/input_Year"-->
-                        <!--                            android:layout_width="match_parent"-->
-                        <!--                            android:layout_height="50dp"-->
-                        <!--                            android:layout_marginStart="10dp"-->
-                        <!--                            android:layout_weight="1"-->
-                        <!--                            android:background="@drawable/green_stroke"-->
-                        <!--                            android:hint="Enter year"-->
-                        <!--                            android:inputType="phone"-->
-                        <!--                            android:paddingStart="8dp"-->
-                        <!--                            android:paddingEnd="8dp" />-->
 
                     </LinearLayout>
 

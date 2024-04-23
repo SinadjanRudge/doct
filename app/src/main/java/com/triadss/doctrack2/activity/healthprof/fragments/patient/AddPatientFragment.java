@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -46,7 +47,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    EditText input_Email, editTextAddress, editTextPhone, editTextIdNumber, editTextFullName;
+    EditText input_Email, editTextPhone, editTextIdNumber, editTextFullName;
+    AutoCompleteTextView editTextAddress;
     TextView error_patientID, error_Email, error_FullName, error_Address, error_Contact, error_DateBirth;
     Spinner input_Status, input_course, input_Year, input_Gender;
     Button getBirthDate;
@@ -123,6 +125,12 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         mAuth = FirebaseAuth.getInstance();
         input_Email = rootView.findViewById(R.id.input_Email);
         editTextAddress = rootView.findViewById(R.id.input_address);
+        ArrayAdapter<CharSequence> addressAdapter = ArrayAdapter.createFromResource(requireContext(),
+            R.array.address,
+            android.R.layout.simple_dropdown_item_1line
+        );
+        editTextAddress.setAdapter(addressAdapter);
+
         editTextPhone = rootView.findViewById(R.id.input_contactNo);
         input_course = rootView.findViewById(R.id.input_course);
         ArrayAdapter<CharSequence> courseAdapter = ArrayAdapter.createFromResource(requireContext(),

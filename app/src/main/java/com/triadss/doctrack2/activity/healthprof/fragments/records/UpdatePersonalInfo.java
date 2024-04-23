@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -39,8 +40,9 @@ public class UpdatePersonalInfo extends Fragment {
     // TODO: Rename and change types of parameters
     private String patientUid;
 
-    EditText editTextAddress, editTextPhone,
+    EditText editTextPhone,
         editTextEmail, editTextFullname, editTextIdNumber;
+    AutoCompleteTextView editTextAddress;
     Spinner edit_course;
     ArrayAdapter<CharSequence> courseAdapter;
     TextView errorAddress, errorPhone;
@@ -85,6 +87,12 @@ public class UpdatePersonalInfo extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_record, container, false);
         editTextAddress = rootView.findViewById(R.id.input_address);
+        ArrayAdapter<CharSequence> addressAdapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.address,
+                android.R.layout.simple_dropdown_item_1line
+        );
+        editTextAddress.setAdapter(addressAdapter);
+
         editTextPhone = rootView.findViewById(R.id.input_contactNo);
         edit_course = rootView.findViewById(R.id.input_course);
         courseAdapter = ArrayAdapter.createFromResource(requireContext(),
