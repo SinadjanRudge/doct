@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,9 +39,11 @@ public class UpdatePersonalInfo extends Fragment {
     // TODO: Rename and change types of parameters
     private String patientUid;
 
-    EditText editTextAddress, editTextPhone, editTextCourse,
+    EditText editTextAddress, editTextPhone,
         editTextEmail, editTextFullname, editTextIdNumber;
-    TextView errorAddress, errorPhone, errorCourse;
+    Spinner edit_course;
+    ArrayAdapter<CharSequence> courseAdapter;
+    TextView errorAddress, errorPhone;
     PatientRepository patientRepository = new PatientRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
     String loggedInUserId;
@@ -82,18 +86,23 @@ public class UpdatePersonalInfo extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_update_record, container, false);
         editTextAddress = rootView.findViewById(R.id.input_address);
         editTextPhone = rootView.findViewById(R.id.input_contactNo);
-        editTextCourse = rootView.findViewById(R.id.input_course);
+        edit_course = rootView.findViewById(R.id.input_course);
+        courseAdapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.course,
+                android.R.layout.simple_spinner_item
+        );
+        courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        edit_course.setAdapter(courseAdapter);
+
         editTextEmail = rootView.findViewById(R.id.email);
         editTextFullname = rootView.findViewById(R.id.name);
         editTextIdNumber = rootView.findViewById(R.id.idNumber);
 
         errorAddress = rootView.findViewById(R.id.errorAddress);
         errorPhone = rootView.findViewById(R.id.errorPhone);
-        errorCourse  = rootView.findViewById(R.id.errorCourse);
 
         errorAddress.setVisibility(rootView.INVISIBLE);
         errorPhone.setVisibility(rootView.INVISIBLE);
-        errorCourse.setVisibility(rootView.INVISIBLE);
 
         populatePersonalInfo();
 
@@ -104,7 +113,6 @@ public class UpdatePersonalInfo extends Fragment {
                 Function<String, Boolean> isNotEmptyPredicate = (val) -> !val.isEmpty();
                 if(widgetPredicate(editTextAddress, isNotEmptyPredicate)
                 && widgetPredicate(editTextPhone, isNotEmptyPredicate)
-                && widgetPredicate(editTextCourse, isNotEmptyPredicate)
                 )
                 {
                     updatePersonalInfo();
@@ -113,7 +121,6 @@ public class UpdatePersonalInfo extends Fragment {
                 {
                     showTextViewWhenTrue(editTextAddress, (value) -> value.isEmpty(), errorAddress);
                     showTextViewWhenTrue(editTextPhone, (value) -> value.isEmpty(), errorPhone);
-                    showTextViewWhenTrue(editTextCourse, (value) -> value.isEmpty(), errorCourse);
                 }
             }
         });
@@ -155,7 +162,8 @@ public class UpdatePersonalInfo extends Fragment {
                 editTextFullname.setText(patient.getFullName());
                 editTextAddress.setText(patient.getAddress());
                 editTextPhone.setText(patient.getPhone());
-                editTextCourse.setText(patient.getCourse());
+                int coursePosition = courseAdapter.getPosition(patient.getCourse());
+                edit_course.setSelection(coursePosition);
                 editTextIdNumber.setText(patient.getIdNumber());
             }
 
@@ -173,7 +181,7 @@ public class UpdatePersonalInfo extends Fragment {
         patientDto.setFullName(editTextFullname.getText().toString());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
-        patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
+        patientDto.setCourse(String.valueOf(edit_course.getSelectedItem()).trim());
         
         ButtonManager.disableButton(nextButton);
 
