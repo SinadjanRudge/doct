@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
+import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.AppointmentDto;
@@ -19,6 +20,7 @@ import com.triadss.doctrack2.dto.ReportDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +50,7 @@ public class ReportsRepository {
             @Override
             public void onSuccess(AppointmentDto appointment) {
                 addReport(createdBy,
-                    "ACEEPTED APPOINTMENT",
+                        ReportConstants.ACCEPTED_APPOINTMENT,
                            String.format("Accepted appointment of %s at %s",
                                 appointment.getNameOfRequester(),
                                 DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString()),
@@ -68,7 +70,7 @@ public class ReportsRepository {
             @Override
             public void onSuccess(AppointmentDto appointment) {
                 addReport(createdBy,
-                        "REJECTED APPOINTMENT",
+                        ReportConstants.REJECTED_APPOINTMENT,
                         String.format("Rejected appointment of %s at %s",
                                 appointment.getNameOfRequester(),
                                 DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString()),
@@ -88,7 +90,7 @@ public class ReportsRepository {
             @Override
             public void onSuccess(AppointmentDto appointment) {
                 addReport(createdBy,
-                        "CANCELLED APPOINTMENT",
+                        ReportConstants.CANCELLED_APPOINTMENT,
                         String.format("Cancelled appointment of %s at %s",
                                 appointment.getNameOfRequester(),
                                 DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString()),
@@ -108,7 +110,7 @@ public class ReportsRepository {
             @Override
             public void onSuccess(AppointmentDto appointment) {
                 addReport(createdBy,
-                        "RESCHEDULED APPOINTMENT",
+                        ReportConstants.RESCHEDULED_APPOINTMENT,
                         String.format("Rescheduled appointment of %s at %s to %s",
                                 appointment.getNameOfRequester(),
                                 DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString(),
@@ -126,7 +128,7 @@ public class ReportsRepository {
     public void addHealthProfPatientInfoReport(String createdBy, AddPatientDto patient, ReportCallback callback)
     {
         addReport(createdBy,
-                "ADDED PATIENT",
+                ReportConstants.ADDED_PATIENT,
                 String.format("Added patient %s",
                         patient.getFullName()),
                 callback);
@@ -138,7 +140,7 @@ public class ReportsRepository {
             @Override
             public void onSuccess(AddPatientDto patient) {
                 addReport(createdBy,
-                        "ADDED PATIENT MEDICAL HISTORY",
+                        ReportConstants.ADDED_PATIENT_MEDICAL_HISTORY,
                         String.format("Added patient medical history of %s",
                                 patient.getFullName()),
                         callback);
@@ -157,7 +159,7 @@ public class ReportsRepository {
             @Override
             public void onSuccess(AddPatientDto patient) {
                 addReport(createdBy,
-                        "ADDED PATIENT VITAL SIGNS",
+                        ReportConstants.ADDED_PATIENT_VITAL_SIGNS,
                         String.format("Added patient vital signs of %s",
                                 patient.getFullName()),
                         callback);
@@ -177,7 +179,7 @@ public class ReportsRepository {
             @Override
             public void onSuccess(AddPatientDto patient) {
                 addReport(createdBy,
-                        "ADDED PATIENT MEDICATION",
+                        ReportConstants.ADDED_PATIENT_MEDICATION,
                         String.format("Added patient medication %s for %s",
                                 medication.getMedicine(),
                                 patient.getFullName()),
@@ -202,7 +204,7 @@ public class ReportsRepository {
                     @Override
                     public void onSuccess(MedicationDto medications) {
                         addReport(createdBy,
-                                "REMOVED PATIENT MEDICATION",
+                                ReportConstants.REMOVED_PATIENT_MEDICATION,
                                 String.format("Removed patient medication %s for %s",
                                         medications.getMedicine(),
                                         patient.getFullName()),
@@ -227,7 +229,7 @@ public class ReportsRepository {
     public void addHealthProfUpdatePatientInfoReport(String createdBy, AddPatientDto patient, ReportCallback callback)
     {
         addReport(createdBy,
-                "UPDATED PATIENT INFO",
+                ReportConstants.UPDATED_PATIENT_INFO,
                 String.format("Updated patient info of %s",
                         patient.getFullName()),
                 callback);
@@ -239,7 +241,7 @@ public class ReportsRepository {
             @Override
             public void onSuccess(AddPatientDto patient) {
                 addReport(createdBy,
-                        "UPDATED PATIENT MEDICAL HISTORY",
+                        ReportConstants.UPDATED_PATIENT_MEDICAL_HISTORY,
                         String.format("Updated patient medical history of %s",
                                 patient.getFullName()),
                         callback);
@@ -258,7 +260,7 @@ public class ReportsRepository {
             @Override
             public void onSuccess(AddPatientDto patient) {
                 addReport(createdBy,
-                        "UPDATED PATIENT VITAL SIGNS",
+                        ReportConstants.UPDATED_PATIENT_VITAL_SIGNS,
                         String.format("Updated patient vital signs of %s",
                                 patient.getFullName()),
                         callback);
@@ -276,7 +278,7 @@ public class ReportsRepository {
     {
         String userId = user.getUid();
         addReport(userId,
-                "REQUESTED APPOINTMENT",
+                ReportConstants.REQUESTED_APPOINTMENT,
                 String.format("Requested Appointment for %s at %s",
                         appointment.getPurpose(),
                         DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment()).ToString()),
@@ -289,7 +291,7 @@ public class ReportsRepository {
         String userId = user.getUid();
 
         addReport(userId,
-                "ADDED MEDICATION",
+                ReportConstants.ADDED_MEDICATION,
                 String.format("Added medication %s at %s",
                         medication.getMedicine(),
                         DateTimeDto.ToDateTimeDto(medication.getTimestamp()).ToString()),
@@ -301,7 +303,7 @@ public class ReportsRepository {
         String userId = user.getUid();
 
         addReport(userId,
-                "COMPLETED MEDICATION",
+                ReportConstants.COMPLETED_MEDICATION,
                 String.format("COMPLETED medication %s at %s",
                         medication.getMedicine(),
                         DateTimeDto.ToDateTimeDto(medication.getTimestamp()).ToString()),
@@ -313,7 +315,7 @@ public class ReportsRepository {
         String userId = user.getUid();
 
         addReport(userId,
-                "UPDATED MEDICATION",
+                ReportConstants.UPDATED_MEDICATION,
                 String.format("Updated medication %s at %s",
                         medication.getMedicine(),
                         DateTimeDto.ToDateTimeDto(medication.getTimestamp()).ToString()),
@@ -322,13 +324,6 @@ public class ReportsRepository {
 
     public void addReport(String createdBy, String action, String message, ReportCallback callback)
     {
-//        if (user == null) {
-//            if (callback != null) {
-//                callback.onReportFailed("Current user not found");
-//            }
-//            return;
-//        }
-
         LocalDateTime currentDate = LocalDateTime.now();
         Timestamp currentTimeStamp  = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
 
@@ -377,30 +372,30 @@ public class ReportsRepository {
         }
     }
 
-    public void getReportsFromUserFilter(String uid, String find, ReportsFilterCallback callback) {
-        if (user != null) {
-            reportsCollection
-                    .whereEqualTo(ReportModel.createdBy, uid)
-                    .orderBy(ReportModel.createdBy, Query.Direction.DESCENDING)
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        List<ReportDto> reports = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            if(Objects.requireNonNull(document.get("message")).toString().toLowerCase().contains(find.toLowerCase()) || Objects.requireNonNull(document.get("action")).toString().toLowerCase().contains(find.toLowerCase())){
-                                ReportDto report = document.toObject(ReportDto.class);
-                                reports.add(report);
-                            }
+    public void getReportsFromUserFilter(String uid, String find, String[] actions, ReportsFilterCallback callback) {
+        reportsCollection
+                .whereEqualTo(ReportModel.createdBy, uid)
+                .orderBy(ReportModel.createdBy, Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<ReportDto> reports = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        if((find.toLowerCase().equals("") ||
+                            Objects.requireNonNull(document.get("message")).toString().toLowerCase().contains(find.toLowerCase()) ||
+                            Objects.requireNonNull(document.get("action")).toString().toLowerCase().contains(find.toLowerCase())) &&
+                            (actions.length == 0 ||
+                            Arrays.stream(actions).anyMatch(x -> Objects.requireNonNull(document.get("action")).toString().equals(x)))
+                        ){
+                            ReportDto report = document.toObject(ReportDto.class);
+                            reports.add(report);
                         }
-                        callback.onSuccess(reports);
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Error fetching medicines", e);
-                        callback.onError(e.getMessage());
-                    });
-        } else {
-            Log.e(TAG, "User is null");
-            callback.onError("User is null");
-        }
+                    }
+                    callback.onSuccess(reports);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching medicines", e);
+                    callback.onError(e.getMessage());
+                });
     }
 
     public void getReportsFromDateRange(Timestamp before, Timestamp after, ReportsFetchCallback callback) {

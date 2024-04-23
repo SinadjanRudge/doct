@@ -9,10 +9,13 @@ import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.type.DateTime;
+import com.google.firebase.firestore.SetOptions;
+import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.AppointmentsModel;
+import com.triadss.doctrack2.config.model.ReportModel;
+import com.triadss.doctrack2.config.model.UserModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
@@ -22,10 +25,15 @@ import java.util.List;
 import android.util.Log;
 
 import com.google.firebase.Timestamp;
+import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
+import com.triadss.doctrack2.dto.ReportDto;
+import com.triadss.doctrack2.dto.TimeDto;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AppointmentRepository {
     private static final String TAG = "AppointmentRepository";
@@ -121,9 +129,50 @@ public class AppointmentRepository {
 
             }
         });
-
-
     }
+
+    public void getAllPatientPendingAppointmentsRecent(String patientUid, int count, AppointmentPatientPendingFetchCallback callback) {
+        patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
+            @Override
+            public void onSuccess(List<AddPatientDto> patients) {
+                Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
+
+                appointmentsCollection
+                        .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
+                        .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
+                        .whereEqualTo(AppointmentsModel.patientId, patientUid)
+                        .orderBy(AppointmentsModel.createdAt, Query.Direction.ASCENDING)
+                        .limit(count)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                List<AppointmentDto> appointments = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                                    appointment.setDocumentId(document.getId().toString());
+                                    appointment.setUid(document.getId().toString());
+                                    String idNumber = patients
+                                            .stream()
+                                            .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
+                                            .findFirst().orElse(null).getIdNumber();
+                                    appointment.setPatientIdNumber(idNumber);
+                                    appointments.add(appointment);
+                                }
+                                callback.onSuccess(appointments);
+                            } else {
+                                Log.e(TAG, "Error getting appointments", task.getException());
+                                callback.onError(task.getException().getMessage());
+                            }
+                        });
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+
+            }
+        });
+    }
+
     public void getAllPatientStatusAppointments(String patientUid, AppointmentPatientStatusFetchCallback callback) {
         patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
             @Override
@@ -350,6 +399,55 @@ public class AppointmentRepository {
         }
     }
 
+    public void getPendingAppointmentsForHealthProfRecent(String healthProfId, int count, AppointmentFetchCallback callback)
+    {
+        if (user != null) {
+            patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
+                @Override
+                public void onSuccess(List<AddPatientDto> patients) {
+                    Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
+                    appointmentsCollection
+                            .whereEqualTo(AppointmentsModel.healthProfId, healthProfId)
+                            .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
+                            .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
+                            .orderBy(AppointmentsModel.dateOfAppointment, Query.Direction.ASCENDING)
+                            .limit(count)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                List<AppointmentDto> appointments = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                    AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                                    appointment.setUid(document.getId());
+                                    appointment.setDocumentId(document.getId());
+                                    String idNumber = patients
+                                            .stream()
+                                            .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
+                                            .findFirst().orElse(null).getIdNumber();
+                                    appointment.setPatientIdNumber(idNumber);
+
+                                    appointments.add(appointment);
+                                }
+                                callback.onSuccess(appointments);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(TAG, "Error fetching medicines", e);
+                                callback.onError(e.getMessage());
+                            });
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+
+                }
+            });
+
+
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
+
     public void cancelAppointment(String DocumentId, AppointmentCancelCallback callback) {
 
         appointmentsCollection
@@ -438,6 +536,118 @@ public class AppointmentRepository {
                 });
     }
 
+    public void checkAppointmentExists(String goal,Timestamp dateAndTime,int Timeyear,int Timemonth,int Timeday,CheckAppointmentExistFetchCallback callback) {
+
+        DateTimeDto selectedDateTime = new DateTimeDto();
+        selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
+        selectedDateTime.setTime(new TimeDto(8, 0));
+
+        Timestamp EightToNine = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(9, 35));
+        Timestamp NineToTen = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(10, 30));
+        Timestamp TenToEleven = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(11, 30));
+        Timestamp ElevenToTwelve = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(12, 15));
+        Timestamp TwelveToOne = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(13, 30));
+        Timestamp OneToTwo = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(14, 0));
+        Timestamp TwoToThree = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(15, 0));
+        Timestamp ThreeToFour = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(16, 30));
+        Timestamp FourToFive = selectedDateTime.ToTimestampForTimePicker();
+
+
+        appointmentsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
+                .whereEqualTo("status", "Pending")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+
+                    boolean freespaceA = true; boolean freespaceB = true; boolean freespaceC = true; boolean freespaceD = true;
+                    boolean freespaceE = true; boolean freespaceF = true; boolean freespaceG = true; boolean freespaceH = true;
+                    boolean freespaceI = true;
+                    ArrayList<String> TimeSlotList = new ArrayList<>();
+                    ArrayList<String> FreeTimeSlotList = new ArrayList<>();
+
+//                        TimeSlotList.add(String.valueOf(Timeyear));
+//                        TimeSlotList.add(String.valueOf(Timemonth));
+//                        TimeSlotList.add(String.valueOf(Timeday));
+//                        selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
+//                        selectedDateTime.setTime(new TimeDto(15, 33));
+//                        TimeSlotList.add(String.valueOf(selectedDateTime.ToTimestampForTimePicker()));
+
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+
+                        if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(EightToNine))) {
+
+                            freespaceA = false;
+
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(NineToTen))) {
+
+                            freespaceB = false;
+
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(TenToEleven))) {
+
+                            freespaceC = false;
+
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(ElevenToTwelve))) {
+
+                            freespaceD = false;
+
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(TwelveToOne))) {
+
+                            freespaceE = false;
+
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(OneToTwo))) {
+
+                            freespaceF = false;
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(TwoToThree))) {
+
+                            freespaceG = false;
+
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(ThreeToFour))) {
+
+                            freespaceH = false;
+
+                        } else if (String.valueOf(document.get("dateOfAppointment")).equals(String.valueOf(FourToFive))) {
+
+                            freespaceI = false;
+
+                        }
+
+                        // TimeSlotList.add(String.valueOf(document.get("dateOfAppointment")));
+                    }
+                    if(goal.equals("Sunday")){
+                        freespaceA = false;  freespaceB = false;  freespaceC = false;  freespaceD = false;
+                        freespaceE = false;  freespaceF = false;  freespaceG = false;  freespaceH = false;
+                        freespaceI = false;
+                    }
+                    if(goal.equals("Saturday")){
+                        freespaceE = false; freespaceF = false;  freespaceG = false;  freespaceH = false;
+                        freespaceI = false;
+                    }
+
+                    if(freespaceA) {TimeSlotList.add("8:00 am - 9:00 am");} else {TimeSlotList.add("Not available");}
+
+                    if(freespaceB) {TimeSlotList.add("9:00 am - 10:00 am");} else{TimeSlotList.add("Not available");}
+
+                    if(freespaceC) {TimeSlotList.add("10:00 am - 11:00 am");} else{TimeSlotList.add("Not available");}
+
+                    if(freespaceD) {TimeSlotList.add("11:00 am - 12:00 pm");} else{TimeSlotList.add("Not available");}
+
+                    if(freespaceE) {TimeSlotList.add("12:00 pm - 1:00 pm");} else{TimeSlotList.add("Not available");}
+
+                    if(freespaceF) {TimeSlotList.add("1:00 pm - 2:00 pm");} else{TimeSlotList.add("Not available");}
+
+                    if(freespaceG) {TimeSlotList.add("2:00 pm - 3:00 pm");} else{TimeSlotList.add("Not available");}
+
+                    if(freespaceH) {TimeSlotList.add("3:00 pm - 4:00 pm");} else{TimeSlotList.add("Not available");}
+
+                    if(freespaceI) {TimeSlotList.add("4:00 pm - 5:00 pm");} else{TimeSlotList.add("Not available");}
+
+                    callback.onSuccess(TimeSlotList);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching medicines", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
     public interface AppointmentCancelCallback {
         void onSuccess(String appointmentId);
 
@@ -481,6 +691,12 @@ public class AppointmentRepository {
 
     public interface ReportCallback {
         void onSuccess(String appointmentId);
+
+        void onError(String errorMessage);
+    }
+
+    public interface CheckAppointmentExistFetchCallback {
+        void onSuccess(ArrayList<String> lngList);
 
         void onError(String errorMessage);
     }

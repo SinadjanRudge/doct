@@ -9,9 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.adapters.RecordFragmentPageAdapter;
+import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,6 +75,11 @@ public class RecordFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_record, container, false);
         tabLayout = rootView.findViewById(R.id.tabLayout);
         viewPager = rootView.findViewById(R.id.viewPager);
+
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new PatientHomeFragment());
+        });
 
         pageAdapter = new RecordFragmentPageAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
 

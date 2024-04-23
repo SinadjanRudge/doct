@@ -29,54 +29,60 @@
         android:layout_marginHorizontal="10dp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/datebutton"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Select Date"
-            android:textSize="18sp"
-            android:backgroundTint="@color/green"
-            app:icon="@drawable/baseline_aod_24" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/idBtnPickTime"
+            <Button
+                android:id="@+id/datebutton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/green"
+                android:text="Select Date"
+                android:textSize="18sp"
+                app:icon="@drawable/baseline_aod_24" />
+
+            <TextView
+                android:id="@+id/dateErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Please select a date"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Pick Time"
-            android:textSize="18sp"
-            android:backgroundTint="@color/green"
-            app:icon="@drawable/baseline_access_time_24" />
-    </LinearLayout>
+            android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:orientation="horizontal">
+            <Button
+                android:id="@+id/idBtnPickTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/green"
+                android:text="Pick Time"
+                android:textSize="18sp"
+                app:icon="@drawable/baseline_access_time_24" />
 
-        <!-- Error TextView for date selection -->
-        <TextView
-            android:id="@+id/dateErrorText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@android:color/holo_red_dark"
-            android:text="Please select a date"
-            android:gravity="center"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/timeErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Please select a valid time"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone" />
+        </LinearLayout>
 
-        <!-- Error TextView for time selection -->
-        <TextView
-            android:id="@+id/timeErrorText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@android:color/holo_red_dark"
-            android:text="Please select a time"
-            android:gravity="center"
-            android:visibility="gone" />
     </LinearLayout>
 
 

@@ -12,8 +12,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.ViewMedicationAdapter;
+import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
@@ -25,6 +27,7 @@ import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 import com.triadss.doctrack2.utils.CheckboxStringProcessor;
 import com.triadss.doctrack2.utils.EditTextStringProcessor;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +62,11 @@ public class ViewPatientRecordFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patientrecord_viewrecord, container, false);
 
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
+        });
+
         // Retrieve patient data from arguments
         Bundle args = getArguments();
         if (args != null) {
@@ -72,7 +80,6 @@ public class ViewPatientRecordFragment extends Fragment {
             TextView patientName = rootView.findViewById(R.id.value_Name);
             TextView patientEmail = rootView.findViewById(R.id.value_Email);
             TextView patientAddress = rootView.findViewById(R.id.value_Address);
-            TextView patientAge = rootView.findViewById(R.id.value_Age);
             TextView patientPhone = rootView.findViewById(R.id.value_ContactNo);
             TextView patientCourse = rootView.findViewById(R.id.value_Course);
             TextView patientGender = rootView.findViewById(R.id.value_Gender);
@@ -88,7 +95,6 @@ public class ViewPatientRecordFragment extends Fragment {
                     patientName.setText(patient.getFullName());
                     patientEmail.setText(patient.getEmail());
                     patientAddress.setText(patient.getAddress());
-                    patientAge.setText(String.valueOf(patient.getAge()));
                     patientPhone.setText(patient.getPhone());
                     patientCourse.setText(patient.getCourse());
                     patientYear.setText(String.valueOf(patient.getYear()));

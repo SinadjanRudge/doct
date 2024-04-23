@@ -8,13 +8,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="730dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_width="409dp"
+            android:layout_width="match_parent"
             android:layout_height="729dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -23,11 +24,11 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:weightSum="6"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:background="#55000000"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="6">
 
                 <TextView
                     android:id="@+id/textView15"
@@ -49,17 +50,12 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
-                    android:cropToPadding="false"
                     android:contentDescription="Menu"
+                    android:cropToPadding="false"
                     android:onClick="showPopupMenu"
                     app:srcCompat="@drawable/menu_three_dots" />
 
             </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
 
             <TextView
@@ -98,12 +94,13 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="250dp">
+                android:layout_height="wrap_content"
+                android:overScrollMode="never">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView_pendingAppointment"
                     android:layout_width="match_parent"
-                    android:layout_height="210dp" />
+                    android:layout_height="wrap_content" />
 
             </ScrollView>
 

@@ -2,6 +2,7 @@ package com.triadss.doctrack2.activity.healthprof.fragments.appointments;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -53,7 +54,7 @@ public class HealthProfessionalPending extends Fragment implements IListView {
     private String mParam1;
     private String mParam2;
     String loggedInUserId;
-    private NotificationRepository notificationRepository;
+    private NotificationRepository notificationRepository = new NotificationRepository();
 
     public HealthProfessionalPending() {
         // Required empty public constructor
@@ -88,6 +89,7 @@ public class HealthProfessionalPending extends Fragment implements IListView {
 
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
+    private Dialog currentDialog = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,11 +115,17 @@ public class HealthProfessionalPending extends Fragment implements IListView {
             public void onSuccess(List<AppointmentDto> appointments) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(linearLayoutManager);
+                if(currentDialog != null)
+                {
+                    currentDialog.dismiss();
+                    currentDialog = null;
+                }
 
                 HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments, 
                     new HealthProfessionalAppointmentPendingAdapter.AppointmentCallback() {
                         @Override
-                        public void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid) {
+                        public void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid, Dialog dialog) {
+                            currentDialog = dialog;
                             reportsRepository.addHealthProfRescheduledAppointmentReport(loggedInUserId, appointmentUid, dateTime, new ReportsRepository.ReportCallback() {
                                 @Override
                                 public void onReportAddedSuccessfully() {

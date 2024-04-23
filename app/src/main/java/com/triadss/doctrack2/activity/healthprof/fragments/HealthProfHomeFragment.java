@@ -21,7 +21,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
+import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfHomeAppointmentAdapter;
 import com.triadss.doctrack2.activity.patient.adapters.PatientHomeAppointmentAdapter;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
@@ -29,6 +31,7 @@ import com.triadss.doctrack2.repoositories.ReportsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -122,7 +125,9 @@ public class HealthProfHomeFragment extends Fragment {
                 recyclerView.setLayoutManager(linearLayoutManager);
                 pendingAppointmentCountVal.setText(String.valueOf(appointments.size()));
 
-                PatientHomeAppointmentAdapter adapter = new PatientHomeAppointmentAdapter(getContext(), (ArrayList)appointments);
+                HealthProfHomeAppointmentAdapter adapter = new HealthProfHomeAppointmentAdapter(getContext(),
+                        (ArrayList)appointments.stream().limit(DocTrackConstant.HOME_PAGE_APPOINTMENT_COUNT)
+                                .collect(Collectors.toList()));
                 recyclerView.setAdapter(adapter);
             }
 

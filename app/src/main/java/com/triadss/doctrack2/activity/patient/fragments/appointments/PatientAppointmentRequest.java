@@ -36,6 +36,7 @@ import com.triadss.doctrack2.notification.NotificationService;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
+import com.triadss.doctrack2.utils.AppointmentFunctions;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -45,7 +46,7 @@ public class PatientAppointmentRequest extends Fragment {
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;
-    private NotificationRepository notificationRepository;
+    private NotificationRepository notificationRepository = new NotificationRepository();
     private ReportsRepository _reportsRepository = new ReportsRepository();
     private NotificationDTO notifyDto;
     private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute;
@@ -134,45 +135,45 @@ public class PatientAppointmentRequest extends Fragment {
     private boolean isInputsNotValid() {
         dateErrorText.setVisibility(View.GONE);
         timeErrorText.setVisibility(View.GONE);
-
+        boolean invalidTime = AppointmentFunctions.IsValidHour(selectedHour);
+        boolean invalid = false;
         if (TextUtils.isEmpty(textInputPurpose.getText().toString()) &&
-                (selectedYear == 0 || selectedMonth == 0 || selectedDay == 0 ||
-                        selectedHour == 0 || selectedMinute == 0)) {
+                (selectedYear == 0 || selectedMonth == 0 || selectedDay == 0) && invalidTime) {
             Toast.makeText(getContext(), "Please enter a purpose and select a valid date and time", Toast.LENGTH_SHORT)
                     .show();
 
             textInputPurpose.setError("Purpose cannot be empty");
             dateErrorText.setVisibility(View.VISIBLE);
             timeErrorText.setVisibility(View.VISIBLE);
-            return true;
+            invalid = true;
         }
 
         if (TextUtils.isEmpty(textInputPurpose.getText().toString())) {
             textInputPurpose.setError("Purpose cannot be empty");
             Toast.makeText(getContext(), "Please enter a purpose", Toast.LENGTH_SHORT).show();
-            return true;
+            invalid = true;
         }
 
         if ((selectedYear == 0 || selectedMonth == 0 || selectedDay == 0)
-                && (selectedHour == 0 || selectedMinute == 0)) {
+                && invalidTime) {
             Toast.makeText(getContext(), "Please select a valid date and time", Toast.LENGTH_SHORT).show();
             dateErrorText.setVisibility(View.VISIBLE);
             timeErrorText.setVisibility(View.VISIBLE);
-            return true;
+            invalid = true;
         }
 
         if (selectedYear == 0 || selectedMonth == 0 || selectedDay == 0) {
             Toast.makeText(getContext(), "Please select a valid date", Toast.LENGTH_SHORT).show();
             dateErrorText.setVisibility(View.VISIBLE);
-            return true;
+            invalid = true;
         }
 
-        if (selectedHour == 0 || selectedMinute == 0) {
+        if (invalidTime) {
             Toast.makeText(getContext(), "Please select a valid time", Toast.LENGTH_SHORT).show();
             timeErrorText.setVisibility(View.VISIBLE);
-            return true;
+            invalid = true;
         }
-        return false;
+        return invalid;
     }
 
     private void handleConfirmationButtonClick() {
@@ -189,25 +190,7 @@ public class PatientAppointmentRequest extends Fragment {
 
         AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, status);
-
-        notifyDto = new NotificationDTO();
-        notifyDto.setTitle("Patient New Appointment Request on " + pickDateButton.getText().toString() + " "
-                + pickTimeBtn.getText().toString());
-        notifyDto.setContent(textInputPurpose.getText().toString());
-        DateTimeDto datedto = new DateTimeDto();
-        notifyDto.setDateSent(datedto.GetCurrentTimeStamp());
-        notificationRepository = new NotificationRepository();
-        notificationRepository.pushUserNotification(notifyDto, new NotificationRepository.NotificationAddCallback() {
-            @Override
-            public void onSuccess(String appointmentId) {
-                // scheduleNotification(getNotification( "1 second delay" ) , 1000 );
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-
-            }
-        });
+        ButtonManager.disableButton(confirmButton);
 
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {
             @Override

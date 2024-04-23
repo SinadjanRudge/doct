@@ -163,9 +163,6 @@ public class AddMedicalHistory extends Fragment {
 
     private void createMedicalHistory(String userId){
         MedicalHistoryDto medicalHistoryDto= new MedicalHistoryDto();
-        StringBuilder pastIllnessBuilder = new StringBuilder();
-        StringBuilder familyHistoryBuilder = new StringBuilder();
-        StringBuilder obgyneHistoryBuilder = new StringBuilder();
 
         String pastIllness = pastIllnessProcessor.getString();
         medicalHistoryDto.setPastIllness(pastIllness);
