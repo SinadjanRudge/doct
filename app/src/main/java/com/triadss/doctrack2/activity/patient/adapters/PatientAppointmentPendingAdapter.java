@@ -391,22 +391,22 @@ public class PatientAppointmentPendingAdapter
 
                 boolean inputInvalid = false;
 
-                if (selectedDateTime.getDate() == null ||  selectedDateTime.getDate().getYear() == 0 || selectedDateTime.getDate().getMonth() == 0 || selectedDateTime.getDate().getDay() == 0) {
-                    Toast.makeText(context, "Please select a valid date", Toast.LENGTH_SHORT).show();
-                    dateErrorText.setVisibility(View.VISIBLE);
-                    inputInvalid = true;
-                }
-
-                if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
-                    Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
-                    timeErrorText.setVisibility(View.VISIBLE);
-                    inputInvalid = true;
-                }
-
-                if(inputInvalid)
-                {
-                    return;
-                }
+//                if (selectedDateTime.getDate() == null ||  selectedDateTime.getDate().getYear() == 0 || selectedDateTime.getDate().getMonth() == 0 || selectedDateTime.getDate().getDay() == 0) {
+//                    Toast.makeText(context, "Please select a valid date", Toast.LENGTH_SHORT).show();
+//                    dateErrorText.setVisibility(View.VISIBLE);
+//                    inputInvalid = true;
+//                }
+//
+//                if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
+//                    Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
+//                    timeErrorText.setVisibility(View.VISIBLE);
+//                    inputInvalid = true;
+//                }
+//
+//                if(inputInvalid)
+//                {
+//                    return;
+//                }
 
                 String newDateNewTime = updateDate.getText().toString() + " " + updateTime.getText().toString();
                 if (updateDate.getText().toString().equals("Date") || updateTime.getText().toString().equals("Time") || updateTime.getText().toString().equals(" ")) {
