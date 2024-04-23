@@ -6,5 +6,6 @@ public class SessionConstants {
     public static final String Password = "Password";
     public static final String Email = "Email";
     public static final String LastRequestDate = "LastRequestDate";
+    public static final String LastNotificationId = "LastNotificationId";
     public static final String LastRequestTimestamp = "LastRequestTimestamp";
 }

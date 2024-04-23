@@ -72,7 +72,6 @@ public class PatientRepository {
             patientMap.put(UserModel.idNumber, patient.getIdNumber());
             patientMap.put(UserModel.email, patient.getEmail());
             patientMap.put(UserModel.fullName, patient.getFullName());
-            patientMap.put(UserModel.age, patient.getAge());
             patientMap.put(UserModel.gender, patient.getGender());
             patientMap.put(UserModel.address, patient.getAddress());
             patientMap.put(UserModel.dateOfBirth, patient.getDateOfBirth());
@@ -126,7 +125,7 @@ public class PatientRepository {
         DocumentReference patientRef = usersCollection.document(patient.getUid());
 
         patientRef
-                .update(UserModel.age, patient.getAge(),
+                .update(
                         UserModel.address, patient.getAddress(),
                         UserModel.status, patient.getStatus(),
                         UserModel.phone, patient.getPhone(),

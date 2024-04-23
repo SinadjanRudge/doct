@@ -83,7 +83,7 @@ public class AddVitalSigns extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_record_add_vital_signs, container, false);
-        Button submit = rootView.findViewById(R.id.submitBtn);
+        submit = rootView.findViewById(R.id.submitBtn);
 
         editBloodPressure = rootView.findViewById(R.id.input_bloodPressure);
         editTemperature = rootView.findViewById(R.id.input_temperature);

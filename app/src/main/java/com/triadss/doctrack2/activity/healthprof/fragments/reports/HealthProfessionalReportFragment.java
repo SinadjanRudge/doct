@@ -9,22 +9,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ToggleButton;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalReportAdapter;
+import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.adapters.PatientReportAdapter;
+import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.ReportDto;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,6 +50,8 @@ public class HealthProfessionalReportFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     String loggedInUserId;
+
+    ToggleButton appointmentToggle, patientToggle;
 
     public HealthProfessionalReportFragment() {
         // Required empty public constructor
@@ -85,9 +95,25 @@ public class HealthProfessionalReportFragment extends Fragment {
         loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_reports_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_healthprof_reports_list, container, false);
         recyclerView = rootView.findViewById(R.id.recyclerViewReports);
         search = (EditText) rootView.findViewById(R.id.search_bar);
+
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
+        });
+
+        appointmentToggle = rootView.findViewById(R.id.appointmentToggle);
+        patientToggle = rootView.findViewById(R.id.patientToggle);
+
+        appointmentToggle.setOnClickListener(view -> {
+            reloadList();
+        });
+
+        patientToggle.setOnClickListener(view -> {
+            reloadList();
+        });
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -114,47 +140,53 @@ public class HealthProfessionalReportFragment extends Fragment {
 
     TextWatcher inputTextWatcher = new TextWatcher() {
         public void afterTextChanged(Editable s) {
-            // Toast.makeText(getActivity(), "This is my Toast message!", Toast.LENGTH_SHORT).show();
-
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-            FirebaseUser user = auth.getCurrentUser();
-
-            ReportsRepository repository = new ReportsRepository();
-
-            if(search.getText().toString().equals("") || search.getText().toString().equals(null)){
-                repository.getReportsFromUser(loggedInUserId, new ReportsRepository.ReportsFetchCallback() {
-                    @Override
-                    public void onSuccess(List<ReportDto> reports) {
-                        PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
-                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-                        recyclerView.setLayoutManager(linearLayoutManager);
-                        recyclerView.setAdapter(pageAdapter);
-                    }
-
-                    @Override
-                    public void onError(String errorMessage) {
-
-                    }
-                });
-            } else {
-                repository.getReportsFromUserFilter(user.getUid(),search.getText().toString().toLowerCase() ,new ReportsRepository.ReportsFilterCallback() {
-                    @Override
-                    public void onSuccess(List<ReportDto> reports) {
-
-                        PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
-                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-                        recyclerView.setLayoutManager(linearLayoutManager);
-                        recyclerView.setAdapter(pageAdapter);
-                    }
-                    @Override
-                    public void onError(String errorMessage) {
-
-                    }
-                }); }
+            reloadList();
         }
+
         public void beforeTextChanged(CharSequence s, int start, int count, int after){
         }
         public void onTextChanged(CharSequence s, int start, int before, int count) {
         }
     };
+
+    private void reloadList()
+    {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
+        ReportsRepository repository = new ReportsRepository();
+
+        String[] list = new String[0];
+        if(appointmentToggle.isChecked()) {
+            int newCount = list.length + ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS.length;
+            list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS))
+                    .toArray(size -> (String[]) Array.newInstance(String.class,
+                            newCount));
+        }
+
+        if(patientToggle.isChecked()) {
+            int newCount = list.length + ReportConstants.HEALTHPROF_PATIENT_REPORTS.length;
+            list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.HEALTHPROF_PATIENT_REPORTS))
+                    .toArray(size -> (String[]) Array.newInstance(String.class,
+                            newCount));
+        }
+
+        repository.getReportsFromUserFilter(user.getUid(),
+                search.getText().toString().toLowerCase(),
+                list,
+                new ReportsRepository.ReportsFilterCallback() {
+                    @Override
+                    public void onSuccess(List<ReportDto> reports) {
+
+                        PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        recyclerView.setAdapter(pageAdapter);
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+
+                    }
+                });
+    }
 }

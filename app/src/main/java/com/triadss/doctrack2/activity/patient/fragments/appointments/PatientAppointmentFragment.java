@@ -11,10 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.adapters.PatientAppointmentFragmentPageAdapter;
+import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
 import com.triadss.doctrack2.contracts.IListView;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,6 +88,11 @@ public class PatientAppointmentFragment extends Fragment {
         tabLayout = rootView.findViewById(R.id.tabLayout);
         viewPager = rootView.findViewById(R.id.viewPager);
 
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new PatientHomeFragment());
+        });
+
         pageAdapter = new PatientAppointmentFragmentPageAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
 
         viewPager.setAdapter(pageAdapter);
@@ -113,15 +122,15 @@ public class PatientAppointmentFragment extends Fragment {
             @Override
             public  void onPageSelected(int position)
             {
-                super.onPageSelected(position);
-                tabLayout.selectTab(tabLayout.getTabAt(position));
+            super.onPageSelected(position);
+            tabLayout.selectTab(tabLayout.getTabAt(position));
 
-                Fragment fragment = getParentFragmentManager().findFragmentByTag("f" + position);
-                boolean fragmentIsListView = fragment instanceof IListView;
-                boolean fragmentIsNotNull = fragment != null;
-                if (fragmentIsNotNull && fragmentIsListView) {
-                    ((IListView) fragment).ReloadList();
-                }
+            Fragment fragment = getParentFragmentManager().findFragmentByTag("f" + position);
+            boolean fragmentIsListView = fragment instanceof IListView;
+            boolean fragmentIsNotNull = fragment != null;
+            if (fragmentIsNotNull && fragmentIsListView) {
+                ((IListView) fragment).ReloadList();
+            }
             }
         });
 

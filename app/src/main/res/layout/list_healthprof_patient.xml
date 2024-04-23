@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:cardCornerRadius="3dp"
@@ -57,28 +57,28 @@
             android:text="Patient ID"
             android:textColor="@color/black" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="254dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal"
-            android:paddingRight="5dp">
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_alignParentStart="true"-->
+        <!--            android:layout_alignParentTop="true"-->
+        <!--            android:layout_marginStart="254dp"-->
+        <!--            android:layout_marginTop="10dp"-->
+        <!--            android:layout_marginBottom="10dp"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            android:paddingRight="5dp">-->
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/viewPatientRecord"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_green"
-                android:text="View Record"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="normal" />
+        <!--            <androidx.appcompat.widget.AppCompatButton-->
+        <!--                android:id="@+id/viewPatientRecord"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:background="@drawable/btn_green"-->
+        <!--                android:text="View Record"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textSize="10sp"-->
+        <!--                android:textStyle="normal" />-->
 
-        </LinearLayout>
+        <!--        </LinearLayout>-->
 
 
     </RelativeLayout>

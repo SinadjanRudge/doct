@@ -9,13 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.triadss.doctrack2.R;
 
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalAppointmentFragmentPageAdapter;
+import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.contracts.IListView;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +80,11 @@ public class HealthProfessionalAppointmentFragment extends Fragment {
 
         tabLayout = rootView.findViewById(R.id.tabLayout);
         viewPager = rootView.findViewById(R.id.viewPager);
+
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
+        });
 
         pageAdapter = new HealthProfessionalAppointmentFragmentPageAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
 
@@ -170,11 +178,5 @@ public class HealthProfessionalAppointmentFragment extends Fragment {
             }
         }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            // Inflate the layout for this fragment
-            return inflater.inflate(R.layout.fragment_patient_record_add_medical_history, container, false);
-        }
     }
 }

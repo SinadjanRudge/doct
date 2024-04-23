@@ -66,7 +66,7 @@ public class VitalSignsRepository {
         return true;
     }
 
-    public boolean AddVitalSignsCallback(VitalSignsDto vitalSignsDto, AddUpdateCallback callback)
+    public void AddVitalSignsCallback(VitalSignsDto vitalSignsDto, AddUpdateCallback callback)
     {
         try
         {
@@ -95,9 +95,8 @@ public class VitalSignsRepository {
 
         } catch(Exception ex)
         {
-            return false;
+            callback.onError(ex.getMessage());
         }
-        return true;
     }
 
     public boolean updateVitalSigns(VitalSignsDto vitalSignsDto, AddUpdateCallback callback)

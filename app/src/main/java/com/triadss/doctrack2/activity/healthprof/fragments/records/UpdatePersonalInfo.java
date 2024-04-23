@@ -37,9 +37,9 @@ public class UpdatePersonalInfo extends Fragment {
     // TODO: Rename and change types of parameters
     private String patientUid;
 
-    EditText editTextAddress, editTextPhone, editTextAge, editTextCourse,
+    EditText editTextAddress, editTextPhone, editTextCourse,
         editTextEmail, editTextFullname, editTextIdNumber;
-    TextView errorAddress, errorPhone, errorAge, errorCourse;
+    TextView errorAddress, errorPhone, errorCourse;
     PatientRepository patientRepository = new PatientRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
     String loggedInUserId;
@@ -82,7 +82,6 @@ public class UpdatePersonalInfo extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_update_record, container, false);
         editTextAddress = rootView.findViewById(R.id.input_address);
         editTextPhone = rootView.findViewById(R.id.input_contactNo);
-        editTextAge = rootView.findViewById(R.id.input_Age);
         editTextCourse = rootView.findViewById(R.id.input_course);
         editTextEmail = rootView.findViewById(R.id.email);
         editTextFullname = rootView.findViewById(R.id.name);
@@ -90,24 +89,21 @@ public class UpdatePersonalInfo extends Fragment {
 
         errorAddress = rootView.findViewById(R.id.errorAddress);
         errorPhone = rootView.findViewById(R.id.errorPhone);
-        errorAge  = rootView.findViewById(R.id.errorAge);
         errorCourse  = rootView.findViewById(R.id.errorCourse);
 
         errorAddress.setVisibility(rootView.INVISIBLE);
         errorPhone.setVisibility(rootView.INVISIBLE);
-        errorAge.setVisibility(rootView.INVISIBLE);
         errorCourse.setVisibility(rootView.INVISIBLE);
 
         populatePersonalInfo();
 
-        Button nextButton = rootView.findViewById(R.id.nxtButton);
+        nextButton = rootView.findViewById(R.id.nxtButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Function<String, Boolean> isNotEmptyPredicate = (val) -> !val.isEmpty();
                 if(widgetPredicate(editTextAddress, isNotEmptyPredicate)
                 && widgetPredicate(editTextPhone, isNotEmptyPredicate)
-                && widgetPredicate(editTextAge, isNotEmptyPredicate)
                 && widgetPredicate(editTextCourse, isNotEmptyPredicate)
                 )
                 {
@@ -117,7 +113,6 @@ public class UpdatePersonalInfo extends Fragment {
                 {
                     showTextViewWhenTrue(editTextAddress, (value) -> value.isEmpty(), errorAddress);
                     showTextViewWhenTrue(editTextPhone, (value) -> value.isEmpty(), errorPhone);
-                    showTextViewWhenTrue(editTextAge, (value) -> value.isEmpty(), errorAge);
                     showTextViewWhenTrue(editTextCourse, (value) -> value.isEmpty(), errorCourse);
                 }
             }
@@ -160,7 +155,6 @@ public class UpdatePersonalInfo extends Fragment {
                 editTextFullname.setText(patient.getFullName());
                 editTextAddress.setText(patient.getAddress());
                 editTextPhone.setText(patient.getPhone());
-                editTextAge.setText(String.valueOf(patient.getAge()));
                 editTextCourse.setText(patient.getCourse());
                 editTextIdNumber.setText(patient.getIdNumber());
             }
@@ -179,7 +173,6 @@ public class UpdatePersonalInfo extends Fragment {
         patientDto.setFullName(editTextFullname.getText().toString());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
-        patientDto.setAge(Integer.parseInt(String.valueOf(editTextAge.getText())));
         patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
         
         ButtonManager.disableButton(nextButton);
