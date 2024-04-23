@@ -542,14 +542,14 @@ public class AppointmentRepository {
         selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
         selectedDateTime.setTime(new TimeDto(8, 0));
 
-        Timestamp EightToNine = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(9, 35));
-        Timestamp NineToTen = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(10, 30));
-        Timestamp TenToEleven = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(11, 30));
-        Timestamp ElevenToTwelve = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(12, 15));
-        Timestamp TwelveToOne = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(13, 30));
-        Timestamp OneToTwo = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(14, 0));
-        Timestamp TwoToThree = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(15, 0));
-        Timestamp ThreeToFour = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(16, 30));
+        Timestamp EightToNine = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(9, 00));
+        Timestamp NineToTen = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(10, 00));
+        Timestamp TenToEleven = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(11, 00));
+        Timestamp ElevenToTwelve = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(12, 00));
+        Timestamp TwelveToOne = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(13, 00));
+        Timestamp OneToTwo = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(14, 00));
+        Timestamp TwoToThree = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(15, 00));
+        Timestamp ThreeToFour = selectedDateTime.ToTimestampForTimePicker();  selectedDateTime.setTime(new TimeDto(16, 00));
         Timestamp FourToFive = selectedDateTime.ToTimestampForTimePicker();
 
 
@@ -647,6 +647,20 @@ public class AppointmentRepository {
                     callback.onError(e.getMessage());
                 });
     }
+    public void changeToOngoingAppointment(String DocumentId,Timestamp date,ChangeToOngoingAppointmentCallback callback) {
+        String dateTest = DateTimeDto.ToDateTimeDto(date).ToString();
+        appointmentsCollection
+                .document(DocumentId)
+                .update(AppointmentsModel.status, "Ongoing")
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Appointment added with ID: " + DocumentId);
+                    callback.onSuccess(DocumentId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error adding appointment", e);
+                    callback.onError(e.getMessage());
+                });
+    }
 
     public interface AppointmentCancelCallback {
         void onSuccess(String appointmentId);
@@ -697,6 +711,11 @@ public class AppointmentRepository {
 
     public interface CheckAppointmentExistFetchCallback {
         void onSuccess(ArrayList<String> lngList);
+
+        void onError(String errorMessage);
+    }
+    public interface ChangeToOngoingAppointmentCallback {
+        void onSuccess(String appointmentId);
 
         void onError(String errorMessage);
     }
