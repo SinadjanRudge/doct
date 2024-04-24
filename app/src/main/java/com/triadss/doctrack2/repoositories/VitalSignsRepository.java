@@ -2,11 +2,13 @@ package com.triadss.doctrack2.repoositories;
 
 import android.util.Log;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
@@ -17,7 +19,9 @@ import com.triadss.doctrack2.dto.WearableDeviceDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VitalSignsRepository {
@@ -56,6 +60,7 @@ public class VitalSignsRepository {
             vitalSigns.put(VitalSignsModel.weight, vitalSignsDto.getWeight());
             vitalSigns.put(VitalSignsModel.height, vitalSignsDto.getHeight());
             vitalSigns.put(VitalSignsModel.BMI, vitalSignsDto.getBMI());
+            vitalSigns.put(VitalSignsModel.createdAt, Timestamp.now());
             // TODO: EDIT THIS
             userRef.set(vitalSigns, SetOptions.merge());
         } catch(Exception ex)
@@ -81,6 +86,7 @@ public class VitalSignsRepository {
             vitalSigns.put(VitalSignsModel.weight, vitalSignsDto.getWeight());
             vitalSigns.put(VitalSignsModel.height, vitalSignsDto.getHeight());
             vitalSigns.put(VitalSignsModel.BMI, vitalSignsDto.getBMI());
+            vitalSigns.put(VitalSignsModel.createdAt, Timestamp.now());
             // TODO: EDIT THIS
             vitalSignsCollection
                 .add(vitalSigns)
@@ -147,6 +153,36 @@ public class VitalSignsRepository {
                 });
     }
 
+    public void getVitalSignsOfPatient(String patientUid, FetchListCallback callback) {
+        vitalSignsCollection.whereEqualTo(VitalSignsModel.patientId, patientUid)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(5)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<VitalSignsDto> vitalSignsList = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            VitalSignsDto vitalSign = document.toObject(VitalSignsDto.class);
+                            vitalSign.setUid(document.getId()); // Assuming uid is a String
+                            vitalSignsList.add(vitalSign);
+                        }
+
+                        while (vitalSignsList.size() < 5) {
+                            // Add default values to fill up the list
+                            VitalSignsDto defaultVitalSign = new VitalSignsDto();
+                            vitalSignsList.add(defaultVitalSign);
+                        }
+
+                        callback.onSuccess(vitalSignsList);
+                    } else {
+                        Log.e(TAG, "Error getting vital signs", task.getException());
+                        callback.onError(task.getException().getMessage());
+                    }
+                });
+    }
+
+
+
     public interface AddUpdateCallback {
         void onSuccess(String vitalSignsId);
 
@@ -157,4 +193,9 @@ public class VitalSignsRepository {
         void onSuccess(VitalSignsDto vitalSigns);
         void onError(String errorMessage);
     }
+    public interface FetchListCallback {
+        void onSuccess(List<VitalSignsDto> vitalSigns);
+        void onError(String errorMessage);
+    }
+
 }
