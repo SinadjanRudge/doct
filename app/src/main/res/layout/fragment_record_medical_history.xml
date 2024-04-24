@@ -9,8 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -24,19 +25,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Past Illness:" />
+                android:text="Past Illness:"
+                android:textColor="@color/green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_pastIllness"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
-                android:text="Past Illness" />
+                android:text="Past Illness"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -44,7 +50,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Previous Hospitalization/Operation:" />
+                android:text="Previous Hospitalization/Operation:"
+                android:textColor="@color/green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
@@ -61,47 +70,58 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="0.3"
-                android:text="Previous Hospitalization/Operation" />
+                android:text="Previous Hospitalization/Operation"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView_OBGyneHistory"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="488dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.8"
-                android:text="OB-Gyne History:" />
+                android:text="OB-Gyne History:"
+                android:textColor="@color/green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_OBGyneHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
-                android:text="OB-Gyne History" />
+                android:text="OB-Gyne History"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView_familyHistory"
-                android:layout_width="match_parent"
+                android:layout_width="488dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Family History:" />
+                android:text="Family History:"
+                android:textColor="@color/green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_familyHistory"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
-                android:text="Family History" />
+                android:text="Family History"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>

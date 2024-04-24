@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="course">
+        <item>BS Accounting</item>
+        <item>BS Computer Science</item>
+        <item>BS Information Technology</item>
+        <item>BS Nursing</item>
+    </string-array>
+</resources>

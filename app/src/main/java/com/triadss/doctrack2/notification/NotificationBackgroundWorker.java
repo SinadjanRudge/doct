@@ -1,8 +1,11 @@
 package com.triadss.doctrack2.notification;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -64,6 +67,10 @@ public class NotificationBackgroundWorker extends Worker {
 
         Log.e("TEST", "Running Work for " + receiverUserUid + " since " + DateTimeDto.ToDateTimeDto(startDate).ToString() + " seconds " + lastRequestDate);
         // scheduleNotification(getNotification("1 second delay"), 1000);
+        NotificationChannel channel = new NotificationChannel(NotificationConstants.NOTIFICATION_CHANNEL_ID,
+                NotificationConstants.NOTIFICATION_TAG, NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager notificationManager = getSystemService(context, NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
 
         getnotify.fetchUserNotification(receiverUserUid, lastRequestDate, new NotificationRepository.FetchNotificationAddCallback() {
             @Override
@@ -96,6 +103,7 @@ public class NotificationBackgroundWorker extends Worker {
     @SuppressLint("MissingPermission")
     public void scheduleNotification(NotificationDTO dto) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
         int lastNotificationId = sharedPref.getInt(SessionConstants.LastNotificationId, 1);
 
         notificationManager.notify(lastNotificationId, getNotification(dto));
