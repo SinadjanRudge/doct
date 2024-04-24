@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.dto;
 
+import com.google.firebase.Timestamp;
 import com.google.gson.Gson;
 import com.google.type.DateTime;
 
@@ -8,6 +9,7 @@ public class VitalSignsDto {
         Gson gson = new Gson();
         return gson.toJson(this);
     }
+
     public int getVitalsId() {
         return vitalsId;
     }
@@ -80,6 +82,21 @@ public class VitalSignsDto {
         this.BMI = BMI;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+    public Timestamp getCreatedAt(){
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt){
+        this.createdAt = createdAt;
+    }
+
     private int vitalsId;
     private String patientId;
     private String bloodPressure;
@@ -89,14 +106,21 @@ public class VitalSignsDto {
     private double weight;
     private double height;
     private double BMI;
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
+    private Timestamp createdAt;
 
     private String uid;
+
+    public VitalSignsDto(){
+        vitalsId = 0;
+        patientId = "";
+        bloodPressure = "";
+        temperature = 0.0;
+        pulseRate = 0;
+        oxygenLevel = 0;
+        weight = 0.0;
+        height = 0.0;
+        BMI = 0.0;
+        uid = "";
+        createdAt = null;
+    }
 }
