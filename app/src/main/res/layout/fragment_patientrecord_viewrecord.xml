@@ -404,8 +404,8 @@
                         android:id="@+id/textView_space"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.8"
-                        android:text="" />
+                        android:layout_weight="0.5"
+                        android:text="Date Sync" />
 
                     <TextView
                         android:id="@+id/value_latest1"
@@ -452,7 +452,7 @@
                         android:id="@+id/textView_bloodPressure"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.8"
+                        android:layout_weight="0.5"
                         android:text="Blood Pressure:" />
 
                     <TextView
@@ -501,7 +501,7 @@
                         android:id="@+id/textView_temperature"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.8"
+                        android:layout_weight="0.5"
                         android:text="Temperature:" />
 
                     <TextView
@@ -551,7 +551,7 @@
                         android:id="@+id/textView_SpO2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.8"
+                        android:layout_weight="0.5"
                         android:text="Sp02" />
 
                     <TextView
@@ -597,7 +597,7 @@
                         android:id="@+id/textView_pulseRate"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.8"
+                        android:layout_weight="0.5"
                         android:text="Pulse Rate:" />
 
                     <TextView
@@ -647,7 +647,7 @@
                         android:id="@+id/textView_height"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.8"
+                        android:layout_weight="0.5"
                         android:text="Height:" />
 
                     <TextView
@@ -697,8 +697,8 @@
                         android:id="@+id/textView_weight"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.8"
-                        android:text="Height:" />
+                        android:layout_weight="0.5"
+                        android:text="Weight:" />
 
                     <TextView
                         android:id="@+id/value_weight1"
@@ -746,7 +746,7 @@
                         android:id="@+id/textView_BMI"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.8"
+                        android:layout_weight="0.5"
                         android:text="BMI:" />
 
                     <TextView
