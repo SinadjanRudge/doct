@@ -9,8 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -25,19 +26,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Patient ID:" />
+                android:text="Patient ID:"
+                android:textColor="@color/green"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_patientID"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
-                android:text="Patient ID" />
+                android:text="Patient ID"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -45,19 +52,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Email:" />
+                android:text="Email:"
+                android:textColor="@color/green"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_Email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
-                android:text="Email" />
+                android:text="Email"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -65,19 +78,51 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Name:" />
+                android:text="Name:"
+                android:textColor="@color/green"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_Name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
-                android:text="Name" />
+                android:text="Name"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_Age"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Age:"
+                android:textColor="@color/green"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/value_Age"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.3"
+                android:text="Age"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -85,19 +130,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Gender:" />
+                android:text="Gender:"
+                android:textColor="@color/green"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_Gender"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
-                android:text="Gender" />
+                android:text="Gender"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -105,19 +156,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Address:" />
+                android:text="Address:"
+                android:textColor="@color/green"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_Address"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
-                android:text="Address" />
+                android:text="Address"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -125,19 +182,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Date of Birth:" />
+                android:text="Date of Birth:"
+                android:textColor="@color/green"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_dateOfBirth"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
-                android:text="Date of Birth" />
+                android:text="Date of Birth"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -145,19 +208,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Status:" />
+                android:text="Civil Status:"
+                android:textColor="@color/green"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_Status"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
-                android:text="Status" />
+                android:text="Status"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -165,19 +234,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Contact No.:" />
+                android:text="Contact No.:"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_ContactNo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
-                android:text="Contact No" />
+                android:text="Contact No"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -185,19 +260,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Course:" />
+                android:text="Course:"
+                android:textColor="@color/green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_Course"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
-                android:text="Course" />
+                android:text="Course"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -205,14 +286,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
-                android:text="Year:" />
+                android:text="Year:"
+                android:textColor="@color/green"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/value_Year"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
-                android:text="Year" />
+                android:text="Year"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>
