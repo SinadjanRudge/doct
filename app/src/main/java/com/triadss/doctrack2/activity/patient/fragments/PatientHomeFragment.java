@@ -20,6 +20,7 @@ import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.activity.patient.adapters.PatientHomeAppointmentAdapter;
 import com.triadss.doctrack2.activity.patient.adapters.PatientHomeMedicationAdapter;
 import com.triadss.doctrack2.activity.patient.fragments.records.RecordFragment;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.MedicationDto;
@@ -140,7 +141,7 @@ public class PatientHomeFragment extends Fragment{
 
     public void loadAppointments()
     {
-        appointmentRepository.getAllPatientPendingAppointments(currentUser.getUid(), new AppointmentRepository.AppointmentPatientPendingFetchCallback() {
+        appointmentRepository.getAllPatientPendingAppointmentsRecent(currentUser.getUid(), DocTrackConstant.HOME_PAGE_APPOINTMENT_COUNT, new AppointmentRepository.AppointmentPatientPendingFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

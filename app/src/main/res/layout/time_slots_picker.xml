@@ -32,7 +32,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="50dp"
                 android:backgroundTint="@color/green"
-                android:text="Cancel" />
+                android:text="Close" />
         </LinearLayout>
 
 </LinearLayout>

@@ -42,7 +42,8 @@
                 android:id="@+id/actionValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:layout_weight="1"
+                android:text="TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView" />
         </TableRow>
 
         <TableRow
