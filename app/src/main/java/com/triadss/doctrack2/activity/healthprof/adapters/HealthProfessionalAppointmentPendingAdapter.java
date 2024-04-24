@@ -91,6 +91,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
     @Override
     public HealthProfessionalAppointmentPendingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+        appointmentRepository = new AppointmentRepository();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_appointment_pending, parent, false);
 
         // Passing view to ViewHolder
@@ -521,22 +522,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                                                     ButtonManager.enableButton(confirmBtn);
                                                 }
                                             });
-                                    appointmentRepository.changeToOngoingAppointment(dto.getDocumentId(),
-                                            selectedDateTime.ToTimestampForTimePicker(),
-                                            new AppointmentRepository.ChangeToOngoingAppointmentCallback() {
 
-                                                @Override
-                                                public void onSuccess(String appointmentId) {
-                                                    Toast.makeText(itemView.getContext(),
-                                                            appointmentId + " changed to Ongoing", Toast.LENGTH_SHORT).show();
-                                                    dialog.dismiss();
-                                                }
-
-                                                @Override
-                                                public void onError(String errorMessage) {
-                                                    ButtonManager.enableButton(confirmBtn);
-                                                }
-                                            });
                                 }
                             });
 
