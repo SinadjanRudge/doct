@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
@@ -31,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import com.triadss.doctrack2.helper.ButtonManager;
@@ -120,8 +122,8 @@ public class PatientAppointmentPendingAdapter
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView purpose, date, time, documentId, patientName;
-        private Button reschedule, cancel;
+        private TextView purpose, date, time, documentId, patientName,  DocId;
+        private Button reschedule, cancel, info;
 
         public ViewHolder(View view) {
             super(view);
@@ -132,6 +134,8 @@ public class PatientAppointmentPendingAdapter
             reschedule = (Button) itemView.findViewById(R.id.reschedule_button);
             documentId = (TextView) view.findViewById(R.id.IDtext);
             patientName = view.findViewById(R.id.nametext);
+            info = (Button) itemView.findViewById(R.id.showInfo);
+            DocId = (TextView) view.findViewById(R.id.DocumentID);
         }
 
         public void update(AppointmentDto appointment) {
@@ -141,12 +145,54 @@ public class PatientAppointmentPendingAdapter
             time.setText(dateTimeDto.getTime().ToString());
             documentId.setText(appointment.getPatientIdNumber());
             patientName.setText(appointment.getNameOfRequester());
-
+            DocId.setText(appointment.getDocumentId());
             reschedule.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
                     showUpdateDialog(appointment);
+                }
+            });
+
+            info.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    appointmentRepository.PatientInfo(DocId.getText().toString(), new AppointmentRepository.PatientInfoAppointmentCallback() {
+                        @Override
+                        public void onSuccess(ArrayList<String> lngList) {
+
+
+                            Dialog dialog = new Dialog(context);
+                            dialog.setContentView(R.layout.show_info);
+                            Button cancelBtn = dialog.findViewById(R.id.showInfoCancel);
+
+                            String Carl = "";
+
+                            ListView hello = dialog.findViewById(R.id.breakdown);
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(itemView.getContext(), android.R.layout.simple_list_item_1, lngList) {
+
+                                @Override
+                                public View getView(int position, View convertView, ViewGroup parent) {
+
+                                    TextView textView = (TextView) super.getView(position, convertView, parent);
+                                    textView.setTextSize(15);
+                                    return textView;
+                                }
+                            };
+
+                            hello.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+
+                            dialog.show();
+
+                        }
+                        @Override
+                        public void onError(String errorMessage) {
+
+                        }
+                    });
+
                 }
             });
 

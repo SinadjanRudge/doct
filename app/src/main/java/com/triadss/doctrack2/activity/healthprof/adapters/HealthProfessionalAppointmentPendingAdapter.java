@@ -113,9 +113,9 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView purpose, date, time, identification, name,documentId,patientName;
+        private TextView purpose, date, time, identification, name,documentId,patientName,  DocId;
 
-        private Button reschedule, cancel;
+        private Button reschedule, cancel, info;
 
         public ViewHolder(View view) {
             super(view);
@@ -128,6 +128,8 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             reschedule = (Button) itemView.findViewById(R.id.reschedule_button);
             documentId = (TextView) view.findViewById(R.id.IDtext);
             patientName = view.findViewById(R.id.nametext);
+            info = (Button) itemView.findViewById(R.id.showInfo);
+            DocId = (TextView) view.findViewById(R.id.DocumentID);
         }
 
         public void update(AppointmentDto appointment) {
@@ -139,7 +141,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             date.setText(dateTime.getDate().ToString());
             time.setText(dateTime.getTime().ToString());
             //Button reschedule = (Button) itemView.findViewById(R.id.reschedule_button);
-
+            DocId.setText(appointment.getDocumentId());
             reschedule.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -149,6 +151,48 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             });
 
            // Button cancel = (Button) itemView.findViewById(R.id.cancel_button);
+            info.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    appointmentRepository.PatientInfo(DocId.getText().toString(), new AppointmentRepository.PatientInfoAppointmentCallback() {
+                        @Override
+                        public void onSuccess(ArrayList<String> lngList) {
+
+
+                            Dialog dialog = new Dialog(context);
+                            dialog.setContentView(R.layout.show_info);
+                            Button cancelBtn = dialog.findViewById(R.id.showInfoCancel);
+
+                            String Carl = "";
+
+                            ListView hello = dialog.findViewById(R.id.breakdown);
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(itemView.getContext(), android.R.layout.simple_list_item_1, lngList) {
+
+                                @Override
+                                public View getView(int position, View convertView, ViewGroup parent) {
+
+                                    TextView textView = (TextView) super.getView(position, convertView, parent);
+                                    textView.setTextSize(15);
+                                    return textView;
+                                }
+                            };
+                            cancelBtn.setOnClickListener(v -> {
+                                dialog.dismiss();
+                            });
+                            hello.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+
+                            dialog.show();
+                        }
+                        @Override
+                        public void onError(String errorMessage) {
+
+                        }
+                    });
+
+                }
+            });
 
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override

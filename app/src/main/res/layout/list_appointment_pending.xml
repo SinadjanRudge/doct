@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="297dp"
+        android:layout_height="379dp"
         android:padding="15dp">
 
         <TextView
@@ -84,9 +84,9 @@
             android:layout_below="@+id/PURPOSEtext"
             android:layout_marginStart="5dp"
             android:layout_marginTop="30dp"
-            app:tint="@color/green"
             android:layout_toEndOf="@+id/appointment_date"
-            app:srcCompat="@drawable/baseline_access_time_24" />
+            app:srcCompat="@drawable/baseline_access_time_24"
+            app:tint="@color/green" />
 
         <TextView
             android:id="@+id/appointment_time"
@@ -155,6 +155,25 @@
             android:layout_marginEnd="25dp"
             android:layout_toEndOf="@+id/PURPOSEtext"
             android:text="viewPurpose" />
+
+        <Button
+            android:id="@+id/showInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/appointment_date"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="100dp"
+            android:backgroundTint="@color/green"
+            android:text="info" />
+
+        <TextView
+            android:id="@+id/DocumentID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            tools:visibility="gone"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
