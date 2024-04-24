@@ -111,24 +111,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:backgroundTint="@color/green"
-                            android:text="Change \nDate" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/dateErrorText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="Please select a date"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/holo_red_dark"
-                            android:visibility="gone" />
+                            android:text="Change Date"
+                            android:textSize="12sp" />
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -154,24 +138,9 @@
                             android:layout_centerVertical="false"
                             android:layout_weight="1"
                             android:backgroundTint="@color/green"
-                            android:text="Change \nTime" />
+                            android:text="Change Time"
+                            android:textSize="12sp" />
 
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/timeErrorText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="Please select a valid time"
-                            android:textColor="@android:color/holo_red_dark"
-                            android:visibility="gone" />
                     </RelativeLayout>
 
                 </LinearLayout>
