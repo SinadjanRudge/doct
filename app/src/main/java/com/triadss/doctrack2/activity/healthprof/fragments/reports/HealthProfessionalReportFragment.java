@@ -3,6 +3,8 @@ package com.triadss.doctrack2.activity.healthprof.fragments.reports;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -51,7 +53,7 @@ public class HealthProfessionalReportFragment extends Fragment {
     private String mParam2;
     String loggedInUserId;
 
-    ToggleButton appointmentToggle, patientToggle;
+    ToggleButton appointmentToggle, patientToggle, allToggle;
 
     public HealthProfessionalReportFragment() {
         // Required empty public constructor
@@ -106,12 +108,17 @@ public class HealthProfessionalReportFragment extends Fragment {
 
         appointmentToggle = rootView.findViewById(R.id.appointmentToggle);
         patientToggle = rootView.findViewById(R.id.patientToggle);
+        allToggle = rootView.findViewById(R.id.allToggle);
 
         appointmentToggle.setOnClickListener(view -> {
             reloadList();
         });
 
         patientToggle.setOnClickListener(view -> {
+            reloadList();
+        });
+
+        allToggle.setOnClickListener(view -> {
             reloadList();
         });
 
@@ -149,44 +156,57 @@ public class HealthProfessionalReportFragment extends Fragment {
         }
     };
 
-    private void reloadList()
-    {
+    private void reloadList() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-
         ReportsRepository repository = new ReportsRepository();
 
         String[] list = new String[0];
-        if(appointmentToggle.isChecked()) {
-            int newCount = list.length + ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS.length;
-            list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS))
-                    .toArray(size -> (String[]) Array.newInstance(String.class,
-                            newCount));
+
+        if (allToggle.isChecked()) {
+            //* Merge all report lists into 'list'
+            list = Stream.concat(
+                            Arrays.stream(ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS),
+                            Arrays.stream(ReportConstants.HEALTHPROF_PATIENT_REPORTS))
+                    .toArray(String[]::new);
+        } else {
+            //* Handle individual toggle button states
+            if (appointmentToggle.isChecked()) {
+                list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS))
+                        .toArray(String[]::new);
+            }
+
+            if (patientToggle.isChecked()) {
+                list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.HEALTHPROF_PATIENT_REPORTS))
+                        .toArray(String[]::new);
+            }
         }
 
-        if(patientToggle.isChecked()) {
-            int newCount = list.length + ReportConstants.HEALTHPROF_PATIENT_REPORTS.length;
-            list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.HEALTHPROF_PATIENT_REPORTS))
-                    .toArray(size -> (String[]) Array.newInstance(String.class,
-                            newCount));
+        if(!allToggle.isChecked() || !appointmentToggle.isChecked() || !patientToggle.isChecked()){
+            repository.getReportsFromUserFilter(user.getUid(),
+                    search.getText().toString().toLowerCase(),
+                    list,
+                    new ReportsRepository.ReportsFilterCallback() {
+                        @Override
+                        public void onSuccess(List<ReportDto> reports) {
+                            PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList) reports);
+                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                            recyclerView.setLayoutManager(linearLayoutManager);
+                            recyclerView.setAdapter(pageAdapter);
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            // Handle error
+                        }
+                    });
+        } else {
+            PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), new ArrayList<ReportDto>());
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(pageAdapter);
         }
 
-        repository.getReportsFromUserFilter(user.getUid(),
-                search.getText().toString().toLowerCase(),
-                list,
-                new ReportsRepository.ReportsFilterCallback() {
-                    @Override
-                    public void onSuccess(List<ReportDto> reports) {
-
-                        PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
-                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-                        recyclerView.setLayoutManager(linearLayoutManager);
-                        recyclerView.setAdapter(pageAdapter);
-                    }
-                    @Override
-                    public void onError(String errorMessage) {
-
-                    }
-                });
     }
+
 }
