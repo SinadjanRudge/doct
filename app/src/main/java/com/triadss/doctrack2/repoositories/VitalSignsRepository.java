@@ -155,30 +155,34 @@ public class VitalSignsRepository {
 
     public void getVitalSignsOfPatient(String patientUid, FetchListCallback callback) {
         vitalSignsCollection.whereEqualTo(VitalSignsModel.patientId, patientUid)
-                .orderBy("createdAt", Query.Direction.DESCENDING)
-                .limit(5)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<VitalSignsDto> vitalSignsList = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            VitalSignsDto vitalSign = document.toObject(VitalSignsDto.class);
-                            vitalSign.setUid(document.getId()); // Assuming uid is a String
-                            vitalSignsList.add(vitalSign);
-                        }
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
+                    .limit(5)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            List<VitalSignsDto> vitalSignsList = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                VitalSignsDto vitalSign = document.toObject(VitalSignsDto.class);
+                                vitalSign.setUid(document.getId()); // Assuming uid is a String
+                                vitalSignsList.add(vitalSign);
+                            }
 
-                        while (vitalSignsList.size() < 5) {
-                            // Add default values to fill up the list
-                            VitalSignsDto defaultVitalSign = new VitalSignsDto();
-                            vitalSignsList.add(defaultVitalSign);
-                        }
+                            while (vitalSignsList.size() < 5) {
+                                // Add default values to fill up the list
+                                VitalSignsDto defaultVitalSign = new VitalSignsDto();
+                                vitalSignsList.add(defaultVitalSign);
+                            }
 
-                        callback.onSuccess(vitalSignsList);
-                    } else {
-                        Log.e(TAG, "Error getting vital signs", task.getException());
-                        callback.onError(task.getException().getMessage());
-                    }
+                            callback.onSuccess(vitalSignsList);
+                        } else {
+                            Log.e(TAG, "Error getting vital signs", task.getException());
+                            callback.onError(task.getException().getMessage());
+                        }
+                    }).addOnFailureListener(e -> {
+                        Log.e(TAG, "Error: " + e.getMessage());
                 });
+
+
     }
 
 
