@@ -58,7 +58,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView purpose,date,time,identification,name;
+        TextView purpose,date,time,identification,name, birthday, age;
 
         public ViewHolder(View view) {
             super(view);
@@ -67,6 +67,8 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             time = (TextView) view.findViewById(R.id.appointment_time);
             identification = (TextView) view.findViewById(R.id.IDtext);
             name = (TextView) view.findViewById(R.id.nametext);
+            birthday = view.findViewById(R.id.birthdaytext);
+            age = view.findViewById(R.id.agetext);
         }
 
         public void update(AppointmentDto appointment)
@@ -74,6 +76,8 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             purpose.setText(appointment.getPurpose());
             identification.setText(appointment.getPatientIdNumber());
             name.setText(appointment.getNameOfRequester());
+            birthday.setText(DateTimeDto.ToDateTimeDto(appointment.getPatientBirthday()).ToString());
+            age.setText(String.valueOf(appointment.getPatientAge()));
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
