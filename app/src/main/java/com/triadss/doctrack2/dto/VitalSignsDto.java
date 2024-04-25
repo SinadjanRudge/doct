@@ -111,16 +111,5 @@ public class VitalSignsDto {
     private String uid;
 
     public VitalSignsDto(){
-        vitalsId = 0;
-        patientId = "";
-        bloodPressure = "";
-        temperature = 0.0;
-        pulseRate = 0;
-        oxygenLevel = 0;
-        weight = 0.0;
-        height = 0.0;
-        BMI = 0.0;
-        uid = "";
-        createdAt = null;
     }
 }

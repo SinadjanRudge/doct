@@ -248,28 +248,6 @@ public class UpdateVitalSigns extends Fragment {
                 ButtonManager.enableButton(submit);
             }
         });
-//        repository.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
-//            @Override
-//            public void onSuccess(String documentId) {
-//                _reportsRepository.addHealthProfUpdatePatientVitalSignReport(loggedInUserId, patientUid, new ReportsRepository.ReportCallback() {
-//                    @Override
-//                    public void onReportAddedSuccessfully() {
-//                        showViewPatient();
-//                    }
-//
-//                    @Override
-//                    public void onReportFailed(String errorMessage) {
-//                        ButtonManager.enableButton(submit);
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onError(String message) {
-//                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-//                ButtonManager.enableButton(submit);
-//            }
-//        });
     }
 
     private void showViewPatient() {

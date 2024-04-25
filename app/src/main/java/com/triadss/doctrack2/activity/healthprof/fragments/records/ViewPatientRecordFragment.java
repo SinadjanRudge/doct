@@ -60,22 +60,31 @@ public class ViewPatientRecordFragment extends Fragment {
             patientUid = getArguments().getString(PATIENT_UID);
         }
     }
-
     private void setVitalSignsValues(TextView bloodPressure, TextView temperature, TextView sp,
-                                     TextView pulseRate, TextView weight, TextView height, TextView BMI, TextView date, VitalSignsDto v) {
-        bloodPressure.setText(v.getBloodPressure());
-        temperature.setText(String.valueOf(v.getTemperature()));
-        sp.setText(String.valueOf(v.getOxygenLevel()));
-        pulseRate.setText(String.valueOf(v.getPulseRate()));
-        weight.setText(String.valueOf(v.getWeight()));
-        height.setText(String.valueOf(v.getHeight()));
-        BMI.setText(String.valueOf(v.getBMI()));
+                                     TextView pulseRate, TextView weight, TextView height, TextView BMI,
+                                     TextView date, VitalSignsDto v) {
 
+        if (v.getCreatedAt() != null) {
+            DateTimeDto dt = DateTimeDto.ToDateTimeDto(v.getCreatedAt());
 
-        DateTimeDto dt = (v.getCreatedAt() != null) ? DateTimeDto.ToDateTimeDto(v.getCreatedAt()) : null;
-
-
-        date.setText((dt != null) ? dt.ToString() : "");
+            bloodPressure.setText(v.getBloodPressure());
+            temperature.setText(String.valueOf(v.getTemperature()));
+            sp.setText(String.valueOf(v.getOxygenLevel()));
+            pulseRate.setText(String.valueOf(v.getPulseRate()));
+            weight.setText(String.valueOf(v.getWeight()));
+            height.setText(String.valueOf(v.getHeight()));
+            BMI.setText(String.valueOf(v.getBMI()));
+            date.setText(dt.ToString());
+        } else {
+            bloodPressure.setText("");
+            temperature.setText("");
+            sp.setText("");
+            pulseRate.setText("");
+            weight.setText("");
+            height.setText("");
+            BMI.setText("");
+            date.setText("");
+        }
     }
 
 

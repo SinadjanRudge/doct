@@ -384,13 +384,16 @@
 
 
 
-
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_marginStart="35dp"
+                android:layout_marginEnd="35dp"
+                android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginEnd="35dp"
+
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -405,6 +408,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
+                        android:minWidth="50dp"
                         android:text="Date Sync" />
 
                     <TextView
@@ -412,6 +416,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="90dp"
                         android:text="DATE1" />
 
                     <TextView
@@ -419,12 +424,14 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="90dp"
                         android:text="DATE2" />
                     <TextView
                         android:id="@+id/value_latest3"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="90dp"
                         android:text="DATE3" />
 
                     <TextView
@@ -432,6 +439,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="90dp"
                         android:text="DATE4" />
 
                     <TextView
@@ -439,7 +447,9 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="90dp"
                         android:text="DATE5" />
+                    
 
                 </LinearLayout>
                 <!-- Blood Pressure -->
@@ -453,6 +463,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
+                        android:minWidth="50dp"
                         android:text="Blood Pressure:" />
 
                     <TextView
@@ -460,6 +471,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="BP1" />
 
                     <TextView
@@ -467,6 +479,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="BP2" />
 
                     <TextView
@@ -474,6 +487,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="BP3" />
 
                     <TextView
@@ -481,6 +495,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="BP4" />
 
                     <TextView
@@ -488,6 +503,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="BP5" />
                 </LinearLayout>
 
@@ -502,6 +518,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
+                        android:minWidth="50dp"
                         android:text="Temperature:" />
 
                     <TextView
@@ -509,6 +526,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="T1" />
 
                     <TextView
@@ -516,6 +534,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="T2" />
 
                     <TextView
@@ -523,6 +542,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="T3" />
 
                     <TextView
@@ -530,6 +550,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="T4" />
 
                     <TextView
@@ -537,6 +558,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="T5" />
 
                 </LinearLayout>
@@ -552,6 +574,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
+                        android:minWidth="50dp"
                         android:text="Sp02" />
 
                     <TextView
@@ -559,30 +582,35 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="0" />
                     <TextView
                         android:id="@+id/value_spo2_2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="0" />
                     <TextView
                         android:id="@+id/value_spo2_3"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="0" />
                     <TextView
                         android:id="@+id/value_spo2_4"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="0" />
                     <TextView
                         android:id="@+id/value_spo2_5"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="0" />
 
                 </LinearLayout>
@@ -598,6 +626,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
+                        android:minWidth="50dp"
                         android:text="Pulse Rate:" />
 
                     <TextView
@@ -605,6 +634,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="PR1" />
 
                     <TextView
@@ -612,6 +642,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="PR2" />
 
                     <TextView
@@ -619,6 +650,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="PR3" />
 
                     <TextView
@@ -626,6 +658,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="PR4" />
 
                     <TextView
@@ -633,6 +666,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="PR5" />
 
                 </LinearLayout>
@@ -648,6 +682,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
+                        android:minWidth="50dp"
                         android:text="Height:" />
 
                     <TextView
@@ -662,6 +697,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="H2" />
 
                     <TextView
@@ -669,6 +705,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="H3" />
 
 
@@ -677,6 +714,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="H4" />
 
                     <TextView
@@ -684,6 +722,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="H5" />
                 </LinearLayout>
 
@@ -698,6 +737,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
+                        android:minWidth="50dp"
                         android:text="Weight:" />
 
                     <TextView
@@ -705,6 +745,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="W1" />
 
                     <TextView
@@ -719,6 +760,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="W3" />
 
                     <TextView
@@ -726,6 +768,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="W4" />
 
                     <TextView
@@ -733,6 +776,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="W5" />
                 </LinearLayout>
 
@@ -747,6 +791,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
+                        android:minWidth="50dp"
                         android:text="BMI:" />
 
                     <TextView
@@ -754,6 +799,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="BMI1" />
 
                     <TextView
@@ -761,6 +807,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="BMI2" />
 
 
@@ -769,6 +816,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="BMI3" />
 
                     <TextView
@@ -776,6 +824,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="BMI4" />
 
                     <TextView
@@ -783,11 +832,14 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:minWidth="50dp"
                         android:text="BMI5" />
 
                 </LinearLayout>
 
             </LinearLayout>
+
+            </HorizontalScrollView>
 
 
             <TextView
