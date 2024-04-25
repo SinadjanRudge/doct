@@ -162,7 +162,12 @@ public class PatientAppointmentPendingAdapter
             purpose.setText(appointment.getPurpose());
             DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTimeDto.getDate().ToString());
-            time.setText(dateTimeDto.getTime().ToString());
+
+            DateTimeDto rangeEnd = dateTimeDto.Clone();
+            TimeDto startTime = dateTimeDto.getTime();
+            rangeEnd.setTime(new TimeDto(startTime.getHour() + 1, startTime.getMinute()));
+
+            time.setText(String.format("%s - %s", dateTimeDto.getTime().ToString(), rangeEnd.getTime().ToString()));
             documentId.setText(appointment.getPatientIdNumber());
             patientName.setText(appointment.getNameOfRequester());
 

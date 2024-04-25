@@ -81,7 +81,13 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
-            time.setText(dateTime.getTime().ToString());
+            DateTimeDto rangeEnd = dateTime.Clone();
+            TimeDto startTime = dateTime.getTime();
+            rangeEnd.setTime(new TimeDto(startTime.getHour() + 1, startTime.getMinute()));
+
+            time.setText(String.format("%s - %s", dateTime.getTime().ToString(), rangeEnd.getTime().ToString()));
+
+//            time.setText(dateTime.getTime().ToString());
             Button reschedule = (Button)itemView.findViewById(R.id.reschedule_button);
 
             reschedule.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +119,8 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             TextView updateDate = dialog.findViewById(R.id.updateDate);
 
             Button timeBtn = dialog.findViewById(R.id.timeBtn);
+
+
             TextView updateTime = dialog.findViewById(R.id.updateTime);
             TextView dateErrorText = dialog.findViewById(R.id.dateErrorText);
             TextView timeErrorText = dialog.findViewById(R.id.timeErrorText);

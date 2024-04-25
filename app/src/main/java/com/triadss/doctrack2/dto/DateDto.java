@@ -38,6 +38,10 @@ public class DateDto {
         return day;
     }
 
+    public DateDto Clone() {
+        return new DateDto(year, month, day);
+    }
+
     public String ToString(boolean isMonth0Index)
     {
         return String.format(Locale.getDefault(), "%04d-%02d-%02d", year,

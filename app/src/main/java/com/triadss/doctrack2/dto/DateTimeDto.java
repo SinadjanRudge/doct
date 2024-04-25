@@ -1,6 +1,7 @@
 package com.triadss.doctrack2.dto;
 
 import com.google.firebase.Timestamp;
+import com.google.type.DateTime;
 
 import java.time.LocalDateTime;
 import java.util.Calendar;
@@ -46,6 +47,13 @@ public class DateTimeDto {
     }
     public String ToString() {
         return date.ToString() + " " + time.ToString();
+    }
+
+    public DateTimeDto Clone() {
+        DateTimeDto newDateTimeDto = new DateTimeDto();
+        newDateTimeDto.setTime(time.Clone());
+        newDateTimeDto.setDate(date.Clone());
+        return newDateTimeDto;
     }
 
     public static DateTimeDto ToDateTimeDto(Timestamp timestamp)
