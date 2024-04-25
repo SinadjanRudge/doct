@@ -356,7 +356,7 @@ public class PatientAppointmentPendingAdapter
                                 if (!itemValue.equals("Not available")) {
                                     // updateTime.setText(itemValue);
                                     setTimePick(itemValue);
-                                    updateTime.setText(getTimePick());
+                                    updateTime.setText(itemValue);
                                     dialog.dismiss();
                                 }
                                 // adapter.dismiss(); // If you want to close the adapter
