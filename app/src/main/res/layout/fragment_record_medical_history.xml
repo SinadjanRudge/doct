@@ -8,11 +8,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
@@ -26,7 +25,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Past Illness:"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -36,6 +35,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
                 android:text="Past Illness"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -51,7 +51,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Previous Hospitalization/Operation:"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -71,6 +71,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_weight="0.3"
                 android:text="Previous Hospitalization/Operation"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -86,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.8"
                 android:text="OB-Gyne History:"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -96,6 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:text="OB-Gyne History"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -111,7 +113,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Family History:"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -121,6 +123,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
                 android:text="Family History"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 

@@ -8,11 +8,10 @@
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@color/white"
         android:orientation="vertical">
 
 
@@ -27,7 +26,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.10"
                 android:text="Patient ID:"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -38,6 +37,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
                 android:text="Patient ID"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -53,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Email:"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -64,12 +64,13 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
                 android:text="Email"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
@@ -79,7 +80,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Name:"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -90,6 +91,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
                 android:text="Name"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -105,7 +107,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Gender:"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -116,6 +118,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
                 android:text="Gender"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -128,10 +131,10 @@
             <TextView
                 android:id="@+id/textView_Address"
                 android:layout_width="424dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.8"
                 android:text="Address:"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -142,12 +145,13 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
                 android:text="Address"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
@@ -157,7 +161,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Date of Birth:"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -168,6 +172,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
                 android:text="Date of Birth"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -183,8 +188,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Civil Status:"
-                android:textColor="@color/green"
-                android:textSize="18dp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -194,6 +199,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
                 android:text="Status"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -209,8 +215,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Contact No.:"
-                android:textColor="@color/green"
-                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -220,6 +226,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
                 android:text="Contact No"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -235,8 +242,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Course:"
-                android:textColor="@color/green"
-                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -246,6 +253,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
                 android:text="Course"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -261,8 +269,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
                 android:text="Year:"
-                android:textColor="@color/green"
-                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -272,6 +280,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="0.3"
                 android:text="Year"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
