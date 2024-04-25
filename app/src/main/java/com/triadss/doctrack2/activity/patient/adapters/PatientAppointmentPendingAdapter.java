@@ -47,6 +47,7 @@ public class PatientAppointmentPendingAdapter
     ArrayList<AppointmentDto> appointments;
     Context context;
     NotificationRepository notificationRepository = new NotificationRepository();
+    private Button cancel;
 
     private String TimePick;
     public String getTimePick(){
