@@ -3,6 +3,7 @@ package com.triadss.doctrack2.dto;
 import com.google.firebase.Timestamp;
 import com.google.type.DateTime;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,7 +47,18 @@ public class DateTimeDto {
         return new Timestamp(extractedDate);
     }
     public String ToString() {
-        return date.ToString() + " " + time.ToString();
+        return date.ToString() + " " + ToAMPMString(time.ToString());
+    }
+    public String ToAMPMString(String time){
+        try{
+            SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a");
+
+            Date date = inputFormat.parse(time);
+            return outputFormat.format(date);
+        } catch(Exception e){
+            return "";
+        }
     }
 
     public DateTimeDto Clone() {
