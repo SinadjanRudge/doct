@@ -89,6 +89,6 @@ public class DateDto {
         calendar.set(year, month, day);
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-        return dayOfWeek == Calendar.SATURDAY;
+        return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
     }
 }

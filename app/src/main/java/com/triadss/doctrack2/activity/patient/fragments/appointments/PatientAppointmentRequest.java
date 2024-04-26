@@ -182,7 +182,7 @@ public class PatientAppointmentRequest extends Fragment {
             return;
 
         if(DateDto.isDayWeekend(selectedYear, selectedMonth, selectedDay)){
-            Toast.makeText(getContext(), "Appointments cannot be scheduled on Saturdays", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Appointments cannot be scheduled on Weekends", Toast.LENGTH_SHORT).show();
             return;
         }
 
