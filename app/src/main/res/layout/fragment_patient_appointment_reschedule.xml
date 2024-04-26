@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="360dp"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:background="@drawable/green_stroke">
@@ -11,10 +11,6 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:elevation="5dp"
         app:cardCornerRadius="5dp"
         app:cardUseCompatPadding="true">
 
