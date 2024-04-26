@@ -3,15 +3,11 @@ package com.triadss.doctrack2.notification;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -28,9 +24,6 @@ import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.NotificationDTO;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
 
-import org.checkerframework.checker.units.qual.N;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -76,7 +69,7 @@ public class NotificationBackgroundWorker extends Worker {
             @Override
             public void onSuccess(List<NotificationDTO> notificationList) { // fetch notification data
                 for (NotificationDTO notifyDti : notificationList) {
-                    scheduleNotification(notifyDti);
+                    showNotification(notifyDti);
                     Log.e("TEST", "Found notifcation" + notifyDti.getTitle() + " at " +
                         DateTimeDto.ToDateTimeDto(notifyDti.getDateSent()).ToString());
                 }
@@ -101,7 +94,7 @@ public class NotificationBackgroundWorker extends Worker {
 
     // Modify the scheduleNotification method to accept notification content
     @SuppressLint("MissingPermission")
-    public void scheduleNotification(NotificationDTO dto) {
+    public void showNotification(NotificationDTO dto) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
         int lastNotificationId = sharedPref.getInt(SessionConstants.LastNotificationId, 1);
