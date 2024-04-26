@@ -170,7 +170,7 @@ public class PatientAppointmentRequest extends Fragment {
         }
 
         if (invalidTime) {
-            Toast.makeText(getContext(), "Please select a valid time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Must be between 8:00 - 17:00", Toast.LENGTH_SHORT).show();
             timeErrorText.setVisibility(View.VISIBLE);
             invalid = true;
         }
