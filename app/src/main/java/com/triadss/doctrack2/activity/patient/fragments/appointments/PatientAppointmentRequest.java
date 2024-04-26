@@ -29,6 +29,7 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.NotificationDTO;
@@ -169,7 +170,7 @@ public class PatientAppointmentRequest extends Fragment {
         }
 
         if (invalidTime) {
-            Toast.makeText(getContext(), "Please select a valid time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Must be between 8:00 - 17:00", Toast.LENGTH_SHORT).show();
             timeErrorText.setVisibility(View.VISIBLE);
             invalid = true;
         }
@@ -180,7 +181,11 @@ public class PatientAppointmentRequest extends Fragment {
         if (isInputsNotValid())
             return;
 
-        // Sample values for AppointmentDto
+        if(DateDto.isDayWeekend(selectedYear, selectedMonth, selectedDay)){
+            Toast.makeText(getContext(), "Appointments cannot be scheduled on Weekends", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String purpose = textInputPurpose.getText().toString();
 
         Timestamp dateTimeOfAppointment = new Timestamp(
@@ -190,6 +195,7 @@ public class PatientAppointmentRequest extends Fragment {
 
         AppointmentDto appointment = new AppointmentDto("",
                 "", purpose, dateTimeOfAppointment, status);
+
         ButtonManager.disableButton(confirmButton);
 
         appointmentRepository.addAppointment(appointment, new AppointmentRepository.AppointmentAddCallback() {

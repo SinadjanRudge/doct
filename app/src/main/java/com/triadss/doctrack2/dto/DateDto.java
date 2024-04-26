@@ -83,4 +83,12 @@ public class DateDto {
         DateDto extractedDate = new DateDto(datepicker.getYear(), datepicker.getMonth() + 1, datepicker.getDayOfMonth());
         return extractedDate;
     }
+
+    public static boolean isDayWeekend(int year, int month, int day){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
+    }
 }
