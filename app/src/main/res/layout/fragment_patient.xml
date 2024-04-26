@@ -43,7 +43,7 @@
                 android:layout_marginHorizontal="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/green_stroke"
-                android:hint=" Search Patient Name" />
+                android:hint=" Search Patient" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/patient_add_btn"

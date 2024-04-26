@@ -118,8 +118,6 @@ public class PatientHomeFragment extends Fragment{
         popupMenu.show();
     }
 
-
-
     public void loadMedications()
     {
         medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING, new MedicationRepository.MedicationFetchCallback() {

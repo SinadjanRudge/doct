@@ -323,11 +323,14 @@ public class AppointmentRepository {
                                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                     AppointmentDto appointment = document.toObject(AppointmentDto.class);
                                     appointment.setUid(document.getId());
-                                    String idNumber = patients
+                                    AddPatientDto requestingPatient = patients
                                             .stream()
                                             .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
-                                            .findFirst().orElse(null).getIdNumber();
-                                    appointment.setPatientIdNumber(idNumber);
+                                            .findFirst().orElse(null);
+                                    appointment.setPatientIdNumber(requestingPatient.getIdNumber());
+                                    Timestamp patientBirthday = requestingPatient.getDateOfBirth();
+                                    appointment.setPatientBirthday(patientBirthday);
+                                    appointment.setPatientAge(DateTimeDto.ComputeAge(patientBirthday));
 
                                     appointments.add(appointment);
                                 }

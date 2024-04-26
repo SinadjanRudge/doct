@@ -1,9 +1,13 @@
 package com.triadss.doctrack2.dto;
 
 import com.google.firebase.Timestamp;
+import com.google.type.DateTime;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -60,6 +64,13 @@ public class DateTimeDto {
         }
     }
 
+    public DateTimeDto Clone() {
+        DateTimeDto newDateTimeDto = new DateTimeDto();
+        newDateTimeDto.setTime(time.Clone());
+        newDateTimeDto.setDate(date.Clone());
+        return newDateTimeDto;
+    }
+
     public static DateTimeDto ToDateTimeDto(Timestamp timestamp)
     {
         Date date = timestamp.toDate();
@@ -93,5 +104,12 @@ public class DateTimeDto {
         Timestamp currentTimeStamp  = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
 
         return currentTimeStamp;
+    }
+
+    public static int ComputeAge(Timestamp birthday) {
+        LocalDate birthdate = birthday.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate now = LocalDate.now();
+        Period period = Period.between(birthdate, now);
+        return period.getYears();
     }
 }

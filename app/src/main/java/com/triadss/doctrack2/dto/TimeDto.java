@@ -20,6 +20,10 @@ public class TimeDto {
         return minute;
     }
 
+    public TimeDto Clone() {
+        return  new TimeDto(hour, minute);
+    }
+
     public String ToString()
     {
         return String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
