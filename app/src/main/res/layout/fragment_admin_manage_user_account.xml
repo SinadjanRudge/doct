@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="@color/green"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             app:title="Manage User Account"
@@ -26,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="50dp"
-            android:text="Add Health Professional" />
+            android:backgroundTint="@color/green"
+            android:text="Create Health Professional Account" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewAdmin"

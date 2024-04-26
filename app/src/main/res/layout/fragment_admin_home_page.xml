@@ -31,7 +31,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:textColor="@color/white"
-            android:text="Manage Users"
+            android:text="Manage User Account"
             android:textSize="16sp"/>
     </RelativeLayout>
 
@@ -60,7 +60,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:textColor="@color/white"
-            android:text="View Reports"
+            android:text="Reports"
             android:textSize="16sp"/>
     </RelativeLayout>
 
