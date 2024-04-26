@@ -2,6 +2,7 @@ package com.triadss.doctrack2.repoositories;
 
 import android.util.Log;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -12,7 +13,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.config.model.MedicationModel;
+import com.triadss.doctrack2.config.model.ReportModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 
 import java.util.ArrayList;
@@ -92,6 +96,32 @@ public class MedicationRepository {
             callback.onError("User is null");
         }
     }
+
+    public void getUncompletedMedications(String userId, MedicationFetchCallback callback) {
+        List<String> types = new ArrayList<String>();
+        Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
+        medicationsCollection
+                .whereEqualTo(MedicationModel.patientId, userId)
+                .whereEqualTo(MedicationModel.status, MedicationTypeConstants.ONGOING)
+                .whereGreaterThanOrEqualTo(MedicationModel.timestamp, currentTime)
+                .orderBy(MedicationModel.timestamp, Query.Direction.ASCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<MedicationDto> medications = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        MedicationDto medication = document.toObject(MedicationDto.class);
+                        medications.add(medication);
+                        medication.setMediId(document.getId());
+                    }
+                    callback.onSuccess(medications);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching medicines", e);
+                    callback.onError(e.getMessage());
+                });
+
+    }
+
 
     public void getAllMedicationsFromUser(String userId, MedicationFetchCallback callback) {
         if (user != null) {

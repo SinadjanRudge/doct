@@ -106,6 +106,12 @@ public class DateTimeDto {
         return currentTimeStamp;
     }
 
+    public static long GetTimestampDiffInSeconds(Timestamp futureTime) {
+        long secondDiff = futureTime.getSeconds() - Timestamp.now().getSeconds();
+
+        return secondDiff;
+    }
+
     public static int ComputeAge(Timestamp birthday) {
         LocalDate birthdate = birthday.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate now = LocalDate.now();
