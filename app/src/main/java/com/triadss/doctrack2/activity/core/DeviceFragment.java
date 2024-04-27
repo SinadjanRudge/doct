@@ -370,7 +370,8 @@ public class DeviceFragment extends Fragment {
         if (user != null && !isCurrentInAnAppointment(user.getUid())) {
             Toast.makeText(getContext(), "Can't sync. You're not currently in an appointment.", Toast.LENGTH_SHORT).show();
             return false;
-        } return true;
+        }
+        return true;
     }
 
     private void handleSyncButtonClick() {
@@ -432,7 +433,8 @@ public class DeviceFragment extends Fragment {
 
         putDataTask.addOnSuccessListener(dataItem -> {
             count++;
-            Log.d(TAG, "Data sent successfully");
-        }).addOnFailureListener(e -> Log.e(TAG, "Failed to send data", e));
+        })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to send data", e))
+                .addOnSuccessListener(e -> Toast.makeText(getContext(), "Data sent successfully", Toast.LENGTH_SHORT).show());
     }
 }
