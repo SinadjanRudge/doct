@@ -120,66 +120,39 @@ public class PatientAppointmentRequest extends Fragment {
         return rootView;
     }
 
-
     private void setupDatePicker() {
-        // Set up Date Picker Dialog
         pickDateButton.setOnClickListener(v -> {
-            // Get the current date
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-
-            DateTimeDto selectedDateTime = new DateTimeDto();
-
-            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
-            // TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
-            TimeZone tz = TimeZone.getDefault();
-            inFormat.setTimeZone(tz);
-
             // Create and show the Date Picker Dialog
             DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
                     (view, year1, monthOfYear, dayOfMonth) -> {
-                        // Store the selected date
-                        selectedYear = year1;
-                        selectedMonth = monthOfYear;
-                        selectedDay = dayOfMonth;
+                        Calendar selectedDate = Calendar.getInstance();
+                        selectedDate.set(year1, monthOfYear, dayOfMonth);
 
-                        // Update the text on the button
-                        pickDateButton.setText(
-                                String.format(Locale.getDefault(), "%04d-%02d-%02d", selectedYear,
-                                        selectedMonth + 1, selectedDay));
+                        Calendar currentDate = Calendar.getInstance();
 
-                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                        String currentDate = df.format(Calendar.getInstance().getTime());
-
-                        Date sunday = null;
-                        try {
-                            sunday = inFormat.parse(pickDateButton.getText().toString());
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                        SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
-                        String goal = outFormat.format(sunday);
-                        // Update the text on the button
-                        if(currentDate.compareTo(pickDateButton.getText().toString()) > 0){
-                            pickDateButton.setText("Select Date");
+                        if (selectedDate.before(currentDate)) {
+                            // Selected date is in the past
                             Toast.makeText(getContext(), "Cannot select past date", Toast.LENGTH_SHORT)
                                     .show();
+                        } else {
+                            // Update the text on the button with the selected date
+                            pickDateButton.setText(
+                                    String.format(Locale.getDefault(), "%04d-%02d-%02d", year1,
+                                            monthOfYear + 1, dayOfMonth));
                         }
-                        if (goal.equals("Sunday")) {
-                            pickDateButton.setText("Select Date");
-                            Toast.makeText(getContext(), "No Appointments on Sunday", Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-
                     }, year, month, day);
+
             // Show the Date Picker Dialog
             datePickerDialog.show();
             pickTimeBtn.setText("Pick Time");
         });
     }
+
 
     private void setupTimePicker() {
 //        // Set up Time Picker Dialog
