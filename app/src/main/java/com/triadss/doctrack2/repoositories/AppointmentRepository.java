@@ -772,7 +772,7 @@ public class AppointmentRepository {
 
                             appointmentsCollection
                                     .document(document.getId())
-                                    .update(AppointmentsModel.status, "Cancelled")
+                                    .update(AppointmentsModel.status, "Canceled")
                                     .addOnSuccessListener(documentReference -> {
                                         callback.onSuccess(document.getId());
                                     })

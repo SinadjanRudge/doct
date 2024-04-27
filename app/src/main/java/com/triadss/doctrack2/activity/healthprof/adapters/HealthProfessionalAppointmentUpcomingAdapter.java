@@ -221,7 +221,8 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                                       }
                                   });
 
-                          callback.onAccept(dto.getUid());;
+                          callback.onAccept(dto.getUid());
+                          dialog.dismiss();
                       });
 
                       hello.setAdapter(adapter);
