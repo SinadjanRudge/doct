@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 
 import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalAppointmentPendingAdapter;
+import com.triadss.doctrack2.activity.patient.fragments.appointments.PatientAppointmentPending;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
@@ -146,7 +147,6 @@ public class HealthProfessionalPending extends Fragment implements IListView {
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
                 boolean isCurrentlyAtHealthProfAppointment = currentFragment instanceof HealthProfessionalAppointmentFragment;
-                boolean isCurrentlyAtHealthProfAppointmentPending = true;
 
                 if(!isCurrentlyAtHealthProfAppointment) {
                     stop = true;
