@@ -30,6 +30,7 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -37,9 +38,11 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
 import com.triadss.doctrack2.config.constants.BluetoothConstants;
+import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.dto.WearableDeviceDto;
 import com.triadss.doctrack2.helper.ButtonManager;
+import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 import com.triadss.doctrack2.repoositories.WearableDeviceRepository;
 import com.triadss.doctrack2.utils.FragmentFunctions;
@@ -59,7 +62,6 @@ public class DeviceFragment extends Fragment {
     private int receivedMessageNumber = 1;
     private Receiver messageReceiver;
     private int count = 0;
-
     private final VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
     private final WearableDeviceRepository wearableDevicesRepo = new WearableDeviceRepository();
     private WearableDeviceDto wearableDeviceDto = new WearableDeviceDto();
