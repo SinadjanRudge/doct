@@ -241,6 +241,12 @@ public class AppointmentRepository {
                                             .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
                                             .findFirst().orElse(null).getIdNumber();
                                     appointment.setPatientIdNumber(idNumber);
+
+                                    if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) && appointment.getDateOfAppointment().compareTo(DateTimeDto.GetCurrentTimeStamp()) == -1)
+                                    {
+                                        appointment.setStatus(AppointmentTypeConstants.COMPLETED);
+                                    }
+
                                     appointments.add(appointment);
                                 }
                                 callback.onSuccess(appointments);

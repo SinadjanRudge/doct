@@ -35,8 +35,6 @@ public class HealthProfessionalStatus extends Fragment implements IListView {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -72,19 +70,8 @@ public class HealthProfessionalStatus extends Fragment implements IListView {
         }
     }
 
-
-
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
-
-    ArrayList<String> Purpose = new ArrayList<>();
-    ArrayList<String> Date = new ArrayList<>();
-    ArrayList<String> Time = new ArrayList<>();
-
-    ArrayList<String> Identification = new ArrayList<>();
-    ArrayList<String> Name = new ArrayList<>();
-
-    ArrayList<String> Status = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
