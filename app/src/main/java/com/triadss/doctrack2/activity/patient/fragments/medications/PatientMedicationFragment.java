@@ -71,7 +71,6 @@ public class PatientMedicationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_patient_medication, container, false);
-
         FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
         homeBtn.setOnClickListener(view -> {
             FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new PatientHomeFragment());

@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
+import com.triadss.doctrack2.activity.patient.PatientHome;
 import com.triadss.doctrack2.activity.patient.adapters.PatientHomeAppointmentAdapter;
 import com.triadss.doctrack2.activity.patient.adapters.PatientHomeMedicationAdapter;
 import com.triadss.doctrack2.activity.patient.fragments.records.RecordFragment;
@@ -67,7 +68,6 @@ public class PatientHomeFragment extends Fragment{
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-    private String loggedInUserId;
 
     public PatientHomeFragment(){
         //Required empty constructor
@@ -102,9 +102,6 @@ public class PatientHomeFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey,
-                Context.MODE_PRIVATE);
-        loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
 
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_patient_home_page, container, false);
@@ -117,54 +114,13 @@ public class PatientHomeFragment extends Fragment{
 
         loadMedications();
         loadAppointments();
-        setupNotifications();
+        PatientHome homeActivity = (PatientHome) getContext();
+        homeActivity.setupNotifications();
 
         return rootview;
     }
 
-    public void setupNotifications() {
 
-        medicationRepository.getUncompletedMedications(loggedInUserId, new MedicationRepository.MedicationFetchCallback() {
-            @Override
-            public void onSuccess(List<MedicationDto> medications) {
-                List<OneTimeWorkRequest> requests = new ArrayList<OneTimeWorkRequest>();
-                for(MedicationDto dto : medications) {
-                    Log.e("TEST", "Running Medication Work for " + loggedInUserId +
-                            " for " + dto.getMedicine() + " at " + DateTimeDto.ToDateTimeDto(dto.getTimestamp()).ToString());
-
-                    long distance = DateTimeDto.GetTimestampDiffInSeconds(dto.getTimestamp());
-
-                    OneTimeWorkRequest notifWorkRequest = new OneTimeWorkRequest.Builder(
-                            NotificationMedicationScheduleWorker.class)
-                            .setInputData(new Data.Builder()
-                                    .putString(NotificationConstants.RECEIVER_ID, loggedInUserId)
-                                    .putString(NotificationConstants.TITLE_ID, String.format("Please Take your medication %s", dto.getMedicine()))
-                                    .putString(NotificationConstants.CONTENT_ID, String.format("Medication should be taken at %s", DateTimeDto.ToDateTimeDto(dto.getTimestamp()).ToString()))
-                                    .build())
-                            .addTag(NotificationConstants.MEDICATION_NOTIFICATION_TAG)
-                            .setInitialDelay(distance, TimeUnit.SECONDS)
-                            .build();
-
-                    requests.add(notifWorkRequest);
-                }
-                WorkManager.getInstance(requireContext())
-                        .cancelAllWorkByTag(NotificationConstants.MEDICATION_NOTIFICATION_TAG);
-
-                Log.e("TEST", "Medication notif count " + String.valueOf(requests.size()));
-
-
-                if(!requests.isEmpty()) {
-                    WorkManager.getInstance(requireContext())
-                            .enqueue(requests);
-                }
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-
-            }
-        });
-    }
 
     public void showPopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(getContext(), view);

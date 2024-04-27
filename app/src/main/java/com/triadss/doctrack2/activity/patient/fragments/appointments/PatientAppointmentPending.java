@@ -65,7 +65,6 @@ public class PatientAppointmentPending extends Fragment implements IListView {
     }
 
     public void CallSomething(){
-
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             int carl = 2;
