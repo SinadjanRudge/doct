@@ -16,13 +16,16 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.admin.adapters.AdminGenerateReportAdapter;
+import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.ReportDto;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +84,12 @@ public class AdminGenerateReportsPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_admin_generate_reports_page, container, false); 
+        View rootView = inflater.inflate(R.layout.fragment_admin_generate_reports_page, container, false);
+
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new AdminHomeFragment());
+        });
 
         Button generateReports = rootView.findViewById(R.id.generate_report_button);
         DatePicker startDatePicker = rootView.findViewById(R.id.start_date_picker);

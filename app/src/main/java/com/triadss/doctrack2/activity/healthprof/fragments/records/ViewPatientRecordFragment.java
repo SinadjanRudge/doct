@@ -1,6 +1,8 @@
 package com.triadss.doctrack2.activity.healthprof.fragments.records;
 
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.type.DateTime;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.ViewMedicationAdapter;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
@@ -28,6 +31,8 @@ import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 import com.triadss.doctrack2.utils.CheckboxStringProcessor;
 import com.triadss.doctrack2.utils.EditTextStringProcessor;
 import com.triadss.doctrack2.utils.FragmentFunctions;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +60,33 @@ public class ViewPatientRecordFragment extends Fragment {
             patientUid = getArguments().getString(PATIENT_UID);
         }
     }
+    private void setVitalSignsValues(TextView bloodPressure, TextView temperature, TextView sp,
+                                     TextView pulseRate, TextView weight, TextView height, TextView BMI,
+                                     TextView date, VitalSignsDto v) {
+
+        if (v.getCreatedAt() != null) {
+            DateTimeDto dt = DateTimeDto.ToDateTimeDto(v.getCreatedAt());
+
+            bloodPressure.setText(v.getBloodPressure());
+            temperature.setText(String.valueOf(v.getTemperature()));
+            sp.setText(String.valueOf(v.getOxygenLevel()));
+            pulseRate.setText(String.valueOf(v.getPulseRate()));
+            weight.setText(String.valueOf(v.getWeight()));
+            height.setText(String.valueOf(v.getHeight()));
+            BMI.setText(String.valueOf(v.getBMI()));
+            date.setText(dt.ToString());
+        } else {
+            bloodPressure.setText("");
+            temperature.setText("");
+            sp.setText("");
+            pulseRate.setText("");
+            weight.setText("");
+            height.setText("");
+            BMI.setText("");
+            date.setText("");
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,31 +173,91 @@ public class ViewPatientRecordFragment extends Fragment {
                 }
             });
 
+            //Patient Vital Signs Latest
+            TextView bloodPressure1 = rootView.findViewById(R.id.value_bp1);
+            TextView temperature1 = rootView.findViewById(R.id.value_temp1);
+            TextView sp1 = rootView.findViewById(R.id.value_spo2_1);
+            TextView pulseRate1 = rootView.findViewById(R.id.value_pulseRate1);
+            TextView weight1 = rootView.findViewById(R.id.value_weight1);
+            TextView height1 = rootView.findViewById(R.id.value_height1);
+            TextView BMI1 = rootView.findViewById(R.id.value_BMI1);
+            TextView date1 = rootView.findViewById(R.id.value_latest1);
+
+            //Patient Vital Signs 2nd Latest
+            TextView bloodPressure2 = rootView.findViewById(R.id.value_bp2);
+            TextView temperature2 = rootView.findViewById(R.id.value_temp2);
+            TextView sp2 = rootView.findViewById(R.id.value_spo2_2);
+            TextView pulseRate2 = rootView.findViewById(R.id.value_pulseRate2);
+            TextView weight2 = rootView.findViewById(R.id.value_weight2);
+            TextView height2 = rootView.findViewById(R.id.value_height2);
+            TextView BMI2 = rootView.findViewById(R.id.value_BMI2);
+            TextView date2 = rootView.findViewById(R.id.value_latest2);
+
             //Patient Vital Signs
-            TextView bloodPressure = rootView.findViewById(R.id.value_bloodPressure);
-            TextView temperature = rootView.findViewById(R.id.value_temperature);
-            TextView spo2 = rootView.findViewById(R.id.value_SpO2);
-            TextView pulseRate = rootView.findViewById(R.id.value_pulseRate);
-            TextView weight = rootView.findViewById(R.id.value_weight);
-            TextView height = rootView.findViewById(R.id.value_height);
-            TextView BMI = rootView.findViewById(R.id.value_BMI);
-            vitalSignsRepository.getVitalSignOfPatient(patientUid, new VitalSignsRepository.FetchCallback() {
+            TextView bloodPressure3 = rootView.findViewById(R.id.value_bp3);
+            TextView temperature3 = rootView.findViewById(R.id.value_temp3);
+            TextView sp3 = rootView.findViewById(R.id.value_spo2_3);
+            TextView pulseRate3 = rootView.findViewById(R.id.value_pulseRate3);
+            TextView weight3 = rootView.findViewById(R.id.value_weight3);
+            TextView height3 = rootView.findViewById(R.id.value_height3);
+            TextView BMI3 = rootView.findViewById(R.id.value_BMI3);
+            TextView date3 = rootView.findViewById(R.id.value_latest3);
+
+            //Patient Vital Signs
+            TextView bloodPressure4 = rootView.findViewById(R.id.value_bp4);
+            TextView temperature4 = rootView.findViewById(R.id.value_temp4);
+            TextView sp4 = rootView.findViewById(R.id.value_spo2_4);
+            TextView pulseRate4 = rootView.findViewById(R.id.value_pulseRate4);
+            TextView weight4 = rootView.findViewById(R.id.value_weight4);
+            TextView height4 = rootView.findViewById(R.id.value_height4);
+            TextView BMI4 = rootView.findViewById(R.id.value_BMI4);
+            TextView date4 = rootView.findViewById(R.id.value_latest4);
+
+            //Patient Vital Signs
+            TextView bloodPressure5 = rootView.findViewById(R.id.value_bp5);
+            TextView temperature5 = rootView.findViewById(R.id.value_temp5);
+            TextView sp5 = rootView.findViewById(R.id.value_spo2_5);
+            TextView pulseRate5 = rootView.findViewById(R.id.value_pulseRate5);
+            TextView weight5 = rootView.findViewById(R.id.value_weight5);
+            TextView height5 = rootView.findViewById(R.id.value_height5);
+            TextView BMI5 = rootView.findViewById(R.id.value_BMI5);
+            TextView date5 = rootView.findViewById(R.id.value_latest5);
+
+            vitalSignsRepository.getVitalSignsOfPatient(patientUid, new VitalSignsRepository.FetchListCallback() {
                 @Override
-                public void onSuccess(VitalSignsDto vitalSigns) {
-                    if(vitalSigns != null){
-                        bloodPressure.setText(vitalSigns.getBloodPressure());
-                        temperature.setText(String.valueOf(vitalSigns.getTemperature()));
-                        spo2.setText(String.valueOf(vitalSigns.getOxygenLevel()));
-                        pulseRate.setText(String.valueOf(vitalSigns.getPulseRate()));
-                        weight.setText(String.valueOf(vitalSigns.getWeight()));
-                        height.setText(String.valueOf(vitalSigns.getHeight()));
-                        BMI.setText(String.valueOf(vitalSigns.getBMI()));
+                public void onSuccess(List<VitalSignsDto> vitalSigns) {
+                    int index = 0;
+
+                    for (VitalSignsDto v : vitalSigns) {
+
+                        switch (index) {
+                            case 0:
+                                setVitalSignsValues(bloodPressure1, temperature1, sp1, pulseRate1, weight1, height1, BMI1, date1, v);
+                                break;
+                            case 1:
+                                setVitalSignsValues(bloodPressure2, temperature2, sp2, pulseRate2, weight2, height2, BMI2, date2, v);
+                                break;
+                            case 2:
+                                setVitalSignsValues(bloodPressure3, temperature3, sp3, pulseRate3, weight3, height3, BMI3, date3, v);
+                                break;
+                            case 3:
+                                setVitalSignsValues(bloodPressure4, temperature4, sp4, pulseRate4, weight4, height4, BMI4, date4, v);
+                                break;
+                            case 4:
+                                setVitalSignsValues(bloodPressure5, temperature5, sp5, pulseRate5, weight5, height5, BMI5, date5, v);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        index++;
                     }
                 }
 
+
                 @Override
-                public void onError(String message) {
-                    System.out.println();
+                public void onError(String errorMessage) {
+                    Log.e("ERROR", errorMessage);
                 }
             });
 

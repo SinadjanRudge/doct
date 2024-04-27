@@ -44,11 +44,6 @@ public class AdminHome extends AppCompatActivity {
             }
             if (item.getItemId() == R.id.report_menu) {
                 replaceFragment(new AdminGenerateReportsPage());
-            } else if (item.getItemId() == R.id.temp_logout) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                finish();
             }
             return true;
         });

@@ -1,5 +1,6 @@
 package com.triadss.doctrack2.activity.admin.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,8 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.LoginActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,6 +76,9 @@ public class AdminHomeFragment extends Fragment {
             replaceFragment(new AdminManageUserAccount());
         });
 
+        ImageView menuImageView = rootView.findViewById(R.id.menu);
+        menuImageView.setOnClickListener(v -> showPopupMenu(v));
+
         viewReports.setOnClickListener(v -> {
             replaceFragment(new AdminGenerateReportsPage());
         });
@@ -84,5 +92,23 @@ public class AdminHomeFragment extends Fragment {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.addToBackStack("toHome");
         fragmentTransaction.commit();
+    }
+
+    public void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_item1) {
+
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(requireContext(), LoginActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
+                return true;
+            } else {
+                return false;
+            }
+        });
+        popupMenu.inflate(R.menu.patient_popup_menu);
+        popupMenu.show();
     }
 }

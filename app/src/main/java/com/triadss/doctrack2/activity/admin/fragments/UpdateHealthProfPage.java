@@ -12,9 +12,11 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,6 +67,11 @@ public class UpdateHealthProfPage extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_admin_manage_user_accounts_update_health_prof, container, false);
+
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new AdminHomeFragment());
+        });
 
         updateBtn = rootView.findViewById(R.id.buttonUpdateHealthProf);
         editTextPosition = rootView.findViewById(R.id.editTextPosition);

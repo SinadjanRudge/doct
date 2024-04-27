@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="5dp"
+    app:cardBackgroundColor="#F2FAFFFA"
     app:cardCornerRadius="5dp"
     app:cardUseCompatPadding="true">
 
@@ -12,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="#D1EAF4"
         android:orientation="vertical">
 
         <LinearLayout
@@ -25,12 +25,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medicine:"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/medicationMedicine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:text="TextView"
                 android:textSize="18sp" />
@@ -46,12 +48,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Note:"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/medicationNote"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="90dp"
+                android:layout_marginStart="10dp"
                 android:text="TextView"
                 android:textSize="16sp" />
         </LinearLayout>

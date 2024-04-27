@@ -50,6 +50,7 @@ public class PatientAppointmentPendingAdapter
     ArrayList<AppointmentDto> appointments;
     Context context;
     NotificationRepository notificationRepository = new NotificationRepository();
+    private Button cancel;
 
     private String TimePick;
     public String getTimePick(){
@@ -142,7 +143,12 @@ public class PatientAppointmentPendingAdapter
             purpose.setText(appointment.getPurpose());
             DateTimeDto dateTimeDto = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTimeDto.getDate().ToString());
-            time.setText(dateTimeDto.getTime().ToString());
+
+            DateTimeDto rangeEnd = dateTimeDto.Clone();
+            TimeDto startTime = dateTimeDto.getTime();
+            rangeEnd.setTime(new TimeDto(startTime.getHour() + 1, startTime.getMinute()));
+
+            time.setText(String.format("%s - %s", dateTimeDto.getTime().ToString(), rangeEnd.getTime().ToString()));
             documentId.setText(appointment.getPatientIdNumber());
             patientName.setText(appointment.getNameOfRequester());
             DocId.setText(appointment.getDocumentId());
@@ -395,8 +401,7 @@ public class PatientAppointmentPendingAdapter
                                 if (!itemValue.equals("Not available")) {
                                     // updateTime.setText(itemValue);
                                     setTimePick(itemValue);
-                                    updateTime.setText(getTimePick() + ":00");
-                                    selectedDateTime.setTime(new TimeDto(Integer.parseInt(getTimePick()), 00));
+                                    updateTime.setText(itemValue);
                                     dialog.dismiss();
                                 }
                                 // adapter.dismiss(); // If you want to close the adapter
