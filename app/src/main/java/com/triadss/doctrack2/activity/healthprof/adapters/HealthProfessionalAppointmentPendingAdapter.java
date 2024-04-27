@@ -135,11 +135,11 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
-            DateTimeDto rangeEnd = dateTime.Clone();
-            TimeDto startTime = dateTime.getTime();
-            rangeEnd.setTime(new TimeDto(startTime.getHour() + 1, startTime.getMinute()));
 
-            time.setText(String.format("%s - %s", dateTime.getTime().ToString(), rangeEnd.getTime().ToString()));
+            TimeDto startTime = dateTime.getTime();
+            TimeDto rangeEnd = new TimeDto(startTime.getHour() + 1, startTime.getMinute());
+
+            time.setText(String.format("%s - %s", dateTime.getTime().ToString(), rangeEnd.ToString()));
 
             Button reschedule = (Button)itemView.findViewById(R.id.reschedule_button);
 
@@ -187,7 +187,6 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                                             progressDialog.setTitle("Canceled");
                                             progressDialog.setMessage("appointment was canceled");
                                             progressDialog.show();
-                                            Log.d("TEST", "Updated appointment");
                                             myEdit.putInt("PatientPending", Integer.parseInt("10"));
                                             myEdit.putInt("PatientStatus", Integer.parseInt("10"));
                                             myEdit.apply();
@@ -402,6 +401,10 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                                                     Toast.makeText(itemView.getContext(),
                                                     appointmentId + " updated", Toast.LENGTH_SHORT).show();
                                                     dialog.dismiss();
+
+                                                    myEdit.putInt("PatientPending", Integer.parseInt("10"));
+                                                    myEdit.putInt("PatientStatus", Integer.parseInt("10"));
+                                                    myEdit.apply();
                                                 }
 
                                                 @Override
@@ -425,9 +428,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
                                 }
                             });
-                    myEdit.putInt("PatientPending", Integer.parseInt("10"));
-                    myEdit.putInt("PatientStatus", Integer.parseInt("10"));
-                    myEdit.apply();
+
                 }
             });
             dialog.show();

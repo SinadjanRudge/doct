@@ -76,12 +76,10 @@ public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Ada
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
 
-            DateTimeDto rangeEnd = dateTime.Clone();
             TimeDto startTime = dateTime.getTime();
-            rangeEnd.setTime(new TimeDto(startTime.getHour() + 1, startTime.getMinute()));
+            TimeDto rangeEnd = new TimeDto(startTime.getHour() + 1, startTime.getMinute());
 
-            time.setText(String.format("%s - %s", dateTime.getTime().ToString(), rangeEnd.getTime().ToString()));
-//            time.setText(dateTime.getTime().ToString());
+            time.setText(String.format("%s - %s", dateTime.getTime().ToString(), rangeEnd.ToString()));
 
             status.setText(appointment.getStatus());
         }

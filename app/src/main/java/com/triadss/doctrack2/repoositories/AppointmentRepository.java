@@ -196,7 +196,7 @@ public class AppointmentRepository {
                                             .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
                                             .findFirst().orElse(null).getIdNumber();
                                     appointment.setPatientIdNumber(idNumber);
-                                    if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) && appointment.getDateOfAppointment().compareTo(DateTimeDto.GetCurrentTimeStamp()) == -1)
+                                    if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) && appointment.getDateOfAppointment().compareTo(DateTimeDto.GetCurrentTimeStamp()) < 0)
                                     {
                                         appointment.setStatus(AppointmentTypeConstants.COMPLETED);
                                     }
@@ -760,9 +760,7 @@ public class AppointmentRepository {
     }
 
     public void rejectSimilarAppointmentExists(String ID, int Timehour, int Timeminute,int Timeyear,int Timemonth,int Timeday,rejectSimilarAppointmentCallback callback) {
-
         DateTimeDto selectedDateTime = new DateTimeDto();
-
 
         selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
         selectedDateTime.setTime(new TimeDto(Timehour, Timeminute));
