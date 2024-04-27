@@ -156,16 +156,7 @@
             android:layout_toEndOf="@+id/PURPOSEtext"
             android:text="viewPurpose" />
 
-        <Button
-            android:id="@+id/showInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/appointment_date"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="140dp"
-            android:layout_marginTop="100dp"
-            android:backgroundTint="@color/green"
-            android:text="info" />
+
 
         <TextView
             android:id="@+id/DocumentID"

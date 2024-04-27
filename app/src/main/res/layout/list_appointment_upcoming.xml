@@ -216,15 +216,5 @@
             android:textColor="#000"
             android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/showInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/appointment_time"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="140dp"
-            android:layout_marginTop="100dp"
-            android:backgroundTint="@color/green"
-            android:text="info" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
