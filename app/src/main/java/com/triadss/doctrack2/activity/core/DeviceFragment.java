@@ -34,12 +34,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.triadss.doctrack2.R;
-import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
 import com.triadss.doctrack2.config.constants.BluetoothConstants;
+import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.dto.WearableDeviceDto;
 import com.triadss.doctrack2.helper.ButtonManager;
+import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 import com.triadss.doctrack2.repoositories.WearableDeviceRepository;
 import com.triadss.doctrack2.utils.FragmentFunctions;
@@ -51,8 +53,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import com.google.firebase.Timestamp;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class DeviceFragment extends Fragment {
     private static final String TAG = "DEVICE";
+    private final AppointmentRepository appointmentRepository = new AppointmentRepository();
 
     private TextView receivedMessageTextView;
     private Button syncButton;
@@ -85,9 +91,7 @@ public class DeviceFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_device_with_device, container, false);
 
         FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
-        homeBtn.setOnClickListener(view -> {
-            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new PatientHomeFragment());
-        });
+        homeBtn.setOnClickListener(view -> FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new PatientHomeFragment()));
 
         initializeViews(rootView);
         initializeListeners();
@@ -332,10 +336,46 @@ public class DeviceFragment extends Fragment {
         isNearbyVal.setText(String.valueOf(wearableDeviceDto.getIsNearby()));
     }
 
+    private boolean isCurrentInAnAppointment(String patientId){
+        Timestamp currentTimeStamp = DateTimeDto.GetCurrentTimeStamp();
+        AtomicBoolean isCurrent = new AtomicBoolean(false);
+
+        appointmentRepository.getAllPatientPendingAppointments(patientId, new AppointmentRepository.AppointmentPatientPendingFetchCallback(){
+
+            @Override
+            public void onSuccess(List<AppointmentDto> appointments) {
+                for (AppointmentDto appointment : appointments) {
+                    if (DateTimeDto.isToday(appointment.getDateOfAppointment()) && DateTimeDto.isCurrentTimeInRange(currentTimeStamp, appointment.getDateOfAppointment())) {
+                        isCurrent.set(true);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+
+        return isCurrent.get();
+    }
+
+    private boolean isValidSync(){
+        if (!wearableDeviceDto.getIsNearby()) {
+            Toast.makeText(getContext(), "Can't sync. No Device Nearby Found.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (user != null && !isCurrentInAnAppointment(user.getUid())) {
+            Toast.makeText(getContext(), "Can't sync. You're not currently in an appointment.", Toast.LENGTH_SHORT).show();
+            return false;
+        } return true;
+    }
+
     private void handleSyncButtonClick() {
         try {
-            if (!wearableDeviceDto.getIsNearby()) {
-                Toast.makeText(getContext(), "Can't sync. No Device Nearby Found.", Toast.LENGTH_SHORT).show();
+            if(!isValidSync()){
                 return;
             }
 
