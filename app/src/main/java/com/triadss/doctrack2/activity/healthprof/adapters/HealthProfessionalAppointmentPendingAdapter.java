@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -186,6 +187,10 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                                             progressDialog.setTitle("Canceled");
                                             progressDialog.setMessage("appointment was canceled");
                                             progressDialog.show();
+                                            Log.d("TEST", "Updated appointment");
+                                            myEdit.putInt("PatientPending", Integer.parseInt("10"));
+                                            myEdit.putInt("PatientStatus", Integer.parseInt("10"));
+                                            myEdit.apply();
                                         }
 
                                         @Override
@@ -207,10 +212,6 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
                                     }
                                 });
-
-                            myEdit.putInt("PatientPending", Integer.parseInt("10"));
-                            myEdit.putInt("PatientStatus", Integer.parseInt("10"));
-                            myEdit.apply();
                         }
                     });
                     alertDialog.show();
@@ -432,4 +433,5 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             dialog.show();
         }
     }
+
 }

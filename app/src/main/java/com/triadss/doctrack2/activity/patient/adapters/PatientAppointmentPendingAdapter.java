@@ -197,13 +197,13 @@ public class PatientAppointmentPendingAdapter
                                             ButtonManager.enableButton(yesButton);
                                         }
                                     });
+
                             appointmentRepository.addReport(appointment.getDocumentId(), ReportConstants.CANCELLED_APPOINTMENT,
                                     new AppointmentRepository.ReportCallback() {
                                         @Override
                                         public void onSuccess(String appointmentId) {
                                             Toast.makeText(itemView.getContext(), appointmentId + " updated",
                                                     Toast.LENGTH_SHORT).show();
-
                                         }
 
                                         @Override
@@ -235,9 +235,6 @@ public class PatientAppointmentPendingAdapter
             Button confirmBtn = dialog.findViewById(R.id.confirmbutton);
             DateTimeDto selectedDateTime = new DateTimeDto();
 
-            String oldDate = date.getText().toString();
-            String oldTime = time.getText().toString();
-            String oldDateOldTime = date.getText().toString(); //+ " " + time.getText().toString();
             DateTimeDto dateOfAppointment = DateTimeDto.ToDateTimeDto(dto.getDateOfAppointment());
 
             SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -381,7 +378,8 @@ public class PatientAppointmentPendingAdapter
                 if (updateDate.getText().toString().equals("Change Date") || updateTime.getText().toString().equals("Time") || updateTime.getText().toString().equals(" ")) {
                     Toast.makeText(itemView.getContext(), "Error: must select date and time", Toast.LENGTH_SHORT)
                             .show();
-                }else {
+                }
+                else {
                         SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref",
                                 Context.MODE_PRIVATE);
                         SharedPreferences.Editor myEdit = sharedPreferences.edit();

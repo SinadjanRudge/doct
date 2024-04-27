@@ -37,7 +37,7 @@ public class HealthProfessionalAppointmentFragment extends Fragment {
     private String mParam2;
 
     private TabLayout tabLayout;
-    private ViewPager2 viewPager;
+    public ViewPager2 viewPager;
     private HealthProfessionalAppointmentFragmentPageAdapter pageAdapter;
 
     public HealthProfessionalAppointmentFragment() {

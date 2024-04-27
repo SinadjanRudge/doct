@@ -9,11 +9,13 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -103,6 +105,8 @@ public class HealthProfessionalPending extends Fragment implements IListView {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
         ReloadList();
+        CallSomething();
+
         return rootView;
     }
 
@@ -122,13 +126,48 @@ public class HealthProfessionalPending extends Fragment implements IListView {
                 }
 
                 HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments);
-
                 recyclerView.setAdapter(adapter);
             }
+
             @Override
             public void onError(String errorMessage) {
 
             }
         });
+    }
+
+    public void CallSomething(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            int carl = 2;
+            boolean stop = false;
+            public void run() {
+                //When you are not in fragment
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
+                boolean isCurrentlyAtHealthProfAppointment = currentFragment instanceof HealthProfessionalAppointmentFragment;
+                boolean isCurrentlyAtHealthProfAppointmentPending = true;
+
+                if(!isCurrentlyAtHealthProfAppointment) {
+                    stop = true;
+                }
+
+                SharedPreferences sh = getActivity().getApplicationContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+
+                int a = sh.getInt("PatientPending",9);
+                carl = a;
+
+                if(carl == 10){
+                    SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor myEdit = sharedPreferences.edit();
+
+                    myEdit.putInt("PatientPending", Integer.parseInt("0"));
+
+                    myEdit.apply();
+                    ReloadList();
+                }
+                if (!stop) handler.postDelayed(this,1000);
+            }
+        }, 1000);
     }
 }

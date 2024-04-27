@@ -80,7 +80,6 @@ public class PatientAppointmentStatusAdapter extends RecyclerView.Adapter<Patien
             rangeEnd.setTime(new TimeDto(startTime.getHour() + 1, startTime.getMinute()));
 
             time.setText(String.format("%s - %s", dateTime.getTime().ToString(), rangeEnd.getTime().ToString()));
-//            time.setText(dateTime.getTime().ToString());
         }
     }
 }

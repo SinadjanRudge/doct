@@ -92,7 +92,6 @@ public class PatientAppointmentStatus extends Fragment implements IListView {
                     myEdit.apply();
                     ReloadList();
                 }
-                //Toast.makeText(getContext(), Integer.toString(carl), Toast.LENGTH_SHORT).show();
                 if (!stop) handler.postDelayed(this,1000);
             }
         }, 1000);
