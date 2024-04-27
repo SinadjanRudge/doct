@@ -118,4 +118,20 @@ public class DateTimeDto {
         Period period = Period.between(birthdate, now);
         return period.getYears();
     }
+
+    public static boolean isToday(Timestamp timestamp) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate appointmentDate = timestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        return currentDate.equals(appointmentDate);
+    }
+
+    public static boolean isCurrentTimeInRange(Timestamp currentTimeStamp, Timestamp appointmentTimeStamp) {
+        int currentHour = currentTimeStamp.toDate().toInstant().atZone(ZoneId.systemDefault()).getHour();
+        int appointmentHour = appointmentTimeStamp.toDate().toInstant().atZone(ZoneId.systemDefault()).getHour();
+
+        return currentHour == appointmentHour || currentHour == (appointmentHour + 1);
+    }
+
+
 }
