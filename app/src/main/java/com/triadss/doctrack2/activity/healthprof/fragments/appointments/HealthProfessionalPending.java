@@ -121,72 +121,10 @@ public class HealthProfessionalPending extends Fragment implements IListView {
                     currentDialog = null;
                 }
 
-                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments, 
-                    new HealthProfessionalAppointmentPendingAdapter.AppointmentCallback() {
-                        @Override
-                        public void onRescheduleConfirmed(DateTimeDto dateTime, String appointmentUid, Dialog dialog) {
-                            currentDialog = dialog;
-                            reportsRepository.addHealthProfRescheduledAppointmentReport(loggedInUserId, appointmentUid, dateTime, new ReportsRepository.ReportCallback() {
-                                @Override
-                                public void onReportAddedSuccessfully() {
-                                    notificationRepository.NotifyRescheduledAppointmentToPatient(appointmentUid, dateTime, new NotificationRepository.NotificationPushedCallback() {
-                                        @Override
-                                        public void onNotificationDone() {
-                                            appointmentRepository.updateAppointmentSchedule(appointmentUid, dateTime, new AppointmentRepository.AppointmentAddCallback() {
-                                                @Override
-                                                public void onSuccess(String appointmentId) {
-                                                    Toast.makeText(getContext(), appointmentId + " updated", Toast.LENGTH_SHORT).show();
-                                                    ReloadList();
-                                                }
-
-                                                @Override
-                                                public void onError(String errorMessage) {
-                                                    Log.e(TAG, "Error updating appointment: " + errorMessage);
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onReportFailed(String errorMessage) {
-                                    System.out.println();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancel(String appointmentUid) {
-                            appointmentRepository.cancelAppointment(appointmentUid, new AppointmentRepository.AppointmentCancelCallback() {
-                                @Override
-                                public void onSuccess(String appointmentId) {
-                                    notifcationRepository.NotifyCancelledAppointmentToPatient(appointmentId);
-
-                                    Toast.makeText(getContext(), appointmentId + " cancelled", Toast.LENGTH_SHORT).show();
-                                    reportsRepository.addHealthProfCancelledAppointmentReport(loggedInUserId, appointmentId, new ReportsRepository.ReportCallback() {
-                                        @Override
-                                        public void onReportAddedSuccessfully() {
-                                            ReloadList();
-                                        }
-
-                                        @Override
-                                        public void onReportFailed(String errorMessage) {
-                                            System.out.println();
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onError(String errorMessage) {
-                                    Log.e(TAG, "Error deleting appointment: " + errorMessage);
-                                }
-                            });
-                        }
-                });
+                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments);
 
                 recyclerView.setAdapter(adapter);
             }
-
             @Override
             public void onError(String errorMessage) {
 
