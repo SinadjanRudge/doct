@@ -2,19 +2,23 @@ package com.triadss.doctrack2.activity.patient.fragments.appointments;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +32,10 @@ import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
+import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
+import com.triadss.doctrack2.dto.TimeDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.NotificationDTO;
@@ -39,9 +45,13 @@ import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.AppointmentFunctions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class PatientAppointmentRequest extends Fragment {
     private Button pickDateButton, pickTimeBtn, confirmButton;
@@ -53,6 +63,43 @@ public class PatientAppointmentRequest extends Fragment {
     private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute;
     private TextView dateErrorText, timeErrorText;
 
+    private String TimePick;
+    public String getTimePick(){
+
+        return TimePick;
+    }
+
+    public void setTimePick(String TimePick){
+
+        if(TimePick.equals("8:00 am - 9:00 am")){
+            TimePick = "8";
+        }
+        if(TimePick.equals("9:00 am - 10:00 am")){
+            TimePick = "9";
+        }
+        if(TimePick.equals("10:00 am - 11:00 am")){
+            TimePick ="10";
+        }
+        if(TimePick.equals("11:00 am - 12:00 pm")){
+            TimePick = "11";
+        }
+        if(TimePick.equals("12:00 pm - 1:00 pm")){
+            TimePick = "12";
+        }
+        if(TimePick.equals("1:00 pm - 2:00 pm")){
+            TimePick = "13";
+        }
+        if(TimePick.equals("2:00 pm - 3:00 pm")){
+            TimePick = "14";
+        }
+        if(TimePick.equals("3:00 pm - 4:00 pm")){
+            TimePick = "15";
+        }
+        if(TimePick.equals("4:00 pm - 5:00 pm")){
+            TimePick = "16";
+        }
+        this.TimePick = TimePick;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_patient_request, container, false);
@@ -73,6 +120,7 @@ public class PatientAppointmentRequest extends Fragment {
         return rootView;
     }
 
+
     private void setupDatePicker() {
         // Set up Date Picker Dialog
         pickDateButton.setOnClickListener(v -> {
@@ -81,6 +129,14 @@ public class PatientAppointmentRequest extends Fragment {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
+
+
+            DateTimeDto selectedDateTime = new DateTimeDto();
+
+            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+            // TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
+            TimeZone tz = TimeZone.getDefault();
+            inFormat.setTimeZone(tz);
 
             // Create and show the Date Picker Dialog
             DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
@@ -94,42 +150,166 @@ public class PatientAppointmentRequest extends Fragment {
                         pickDateButton.setText(
                                 String.format(Locale.getDefault(), "%04d-%02d-%02d", selectedYear,
                                         selectedMonth + 1, selectedDay));
-                    }, year, month, day);
 
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        String currentDate = df.format(Calendar.getInstance().getTime());
+
+                        Date sunday = null;
+                        try {
+                            sunday = inFormat.parse(pickDateButton.getText().toString());
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
+                        String goal = outFormat.format(sunday);
+                        // Update the text on the button
+                        if(currentDate.compareTo(pickDateButton.getText().toString()) > 0){
+                            pickDateButton.setText("Select Date");
+                            Toast.makeText(getContext(), "Cannot select past date", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                        if (goal.equals("Sunday")) {
+                            pickDateButton.setText("Select Date");
+                            Toast.makeText(getContext(), "No Appointments on Sunday", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+
+                    }, year, month, day);
             // Show the Date Picker Dialog
             datePickerDialog.show();
+            pickTimeBtn.setText("Pick Time");
         });
     }
 
     private void setupTimePicker() {
-        // Set up Time Picker Dialog
+//        // Set up Time Picker Dialog
         pickTimeBtn.setOnClickListener(v -> {
-            // Get the current time
-            final Calendar c = Calendar.getInstance();
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
+//            // Get the current time
+//            final Calendar c = Calendar.getInstance();
+//            int hour = c.get(Calendar.HOUR_OF_DAY);
+//            int minute = c.get(Calendar.MINUTE);
+//
+//            // Create and show the Time Picker Dialog
+//            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+//                    (view, hourOfDay, minute1) -> {
+//                        // Store the selected time
+//                        selectedHour = hourOfDay;
+//                        selectedMinute = minute1;
+//
+//                        // Update the text on the button
+//                        pickTimeBtn.setText(
+//                                String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
+//                    }, hour, minute, false);
+//
+//            // Show the Time Picker Dialog
+//            timePickerDialog.show();
+//        });
+            DateTimeDto selectedDateTime = new DateTimeDto();
 
-            // Create and show the Time Picker Dialog
-            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                    (view, hourOfDay, minute1) -> {
-                        // Store the selected time
-                        selectedHour = hourOfDay;
-                        selectedMinute = minute1;
+            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+            // TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
+            TimeZone tz = TimeZone.getDefault();
+            inFormat.setTimeZone(tz);
 
-                        // Update the text on the button
-                        pickTimeBtn.setText(
-                                String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
-                    }, hour, minute, false);
+            if (pickDateButton.getText().toString().equals("Date") || pickDateButton.getText().toString().equals(" ")) {
 
-            // Show the Time Picker Dialog
-            timePickerDialog.show();
+                Toast.makeText(getContext(), "Error: must select date first", Toast.LENGTH_SHORT)
+                        .show();
+            } else {
+                selectedDateTime.setDate(new DateDto(selectedYear, selectedMonth + 1, selectedDay));
+                selectedDateTime.setTime(new TimeDto(0, 00));
+//                    SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                    // TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
+//                    TimeZone tz = TimeZone.getDefault();
+//                    inFormat.setTimeZone(tz);
+                Date date = null;
+                try {
+                    date = inFormat.parse(pickDateButton.getText().toString());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+
+                SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
+                SimpleDateFormat outYear = new SimpleDateFormat("yyyy");
+                SimpleDateFormat outMonth = new SimpleDateFormat("MM");
+                SimpleDateFormat outDay = new SimpleDateFormat("dd");
+
+                String goal = outFormat.format(date);
+                String timepickYear = outYear.format(date);
+                String timepickMonth = outMonth.format(date);
+                String timepickDay = outDay.format(date);
+
+                appointmentRepository.checkAppointmentExists(goal, selectedDateTime.ToTimestampForTimePicker(), Integer.valueOf(timepickYear), Integer.valueOf(timepickMonth), Integer.valueOf(timepickDay), new AppointmentRepository.CheckAppointmentExistFetchCallback() {
+                    public void onSuccess(ArrayList<String> lngList) {
+
+                        //AnotherPickTimeSlot(lngList);
+                        Dialog dialog = new Dialog(getContext());
+                        dialog.setContentView(R.layout.time_slots_picker);
+                        Button cancelBtn = dialog.findViewById(R.id.timePickCancel);
+
+                        String Carl = "";
+
+                        ListView hello = dialog.findViewById(R.id.breakdown);
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, lngList) {
+
+                            @Override
+                            public View getView(int position, View convertView, ViewGroup parent) {
+
+                                TextView textView = (TextView) super.getView(position, convertView, parent);
+                                textView.setTextSize(15);
+                                return textView;
+                            }
+                        };
+
+                        hello.setOnItemClickListener((adapterView, view, i, l) -> {
+                            // String s = hello.getItemAtPosition(i).toString();
+                            String itemValue = (String) hello.getItemAtPosition(i);
+                            Toast.makeText(getContext(), itemValue, Toast.LENGTH_LONG).show();
+                            if (!itemValue.equals("Not available")) {
+                                // updateTime.setText(itemValue);
+                                setTimePick(itemValue);
+                                pickTimeBtn.setText(getTimePick() + ":00");
+                                selectedDateTime.setTime(new TimeDto(Integer.parseInt(getTimePick()), 00));
+
+                                selectedHour = Integer.parseInt(getTimePick());
+                                selectedMinute = 00;
+                                dialog.dismiss();
+                            }
+                            // adapter.dismiss(); // If you want to close the adapter
+                        });
+                        cancelBtn.setOnClickListener(v -> {
+                            dialog.dismiss();
+                        });
+
+                        hello.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                        // dialog.getWindow().setGravity(Gravity.LEFT);
+                        //updateTime.setText(getTimePick());
+                        dialog.show();
+                        // updateTime.setText(getTimePick());
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+
+
+                    }
+
+                });
+                //updateTime.setText(getTimePick());
+                //FromDateandTime(updateDate.getText().toString(),timepickyear,timepickmonth,timepickday);
+            }
         });
     }
 
     private void setupConfirmationButton() {
+
+        DateTimeDto selectedDateTime = new DateTimeDto();
         confirmButton.setOnClickListener(v -> {
             // Handle confirmation button click
             handleConfirmationButtonClick();
+
         });
     }
 
@@ -205,8 +385,8 @@ public class PatientAppointmentRequest extends Fragment {
                     @Override
                     public void onReportAddedSuccessfully() {
                         textInputPurpose.setText("");
-                        pickTimeBtn.setText("Select Date");
-                        pickDateButton.setText("Select Time");
+                        pickTimeBtn.setText("Pick Time");
+                        pickDateButton.setText("Select Date");
                         Toast.makeText(getContext(), appointmentId + " added", Toast.LENGTH_SHORT).show();
 
                         ButtonManager.enableButton(confirmButton);
@@ -224,6 +404,7 @@ public class PatientAppointmentRequest extends Fragment {
                 ButtonManager.enableButton(confirmButton);
             }
         });
+
     }
 
     public void scheduleNotification(Notification notification, int delay) {
