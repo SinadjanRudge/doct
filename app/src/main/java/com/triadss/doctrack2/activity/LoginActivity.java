@@ -111,16 +111,16 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (user != null) {
                             ButtonManager.enableButton(buttonLogin);
-                            if (user.isEmailVerified()) {
+//                            if (user.isEmailVerified()) {
                                 //Email is verified
                                 fetchUserRole(user.getUid());
                                 Toast.makeText(LoginActivity.this, "Login Successfully",
                                         Toast.LENGTH_SHORT).show();
-                            } else {
-                                // Email is not verified, prompt user to verify email
-                                Toast.makeText(LoginActivity.this, "Please verify your email before logging in.", Toast.LENGTH_SHORT).show();
-                                sendEmailVerification(user);
-                            }
+//                            } else {
+//                                // Email is not verified, prompt user to verify email
+//                                Toast.makeText(LoginActivity.this, "Please verify your email before logging in.", Toast.LENGTH_SHORT).show();
+//                                sendEmailVerification(user);
+//                            }
 
                         }
 

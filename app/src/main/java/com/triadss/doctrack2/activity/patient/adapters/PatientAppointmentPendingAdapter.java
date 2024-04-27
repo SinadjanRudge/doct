@@ -35,6 +35,7 @@ import java.util.TimeZone;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
+import com.triadss.doctrack2.utils.AppointmentFunctions;
 
 // Extends the Adapter class to RecyclerView.Adapter
 // and implement the unimplemented methods
@@ -286,13 +287,10 @@ public class PatientAppointmentPendingAdapter
             });
 
             timeBtn.setOnClickListener(v -> {
-
                 if (updateDate.getText().toString().equals("Date") || updateDate.getText().toString().equals(" ")){
-
                     Toast.makeText(itemView.getContext(), "Error: must select date first", Toast.LENGTH_SHORT)
                             .show();
                 } else {
-
                     selectedDateTime.setTime(new TimeDto(0, 00));
                     Date date = null;
                     try {
@@ -313,8 +311,6 @@ public class PatientAppointmentPendingAdapter
 
                     appointmentRepository.checkAppointmentExists(goal, selectedDateTime.ToTimestampForTimePicker(), Integer.valueOf(timepickYear), Integer.valueOf(timepickMonth), Integer.valueOf(timepickDay), new AppointmentRepository.CheckAppointmentExistFetchCallback() {
                         public void onSuccess(ArrayList<String> lngList) {
-
-                            //AnotherPickTimeSlot(lngList);
                             Dialog dialog = new Dialog(context);
                             dialog.setContentView(R.layout.time_slots_picker);
                             Button cancelBtn = dialog.findViewById(R.id.timePickCancel);
@@ -324,7 +320,6 @@ public class PatientAppointmentPendingAdapter
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(itemView.getContext(), android.R.layout.simple_list_item_1, lngList) {
                                 @Override
                                 public View getView(int position, View convertView, ViewGroup parent) {
-
                                     TextView textView = (TextView) super.getView(position, convertView, parent);
                                     textView.setTextSize(15);
                                     return textView;
@@ -365,8 +360,25 @@ public class PatientAppointmentPendingAdapter
 
                 boolean inputInvalid = false;
 
-                String newDateNewTime = updateDate.getText().toString(); //+ " " + updateTime.getText().toString();
-                if (updateDate.getText().toString().equals("Date") || updateTime.getText().toString().equals("Time") || updateTime.getText().toString().equals(" ")) {
+                if (selectedDateTime.getDate() == null ||  selectedDateTime.getDate().getYear() == 0 || selectedDateTime.getDate().getMonth() == 0 || selectedDateTime.getDate().getDay() == 0) {
+                    Toast.makeText(context, "Please select a valid date", Toast.LENGTH_SHORT).show();
+                    dateErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
+
+                if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
+                    Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
+                    timeErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
+
+                if(inputInvalid)
+                {
+                    return;
+                }
+
+                String newDateNewTime = updateDate.getText().toString();
+                if (updateDate.getText().toString().equals("Change Date") || updateTime.getText().toString().equals("Time") || updateTime.getText().toString().equals(" ")) {
                     Toast.makeText(itemView.getContext(), "Error: must select date and time", Toast.LENGTH_SHORT)
                             .show();
                 }else {
