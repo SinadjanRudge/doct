@@ -156,7 +156,7 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                     inputInvalid = true;
                 }
 
-                if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
+                if (selectedDateTime.getTime() == null) {
                     Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
                     timeErrorText.setVisibility(View.VISIBLE);
                     inputInvalid = true;
