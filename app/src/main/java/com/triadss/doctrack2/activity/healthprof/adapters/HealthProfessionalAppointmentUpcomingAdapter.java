@@ -75,6 +75,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView purpose,date,time,identification,name, birthday, age;
+        Button accept;
 
         public ViewHolder(View view) {
             super(view);
@@ -134,7 +135,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             });
 
 
-            Button accept = (Button)itemView.findViewById(R.id.accept_button);
+            accept = (Button)itemView.findViewById(R.id.accept_button);
 
             accept.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -145,12 +146,9 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             });
         }
         private void showSimilarDialog(AppointmentDto dto) {
-
-
             SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
             SimpleDateFormat commonFormat = new SimpleDateFormat("HH:mm");
 
-            // TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
             TimeZone tz = TimeZone.getDefault();
             inFormat.setTimeZone(tz);
 
@@ -174,27 +172,49 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             String timepickDay = outDay.format(similardate);
             String timepickhour = outHour.format(similartime);
             String timepickminute = outMinute.format(similartime);
+
+            ButtonManager.disableButton(accept);
+
             appointmentRepository.checkSimilarAppointmentExists(dto.getUid(),Integer.valueOf(timepickhour), Integer.valueOf(timepickminute),Integer.valueOf(timepickYear), Integer.valueOf(timepickMonth), Integer.valueOf(timepickDay),new AppointmentRepository.PatientSimilarDateUpcomingCallback() {
                 @Override
                 public void onSuccess(ArrayList<String> lngList) {
-
                   if(lngList.size() == 2){
-                      callback.onAccept(dto.getUid());
-                  }else{
+                      Dialog dialog = new Dialog(context);
+                      dialog.setContentView(R.layout.dialog_accept_appointment_confirmation);
+
+                      Button yes = dialog.findViewById(R.id.yesBtn);
+                      Button no = dialog.findViewById(R.id.noBtn);
+
+                      no.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                          public void onClick(View v) {
+                              ButtonManager.enableButton(accept);
+                              dialog.dismiss();
+                          }
+                      });
+
+                      yes.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                          public void onClick(View v) {
+                              Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
+                              callback.onAccept(dto.getUid());
+                              dialog.dismiss();
+                          }
+                      });
+
+                      dialog.show();
+                  }
+                  else {
                       Dialog dialog = new Dialog(context);
                       dialog.setContentView(R.layout.similar_appointments);
                       Button cancelBtn = dialog.findViewById(R.id.showSimilarCancel);
                       Button acceptBtn = dialog.findViewById(R.id.showSimilarAccept);
 
-                      String Carl = "";
-
                       ListView hello = dialog.findViewById(R.id.breakdown);
 
                       ArrayAdapter<String> adapter = new ArrayAdapter<String>(itemView.getContext(), android.R.layout.simple_list_item_1, lngList) {
-
                           @Override
                           public View getView(int position, View convertView, ViewGroup parent) {
-
                               TextView textView = (TextView) super.getView(position, convertView, parent);
                               textView.setTextSize(15);
                               return textView;
@@ -202,17 +222,17 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                       };
 
                       cancelBtn.setOnClickListener(v -> {
+                          ButtonManager.enableButton(accept);
                           dialog.dismiss();
                       });
-                      acceptBtn.setOnClickListener(v -> {
 
+                      acceptBtn.setOnClickListener(v -> {
                           appointmentRepository.rejectSimilarAppointmentExists(dto.getUid(),Integer.valueOf(timepickhour), Integer.valueOf(timepickminute),Integer.valueOf(timepickYear), Integer.valueOf(timepickMonth), Integer.valueOf(timepickDay),
                                   new AppointmentRepository.rejectSimilarAppointmentCallback() {
                                       @Override
                                       public void onSuccess(String appointmentId) {
                                           Toast.makeText(itemView.getContext(), appointmentId + " updated",
                                                   Toast.LENGTH_SHORT).show();
-
                                       }
 
                                       @Override
@@ -227,23 +247,17 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
 
                       hello.setAdapter(adapter);
                       adapter.notifyDataSetChanged();
-                      // dialog.getWindow().setGravity(Gravity.LEFT);
-                      //updateTime.setText(getTimePick());
                       dialog.show();
-                      // updateTime.setText(getTimePick());
                   }
-
                 }
+
                 @Override
                 public void onError(String errorMessage) {
-                    //ButtonManager.enableButton(confirmBtn);
+                    ButtonManager.enableButton(accept);
                 }
             });
-
         }
-
     }
-
 
     public interface AppointmentCallback {
         void onAccept(String appointmentUid);

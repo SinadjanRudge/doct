@@ -322,7 +322,6 @@ public class PatientAppointmentPendingAdapter
                             ListView timeSlotList = dialog.findViewById(R.id.breakdown);
 
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(itemView.getContext(), android.R.layout.simple_list_item_1, lngList) {
-
                                 @Override
                                 public View getView(int position, View convertView, ViewGroup parent) {
 
