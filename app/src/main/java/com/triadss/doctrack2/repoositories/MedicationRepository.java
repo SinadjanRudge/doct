@@ -119,9 +119,7 @@ public class MedicationRepository {
                     Log.e(TAG, "Error fetching medicines", e);
                     callback.onError(e.getMessage());
                 });
-
     }
-
 
     public void getAllMedicationsFromUser(String userId, MedicationFetchCallback callback) {
         if (user != null) {

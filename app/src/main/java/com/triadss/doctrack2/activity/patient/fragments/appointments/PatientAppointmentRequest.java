@@ -1,17 +1,9 @@
 package com.triadss.doctrack2.activity.patient.fragments.appointments;
 
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,26 +17,18 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.Timestamp;
-import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.Fragment;
-
-import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
-import com.triadss.doctrack2.config.constants.NotificationConstants;
-import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.TimeDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.NotificationDTO;
-import com.triadss.doctrack2.notification.NotificationService;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.AppointmentFunctions;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -100,6 +84,7 @@ public class PatientAppointmentRequest extends Fragment {
         }
         this.TimePick = TimePick;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_patient_request, container, false);
@@ -120,7 +105,6 @@ public class PatientAppointmentRequest extends Fragment {
         return rootView;
     }
 
-
     private void setupDatePicker() {
         // Set up Date Picker Dialog
         pickDateButton.setOnClickListener(v -> {
@@ -130,49 +114,45 @@ public class PatientAppointmentRequest extends Fragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-
-            DateTimeDto selectedDateTime = new DateTimeDto();
-
             SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
-            // TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
             TimeZone tz = TimeZone.getDefault();
             inFormat.setTimeZone(tz);
 
             // Create and show the Date Picker Dialog
             DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
-                    (view, year1, monthOfYear, dayOfMonth) -> {
-                        // Store the selected date
-                        selectedYear = year1;
-                        selectedMonth = monthOfYear;
-                        selectedDay = dayOfMonth;
+                (view, year1, monthOfYear, dayOfMonth) -> {
+                    // Store the selected date
+                    selectedYear = year1;
+                    selectedMonth = monthOfYear;
+                    selectedDay = dayOfMonth;
 
-                        // Update the text on the button
-                        pickDateButton.setText(
-                                String.format(Locale.getDefault(), "%04d-%02d-%02d", selectedYear,
-                                        selectedMonth + 1, selectedDay));
+                    // Update the text on the button
+                    pickDateButton.setText(
+                            String.format(Locale.getDefault(), "%04d-%02d-%02d", selectedYear,
+                                    selectedMonth + 1, selectedDay));
 
-                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                        String currentDate = df.format(Calendar.getInstance().getTime());
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    String currentDate = df.format(Calendar.getInstance().getTime());
 
-                        Date sunday = null;
-                        try {
-                            sunday = inFormat.parse(pickDateButton.getText().toString());
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                        SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
-                        String goal = outFormat.format(sunday);
-                        // Update the text on the button
-                        if(currentDate.compareTo(pickDateButton.getText().toString()) > 0){
-                            pickDateButton.setText("Select Date");
-                            Toast.makeText(getContext(), "Cannot select past date", Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                        if (goal.equals("Sunday")) {
-                            pickDateButton.setText("Select Date");
-                            Toast.makeText(getContext(), "No Appointments on Sunday", Toast.LENGTH_SHORT)
-                                    .show();
-                        }
+                    Date sunday = null;
+                    try {
+                        sunday = inFormat.parse(pickDateButton.getText().toString());
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
+                    String goal = outFormat.format(sunday);
+                    // Update the text on the button
+                    if(currentDate.compareTo(pickDateButton.getText().toString()) > 0){
+                        pickDateButton.setText("Select Date");
+                        Toast.makeText(getContext(), "Cannot select past date", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                    if (goal.equals("Sunday")) {
+                        pickDateButton.setText("Select Date");
+                        Toast.makeText(getContext(), "No Appointments on Sunday", Toast.LENGTH_SHORT)
+                                .show();
+                    }
 
                     }, year, month, day);
             // Show the Date Picker Dialog
@@ -182,46 +162,21 @@ public class PatientAppointmentRequest extends Fragment {
     }
 
     private void setupTimePicker() {
-//        // Set up Time Picker Dialog
+        // Set up Time Picker Dialog
         pickTimeBtn.setOnClickListener(v -> {
-//            // Get the current time
-//            final Calendar c = Calendar.getInstance();
-//            int hour = c.get(Calendar.HOUR_OF_DAY);
-//            int minute = c.get(Calendar.MINUTE);
-//
-//            // Create and show the Time Picker Dialog
-//            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-//                    (view, hourOfDay, minute1) -> {
-//                        // Store the selected time
-//                        selectedHour = hourOfDay;
-//                        selectedMinute = minute1;
-//
-//                        // Update the text on the button
-//                        pickTimeBtn.setText(
-//                                String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute));
-//                    }, hour, minute, false);
-//
-//            // Show the Time Picker Dialog
-//            timePickerDialog.show();
-//        });
             DateTimeDto selectedDateTime = new DateTimeDto();
 
             SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
-            // TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
             TimeZone tz = TimeZone.getDefault();
             inFormat.setTimeZone(tz);
 
-            if (pickDateButton.getText().toString().equals("Date") || pickDateButton.getText().toString().equals(" ")) {
-
+            if (pickDateButton.getText().toString().equals("Select Date") || pickDateButton.getText().toString().equals(" ")) {
                 Toast.makeText(getContext(), "Error: must select date first", Toast.LENGTH_SHORT)
                         .show();
             } else {
                 selectedDateTime.setDate(new DateDto(selectedYear, selectedMonth + 1, selectedDay));
                 selectedDateTime.setTime(new TimeDto(0, 00));
-//                    SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
-//                    // TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
-//                    TimeZone tz = TimeZone.getDefault();
-//                    inFormat.setTimeZone(tz);
+
                 Date date = null;
                 try {
                     date = inFormat.parse(pickDateButton.getText().toString());
@@ -241,75 +196,56 @@ public class PatientAppointmentRequest extends Fragment {
 
                 appointmentRepository.checkAppointmentExists(goal, selectedDateTime.ToTimestampForTimePicker(), Integer.valueOf(timepickYear), Integer.valueOf(timepickMonth), Integer.valueOf(timepickDay), new AppointmentRepository.CheckAppointmentExistFetchCallback() {
                     public void onSuccess(ArrayList<String> lngList) {
-
                         //AnotherPickTimeSlot(lngList);
                         Dialog dialog = new Dialog(getContext());
                         dialog.setContentView(R.layout.time_slots_picker);
                         Button cancelBtn = dialog.findViewById(R.id.timePickCancel);
 
-                        String Carl = "";
-
-                        ListView hello = dialog.findViewById(R.id.breakdown);
+                        ListView timeSlotList = dialog.findViewById(R.id.breakdown);
 
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, lngList) {
-
                             @Override
                             public View getView(int position, View convertView, ViewGroup parent) {
-
                                 TextView textView = (TextView) super.getView(position, convertView, parent);
                                 textView.setTextSize(15);
                                 return textView;
                             }
                         };
 
-                        hello.setOnItemClickListener((adapterView, view, i, l) -> {
-                            // String s = hello.getItemAtPosition(i).toString();
-                            String itemValue = (String) hello.getItemAtPosition(i);
+                        timeSlotList.setOnItemClickListener((adapterView, view, i, l) -> {
+                            String itemValue = (String) timeSlotList.getItemAtPosition(i);
                             Toast.makeText(getContext(), itemValue, Toast.LENGTH_LONG).show();
                             if (!itemValue.equals("Not available")) {
-                                // updateTime.setText(itemValue);
                                 setTimePick(itemValue);
-                                pickTimeBtn.setText(getTimePick() + ":00");
+                                pickTimeBtn.setText(itemValue);
                                 selectedDateTime.setTime(new TimeDto(Integer.parseInt(getTimePick()), 00));
 
                                 selectedHour = Integer.parseInt(getTimePick());
                                 selectedMinute = 00;
                                 dialog.dismiss();
                             }
-                            // adapter.dismiss(); // If you want to close the adapter
                         });
                         cancelBtn.setOnClickListener(v -> {
                             dialog.dismiss();
                         });
 
-                        hello.setAdapter(adapter);
+                        timeSlotList.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-                        // dialog.getWindow().setGravity(Gravity.LEFT);
-                        //updateTime.setText(getTimePick());
                         dialog.show();
-                        // updateTime.setText(getTimePick());
                     }
 
                     @Override
                     public void onError(String errorMessage) {
-
-
                     }
-
                 });
-                //updateTime.setText(getTimePick());
-                //FromDateandTime(updateDate.getText().toString(),timepickyear,timepickmonth,timepickday);
             }
         });
     }
 
     private void setupConfirmationButton() {
-
-        DateTimeDto selectedDateTime = new DateTimeDto();
         confirmButton.setOnClickListener(v -> {
             // Handle confirmation button click
             handleConfirmationButtonClick();
-
         });
     }
 
@@ -404,29 +340,5 @@ public class PatientAppointmentRequest extends Fragment {
                 ButtonManager.enableButton(confirmButton);
             }
         });
-
-    }
-
-    public void scheduleNotification(Notification notification, int delay) {
-        Intent notificationIntent = new Intent(getContext(), NotificationService.class);
-        notificationIntent.putExtra(NotificationService.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationService.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),
-                0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        assert alarmManager != null;
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    }
-
-    public Notification getNotification(String content) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(),
-                NotificationConstants.DEFAULT_NOTIFICATION_CHANNEL_ID);
-        builder.setContentTitle("Scheduled Notification");
-        builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_launcher_foreground);
-        builder.setAutoCancel(true);
-        builder.setChannelId(NotificationConstants.NOTIFICATION_CHANNEL_ID);
-        return builder.build();
     }
 }
