@@ -375,7 +375,7 @@ public class ReportsRepository {
     public void getReportsFromUserFilter(String uid, String find, String[] actions, ReportsFilterCallback callback) {
         reportsCollection
                 .whereEqualTo(ReportModel.createdBy, uid)
-                .orderBy(ReportModel.createdBy, Query.Direction.DESCENDING)
+                 .orderBy(ReportModel.createdDate, Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<ReportDto> reports = new ArrayList<>();

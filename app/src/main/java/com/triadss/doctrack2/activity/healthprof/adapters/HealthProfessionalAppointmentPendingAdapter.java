@@ -128,7 +128,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             reschedule = (Button) itemView.findViewById(R.id.reschedule_button);
             documentId = (TextView) view.findViewById(R.id.IDtext);
             patientName = view.findViewById(R.id.nametext);
-            info = (Button) itemView.findViewById(R.id.showInfo);
+
             DocId = (TextView) view.findViewById(R.id.DocumentID);
         }
 
@@ -139,9 +139,15 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
-            time.setText(dateTime.getTime().ToString());
-            //Button reschedule = (Button) itemView.findViewById(R.id.reschedule_button);
-            DocId.setText(appointment.getDocumentId());
+            DateTimeDto rangeEnd = dateTime.Clone();
+            TimeDto startTime = dateTime.getTime();
+            rangeEnd.setTime(new TimeDto(startTime.getHour() + 1, startTime.getMinute()));
+
+            time.setText(String.format("%s - %s", dateTime.getTime().ToString(), rangeEnd.getTime().ToString()));
+
+//            time.setText(dateTime.getTime().ToString());
+            Button reschedule = (Button)itemView.findViewById(R.id.reschedule_button);
+
             reschedule.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -151,48 +157,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             });
 
            // Button cancel = (Button) itemView.findViewById(R.id.cancel_button);
-            info.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    appointmentRepository.PatientInfo(DocId.getText().toString(), new AppointmentRepository.PatientInfoAppointmentCallback() {
-                        @Override
-                        public void onSuccess(ArrayList<String> lngList) {
 
-
-                            Dialog dialog = new Dialog(context);
-                            dialog.setContentView(R.layout.show_info);
-                            Button cancelBtn = dialog.findViewById(R.id.showInfoCancel);
-
-                            String Carl = "";
-
-                            ListView hello = dialog.findViewById(R.id.breakdown);
-
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(itemView.getContext(), android.R.layout.simple_list_item_1, lngList) {
-
-                                @Override
-                                public View getView(int position, View convertView, ViewGroup parent) {
-
-                                    TextView textView = (TextView) super.getView(position, convertView, parent);
-                                    textView.setTextSize(15);
-                                    return textView;
-                                }
-                            };
-                            cancelBtn.setOnClickListener(v -> {
-                                dialog.dismiss();
-                            });
-                            hello.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-
-                            dialog.show();
-                        }
-                        @Override
-                        public void onError(String errorMessage) {
-
-                        }
-                    });
-
-                }
-            });
 
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -357,11 +322,16 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
             Button dateBtn = dialog.findViewById(R.id.dateBtn);
             TextView updateDate = dialog.findViewById(R.id.updateDate);
+
+            Button timeBtn = dialog.findViewById(R.id.timeBtn);
+
+
+            TextView updateTime = dialog.findViewById(R.id.updateTime);
             TextView dateErrorText = dialog.findViewById(R.id.dateErrorText);
             TextView timeErrorText = dialog.findViewById(R.id.timeErrorText);
 
-            Button timeBtn = dialog.findViewById(R.id.timeBtn);
-            TextView updateTime = dialog.findViewById(R.id.updateTime);
+//            Button timeBtn = dialog.findViewById(R.id.timeBtn);
+//            TextView updateTime = dialog.findViewById(R.id.updateTime);
             Button confirmBtn = dialog.findViewById(R.id.confirmbutton);
             DateTimeDto selectedDateTime = new DateTimeDto();
 

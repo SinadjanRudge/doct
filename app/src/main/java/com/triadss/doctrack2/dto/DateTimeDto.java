@@ -1,8 +1,13 @@
 package com.triadss.doctrack2.dto;
 
 import com.google.firebase.Timestamp;
+import com.google.type.DateTime;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -45,7 +50,25 @@ public class DateTimeDto {
         return new Timestamp(extractedDate);
     }
     public String ToString() {
-        return date.ToString() + " " + time.ToString();
+        return date.ToString() + " " + ToAMPMString(time.ToString());
+    }
+    public String ToAMPMString(String time){
+        try{
+            SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a");
+
+            Date date = inputFormat.parse(time);
+            return outputFormat.format(date);
+        } catch(Exception e){
+            return "";
+        }
+    }
+
+    public DateTimeDto Clone() {
+        DateTimeDto newDateTimeDto = new DateTimeDto();
+        newDateTimeDto.setTime(time.Clone());
+        newDateTimeDto.setDate(date.Clone());
+        return newDateTimeDto;
     }
 
     public static DateTimeDto ToDateTimeDto(Timestamp timestamp)
@@ -81,5 +104,18 @@ public class DateTimeDto {
         Timestamp currentTimeStamp  = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
 
         return currentTimeStamp;
+    }
+
+    public static long GetTimestampDiffInSeconds(Timestamp futureTime) {
+        long secondDiff = futureTime.getSeconds() - Timestamp.now().getSeconds();
+
+        return secondDiff;
+    }
+
+    public static int ComputeAge(Timestamp birthday) {
+        LocalDate birthdate = birthday.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate now = LocalDate.now();
+        Period period = Period.between(birthdate, now);
+        return period.getYears();
     }
 }

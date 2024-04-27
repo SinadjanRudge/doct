@@ -74,7 +74,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView purpose,date,time,identification,name;
+        TextView purpose,date,time,identification,name, birthday, age;
 
         public ViewHolder(View view) {
             super(view);
@@ -83,6 +83,8 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             time = (TextView) view.findViewById(R.id.appointment_time);
             identification = (TextView) view.findViewById(R.id.IDtext);
             name = (TextView) view.findViewById(R.id.nametext);
+            birthday = view.findViewById(R.id.birthdaytext);
+            age = view.findViewById(R.id.agetext);
         }
 
         public void update(AppointmentDto appointment)
@@ -90,6 +92,8 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             purpose.setText(appointment.getPurpose());
             identification.setText(appointment.getPatientIdNumber());
             name.setText(appointment.getNameOfRequester());
+            birthday.setText(DateTimeDto.ToDateTimeDto(appointment.getPatientBirthday()).ToString());
+            age.setText(String.valueOf(appointment.getPatientAge()));
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
@@ -129,48 +133,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                 }
             });
 
-            Button info = (Button)itemView.findViewById(R.id.showInfo);
-            info.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    appointmentRepository.PatientInfo(appointment.getUid(), new AppointmentRepository.PatientInfoAppointmentCallback() {
-                        @Override
-                        public void onSuccess(ArrayList<String> lngList) {
 
-
-                            Dialog dialog = new Dialog(context);
-                            dialog.setContentView(R.layout.show_info);
-                            Button cancelBtn = dialog.findViewById(R.id.showInfoCancel);
-
-                            String Carl = "";
-
-                            ListView hello = dialog.findViewById(R.id.breakdown);
-
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(itemView.getContext(), android.R.layout.simple_list_item_1, lngList) {
-
-                                @Override
-                                public View getView(int position, View convertView, ViewGroup parent) {
-
-                                    TextView textView = (TextView) super.getView(position, convertView, parent);
-                                    textView.setTextSize(15);
-                                    return textView;
-                                }
-                            };
-
-                            hello.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-
-                            dialog.show();
-
-                        }
-                        @Override
-                        public void onError(String errorMessage) {
-
-                        }
-                    });
-
-                }
-            });
             Button accept = (Button)itemView.findViewById(R.id.accept_button);
 
             accept.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +179,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                 public void onSuccess(ArrayList<String> lngList) {
 
                   if(lngList.size() == 2){
-                      //callback.onAccept(dto.getUid());
+                      callback.onAccept(dto.getUid());
                   }else{
                       Dialog dialog = new Dialog(context);
                       dialog.setContentView(R.layout.similar_appointments);
@@ -242,7 +205,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                           dialog.dismiss();
                       });
                       acceptBtn.setOnClickListener(v -> {
-                          //callback.onAccept(dto.getUid());;
+                          callback.onAccept(dto.getUid());;
                       });
 
                       hello.setAdapter(adapter);

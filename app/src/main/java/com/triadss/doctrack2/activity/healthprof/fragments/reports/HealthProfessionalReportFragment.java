@@ -3,12 +3,16 @@ package com.triadss.doctrack2.activity.healthprof.fragments.reports;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ToggleButton;
 
 import androidx.fragment.app.Fragment;
@@ -50,8 +54,7 @@ public class HealthProfessionalReportFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     String loggedInUserId;
-
-    ToggleButton appointmentToggle, patientToggle;
+    RadioGroup radioGroup;
 
     public HealthProfessionalReportFragment() {
         // Required empty public constructor
@@ -104,15 +107,22 @@ public class HealthProfessionalReportFragment extends Fragment {
             FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new HealthProfHomeFragment());
         });
 
-        appointmentToggle = rootView.findViewById(R.id.appointmentToggle);
-        patientToggle = rootView.findViewById(R.id.patientToggle);
+        radioGroup = rootView.findViewById(R.id.radioGroupbtn);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton radioButton = group.findViewById(checkedId);
 
-        appointmentToggle.setOnClickListener(view -> {
-            reloadList();
-        });
-
-        patientToggle.setOnClickListener(view -> {
-            reloadList();
+                if (checkedId == R.id.radioAll) {
+                    reloadList();
+                }
+                if (checkedId == R.id.radioAppointments) {
+                    reloadList();
+                }
+                if (checkedId == R.id.radioPatients) {
+                    reloadList();
+                }
+            }
         });
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -149,44 +159,56 @@ public class HealthProfessionalReportFragment extends Fragment {
         }
     };
 
-    private void reloadList()
-    {
+    private void reloadList() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-
         ReportsRepository repository = new ReportsRepository();
 
         String[] list = new String[0];
-        if(appointmentToggle.isChecked()) {
-            int newCount = list.length + ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS.length;
-            list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS))
-                    .toArray(size -> (String[]) Array.newInstance(String.class,
-                            newCount));
+        int checkedId = radioGroup.getCheckedRadioButtonId();
+
+        if (checkedId==R.id.radioAll) {
+            //* Merge all report lists into 'list'
+            list = Stream.concat(
+                    Arrays.stream(ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS),
+                            Arrays.stream(ReportConstants.HEALTHPROF_PATIENT_REPORTS))
+                            .toArray(String[]::new);
+        } else {
+            //* Handle individual toggle button states
+            if (checkedId==R.id.radioAppointments) {
+                list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS))
+                        .toArray(String[]::new);
+            }
+
+            if (checkedId==R.id.radioPatients) {
+                list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.HEALTHPROF_PATIENT_REPORTS))
+                        .toArray(String[]::new);
+            }
         }
 
-        if(patientToggle.isChecked()) {
-            int newCount = list.length + ReportConstants.HEALTHPROF_PATIENT_REPORTS.length;
-            list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.HEALTHPROF_PATIENT_REPORTS))
-                    .toArray(size -> (String[]) Array.newInstance(String.class,
-                            newCount));
-        }
-
-        repository.getReportsFromUserFilter(user.getUid(),
-                search.getText().toString().toLowerCase(),
-                list,
-                new ReportsRepository.ReportsFilterCallback() {
+        if(checkedId!=R.id.radioAll || checkedId!=R.id.radioAppointments || checkedId!=R.id.radioPatients){
+            repository.getReportsFromUserFilter(user.getUid(),
+                    search.getText().toString().toLowerCase(),
+                    list,
+                    new ReportsRepository.ReportsFilterCallback() {
                     @Override
                     public void onSuccess(List<ReportDto> reports) {
-
-                        PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
+                        HealthProfessionalReportAdapter pageAdapter = new HealthProfessionalReportAdapter(getContext(), (ArrayList) reports);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                         recyclerView.setLayoutManager(linearLayoutManager);
                         recyclerView.setAdapter(pageAdapter);
                     }
+
                     @Override
                     public void onError(String errorMessage) {
-
+                        // Handle error
                     }
-                });
+            });
+        } else {
+            HealthProfessionalReportAdapter pageAdapter = new HealthProfessionalReportAdapter(getContext(), new ArrayList<ReportDto>());
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(pageAdapter);
+        }
     }
 }

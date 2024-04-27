@@ -8,15 +8,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="729dp"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,11 +27,11 @@
                 android:layout_height="60dp"
                 android:background="#55000000"
                 android:orientation="horizontal"
-                android:weightSum="6">
+                >
 
                 <TextView
                     android:id="@+id/textView15"
-                    android:layout_width="0dp"
+                    android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:layout_weight="5"
                     android:gravity="center_vertical"
@@ -44,8 +43,8 @@
 
                 <ImageView
                     android:id="@+id/menu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
+                    android:layout_width="1dp"
+                    android:layout_height="41dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
@@ -57,10 +56,9 @@
 
             </LinearLayout>
 
-
             <TextView
                 android:id="@+id/textView14"
-                android:layout_width="match_parent"
+                android:layout_width="340dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="170dp"
@@ -94,13 +92,12 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:overScrollMode="never">
+                android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView_pendingAppointment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="210dp" />
 
             </ScrollView>
 
@@ -117,18 +114,18 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="250dp">
+                android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView_medication"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp" />
+                    android:layout_height="wrap_content" />
 
             </ScrollView>
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="87dp" />
 
         </LinearLayout>
 

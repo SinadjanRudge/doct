@@ -1,22 +1,22 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="5dp"
     android:elevation="5dp"
+    app:cardBackgroundColor="#F2FAFFFA"
+    app:cardCornerRadius="5dp"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="379dp"
+        android:layout_width="match_parent"
+        android:layout_height="259dp"
         android:padding="15dp">
 
         <TextView
             android:id="@+id/idtext"
             android:layout_width="80dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="25dp"
@@ -30,7 +30,7 @@
         <TextView
             android:id="@+id/NAMEtext"
             android:layout_width="80dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/IDtext"
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
@@ -44,7 +44,7 @@
         <TextView
             android:id="@+id/PURPOSEtext"
             android:layout_width="80dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/NAMEtext"
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
@@ -69,10 +69,10 @@
         <TextView
             android:id="@+id/appointment_date"
             android:layout_width="100dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/PURPOSEtext"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="40dp"
             android:layout_toEndOf="@+id/calendar"
             android:text="viewCalendar"
             android:textSize="14sp" />
@@ -91,16 +91,16 @@
         <TextView
             android:id="@+id/appointment_time"
             android:layout_width="100dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/PURPOSEtext"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="40dp"
             android:layout_toEndOf="@+id/baseline_access_time_24"
             android:text="viewClock" />
 
         <Button
             android:id="@+id/cancel_button"
-            android:layout_width="130dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/appointment_date"
             android:layout_alignParentStart="true"
@@ -112,47 +112,47 @@
 
         <Button
             android:id="@+id/reschedule_button"
-            android:layout_width="130dp"
+            android:layout_width="133dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/appointment_time"
-            android:layout_alignParentEnd="true"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="30dp"
-            android:layout_marginEnd="30dp"
+            android:layout_toEndOf="@+id/cancel_button"
             android:backgroundTint="@color/green"
             android:text="Reschedule" />
 
         <TextView
             android:id="@+id/IDtext"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginEnd="20dp"
             android:layout_toEndOf="@+id/idtext"
             android:text="viewID" />
 
         <TextView
             android:id="@+id/nametext"
             android:layout_width="264dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/IDtext"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
             android:layout_toEndOf="@+id/NAMEtext"
             android:text="viewName" />
 
         <TextView
             android:id="@+id/purposetext"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/nametext"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
             android:layout_toEndOf="@+id/PURPOSEtext"
             android:text="viewPurpose" />
 

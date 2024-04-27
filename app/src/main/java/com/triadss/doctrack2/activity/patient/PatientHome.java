@@ -64,12 +64,7 @@ public class PatientHome extends AppCompatActivity {
             if (item.getItemId() == R.id.record_menu) {
                 replaceFragment(new RecordFragment());
             }
-            else if (item.getItemId() == R.id.temp_logout) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                finish();
-            } else if(item.getItemId() == R.id.device_menu)
+            else if(item.getItemId() == R.id.device_menu)
             {
                 replaceFragment(new DeviceFragment());
             }

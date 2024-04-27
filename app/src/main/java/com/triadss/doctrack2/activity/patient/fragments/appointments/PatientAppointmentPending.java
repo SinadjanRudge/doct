@@ -63,6 +63,7 @@ public class PatientAppointmentPending extends Fragment implements IListView {
                }
        });
     }
+
     public void CallSomething(){
 
         Handler handler = new Handler();
