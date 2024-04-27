@@ -205,6 +205,22 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                           dialog.dismiss();
                       });
                       acceptBtn.setOnClickListener(v -> {
+
+                          appointmentRepository.rejectSimilarAppointmentExists(dto.getUid(),Integer.valueOf(timepickhour), Integer.valueOf(timepickminute),Integer.valueOf(timepickYear), Integer.valueOf(timepickMonth), Integer.valueOf(timepickDay),
+                                  new AppointmentRepository.rejectSimilarAppointmentCallback() {
+                                      @Override
+                                      public void onSuccess(String appointmentId) {
+                                          Toast.makeText(itemView.getContext(), appointmentId + " updated",
+                                                  Toast.LENGTH_SHORT).show();
+
+                                      }
+
+                                      @Override
+                                      public void onError(String errorMessage) {
+
+                                      }
+                                  });
+
                           callback.onAccept(dto.getUid());;
                       });
 

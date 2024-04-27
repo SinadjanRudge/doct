@@ -753,6 +753,43 @@ public class AppointmentRepository {
                 });
     }
 
+    public void rejectSimilarAppointmentExists(String ID, int Timehour, int Timeminute,int Timeyear,int Timemonth,int Timeday,rejectSimilarAppointmentCallback callback) {
+
+        DateTimeDto selectedDateTime = new DateTimeDto();
+
+
+        selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
+        selectedDateTime.setTime(new TimeDto(Timehour, Timeminute));
+        Timestamp isSimilar = selectedDateTime.ToTimestampForTimePicker();
+
+        appointmentsCollection
+                .whereEqualTo("dateOfAppointment", isSimilar)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        if(!document.getId().toString().equals(ID)) {
+
+                            appointmentsCollection
+                                    .document(document.getId())
+                                    .update(AppointmentsModel.status, "Cancelled")
+                                    .addOnSuccessListener(documentReference -> {
+                                        callback.onSuccess(document.getId());
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Error adding appointment", e);
+                                        callback.onError(e.getMessage());
+                                    });
+                        }
+                    }
+                    callback.onSuccess("");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching medicines", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
 
     public interface AppointmentCancelCallback {
         void onSuccess(String appointmentId);
@@ -824,6 +861,12 @@ public class AppointmentRepository {
     }
     public interface PatientSimilarDateUpcomingCallback {
         void onSuccess(ArrayList<String> lngList);
+
+        void onError(String errorMessage);
+    }
+
+    public interface rejectSimilarAppointmentCallback {
+        void onSuccess(String appointmentId);
 
         void onError(String errorMessage);
     }
