@@ -336,30 +336,48 @@ public class DeviceFragment extends Fragment {
         isNearbyVal.setText(String.valueOf(wearableDeviceDto.getIsNearby()));
     }
 
-    private boolean isCurrentInAnAppointment(String patientId){
+    private boolean isCurrentInAnAppointment(String patientId) {
         Timestamp currentTimeStamp = DateTimeDto.GetCurrentTimeStamp();
         AtomicBoolean isCurrent = new AtomicBoolean(false);
+        AtomicBoolean noDataFetch = new AtomicBoolean(false);
 
-        appointmentRepository.getAllPatientPendingAppointments(patientId, new AppointmentRepository.AppointmentPatientPendingFetchCallback(){
-
+        appointmentRepository.getAllPatientPendingAppointments(patientId, new AppointmentRepository.AppointmentPatientPendingFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
-                for (AppointmentDto appointment : appointments) {
-                    if (DateTimeDto.isToday(appointment.getDateOfAppointment()) && DateTimeDto.isCurrentTimeInRange(currentTimeStamp, appointment.getDateOfAppointment())) {
-                        isCurrent.set(true);
-                        break;
+                if (!appointments.isEmpty()) {
+                    for (AppointmentDto appointment : appointments) {
+                        if (DateTimeDto.isToday(appointment.getDateOfAppointment()) && DateTimeDto.isCurrentTimeInRange(currentTimeStamp, appointment.getDateOfAppointment())) {
+                            isCurrent.set(true);
+                            break;
+                        }
                     }
+                } else {
+                    noDataFetch.set(true);
                 }
+
+                // Check the conditions after the appointment data is fetched
+                handleAppointmentResult(isCurrent.get(), noDataFetch.get());
             }
 
             @Override
             public void onError(String errorMessage) {
-
+                noDataFetch.set(true);
+                handleAppointmentResult(isCurrent.get(), noDataFetch.get());
             }
         });
 
         return isCurrent.get();
     }
+
+    private void handleAppointmentResult(boolean isCurrent, boolean noDataFetch) {
+        if (!isCurrent && !noDataFetch) {
+            Toast.makeText(getContext(), "Can't sync. You're not currently in an appointment.", Toast.LENGTH_SHORT).show();
+        }
+        if (noDataFetch) {
+            Toast.makeText(getContext(), "There are no appointments made.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private boolean isValidSync(){
         if (!wearableDeviceDto.getIsNearby()) {
@@ -367,11 +385,7 @@ public class DeviceFragment extends Fragment {
             return false;
         }
 
-        if (user != null && !isCurrentInAnAppointment(user.getUid())) {
-            Toast.makeText(getContext(), "Can't sync. You're not currently in an appointment.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
+        return user == null || isCurrentInAnAppointment(user.getUid());
     }
 
     private void handleSyncButtonClick() {
@@ -431,9 +445,7 @@ public class DeviceFragment extends Fragment {
         PutDataRequest request = dataMap.asPutDataRequest();
         Task<DataItem> putDataTask = Wearable.getDataClient(requireContext()).putDataItem(request);
 
-        putDataTask.addOnSuccessListener(dataItem -> {
-            count++;
-        })
+        putDataTask.addOnSuccessListener(dataItem -> count++)
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to send data", e))
                 .addOnSuccessListener(e -> Toast.makeText(getContext(), "Data sent successfully", Toast.LENGTH_SHORT).show());
     }
