@@ -17,8 +17,8 @@ public class DateTimeDto {
     {
     }
 
-    private DateDto date;
-    private TimeDto time;
+    private static DateDto date;
+    private static TimeDto time;
 
     public DateDto getDate() {
         return date;
@@ -117,5 +117,16 @@ public class DateTimeDto {
         LocalDate now = LocalDate.now();
         Period period = Period.between(birthdate, now);
         return period.getYears();
+    }
+
+    public String formatDateTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(date.getYear(), date.getMonth(), date.getDay(), time.getHour(), time.getMinute());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy h:mm a", Locale.ENGLISH);
+
+        String formattedDateTime = dateFormat.format(calendar.getTime());
+
+        return formattedDateTime;
     }
 }
