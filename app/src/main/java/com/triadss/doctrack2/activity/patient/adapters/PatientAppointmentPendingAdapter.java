@@ -3,7 +3,6 @@ package com.triadss.doctrack2.activity.patient.adapters;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
@@ -32,15 +30,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.utils.AppointmentFunctions;
-
-import org.w3c.dom.Text;
 
 // Extends the Adapter class to RecyclerView.Adapter
 // and implement the unimplemented methods
@@ -122,7 +117,6 @@ public class PatientAppointmentPendingAdapter
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         private TextView purpose, date, time, documentId, patientName,  DocId;
         private Button reschedule, cancel, info;
 
@@ -159,7 +153,6 @@ public class PatientAppointmentPendingAdapter
                     showUpdateDialog(appointment);
                 }
             });
-
 
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -204,13 +197,13 @@ public class PatientAppointmentPendingAdapter
                                             ButtonManager.enableButton(yesButton);
                                         }
                                     });
+
                             appointmentRepository.addReport(appointment.getDocumentId(), ReportConstants.CANCELLED_APPOINTMENT,
                                     new AppointmentRepository.ReportCallback() {
                                         @Override
                                         public void onSuccess(String appointmentId) {
                                             Toast.makeText(itemView.getContext(), appointmentId + " updated",
                                                     Toast.LENGTH_SHORT).show();
-
                                         }
 
                                         @Override
@@ -224,7 +217,6 @@ public class PatientAppointmentPendingAdapter
                         }
                     });
                     alertDialog.show();
-
                 }
             });
         }
@@ -243,13 +235,9 @@ public class PatientAppointmentPendingAdapter
             Button confirmBtn = dialog.findViewById(R.id.confirmbutton);
             DateTimeDto selectedDateTime = new DateTimeDto();
 
-            String oldDate = date.getText().toString();
-            String oldTime = time.getText().toString();
-            String oldDateOldTime = date.getText().toString(); //+ " " + time.getText().toString();
             DateTimeDto dateOfAppointment = DateTimeDto.ToDateTimeDto(dto.getDateOfAppointment());
 
             SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
-            // TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
             TimeZone tz = TimeZone.getDefault();
             inFormat.setTimeZone(tz);
 
@@ -265,10 +253,6 @@ public class PatientAppointmentPendingAdapter
 
                             updateDate.setText(selectedDateTime.getDate().ToString(false));
 
-                            //SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
-//
-//                            TimeZone tz = TimeZone.getDefault();
-//                            inFormat.setTimeZone(tz);
                             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                             String currentDate = df.format(Calendar.getInstance().getTime());
 
@@ -295,24 +279,16 @@ public class PatientAppointmentPendingAdapter
                         }, date.getYear(), date.getMonth(), date.getDay());
 
                 // Show the Date Picker Dialog
-
                 datePickerDialog.show();
                 updateTime.setText("Time");
             });
 
             timeBtn.setOnClickListener(v -> {
-
                 if (updateDate.getText().toString().equals("Date") || updateDate.getText().toString().equals(" ")){
-
                     Toast.makeText(itemView.getContext(), "Error: must select date first", Toast.LENGTH_SHORT)
                             .show();
                 } else {
-
                     selectedDateTime.setTime(new TimeDto(0, 00));
-//                    SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
-//                    // TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
-//                    TimeZone tz = TimeZone.getDefault();
-//                    inFormat.setTimeZone(tz);
                     Date date = null;
                     try {
                         date = inFormat.parse(updateDate.getText().toString());
@@ -332,30 +308,24 @@ public class PatientAppointmentPendingAdapter
 
                     appointmentRepository.checkAppointmentExists(goal, selectedDateTime.ToTimestampForTimePicker(), Integer.valueOf(timepickYear), Integer.valueOf(timepickMonth), Integer.valueOf(timepickDay), new AppointmentRepository.CheckAppointmentExistFetchCallback() {
                         public void onSuccess(ArrayList<String> lngList) {
-
-                            //AnotherPickTimeSlot(lngList);
                             Dialog dialog = new Dialog(context);
                             dialog.setContentView(R.layout.time_slots_picker);
                             Button cancelBtn = dialog.findViewById(R.id.timePickCancel);
 
-                            String Carl = "";
-
-                            ListView hello = dialog.findViewById(R.id.breakdown);
+                            ListView timeSlotList = dialog.findViewById(R.id.breakdown);
 
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(itemView.getContext(), android.R.layout.simple_list_item_1, lngList) {
-
                                 @Override
                                 public View getView(int position, View convertView, ViewGroup parent) {
-
                                     TextView textView = (TextView) super.getView(position, convertView, parent);
                                     textView.setTextSize(15);
                                     return textView;
                                 }
                             };
 
-                            hello.setOnItemClickListener((adapterView, view, i, l) -> {
+                            timeSlotList.setOnItemClickListener((adapterView, view, i, l) -> {
                                 // String s = hello.getItemAtPosition(i).toString();
-                                String itemValue = (String) hello.getItemAtPosition(i);
+                                String itemValue = (String) timeSlotList.getItemAtPosition(i);
                                 Toast.makeText(itemView.getContext(), itemValue, Toast.LENGTH_LONG).show();
                                 if (!itemValue.equals("Not available")) {
                                     // updateTime.setText(itemValue);
@@ -363,29 +333,21 @@ public class PatientAppointmentPendingAdapter
                                     updateTime.setText(itemValue);
                                     dialog.dismiss();
                                 }
-                                // adapter.dismiss(); // If you want to close the adapter
                             });
                             cancelBtn.setOnClickListener(v -> {
                                 dialog.dismiss();
                             });
 
-                            hello.setAdapter(adapter);
+                            timeSlotList.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
-                            // dialog.getWindow().setGravity(Gravity.LEFT);
-                            //updateTime.setText(getTimePick());
                             dialog.show();
-                           // updateTime.setText(getTimePick());
                         }
 
                         @Override
                         public void onError(String errorMessage) {
 
-
                         }
-
                     });
-                    //updateTime.setText(getTimePick());
-                    //FromDateandTime(updateDate.getText().toString(),timepickyear,timepickmonth,timepickday);
                 }
             });
 
@@ -395,28 +357,29 @@ public class PatientAppointmentPendingAdapter
 
                 boolean inputInvalid = false;
 
-//                if (selectedDateTime.getDate() == null ||  selectedDateTime.getDate().getYear() == 0 || selectedDateTime.getDate().getMonth() == 0 || selectedDateTime.getDate().getDay() == 0) {
-//                    Toast.makeText(context, "Please select a valid date", Toast.LENGTH_SHORT).show();
-//                    dateErrorText.setVisibility(View.VISIBLE);
-//                    inputInvalid = true;
-//                }
-//
-//                if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
-//                    Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
-//                    timeErrorText.setVisibility(View.VISIBLE);
-//                    inputInvalid = true;
-//                }
-//
-//                if(inputInvalid)
-//                {
-//                    return;
-//                }
+                if (selectedDateTime.getDate() == null ||  selectedDateTime.getDate().getYear() == 0 || selectedDateTime.getDate().getMonth() == 0 || selectedDateTime.getDate().getDay() == 0) {
+                    Toast.makeText(context, "Please select a valid date", Toast.LENGTH_SHORT).show();
+                    dateErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
 
-                String newDateNewTime = updateDate.getText().toString(); //+ " " + updateTime.getText().toString();
-                if (updateDate.getText().toString().equals("Date") || updateTime.getText().toString().equals("Time") || updateTime.getText().toString().equals(" ")) {
+                if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
+                    Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
+                    timeErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
+
+                if(inputInvalid)
+                {
+                    return;
+                }
+
+                String newDateNewTime = updateDate.getText().toString();
+                if (updateDate.getText().toString().equals("Change Date") || updateTime.getText().toString().equals("Time") || updateTime.getText().toString().equals(" ")) {
                     Toast.makeText(itemView.getContext(), "Error: must select date and time", Toast.LENGTH_SHORT)
                             .show();
-                }else {
+                }
+                else {
                         SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences("MySharedPref",
                                 Context.MODE_PRIVATE);
                         SharedPreferences.Editor myEdit = sharedPreferences.edit();
