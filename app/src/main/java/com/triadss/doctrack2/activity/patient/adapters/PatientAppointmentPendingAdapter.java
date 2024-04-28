@@ -277,6 +277,7 @@ public class PatientAppointmentPendingAdapter
                             }
 
                         }, date.getYear(), date.getMonth(), date.getDay());
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
                 // Show the Date Picker Dialog
                 datePickerDialog.show();

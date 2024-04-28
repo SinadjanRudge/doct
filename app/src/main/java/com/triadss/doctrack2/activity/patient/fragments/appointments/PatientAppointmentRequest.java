@@ -136,6 +136,8 @@ public class PatientAppointmentRequest extends Fragment {
                         }
                     }, year, month, day);
 
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
             // Show the Date Picker Dialog
             datePickerDialog.show();
             pickTimeBtn.setText("Pick Time");
