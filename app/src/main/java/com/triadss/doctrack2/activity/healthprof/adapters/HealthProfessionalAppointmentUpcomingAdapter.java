@@ -93,7 +93,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
             purpose.setText(appointment.getPurpose());
             identification.setText(appointment.getPatientIdNumber());
             name.setText(appointment.getNameOfRequester());
-            birthday.setText(DateTimeDto.ToDateTimeDto(appointment.getPatientBirthday()).ToString());
+            birthday.setText(DateTimeDto.ToDateTimeDto(appointment.getPatientBirthday()).getDate().ToString());
             age.setText(String.valueOf(appointment.getPatientAge()));
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
