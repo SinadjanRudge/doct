@@ -368,6 +368,12 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                     inputInvalid = true;
                 }
 
+                if (DateDto.isDayWeekend(selectedDateTime.getDate())) {
+                    Toast.makeText(context, "Appointments cannot be scheduled on Weekends", Toast.LENGTH_SHORT).show();
+                    dateErrorText.setVisibility(View.VISIBLE);
+                    inputInvalid = true;
+                }
+
                 if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
                     Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
                     timeErrorText.setVisibility(View.VISIBLE);
