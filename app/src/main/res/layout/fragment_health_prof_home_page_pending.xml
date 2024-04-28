@@ -118,7 +118,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
-                    android:text="date and time" />
+                    android:text="date and time date and time date and time date and time date and time" />
 
             </LinearLayout>
 

@@ -147,7 +147,7 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                                     notificationRepository.NotifyRejectedAppointment(appointmentUid, new NotificationRepository.NotificationPushedCallback() {
                                         @Override
                                         public void onNotificationDone() {
-                                            appointmentRepository.deleteAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                                            appointmentRepository.rejectAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
                                                 @Override
                                                 public void onSuccess(String appointmentId) {
                                                     ReloadList();

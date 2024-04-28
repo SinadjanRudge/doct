@@ -277,6 +277,7 @@ public class PatientAppointmentPendingAdapter
                             }
 
                         }, date.getYear(), date.getMonth(), date.getDay());
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
                 // Show the Date Picker Dialog
                 datePickerDialog.show();
@@ -328,9 +329,9 @@ public class PatientAppointmentPendingAdapter
                                 String itemValue = (String) timeSlotList.getItemAtPosition(i);
                                 Toast.makeText(itemView.getContext(), itemValue, Toast.LENGTH_LONG).show();
                                 if (!itemValue.equals("Not available")) {
-                                    // updateTime.setText(itemValue);
                                     setTimePick(itemValue);
                                     updateTime.setText(itemValue);
+                                    selectedDateTime.setTime(new TimeDto(Integer.parseInt(getTimePick()), 00));
                                     dialog.dismiss();
                                 }
                             });
@@ -385,7 +386,7 @@ public class PatientAppointmentPendingAdapter
                         SharedPreferences.Editor myEdit = sharedPreferences.edit();
                         ButtonManager.disableButton(confirmBtn);
 
-                        notificationRepository.NotifyRescheduledAppointmentToPatient(dto.getDocumentId(),
+                        notificationRepository.NotifyReschedAppointmentToHealthProf(dto.getDocumentId(),
                                 DateTimeDto.ToDateTimeDto(selectedDateTime.ToTimestampForTimePicker()),
                                 new NotificationRepository.NotificationPushedCallback() {
                                     @Override
@@ -398,7 +399,24 @@ public class PatientAppointmentPendingAdapter
                                                     public void onSuccess(String appointmentId) {
                                                         Toast.makeText(itemView.getContext(),
                                                                 appointmentId + " updated", Toast.LENGTH_SHORT).show();
-                                                        dialog.dismiss();
+                                                        appointmentRepository.changeToOngoingAppointment(dto.getDocumentId(),
+                                                                new AppointmentRepository.ChangeToOngoingAppointmentCallback() {
+
+                                                                    @Override
+                                                                    public void onSuccess(String appointmentId) {
+                                                                        Toast.makeText(itemView.getContext(),
+                                                                                appointmentId + " changed to Ongoing", Toast.LENGTH_SHORT).show();
+                                                                        dialog.dismiss();
+                                                                        myEdit.putInt("PatientPending", Integer.parseInt("10"));
+                                                                        myEdit.putInt("PatientStatus", Integer.parseInt("10"));
+                                                                        myEdit.apply();
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onError(String errorMessage) {
+                                                                        ButtonManager.enableButton(confirmBtn);
+                                                                    }
+                                                                });
                                                     }
 
                                                     @Override
@@ -406,22 +424,7 @@ public class PatientAppointmentPendingAdapter
                                                         ButtonManager.enableButton(confirmBtn);
                                                     }
                                                 });
-                                        appointmentRepository.changeToOngoingAppointment(dto.getDocumentId(),
-                                                selectedDateTime.ToTimestampForTimePicker(),
-                                                new AppointmentRepository.ChangeToOngoingAppointmentCallback() {
 
-                                                    @Override
-                                                    public void onSuccess(String appointmentId) {
-                                                        Toast.makeText(itemView.getContext(),
-                                                                appointmentId + " changed to Ongoing", Toast.LENGTH_SHORT).show();
-                                                        dialog.dismiss();
-                                                    }
-
-                                                    @Override
-                                                    public void onError(String errorMessage) {
-                                                        ButtonManager.enableButton(confirmBtn);
-                                                    }
-                                                });
                                     }
                                 });
 
@@ -439,9 +442,7 @@ public class PatientAppointmentPendingAdapter
 
                                     }
                                 });
-                        myEdit.putInt("PatientPending", Integer.parseInt("10"));
-                        myEdit.putInt("PatientStatus", Integer.parseInt("10"));
-                        myEdit.apply();
+
                 }
             });
             dialog.show();

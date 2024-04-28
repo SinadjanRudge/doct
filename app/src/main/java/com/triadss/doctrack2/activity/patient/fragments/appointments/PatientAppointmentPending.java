@@ -73,7 +73,7 @@ public class PatientAppointmentPending extends Fragment implements IListView {
                 //When you are not in fragment
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
-                boolean isCurrentlyAtPatientAppointmentPending = currentFragment instanceof PatientAppointmentPending;
+                boolean isCurrentlyAtPatientAppointmentPending = currentFragment instanceof PatientAppointmentFragment;
                 if(!isCurrentlyAtPatientAppointmentPending) {
                     stop = true;
                 }

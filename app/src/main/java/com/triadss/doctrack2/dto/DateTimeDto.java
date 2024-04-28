@@ -16,8 +16,8 @@ public class DateTimeDto {
     public DateTimeDto() {
     }
 
-    private static DateDto date;
-    private static TimeDto time;
+    private DateDto date;
+    private TimeDto time;
 
     public DateDto getDate() {
         return date;
