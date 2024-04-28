@@ -744,8 +744,7 @@ public class AppointmentRepository {
                 });
     }
 
-    public void changeToOngoingAppointment(String DocumentId,Timestamp date,ChangeToOngoingAppointmentCallback callback) {
-        String dateTest = DateTimeDto.ToDateTimeDto(date).ToString();
+    public void changeToOngoingAppointment(String DocumentId, ChangeToOngoingAppointmentCallback callback) {
         appointmentsCollection
                 .document(DocumentId)
                 .update(AppointmentsModel.status, "Ongoing")
