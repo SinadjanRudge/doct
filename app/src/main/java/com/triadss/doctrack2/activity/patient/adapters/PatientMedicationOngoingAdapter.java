@@ -189,7 +189,6 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                                 ButtonManager.enableButton(updateBtn);
                             }
                         });
-
                     }
 
                     @Override
@@ -198,7 +197,6 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                         ButtonManager.enableButton(updateBtn);
                     }
                 });
-
             });
 
             dialog.show();

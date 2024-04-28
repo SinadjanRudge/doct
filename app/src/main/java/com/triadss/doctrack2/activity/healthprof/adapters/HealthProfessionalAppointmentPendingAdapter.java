@@ -428,11 +428,9 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
                                 }
                             });
-
                 }
             });
             dialog.show();
         }
     }
-
 }
