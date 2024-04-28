@@ -9,36 +9,27 @@ import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.SetOptions;
-import com.triadss.doctrack2.activity.LoginActivity;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.AppointmentsModel;
-import com.triadss.doctrack2.config.model.ReportModel;
-import com.triadss.doctrack2.config.model.UserModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
-import com.triadss.doctrack2.dto.ReportDto;
 import com.triadss.doctrack2.dto.TimeDto;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class AppointmentRepository {
     private static final String TAG = "AppointmentRepository";
@@ -200,7 +191,9 @@ public class AppointmentRepository {
                                     {
                                         appointment.setStatus(AppointmentTypeConstants.COMPLETED);
                                     }
-                                    if(appointment.getStatus().equals(AppointmentTypeConstants.CANCELLED) || appointment.getStatus().equals(AppointmentTypeConstants.COMPLETED)) {
+                                    if(appointment.getStatus().equals(AppointmentTypeConstants.CANCELLED)
+                                            || appointment.getStatus().equals(AppointmentTypeConstants.COMPLETED)
+                                            || appointment.getStatus().equals(AppointmentTypeConstants.REJECTED)) {
 
                                         appointments.add(appointment);
                                     }
@@ -318,6 +311,23 @@ public class AppointmentRepository {
                     callback.onError(e.getMessage());
                 });
     }
+
+
+    public void rejectAppointment(String DocumentId, AppointmentAddCallback callback) {
+
+        appointmentsCollection
+                .document(DocumentId)
+                .update(AppointmentsModel.status, AppointmentTypeConstants.REJECTED)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Appointment added with ID: " + DocumentId);
+                    callback.onSuccess(DocumentId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error adding appointment", e);
+                    callback.onError(e.getMessage());
+                });
+    }
+
 
     public void getOngoingAppointments(AppointmentFetchCallback callback)
     {
@@ -578,13 +588,6 @@ public class AppointmentRepository {
                     boolean freespaceE = true; boolean freespaceF = true; boolean freespaceG = true; boolean freespaceH = true;
                     boolean freespaceI = true;
                     ArrayList<String> TimeSlotList = new ArrayList<>();
-                    ArrayList<String> FreeTimeSlotList = new ArrayList<>();
-//                        TimeSlotList.add(String.valueOf(Timeyear));
-//                        TimeSlotList.add(String.valueOf(Timemonth));
-//                        TimeSlotList.add(String.valueOf(Timeday));
-//                        selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
-//                        selectedDateTime.setTime(new TimeDto(15, 33));
-//                        TimeSlotList.add(String.valueOf(selectedDateTime.ToTimestampForTimePicker()));
                     String currentHour;
                     String currentYear;
                     String currentMonth;
@@ -652,7 +655,6 @@ public class AppointmentRepository {
 
                         }
 
-                        // TimeSlotList.add(String.valueOf(document.get("dateOfAppointment")));
                     }
                     if(goal.equals("Sunday")){
                         freespaceA = false;  freespaceB = false;  freespaceC = false;  freespaceD = false;
@@ -691,9 +693,7 @@ public class AppointmentRepository {
     }
 
     public void checkSimilarAppointmentExists(String ID, int Timehour, int Timeminute,int Timeyear,int Timemonth,int Timeday,PatientSimilarDateUpcomingCallback callback) {
-
         DateTimeDto selectedDateTime = new DateTimeDto();
-
 
         selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
         selectedDateTime.setTime(new TimeDto(Timehour, Timeminute));
@@ -711,7 +711,6 @@ public class AppointmentRepository {
                         if(!document.getId().toString().equals(ID)) {
                             TimeSlotList.add(document.get("nameOfRequester").toString());
                             TimeSlotList.add(document.get("purpose").toString());
-                            //TimeSlotList.add(" ");
                         }
                     }
                     callback.onSuccess(TimeSlotList);
@@ -775,7 +774,7 @@ public class AppointmentRepository {
 
                             appointmentsCollection
                                     .document(document.getId())
-                                    .update(AppointmentsModel.status, "Canceled")
+                                    .update(AppointmentsModel.status, AppointmentTypeConstants.REJECTED)
                                     .addOnSuccessListener(documentReference -> {
                                         callback.onSuccess(document.getId());
                                     })
@@ -793,12 +792,12 @@ public class AppointmentRepository {
                 });
     }
 
-
     public interface AppointmentCancelCallback {
         void onSuccess(String appointmentId);
 
         void onError(String errorMessage);
     }
+
     public interface AppointmentAddCallback {
         void onSuccess(String appointmentId);
 
@@ -846,6 +845,7 @@ public class AppointmentRepository {
 
         void onError(String errorMessage);
     }
+
     public interface ChangeToOngoingAppointmentCallback {
         void onSuccess(String appointmentId);
 
@@ -857,11 +857,13 @@ public class AppointmentRepository {
 
         void onError(String errorMessage);
     }
+
     public interface PatientSimilarAppointmentCallback {
         void onSuccess(ArrayList<String> lngList);
 
         void onError(String errorMessage);
     }
+
     public interface PatientSimilarDateUpcomingCallback {
         void onSuccess(ArrayList<String> lngList);
 
