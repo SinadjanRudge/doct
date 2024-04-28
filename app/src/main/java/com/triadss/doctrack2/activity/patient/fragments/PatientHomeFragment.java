@@ -120,8 +120,6 @@ public class PatientHomeFragment extends Fragment{
         return rootview;
     }
 
-
-
     public void showPopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(getContext(), view);
         popupMenu.setOnMenuItemClickListener(item -> {

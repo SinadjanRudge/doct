@@ -10,6 +10,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
@@ -44,20 +47,12 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class HealthProfessionalPending extends Fragment implements IListView {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     private ReportsRepository reportsRepository = new ReportsRepository();
     private NotificationRepository notifcationRepository = new NotificationRepository();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     String loggedInUserId;
     private NotificationRepository notificationRepository = new NotificationRepository();
+    private TextInputEditText searchAppointment;
 
     public HealthProfessionalPending() {
         // Required empty public constructor
@@ -67,16 +62,12 @@ public class HealthProfessionalPending extends Fragment implements IListView {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment HealthProfessionalPending.
      */
     // TODO: Rename and change types and number of parameters
-    public static HealthProfessionalPending newInstance(String param1, String param2) {
+    public static HealthProfessionalPending newInstance() {
         HealthProfessionalPending fragment = new HealthProfessionalPending();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,10 +75,6 @@ public class HealthProfessionalPending extends Fragment implements IListView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     RecyclerView recyclerView;
@@ -105,6 +92,19 @@ public class HealthProfessionalPending extends Fragment implements IListView {
         View rootView = inflater.inflate(R.layout.fragment_health_professional_pending, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
+        searchAppointment = rootView.findViewById(R.id.searchAppointment);
+        TextWatcher inputTextWatcher = new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                ReloadList();
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){
+            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        };
+
+        searchAppointment.addTextChangedListener(inputTextWatcher);
+
         ReloadList();
         CallSomething();
 
@@ -115,7 +115,9 @@ public class HealthProfessionalPending extends Fragment implements IListView {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = auth.getCurrentUser();
 
-        appointmentRepository.getPendingAppointmentsForHealthProf(currentUser.getUid(), new AppointmentRepository.AppointmentFetchCallback() {
+        String filter = searchAppointment.getText().toString();
+
+        appointmentRepository.getPendingAppointmentsForHealthProfFiltered(currentUser.getUid(), filter, new AppointmentRepository.AppointmentFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

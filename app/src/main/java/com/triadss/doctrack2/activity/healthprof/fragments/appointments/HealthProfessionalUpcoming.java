@@ -6,10 +6,13 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
@@ -37,15 +40,9 @@ import java.util.List;
 public class HealthProfessionalUpcoming extends Fragment implements IListView {
     private ReportsRepository reportsRepository = new ReportsRepository();
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     String loggedInUserId;
+
+    TextInputEditText searchAppointment;
 
     public HealthProfessionalUpcoming() {
         // Required empty public constructor
@@ -55,16 +52,12 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment HealthProfessionalUpcoming.
      */
     // TODO: Rename and change types and number of parameters
-    public static HealthProfessionalUpcoming newInstance(String param1, String param2) {
+    public static HealthProfessionalUpcoming newInstance() {
         HealthProfessionalUpcoming fragment = new HealthProfessionalUpcoming();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,10 +65,6 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     RecyclerView recyclerView;
@@ -93,6 +82,19 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
         View rootView = inflater.inflate(R.layout.fragment_health_professional_upcoming, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
+        searchAppointment = rootView.findViewById(R.id.searchAppointment);
+        TextWatcher inputTextWatcher = new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                ReloadList();
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){
+            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        };
+
+        searchAppointment.addTextChangedListener(inputTextWatcher);
+
         ReloadList();
         return rootView;
     }
@@ -103,7 +105,9 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
 
         NotificationRepository notificationRepository = new NotificationRepository();
 
-        appointmentRepository.getOngoingAppointments(new AppointmentRepository.AppointmentFetchCallback() {
+        String filter = searchAppointment.getText().toString();
+
+        appointmentRepository.getOngoingAppointmentsFiltered(filter, new AppointmentRepository.AppointmentFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
