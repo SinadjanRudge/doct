@@ -10,10 +10,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
@@ -29,6 +32,8 @@ import java.util.List;
 public class PatientAppointmentStatus extends Fragment implements IListView {
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
+    TextInputEditText searchAppointment;
+
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,6 +42,20 @@ public class PatientAppointmentStatus extends Fragment implements IListView {
         appointmentRepository = new AppointmentRepository();
         View rootView = inflater.inflate(R.layout.fragment_patient_appointment_status, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+
+        searchAppointment = rootView.findViewById(R.id.searchAppointment);
+        TextWatcher inputTextWatcher = new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                ReloadList();
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){
+            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        };
+
+        searchAppointment.addTextChangedListener(inputTextWatcher);
+
         ReloadList();
         CallSomething();
         return rootView;
@@ -46,7 +65,9 @@ public class PatientAppointmentStatus extends Fragment implements IListView {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        appointmentRepository.getAllPatientStatusAppointments(user.getUid(), new AppointmentRepository.AppointmentPatientStatusFetchCallback() {
+        String filter = searchAppointment.getText().toString();
+
+        appointmentRepository.getAllPatientStatusAppointmentsFiltered(user.getUid(), filter, new AppointmentRepository.AppointmentPatientStatusFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
 
