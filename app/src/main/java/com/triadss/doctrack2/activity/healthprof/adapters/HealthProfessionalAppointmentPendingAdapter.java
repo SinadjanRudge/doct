@@ -333,7 +333,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                                 Toast.makeText(itemView.getContext(), itemValue, Toast.LENGTH_LONG).show();
                                 if (!itemValue.equals("Not available")) {
                                     setTimePick(itemValue);
-                                    updateTime.setText(getTimePick() + ":00");
+                                    updateTime.setText(itemValue);
                                     selectedDateTime.setTime(new TimeDto(Integer.parseInt(getTimePick()), 00));
                                     dialog.dismiss();
                                 }
