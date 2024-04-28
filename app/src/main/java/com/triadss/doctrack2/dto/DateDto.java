@@ -84,6 +84,10 @@ public class DateDto {
         return extractedDate;
     }
 
+    public static boolean isDayWeekend(DateDto dateDto){
+        return isDayWeekend(dateDto.getYear(), dateDto.getMonth() - 1, dateDto.getDay());
+    }
+
     public static boolean isDayWeekend(int year, int month, int day){
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
