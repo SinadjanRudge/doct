@@ -103,7 +103,6 @@ public class MedicationRepository {
         medicationsCollection
                 .whereEqualTo(MedicationModel.patientId, userId)
                 .whereEqualTo(MedicationModel.status, MedicationTypeConstants.ONGOING)
-                .whereGreaterThanOrEqualTo(MedicationModel.timestamp, currentTime)
                 .orderBy(MedicationModel.timestamp, Query.Direction.ASCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {

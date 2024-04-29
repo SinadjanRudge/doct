@@ -26,6 +26,7 @@ import com.triadss.doctrack2.activity.patient.fragments.PatientHomeFragment;
 import com.triadss.doctrack2.activity.patient.fragments.medications.PatientMedicationFragment;
 import com.triadss.doctrack2.activity.patient.fragments.records.PatientReportFragment;
 import com.triadss.doctrack2.activity.patient.fragments.records.RecordFragment;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.NotificationConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.databinding.ActivityPatientHomeBinding;
@@ -35,6 +36,7 @@ import com.triadss.doctrack2.notification.NotificationMedicationScheduleWorker;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -131,11 +133,33 @@ public class PatientHome extends AppCompatActivity {
             @Override
             public void onSuccess(List<MedicationDto> medications) {
                 List<OneTimeWorkRequest> requests = new ArrayList<OneTimeWorkRequest>();
+                int delayForPastMedications = 1;
+                HashMap<Long, Boolean> delays = new HashMap<Long, Boolean>();
+
                 for(MedicationDto dto : medications) {
                     Log.e("TEST", "Running Medication Work for " + loggedInUserId +
                             " for " + dto.getMedicine() + " at " + DateTimeDto.ToDateTimeDto(dto.getTimestamp()).ToString());
 
                     long distance = DateTimeDto.GetTimestampDiffInSeconds(dto.getTimestamp());
+
+                    if(distance < DocTrackConstant.MEDICATION_NOTIFICATION_NEGATIVE_SECOND_TRESHOLD)
+                    {
+                        continue;
+                    }
+
+                    distance = distance < 0 ? delayForPastMedications++: distance;
+
+                    //Maintance Uniqueness of distance
+                    if(!delays.containsKey(distance)) {
+                        delays.put(distance, true);
+                    } else {
+                        long nextDistance = distance + 1;
+                        while (delays.containsKey(nextDistance)) {
+                            nextDistance++;
+                        }
+                        delays.put(nextDistance, true);
+                        distance = nextDistance;
+                    }
 
                     OneTimeWorkRequest notifWorkRequest = new OneTimeWorkRequest.Builder(
                             NotificationMedicationScheduleWorker.class)
@@ -155,10 +179,9 @@ public class PatientHome extends AppCompatActivity {
 
                 Log.e("TEST", "Medication notif count " + String.valueOf(requests.size()));
 
-
-                if(!requests.isEmpty()) {
+                for(int i = 0; i < requests.size(); i++) {
                     WorkManager.getInstance(PatientHome.this)
-                            .enqueue(requests);
+                            .enqueue(requests.get(i));
                 }
             }
 

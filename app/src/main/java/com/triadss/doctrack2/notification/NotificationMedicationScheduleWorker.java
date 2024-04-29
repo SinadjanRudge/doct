@@ -24,7 +24,6 @@ import com.triadss.doctrack2.repoositories.MedicationRepository;
 import java.util.List;
 
 public class NotificationMedicationScheduleWorker extends Worker {
-    MedicationRepository medicationRepository = new MedicationRepository();
     private SharedPreferences sharedPref;
     Context context;
     public NotificationMedicationScheduleWorker(
@@ -36,6 +35,11 @@ public class NotificationMedicationScheduleWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+        if(isStopped())
+        {
+            return Result.success();
+        }
+
         //Get Medications
         String receiverUserUid = getInputData().getString(NotificationConstants.RECEIVER_ID);
         String title = getInputData().getString(NotificationConstants.TITLE_ID);
@@ -47,16 +51,16 @@ public class NotificationMedicationScheduleWorker extends Worker {
                 " at: " + DateTimeDto.ToDateTimeDto(Timestamp.now()).ToString() +
                 " with content: " + content);
 
-        NotificationDTO testNotif = new NotificationDTO();
-        testNotif.setTitle(title);
-        testNotif.setContent(content);
+        NotificationDTO notif = new NotificationDTO();
+        notif.setTitle(title);
+        notif.setContent(content);
 
-        notify(testNotif);
+        notify(notif);
+
         return Result.success();
     }
 
     @SuppressLint("MissingPermission")
-
 
     public void notify(NotificationDTO dto) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

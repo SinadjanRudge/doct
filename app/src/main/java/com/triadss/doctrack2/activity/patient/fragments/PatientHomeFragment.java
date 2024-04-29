@@ -147,6 +147,7 @@ public class PatientHomeFragment extends Fragment{
                 medicationRecyclerView.setLayoutManager(linearLayoutManager);
 
                 PatientHomeMedicationAdapter adapter = new PatientHomeMedicationAdapter(getContext(), (ArrayList)medications);
+
                 medicationRecyclerView.setAdapter(adapter);
             }
 
