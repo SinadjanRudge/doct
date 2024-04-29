@@ -795,9 +795,7 @@ public class AppointmentRepository {
     }
 
     public void checkAppointmentExists(String goal,Timestamp dateAndTime,int Timeyear,int Timemonth,int Timeday,CheckAppointmentExistFetchCallback callback) {
-
         DateTimeDto selectedDateTime = new DateTimeDto();
-
 
         selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
         selectedDateTime.setTime(new TimeDto(8, 0));
@@ -817,7 +815,6 @@ public class AppointmentRepository {
                 .whereEqualTo("status", "Pending")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-
                     boolean freespaceA = true; boolean freespaceB = true; boolean freespaceC = true; boolean freespaceD = true;
                     boolean freespaceE = true; boolean freespaceF = true; boolean freespaceG = true; boolean freespaceH = true;
                     boolean freespaceI = true;
