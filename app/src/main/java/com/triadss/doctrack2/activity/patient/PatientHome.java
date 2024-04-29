@@ -144,7 +144,7 @@ public class PatientHome extends AppCompatActivity {
 
                     if(distance < DocTrackConstant.MEDICATION_NOTIFICATION_NEGATIVE_SECOND_TRESHOLD)
                     {
-//                        continue;
+                        continue;
                     }
 
                     distance = distance < 0 ? delayForPastMedications++: distance;
