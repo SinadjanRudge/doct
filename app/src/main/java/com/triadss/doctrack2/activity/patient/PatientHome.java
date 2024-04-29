@@ -134,7 +134,7 @@ public class PatientHome extends AppCompatActivity {
             public void onSuccess(List<MedicationDto> medications) {
                 List<OneTimeWorkRequest> requests = new ArrayList<OneTimeWorkRequest>();
                 int delayForPastMedications = 1;
-                HashMap<Long, Long> delays = new HashMap<Long, Long>();
+                HashMap<Long, Boolean> delays = new HashMap<Long, Boolean>();
 
                 for(MedicationDto dto : medications) {
                     Log.e("TEST", "Running Medication Work for " + loggedInUserId +
@@ -144,10 +144,22 @@ public class PatientHome extends AppCompatActivity {
 
                     if(distance < DocTrackConstant.MEDICATION_NOTIFICATION_NEGATIVE_SECOND_TRESHOLD)
                     {
-                        continue;
+//                        continue;
                     }
 
                     distance = distance < 0 ? delayForPastMedications++: distance;
+
+                    //Maintance Uniqueness of distance
+                    if(!delays.containsKey(distance)) {
+                        delays.put(distance, true);
+                    } else {
+                        long nextDistance = distance + 1;
+                        while (delays.containsKey(nextDistance)) {
+                            nextDistance++;
+                        }
+                        delays.put(nextDistance, true);
+                        distance = nextDistance;
+                    }
 
                     OneTimeWorkRequest notifWorkRequest = new OneTimeWorkRequest.Builder(
                             NotificationMedicationScheduleWorker.class)
