@@ -26,16 +26,17 @@ public class ConstantRepository {
                 constantsCollection.document(DOC_HOLIDAY).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            Map<String, Object> holidaysData = document.getData();
-                            if (holidaysData != null) {
-                                Map<String, Timestamp> holidays = (Map<String, Timestamp>)holidaysData.get("dates");
-                                callback.onHolidaysFetched(holidays);
-                            } else {
-                                callback.onFailure("No holidays data found");
+                        Map<String, Object> data = document.getData();
+                        if (data != null) {
+                            Map<String, Timestamp> holidays = new HashMap<>();
+                            for (Map.Entry<String, Object> entry : data.entrySet()) {
+                                if (entry.getValue() instanceof Timestamp) {
+                                    holidays.put(entry.getKey(), (Timestamp) entry.getValue());
+                                }
                             }
+                            callback.onHolidaysFetched(holidays);
                         } else {
-                            callback.onFailure("Document does not exist");
+                            callback.onFailure("No data found in document");
                         }
                     } else {
                         callback.onFailure("Failed to fetch document: " + task.getException());
@@ -50,6 +51,7 @@ public class ConstantRepository {
             callback.onFailure("User is not authenticated");
         }
     }
+
 
 
     public interface HolidayFetchCallback {
