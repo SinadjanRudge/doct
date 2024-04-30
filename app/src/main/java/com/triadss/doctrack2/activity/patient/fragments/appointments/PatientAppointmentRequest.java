@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -133,19 +134,6 @@ public class PatientAppointmentRequest extends Fragment {
         });
     }
 
-    private boolean isDayAHoliday(int year, int month, int day) {
-        for (Timestamp holidayTimestamp : holidayList.values()) {
-            LocalDate holidayDate = holidayTimestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-            holidayDate = holidayDate.withDayOfMonth(1).withMonth(month + 1).withYear(year);
-
-            if (holidayDate.getMonthValue() == month + 1 && holidayDate.getDayOfMonth() == day) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
 
     private void setupDatePicker() {
@@ -155,7 +143,6 @@ public class PatientAppointmentRequest extends Fragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            // Create and show the Date Picker Dialog
             DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
                     (view, year1, monthOfYear, dayOfMonth) -> {
                         Calendar selectedDate = Calendar.getInstance();
@@ -169,7 +156,7 @@ public class PatientAppointmentRequest extends Fragment {
                         } else if(DateDto.isDayWeekend(year1, monthOfYear, dayOfMonth)) {
                             Toast.makeText(getContext(), ErrorMessageConstants.CANNOT_SELECT_WEEKEND_APPOINTMENTS, Toast.LENGTH_SHORT).show();
                         }
-                        else if(isDayAHoliday(year, monthOfYear, dayOfMonth)){
+                        else if(DateDto.checkDayIfHoliday(holidayList, year, monthOfYear, dayOfMonth)){
                             Toast.makeText(getContext(), "Cannot select a holiday", Toast.LENGTH_SHORT).show();
                         }
                         else {
