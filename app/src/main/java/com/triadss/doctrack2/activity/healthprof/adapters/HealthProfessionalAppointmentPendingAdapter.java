@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.ErrorMessageConstants;
 import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
@@ -247,6 +248,11 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                 // Create and show the Date Picker Dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(context,
                         (view, year1, monthOfYear, dayOfMonth) -> {
+                            if (DateDto.isDayWeekend(year1, monthOfYear, dayOfMonth)) {
+                                Toast.makeText(context, ErrorMessageConstants.CANNOT_SELECT_WEEKEND_APPOINTMENTS, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
                             // Store the selected date
                             selectedDateTime.setDate(new DateDto(year1, monthOfYear + 1, dayOfMonth));
 
@@ -364,12 +370,6 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
                 if (selectedDateTime.getDate() == null ||  selectedDateTime.getDate().getYear() == 0 || selectedDateTime.getDate().getMonth() == 0 || selectedDateTime.getDate().getDay() == 0) {
                     Toast.makeText(context, "Please select a valid date", Toast.LENGTH_SHORT).show();
-                    dateErrorText.setVisibility(View.VISIBLE);
-                    inputInvalid = true;
-                }
-
-                if (DateDto.isDayWeekend(selectedDateTime.getDate())) {
-                    Toast.makeText(context, "Appointments cannot be scheduled on Weekends", Toast.LENGTH_SHORT).show();
                     dateErrorText.setVisibility(View.VISIBLE);
                     inputInvalid = true;
                 }

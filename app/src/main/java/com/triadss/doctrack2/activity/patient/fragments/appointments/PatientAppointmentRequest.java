@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.AppointmentTypeConstants;
+import com.triadss.doctrack2.config.constants.ErrorMessageConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.TimeDto;
@@ -125,7 +126,9 @@ public class PatientAppointmentRequest extends Fragment {
                             // Selected date is in the past
                             Toast.makeText(getContext(), "Cannot select past date", Toast.LENGTH_SHORT)
                                     .show();
-                        } else {
+                        } else if(DateDto.isDayWeekend(year1, monthOfYear, dayOfMonth)) {
+                            Toast.makeText(getContext(), ErrorMessageConstants.CANNOT_SELECT_WEEKEND_APPOINTMENTS, Toast.LENGTH_SHORT).show();
+                        }else {
                             // Update the text on the button with the selected date
                             pickDateButton.setText(
                                     String.format(Locale.getDefault(), "%04d-%02d-%02d", year1,
@@ -283,11 +286,6 @@ public class PatientAppointmentRequest extends Fragment {
     private void handleConfirmationButtonClick() {
         if (isInputsNotValid())
             return;
-
-        if (DateDto.isDayWeekend(selectedYear, selectedMonth, selectedDay)) {
-            Toast.makeText(getContext(), "Appointments cannot be scheduled on Weekends", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         String purpose = textInputPurpose.getText().toString();
 
