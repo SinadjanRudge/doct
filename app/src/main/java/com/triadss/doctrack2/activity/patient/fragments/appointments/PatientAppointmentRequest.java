@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,18 +28,28 @@ import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.NotificationDTO;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.repoositories.ConstantRepository;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.AppointmentFunctions;
+
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class PatientAppointmentRequest extends Fragment {
+    private static String TAG = "PatientAppointmentRequest";
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;
@@ -49,6 +60,7 @@ public class PatientAppointmentRequest extends Fragment {
     private TextView dateErrorText, timeErrorText;
 
     private String TimePick;
+    private Map<String, Timestamp> holidayList = Collections.synchronizedMap(new HashMap<>());
 
     public String getTimePick() {
 
@@ -103,9 +115,26 @@ public class PatientAppointmentRequest extends Fragment {
         setupDatePicker();
         setupTimePicker();
         setupConfirmationButton();
+        fetchHolidays();
 
         return rootView;
     }
+
+    private void fetchHolidays(){
+        ConstantRepository.getHolidays(new ConstantRepository.HolidayFetchCallback() {
+            @Override
+            public void onHolidaysFetched(Map<String, Timestamp> holidays) {
+                holidayList.putAll(holidays);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Log.e(TAG, errorMessage);
+            }
+        });
+    }
+
+
 
     private void setupDatePicker() {
         pickDateButton.setOnClickListener(v -> {
@@ -114,7 +143,6 @@ public class PatientAppointmentRequest extends Fragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            // Create and show the Date Picker Dialog
             DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
                     (view, year1, monthOfYear, dayOfMonth) -> {
                         Calendar selectedDate = Calendar.getInstance();
@@ -123,13 +151,15 @@ public class PatientAppointmentRequest extends Fragment {
                         Calendar currentDate = Calendar.getInstance();
 
                         if (selectedDate.before(currentDate)) {
-                            // Selected date is in the past
                             Toast.makeText(getContext(), "Cannot select past date", Toast.LENGTH_SHORT)
                                     .show();
                         } else if(DateDto.isDayWeekend(year1, monthOfYear, dayOfMonth)) {
                             Toast.makeText(getContext(), ErrorMessageConstants.CANNOT_SELECT_WEEKEND_APPOINTMENTS, Toast.LENGTH_SHORT).show();
-                        }else {
-                            // Update the text on the button with the selected date
+                        }
+                        else if(DateDto.checkDayIfHoliday(holidayList, year, monthOfYear, dayOfMonth)){
+                            Toast.makeText(getContext(), "Cannot select a holiday", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
                             pickDateButton.setText(
                                     String.format(Locale.getDefault(), "%04d-%02d-%02d", year1,
                                             monthOfYear + 1, dayOfMonth));
@@ -141,11 +171,11 @@ public class PatientAppointmentRequest extends Fragment {
 
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
-            // Show the Date Picker Dialog
             datePickerDialog.show();
             pickTimeBtn.setText("Pick Time");
         });
     }
+
 
     private void setupTimePicker() {
         // Set up Time Picker Dialog
