@@ -36,8 +36,11 @@ import com.triadss.doctrack2.utils.AppointmentFunctions;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -56,7 +59,7 @@ public class PatientAppointmentRequest extends Fragment {
     private TextView dateErrorText, timeErrorText;
 
     private String TimePick;
-    private Map<String, Timestamp> holidayList = new HashMap<>();
+    private Map<String, Timestamp> holidayList = Collections.synchronizedMap(new HashMap<>());
 
     public String getTimePick() {
 
@@ -120,7 +123,7 @@ public class PatientAppointmentRequest extends Fragment {
         ConstantRepository.getHolidays(new ConstantRepository.HolidayFetchCallback() {
             @Override
             public void onHolidaysFetched(Map<String, Timestamp> holidays) {
-                holidayList = holidays;
+                holidayList.putAll(holidays);
             }
 
             @Override
@@ -130,11 +133,20 @@ public class PatientAppointmentRequest extends Fragment {
         });
     }
 
-    private boolean isDayAHoliday(){
+    private boolean isDayAHoliday(int year, int month, int day) {
+        for (Timestamp holidayTimestamp : holidayList.values()) {
+            LocalDate holidayDate = holidayTimestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
+            holidayDate = holidayDate.withDayOfMonth(1).withMonth(month + 1).withYear(year);
 
-        return true;
+            if (holidayDate.getMonthValue() == month + 1 && holidayDate.getDayOfMonth() == day) {
+                return true;
+            }
+        }
+
+        return false;
     }
+
 
     private void setupDatePicker() {
         pickDateButton.setOnClickListener(v -> {
@@ -152,13 +164,15 @@ public class PatientAppointmentRequest extends Fragment {
                         Calendar currentDate = Calendar.getInstance();
 
                         if (selectedDate.before(currentDate)) {
-                            // Selected date is in the past
                             Toast.makeText(getContext(), "Cannot select past date", Toast.LENGTH_SHORT)
                                     .show();
                         } else if(DateDto.isDayWeekend(year1, monthOfYear, dayOfMonth)) {
                             Toast.makeText(getContext(), ErrorMessageConstants.CANNOT_SELECT_WEEKEND_APPOINTMENTS, Toast.LENGTH_SHORT).show();
-                        }else {
-                            // Update the text on the button with the selected date
+                        }
+                        else if(isDayAHoliday(year, monthOfYear, dayOfMonth)){
+                            Toast.makeText(getContext(), "Cannot select a holiday", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
                             pickDateButton.setText(
                                     String.format(Locale.getDefault(), "%04d-%02d-%02d", year1,
                                             monthOfYear + 1, dayOfMonth));
@@ -170,7 +184,6 @@ public class PatientAppointmentRequest extends Fragment {
 
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
-            // Show the Date Picker Dialog
             datePickerDialog.show();
             pickTimeBtn.setText("Pick Time");
         });
