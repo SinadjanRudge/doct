@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 public class DateDto {
     public DateDto(int year, int month, int day)
@@ -94,5 +95,18 @@ public class DateDto {
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
         return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
+    }
+
+    public static boolean checkDayIfHoliday(Map<String, Timestamp> holidayList, int year, int month, int day) {
+
+        for (Timestamp holidayTimestamp : holidayList.values()) {
+            LocalDate holidayDate = holidayTimestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            holidayDate = holidayDate.withDayOfMonth(1).withMonth(month + 1).withYear(year);
+
+            return (holidayDate.getMonthValue() == month + 1 && holidayDate.getDayOfMonth() == day);
+        }
+        return false;
+
     }
 }
