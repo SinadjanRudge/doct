@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,18 +28,24 @@ import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.NotificationDTO;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.repoositories.ConstantRepository;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.AppointmentFunctions;
+
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class PatientAppointmentRequest extends Fragment {
+    private static String TAG = "PatientAppointmentRequest";
     private Button pickDateButton, pickTimeBtn, confirmButton;
     private EditText textInputPurpose;
     private AppointmentRepository appointmentRepository;
@@ -49,6 +56,7 @@ public class PatientAppointmentRequest extends Fragment {
     private TextView dateErrorText, timeErrorText;
 
     private String TimePick;
+    private Map<String, Timestamp> holidayList = new HashMap<>();
 
     public String getTimePick() {
 
@@ -103,8 +111,29 @@ public class PatientAppointmentRequest extends Fragment {
         setupDatePicker();
         setupTimePicker();
         setupConfirmationButton();
+        fetchHolidays();
 
         return rootView;
+    }
+
+    private void fetchHolidays(){
+        ConstantRepository.getHolidays(new ConstantRepository.HolidayFetchCallback() {
+            @Override
+            public void onHolidaysFetched(Map<String, Timestamp> holidays) {
+                holidayList = holidays;
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Log.e(TAG, errorMessage);
+            }
+        });
+    }
+
+    private boolean isDayAHoliday(){
+
+
+        return true;
     }
 
     private void setupDatePicker() {
@@ -146,6 +175,7 @@ public class PatientAppointmentRequest extends Fragment {
             pickTimeBtn.setText("Pick Time");
         });
     }
+
 
     private void setupTimePicker() {
         // Set up Time Picker Dialog
