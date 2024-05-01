@@ -85,6 +85,7 @@ public class DeviceFragment extends Fragment {
     private static boolean checkOnce = false;
 
     private DataClient.OnDataChangedListener dataListener;
+    private boolean isCurrentInAnAppointment = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -336,7 +337,7 @@ public class DeviceFragment extends Fragment {
         isNearbyVal.setText(String.valueOf(wearableDeviceDto.getIsNearby()));
     }
 
-    private boolean isCurrentInAnAppointment(String patientId) {
+    private boolean checkPendingAppointmentsIfCurrent(String patientId) {
         Timestamp currentTimeStamp = DateTimeDto.GetCurrentTimeStamp();
         AtomicBoolean isCurrent = new AtomicBoolean(false);
         AtomicBoolean noDataFetch = new AtomicBoolean(false);
@@ -348,6 +349,7 @@ public class DeviceFragment extends Fragment {
                     for (AppointmentDto appointment : appointments) {
                         if (DateTimeDto.isToday(appointment.getDateOfAppointment()) && DateTimeDto.isCurrentTimeInRange(currentTimeStamp, appointment.getDateOfAppointment())) {
                             isCurrent.set(true);
+                            isCurrentInAnAppointment = true;
                             break;
                         }
                     }
@@ -365,8 +367,13 @@ public class DeviceFragment extends Fragment {
                 handleAppointmentResult(isCurrent.get(), noDataFetch.get());
             }
         });
-
         return isCurrent.get();
+    }
+
+    public interface IsValidCallback {
+        void onSuccess(boolean isValid);
+
+        void onError(boolean isNotValid);
     }
 
     private void handleAppointmentResult(boolean isCurrent, boolean noDataFetch) {
@@ -378,38 +385,56 @@ public class DeviceFragment extends Fragment {
         }
     }
 
-    private boolean isValidSync(){
-        if (!wearableDeviceDto.getIsNearby()) {
-            Toast.makeText(getContext(), "Can't sync. No Device Nearby Found.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        return user == null || isCurrentInAnAppointment(user.getUid());
-    }
-
     private void handleSyncButtonClick() {
         try {
-            if(!isValidSync()){
-                return;
-            }
 
-            Toast.makeText(getContext(), "Syncing...", Toast.LENGTH_SHORT).show();
-
-            ButtonManager.disableButton(syncButton);
-
-            vitalSignsRepo.getVitalSignOfPatient(Objects.requireNonNull(user).getUid(), new VitalSignsRepository.FetchCallback() {
+            appointmentRepository.getAllPatientPendingAppointments(user.getUid(), new AppointmentRepository.AppointmentPatientPendingFetchCallback() {
                 @Override
-                public void onSuccess(VitalSignsDto vitalSigns) {
-                    String jsonData = vitalSigns.toJsonData();
-                    sendMessage(jsonData);
-                    ButtonManager.enableButton(syncButton);
+                public void onSuccess(List<AppointmentDto> appointments) {
+                    Timestamp currentTimeStamp = DateTimeDto.GetCurrentTimeStamp();
+                    boolean noDataFetch = false;
+                    boolean isCurrent = false;
+                    if (!appointments.isEmpty()) {
+                        for (AppointmentDto appointment : appointments) {
+                            if (DateTimeDto.isToday(appointment.getDateOfAppointment()) && DateTimeDto.isCurrentTimeInRange(currentTimeStamp, appointment.getDateOfAppointment())) {
+                                isCurrent = true;
+
+                                break;
+                            }
+                        }
+                    } else {
+                        noDataFetch = true;
+                    }
+
+                    // Check the conditions after the appointment data is fetched
+                    handleAppointmentResult(isCurrent, noDataFetch);
+
+                    if(isCurrent && !noDataFetch){
+                        Toast.makeText(getContext(), "Syncing...", Toast.LENGTH_SHORT).show();
+
+                        ButtonManager.disableButton(syncButton);
+
+                        vitalSignsRepo.getVitalSignOfPatient(Objects.requireNonNull(user).getUid(), new VitalSignsRepository.FetchCallback() {
+                            @Override
+                            public void onSuccess(VitalSignsDto vitalSigns) {
+                                String jsonData = vitalSigns.toJsonData();
+                                sendMessage(jsonData);
+                                ButtonManager.enableButton(syncButton);
+                            }
+
+                            @Override
+                            public void onError(String errorMessage) {
+                                Log.e(TAG, "Failure in fetching patient's vital signs");
+                                Toast.makeText(getContext(), "Sync Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                                ButtonManager.enableButton(syncButton);
+                            }
+                        });
+                    }
                 }
 
                 @Override
                 public void onError(String errorMessage) {
-                    Log.e(TAG, "Failure in fetching patient's vital signs");
-                    Toast.makeText(getContext(), "Sync Error: " + errorMessage, Toast.LENGTH_SHORT).show();
-                    ButtonManager.enableButton(syncButton);
+                    handleAppointmentResult(false, true);
                 }
             });
         } catch (Exception e) {
