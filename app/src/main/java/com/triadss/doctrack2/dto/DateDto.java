@@ -98,15 +98,17 @@ public class DateDto {
     }
 
     public static boolean checkDayIfHoliday(Map<String, Timestamp> holidayList, int year, int month, int day) {
+        boolean isHoliday = false;
 
         for (Timestamp holidayTimestamp : holidayList.values()) {
             LocalDate holidayDate = holidayTimestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-            holidayDate = holidayDate.withDayOfMonth(1).withMonth(month + 1).withYear(year);
-
-            return (holidayDate.getMonthValue() == month + 1 && holidayDate.getDayOfMonth() == day);
+            isHoliday = (holidayDate.getMonthValue() == month + 1 && holidayDate.getDayOfMonth() == day);
+            if(isHoliday)
+            {
+                return isHoliday;
+            }
         }
-        return false;
-
+        return isHoliday;
     }
 }

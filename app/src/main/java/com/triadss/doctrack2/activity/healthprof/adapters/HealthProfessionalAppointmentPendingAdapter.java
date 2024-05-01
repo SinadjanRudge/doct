@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.ErrorMessageConstants;
 import com.triadss.doctrack2.config.constants.ReportConstants;
@@ -35,7 +36,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Adapter<HealthProfessionalAppointmentPendingAdapter.ViewHolder> {
@@ -44,6 +48,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
     AppointmentRepository appointmentRepository;
     NotificationRepository notificationRepository = new NotificationRepository();
     private String TimePick;
+    private Map<String, Timestamp> holidayList = Collections.synchronizedMap(new HashMap<>());
 
     public String getTimePick(){
         return TimePick;
@@ -81,9 +86,10 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
     }
 
     // Constructor for initialization
-    public HealthProfessionalAppointmentPendingAdapter(Context context,  ArrayList<AppointmentDto> healthProfessional) {
+    public HealthProfessionalAppointmentPendingAdapter(Context context,  ArrayList<AppointmentDto> healthProfessional, Map<String, Timestamp> holidayList) {
         this.context = context;
         this.healthProfessional = healthProfessional;
+        this.holidayList = holidayList;
     }
 
     @NonNull
@@ -250,6 +256,10 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                         (view, year1, monthOfYear, dayOfMonth) -> {
                             if (DateDto.isDayWeekend(year1, monthOfYear, dayOfMonth)) {
                                 Toast.makeText(context, ErrorMessageConstants.CANNOT_SELECT_WEEKEND_APPOINTMENTS, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            if(DateDto.checkDayIfHoliday(holidayList, year1, monthOfYear, dayOfMonth)){
+                                Toast.makeText(context, "Cannot select a holiday", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
