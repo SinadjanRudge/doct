@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import com.google.firebase.Timestamp;
 
 public class AddPatientDto implements Parcelable {
-
     public AddPatientDto(){
         //Required empty constructor
     }

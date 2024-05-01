@@ -29,9 +29,12 @@ import com.triadss.doctrack2.config.constants.DocTrackErrorMessage;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateDto;
+import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.helper.ButtonManager;
+import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
 import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
+import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
 import java.util.Calendar;
 import java.util.function.Function;
@@ -57,6 +60,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     String loggedInUserId;
     PatientRepository _patientRepository;
     ReportsRepository _reportsRepository = new ReportsRepository();
+    MedicalHistoryRepository _medicalHistoryRepository = new MedicalHistoryRepository();
+    VitalSignsRepository _vitalSignsRepository = new VitalSignsRepository();
 
     public AddPatientFragment() {
         // Required empty public constructor
@@ -302,11 +307,9 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             _patientRepository.addPatientCallback(patientDto, new PatientRepository.PatientAddUpdateCallback() {
                                 @Override
                                 public void onSuccess(String patientId) {
-
                                     _reportsRepository.addHealthProfPatientInfoReport(loggedInUserId, patientDto, new ReportsRepository.ReportCallback() {
                                         @Override
                                         public void onReportAddedSuccessfully() {
-
                                             newAuth.signOut();
 
                                             // Sign in the old user
@@ -321,8 +324,29 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                                                             // Handle sign-in failure
                                                         }
                                                     });
-                                            showMedicalHistory(patientId);
 
+                                            //Create default Medical History
+                                            _medicalHistoryRepository.createDefaultMedicalHistoryForPatient(loggedInUserId, new MedicalHistoryRepository.AddUpdateCallback() {
+                                                @Override
+                                                public void onSuccess(String medHistoryUid) {
+                                                    _vitalSignsRepository.createDefaultVitalSignsForPatient(loggedInUserId, new VitalSignsRepository.AddUpdateCallback() {
+                                                        @Override
+                                                        public void onSuccess(String vitalSignsId) {
+                                                            showMedicalHistory(patientId, medHistoryUid, vitalSignsId);
+                                                        }
+
+                                                        @Override
+                                                        public void onError(String errorMessage) {
+
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onError(String errorMessage) {
+
+                                                }
+                                            });
                                         }
 
                                         @Override
@@ -330,7 +354,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                                             ButtonManager.enableButton(nextButton);
                                         }
                                     });
-
                                 }
 
                                 @Override
@@ -364,10 +387,10 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void showMedicalHistory(String patientUId) {
+    private void showMedicalHistory(String patientUId, String medHistoryUid, String vitalSignsUid) {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, AddMedicalHistory.newInstance(patientUId));
+        transaction.replace(R.id.frame_layout, AddMedicalHistory.newInstance(patientUId, medHistoryUid, vitalSignsUid));
         transaction.addToBackStack(null);
         transaction.commit();
     }
