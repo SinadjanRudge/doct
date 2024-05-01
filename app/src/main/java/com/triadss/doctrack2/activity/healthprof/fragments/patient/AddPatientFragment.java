@@ -310,41 +310,43 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                                     _reportsRepository.addHealthProfPatientInfoReport(loggedInUserId, patientDto, new ReportsRepository.ReportCallback() {
                                         @Override
                                         public void onReportAddedSuccessfully() {
-                                            newAuth.signOut();
-
-                                            // Sign in the old user
-                                            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                                                    .addOnCompleteListener(signInTask -> {
-                                                        if (signInTask.isSuccessful()) {
-                                                            FirebaseUser oldUser = signInTask.getResult().getUser();
-                                                            if (oldUser != null) {
-                                                                // Old user signed in successfully, do something
-                                                            }
-                                                        } else {
-                                                            // Handle sign-in failure
-                                                        }
-                                                    });
 
                                             //Create default Medical History
-                                            _medicalHistoryRepository.createDefaultMedicalHistoryForPatient(loggedInUserId, new MedicalHistoryRepository.AddUpdateCallback() {
+                                            _medicalHistoryRepository.createDefaultMedicalHistoryForPatient(userId, new MedicalHistoryRepository.AddUpdateCallback() {
                                                 @Override
                                                 public void onSuccess(String medHistoryUid) {
-                                                    _vitalSignsRepository.createDefaultVitalSignsForPatient(loggedInUserId, new VitalSignsRepository.AddUpdateCallback() {
+                                                    _vitalSignsRepository.createDefaultVitalSignsForPatient(userId, new VitalSignsRepository.AddUpdateCallback() {
                                                         @Override
                                                         public void onSuccess(String vitalSignsId) {
+                                                            Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
+                                                            newAuth.signOut();
+
+                                                            // Sign in the old user
+                                                            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                                                                    .addOnCompleteListener(signInTask -> {
+                                                                        if (signInTask.isSuccessful()) {
+                                                                            FirebaseUser oldUser = signInTask.getResult().getUser();
+                                                                            if (oldUser != null) {
+                                                                                // Old user signed in successfully, do something
+                                                                            }
+                                                                        } else {
+                                                                            // Handle sign-in failure
+                                                                        }
+                                                                    });
+
                                                             showMedicalHistory(patientId, medHistoryUid, vitalSignsId);
                                                         }
 
                                                         @Override
                                                         public void onError(String errorMessage) {
-
+                                                            System.out.println();
                                                         }
                                                     });
                                                 }
 
                                                 @Override
                                                 public void onError(String errorMessage) {
-
+                                                    System.out.println();
                                                 }
                                             });
                                         }
@@ -361,7 +363,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                                     ButtonManager.enableButton(nextButton);
                                 }
                             });
-                            Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
 
                         }
                     } catch (Exception e) {
@@ -371,7 +372,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             Toast.makeText(getContext(), "Failed to create user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                         ButtonManager.enableButton(nextButton);
-
                     }
                 } else {
                     FirebaseAuthException e = (FirebaseAuthException) task.getException();
