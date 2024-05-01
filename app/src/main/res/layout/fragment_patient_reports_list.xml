@@ -20,17 +20,18 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/search_bar"
                 android:layout_width="match_parent"
-                android:layout_height="57dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="5dp"
                 android:background="@drawable/green_stroke"
                 android:hint=" Search Reports"
+                android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.115"
@@ -50,31 +51,34 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <ToggleButton
-                    android:id="@+id/appointmentToggle"
+                <RadioGroup
+                    android:id="@+id/radioGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/report_toggle_background"
-                    android:paddingHorizontal="10dp"
-                    android:text="ToggleButton"
-                    android:textAllCaps="false"
-                    android:textOff="Appointment"
-                    android:textOn="Appointment" />
-
-                <ToggleButton
-                    android:id="@+id/medicationToggle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/report_toggle_background"
-                    android:paddingHorizontal="10dp"
-                    android:text="ToggleButton"
-                    android:textAllCaps="false"
-                    android:textOff="Medication"
-                    android:textOn="Medication" />
+                    android:orientation="horizontal"
+                    android:checkedButton="@id/radioAll">
+                    <RadioButton
+                        android:id="@+id/radioAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="All"
+                        android:textSize="15dp">
+                    </RadioButton>
+                    <RadioButton
+                        android:id="@+id/radioAppointments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Appointments"
+                        android:textSize="15dp">
+                    </RadioButton>
+                    <RadioButton
+                        android:id="@+id/radioMedications"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medications"
+                        android:textSize="15dp">
+                    </RadioButton>
+                </RadioGroup>
 
             </LinearLayout>
         </HorizontalScrollView>
@@ -83,8 +87,8 @@
             android:id="@+id/recyclerViewReports"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:scrollbars="vertical">

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
@@ -23,6 +24,7 @@ import com.triadss.doctrack2.repoositories.HealthProfRepository;
 
 import java.util.function.Function;
 import com.triadss.doctrack2.helper.ButtonManager;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 public class CreateHealthProfessionalPage extends Fragment {
 
@@ -82,6 +84,12 @@ public class CreateHealthProfessionalPage extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_admin_manage_user_accounts_create_health_professional, container,
                 false);
+
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new AdminHomeFragment());
+        });
+
         sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
         healthProfRepository = new HealthProfRepository();
         editTextNameInput = rootView.findViewById(R.id.editTextHWN);

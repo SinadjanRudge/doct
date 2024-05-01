@@ -9,10 +9,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
@@ -27,6 +30,7 @@ import java.util.List;
 public class PatientAppointmentPending extends Fragment implements IListView {
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
+    TextInputEditText searchAppointment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +42,19 @@ public class PatientAppointmentPending extends Fragment implements IListView {
         View rootView = inflater.inflate(R.layout.fragment_patient_appointment_pending, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
+        searchAppointment = rootView.findViewById(R.id.searchAppointment);
+        TextWatcher inputTextWatcher = new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                ReloadList();
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){
+            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        };
+
+        searchAppointment.addTextChangedListener(inputTextWatcher);
+
         ReloadList();
         CallSomething();
         return rootView;
@@ -47,7 +64,9 @@ public class PatientAppointmentPending extends Fragment implements IListView {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-       appointmentRepository.getAllPatientPendingAppointments(currentUser.getUid(), new AppointmentRepository.AppointmentPatientPendingFetchCallback() {
+        String filter = searchAppointment.getText().toString();
+
+       appointmentRepository.getAllPatientPendingAppointmentsFiltered(currentUser.getUid(), filter, new AppointmentRepository.AppointmentPatientPendingFetchCallback() {
                @Override
                public void onSuccess(List<AppointmentDto> appointments) {
                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -63,8 +82,8 @@ public class PatientAppointmentPending extends Fragment implements IListView {
                }
        });
     }
-    public void CallSomething(){
 
+    public void CallSomething(){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             int carl = 2;
@@ -73,7 +92,7 @@ public class PatientAppointmentPending extends Fragment implements IListView {
                 //When you are not in fragment
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame_layout);
-                boolean isCurrentlyAtPatientAppointmentPending = currentFragment instanceof PatientAppointmentPending;
+                boolean isCurrentlyAtPatientAppointmentPending = currentFragment instanceof PatientAppointmentFragment;
                 if(!isCurrentlyAtPatientAppointmentPending) {
                     stop = true;
                 }

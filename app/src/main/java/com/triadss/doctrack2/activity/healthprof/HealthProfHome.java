@@ -59,11 +59,6 @@ public class HealthProfHome extends AppCompatActivity {
             } else if (item.getItemId() == R.id.report_menu) {
                 //scheduleNotification(getNotification( "1 second delay" ) , 1000 ) ;
                 replaceFragment(new HealthProfessionalReportFragment());
-            } else if (item.getItemId() == R.id.temp_logout) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                finish();
             }
             return true;
         });

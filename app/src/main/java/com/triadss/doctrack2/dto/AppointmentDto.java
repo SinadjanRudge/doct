@@ -98,6 +98,22 @@ public class AppointmentDto {
         this.healthProfId = healthProfId;
     }
 
+    public Timestamp getPatientBirthday() {
+        return patientBirthday;
+    }
+
+    public void setPatientBirthday(Timestamp patientBirthday) {
+        this.patientBirthday = patientBirthday;
+    }
+
+    public int getPatientAge() {
+        return patientAge;
+    }
+
+    public void setPatientAge(int patientAge) {
+        this.patientAge = patientAge;
+    }
+
     private String uid;
     private String nameOfRequester;
     private String purpose;
@@ -109,4 +125,6 @@ public class AppointmentDto {
     private String documentId;
     private String patientIdNumber;
     private String healthProfId;
+    public Timestamp patientBirthday;
+    public int patientAge;
 }

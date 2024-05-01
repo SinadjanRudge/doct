@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ToggleButton;
 
 import androidx.fragment.app.Fragment;
@@ -44,6 +46,8 @@ public class PatientReportFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     ToggleButton appointmentToggle, medicationToggle;
+    RadioButton radioAllbtn, radioAppointmentsbtn, radioMedicationsbtn, radioButton;
+    RadioGroup radioGroup;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -96,15 +100,22 @@ public class PatientReportFragment extends Fragment {
             FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new PatientHomeFragment());
         });
 
-        appointmentToggle = rootView.findViewById(R.id.appointmentToggle);
-        medicationToggle = rootView.findViewById(R.id.medicationToggle);
+        radioGroup = rootView.findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton radioButton = group.findViewById(checkedId);
 
-        appointmentToggle.setOnClickListener(view -> {
-            reloadList();
-        });
-
-        medicationToggle.setOnClickListener(view -> {
-            reloadList();
+                if(checkedId == R.id.radioAll){
+                    reloadList();
+                }
+                if (checkedId == R.id.radioAppointments) {
+                    reloadList();
+                }
+                if (checkedId == R.id.radioMedications) {
+                    reloadList();
+                }
+            }
         });
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -129,7 +140,6 @@ public class PatientReportFragment extends Fragment {
         return rootView;
     }
 
-
     TextWatcher inputTextWatcher = new TextWatcher() {
         public void afterTextChanged(Editable s) {
             reloadList();
@@ -141,43 +151,57 @@ public class PatientReportFragment extends Fragment {
     };
 
     private void reloadList() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseUser user = auth.getCurrentUser();
 
-        ReportsRepository repository = new ReportsRepository();
+            ReportsRepository repository = new ReportsRepository();
 
-        String[] list = new String[0];
-        if(appointmentToggle.isChecked()) {
-            int newCount = list.length + ReportConstants.PATIENT_APPOINTMENT_REPORTS.length;
-            list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.PATIENT_APPOINTMENT_REPORTS))
-                    .toArray(size -> (String[]) Array.newInstance(String.class,
-                            newCount));
+            String[] list = new String[0];
+
+            int checkedId = radioGroup.getCheckedRadioButtonId();
+
+            if(checkedId==R.id.radioAll){
+                list = Stream.concat(
+                        Arrays.stream(ReportConstants.PATIENT_APPOINTMENT_REPORTS),
+                                Arrays.stream(ReportConstants.PATIENT_MEDICATION_REPORTS))
+                                .toArray(String[]::new);
+            } else {
+                //* Handle individual toggle button states
+                if (checkedId==R.id.radioAppointments) {
+                    list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.PATIENT_APPOINTMENT_REPORTS))
+                            .toArray(String[]::new);
+                }
+
+                if (checkedId==R.id.radioMedications) {
+                    list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.PATIENT_MEDICATION_REPORTS))
+                            .toArray(String[]::new);
+                    }
+                }
+
+        if(checkedId!=R.id.radioAll || checkedId!=R.id.radioAppointments || checkedId!=R.id.radioMedications){
+            repository.getReportsFromUserFilter(user.getUid(),
+                    search.getText().toString().toLowerCase(),
+                    list,
+                    new ReportsRepository.ReportsFilterCallback() {
+                        @Override
+                        public void onSuccess(List<ReportDto> reports) {
+                            PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList) reports);
+                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                            recyclerView.setLayoutManager(linearLayoutManager);
+                            recyclerView.setAdapter(pageAdapter);
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            // Handle error
+                        }
+                    });
+        } else {
+            PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), new ArrayList<ReportDto>());
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(pageAdapter);
         }
 
-        if(medicationToggle.isChecked()) {
-            int newCount = list.length + ReportConstants.PATIENT_MEDICATION_REPORTS.length;
-            list = Stream.concat(Arrays.stream(list), Arrays.stream(ReportConstants.PATIENT_MEDICATION_REPORTS))
-                    .toArray(size -> (String[]) Array.newInstance(String.class,
-                            newCount));
-        }
-
-        repository.getReportsFromUserFilter(user.getUid(),
-            search.getText().toString().toLowerCase(),
-            list,
-            new ReportsRepository.ReportsFilterCallback() {
-                @Override
-                public void onSuccess(List<ReportDto> reports) {
-
-                    PatientReportAdapter pageAdapter = new PatientReportAdapter(getContext(), (ArrayList)reports);
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    recyclerView.setAdapter(pageAdapter);
-                }
-                @Override
-                public void onError(String errorMessage) {
-
-                }
-            });
     }
-
 }
