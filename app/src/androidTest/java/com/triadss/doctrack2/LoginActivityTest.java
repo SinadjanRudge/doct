@@ -1,4 +1,4 @@
-package AutomationTesting;
+package com.triadss.doctrack2;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -24,8 +24,8 @@ public class LoginActivityTest {
             new ActivityScenarioRule<LoginActivity>(LoginActivity.class);
     @Test
     public void successfulLogin(){
-        onView(withId(R.id.email)).perform(typeText("mingpusa16@gmail.com"));
-        onView(withId(R.id.password)).perform(typeText("20178343"));
+        onView(withId(R.id.email)).perform(typeText("testpatient198@gmail.com"));
+        onView(withId(R.id.password)).perform(typeText("123456"));
         onView(withId(R.id.btn_login)).perform(click());
     }
 
