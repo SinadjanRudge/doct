@@ -166,7 +166,7 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                 {
                     return;
                 }
-                medicationDto.setTimestamp(selectedDateTime.ToTimestamp());
+                medicationDto.setTimestamp(selectedDateTime.ToTimestampForTimePicker());
 
                 ButtonManager.disableButton(updateBtn);
                 medicationRepository.updateMedication(mediId, medicationDto, new MedicationRepository.MedicationUpdateCallback() {
