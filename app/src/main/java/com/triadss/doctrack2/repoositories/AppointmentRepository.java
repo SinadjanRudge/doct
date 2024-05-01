@@ -1012,7 +1012,8 @@ public class AppointmentRepository {
                 });
     }
 
-    public void rejectSimilarAppointmentExists(String ID, int Timehour, int Timeminute,int Timeyear,int Timemonth,int Timeday,rejectSimilarAppointmentCallback callback) {
+    public void rejectSimilarAppointmentExists(String ID, int Timehour,
+       int Timeminute,int Timeyear,int Timemonth,int Timeday, BatchRejectCallback callback) {
         DateTimeDto selectedDateTime = new DateTimeDto();
 
         selectedDateTime.setDate(new DateDto(Timeyear, Timemonth, Timeday));
@@ -1023,23 +1024,24 @@ public class AppointmentRepository {
                 .whereEqualTo("dateOfAppointment", isSimilar)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-
+                    List<AppointmentDto> batchRejected = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         if(!document.getId().toString().equals(ID)) {
-
                             appointmentsCollection
                                     .document(document.getId())
                                     .update(AppointmentsModel.status, AppointmentTypeConstants.REJECTED)
                                     .addOnSuccessListener(documentReference -> {
-                                        callback.onSuccess(document.getId());
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.e(TAG, "Error adding appointment", e);
                                         callback.onError(e.getMessage());
                                     });
+                            AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                            appointment.setUid(document.getId());
+                            batchRejected.add(appointment);
                         }
                     }
-                    callback.onSuccess("");
+                    callback.onSuccess(batchRejected);
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error fetching medicines", e);
@@ -1113,6 +1115,12 @@ public class AppointmentRepository {
 
     public interface ReportCallback {
         void onSuccess(String appointmentId);
+
+        void onError(String errorMessage);
+    }
+
+    public interface BatchRejectCallback {
+        void onSuccess(List<AppointmentDto> batchRejected);
 
         void onError(String errorMessage);
     }

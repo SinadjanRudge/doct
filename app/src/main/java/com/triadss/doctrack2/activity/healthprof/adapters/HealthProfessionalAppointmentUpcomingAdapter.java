@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 // Extends the Adapter class to RecyclerView.Adapter
@@ -232,11 +233,12 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
 
                       acceptBtn.setOnClickListener(v -> {
                           appointmentRepository.rejectSimilarAppointmentExists(dto.getUid(),Integer.valueOf(timepickhour), Integer.valueOf(timepickminute),Integer.valueOf(timepickYear), Integer.valueOf(timepickMonth), Integer.valueOf(timepickDay),
-                                  new AppointmentRepository.rejectSimilarAppointmentCallback() {
+                                  new AppointmentRepository.BatchRejectCallback() {
                                       @Override
-                                      public void onSuccess(String appointmentId) {
-                                          Toast.makeText(itemView.getContext(), appointmentId + " updated",
+                                      public void onSuccess(List<AppointmentDto> rejectedAppointments) {
+                                          Toast.makeText(itemView.getContext(), dto.getUid() + " updated",
                                                   Toast.LENGTH_SHORT).show();
+                                          callback.onRejectBulk(rejectedAppointments);
                                       }
 
                                       @Override
@@ -266,5 +268,6 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
     public interface AppointmentCallback {
         void onAccept(String appointmentUid);
         void onReject(String appointmentUid);
+        void onRejectBulk(List<AppointmentDto> rejectedAppointments);
     }
 }
