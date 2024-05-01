@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="50dp"
-            android:text="Add Health Professional" />
+            android:text="Create Health Professional Account" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewAdmin"
