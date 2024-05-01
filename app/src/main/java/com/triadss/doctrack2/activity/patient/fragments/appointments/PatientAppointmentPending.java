@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
@@ -23,14 +24,19 @@ import com.triadss.doctrack2.activity.patient.adapters.PatientAppointmentPending
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
+import com.triadss.doctrack2.utils.AppointmentFunctions;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PatientAppointmentPending extends Fragment implements IListView {
     RecyclerView recyclerView;
     private AppointmentRepository appointmentRepository;
     TextInputEditText searchAppointment;
+    private Map<String, Timestamp> holidayList = Collections.synchronizedMap(new HashMap<>());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +44,8 @@ public class PatientAppointmentPending extends Fragment implements IListView {
 
         //storage of patient appointment on fire store
         appointmentRepository = new AppointmentRepository();
+
+        AppointmentFunctions.FetchHolidays(holidayList);
 
         View rootView = inflater.inflate(R.layout.fragment_patient_appointment_pending, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
@@ -72,7 +80,7 @@ public class PatientAppointmentPending extends Fragment implements IListView {
                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                    recyclerView.setLayoutManager(linearLayoutManager);
 
-                   PatientAppointmentPendingAdapter adapter = new PatientAppointmentPendingAdapter(getContext(), (ArrayList) appointments);
+                   PatientAppointmentPendingAdapter adapter = new PatientAppointmentPendingAdapter(getContext(), (ArrayList) appointments, holidayList);
 
                    recyclerView.setAdapter(adapter);
                }
