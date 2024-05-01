@@ -45,12 +45,12 @@
             android:id="@+id/AGEtext"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_below="@+id/PURPOSEtext"
+            android:layout_below="@+id/NAMEtext"
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:text="Patient Age :"
+            android:text="Patient Age:"
             android:textColor="#000"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -58,8 +58,8 @@
         <TextView
             android:id="@+id/PURPOSEtext"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_below="@+id/NAMEtext"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/BIRTHDAYtext"
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="10dp"
@@ -70,26 +70,12 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/AGEtext"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/PURPOSEtext"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:text="Age:"
-            android:textColor="#000"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
             android:id="@+id/agetext"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_below="@+id/purposetext"
+            android:layout_below="@+id/nametext"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="25dp"
             android:layout_toEndOf="@+id/AGEtext"
@@ -117,11 +103,11 @@
             android:layout_height="30dp"
             android:layout_below="@+id/agetext"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="48dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="25dp"
             android:layout_toEndOf="@+id/BIRTHDAYtext"
-            android:text="TextView Purpose"
+            android:text="TextView Birthday"
             android:textColor="#000"
             android:textSize="16sp" />
 
@@ -129,10 +115,10 @@
             android:id="@+id/calendar"
             android:layout_width="40dp"
             android:layout_height="45dp"
-            android:layout_below="@+id/BIRTHDAYtext"
+            android:layout_below="@+id/PURPOSEtext"
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             app:srcCompat="@drawable/calendar"
             app:tint="@color/green" />
 
@@ -140,12 +126,13 @@
             android:id="@+id/appointment_date"
             android:layout_width="140dp"
             android:layout_height="45dp"
-            android:layout_below="@+id/birthdaytext"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/purposetext"
+            android:layout_marginStart="88dp"
+            android:layout_marginTop="20dp"
             android:layout_toEndOf="@+id/calendar"
             android:text="TextView Date"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/baseline_access_time_24"
@@ -163,10 +150,11 @@
             android:layout_width="140dp"
             android:layout_height="45dp"
             android:layout_below="@+id/appointment_date"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="88dp"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/baseline_access_time_24"
-            android:text="TextView Time" />
+            android:text="TextView Time"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/reject_button"
@@ -195,7 +183,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="52dp"
             android:layout_marginEnd="25dp"
             android:layout_toEndOf="@+id/idtext"
             android:text="TextView ID"
@@ -208,7 +196,7 @@
             android:layout_height="30dp"
             android:layout_below="@+id/IDtext"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="21dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="25dp"
             android:layout_toEndOf="@+id/NAMEtext"
@@ -220,9 +208,9 @@
             android:id="@+id/purposetext"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_below="@+id/nametext"
+            android:layout_below="@+id/birthdaytext"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="64dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="25dp"
             android:layout_toEndOf="@+id/PURPOSEtext"
