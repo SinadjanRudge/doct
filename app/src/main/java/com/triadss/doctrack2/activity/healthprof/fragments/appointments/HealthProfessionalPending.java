@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
@@ -37,9 +38,13 @@ import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.NotificationRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
+import com.triadss.doctrack2.utils.AppointmentFunctions;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +58,7 @@ public class HealthProfessionalPending extends Fragment implements IListView {
     String loggedInUserId;
     private NotificationRepository notificationRepository = new NotificationRepository();
     private TextInputEditText searchAppointment;
+    private Map<String, Timestamp> holidayList = Collections.synchronizedMap(new HashMap<>());
 
     public HealthProfessionalPending() {
         // Required empty public constructor
@@ -91,6 +97,7 @@ public class HealthProfessionalPending extends Fragment implements IListView {
         appointmentRepository = new AppointmentRepository();
         View rootView = inflater.inflate(R.layout.fragment_health_professional_pending, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        AppointmentFunctions.FetchHolidays(holidayList);
 
         searchAppointment = rootView.findViewById(R.id.searchAppointment);
         TextWatcher inputTextWatcher = new TextWatcher() {
@@ -128,7 +135,7 @@ public class HealthProfessionalPending extends Fragment implements IListView {
                     currentDialog = null;
                 }
 
-                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments);
+                HealthProfessionalAppointmentPendingAdapter adapter = new HealthProfessionalAppointmentPendingAdapter(getContext(), (ArrayList)appointments, holidayList);
                 recyclerView.setAdapter(adapter);
             }
 

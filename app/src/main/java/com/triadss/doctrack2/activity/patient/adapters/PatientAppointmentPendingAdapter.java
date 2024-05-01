@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.ErrorMessageConstants;
 import com.triadss.doctrack2.config.constants.ReportConstants;
@@ -30,7 +31,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 import com.triadss.doctrack2.helper.ButtonManager;
@@ -47,7 +51,7 @@ public class PatientAppointmentPendingAdapter
     Context context;
     NotificationRepository notificationRepository = new NotificationRepository();
     private Button cancel;
-
+    private Map<String, Timestamp> holidayList = Collections.synchronizedMap(new HashMap<>());
     private String TimePick;
     public String getTimePick(){
 
@@ -86,16 +90,15 @@ public class PatientAppointmentPendingAdapter
         this.TimePick = TimePick;
     }
     // Constructor for initialization
-    public PatientAppointmentPendingAdapter(Context context, ArrayList<AppointmentDto> appointments) {
+    public PatientAppointmentPendingAdapter(Context context, ArrayList<AppointmentDto> appointments, Map<String, Timestamp> holidayList) {
         this.context = context;
-
+        this.holidayList = holidayList;
         this.appointments = appointments;
     }
 
     @NonNull
     @Override
     public PatientAppointmentPendingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         appointmentRepository = new AppointmentRepository();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_appointment_pending, parent, false);
 
@@ -147,6 +150,7 @@ public class PatientAppointmentPendingAdapter
             documentId.setText(appointment.getPatientIdNumber());
             patientName.setText(appointment.getNameOfRequester());
             DocId.setText(appointment.getDocumentId());
+
             reschedule.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -251,6 +255,10 @@ public class PatientAppointmentPendingAdapter
                         (view, year1, monthOfYear, dayOfMonth) -> {
                             if (DateDto.isDayWeekend(year1, monthOfYear, dayOfMonth)) {
                                 Toast.makeText(context, ErrorMessageConstants.CANNOT_SELECT_WEEKEND_APPOINTMENTS, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            if(DateDto.checkDayIfHoliday(holidayList, year1, monthOfYear, dayOfMonth)){
+                                Toast.makeText(context, "Cannot select a holiday", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 

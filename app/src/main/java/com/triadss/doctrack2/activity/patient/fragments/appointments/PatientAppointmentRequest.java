@@ -115,26 +115,10 @@ public class PatientAppointmentRequest extends Fragment {
         setupDatePicker();
         setupTimePicker();
         setupConfirmationButton();
-        fetchHolidays();
+        AppointmentFunctions.FetchHolidays(holidayList);
 
         return rootView;
     }
-
-    private void fetchHolidays(){
-        ConstantRepository.getHolidays(new ConstantRepository.HolidayFetchCallback() {
-            @Override
-            public void onHolidaysFetched(Map<String, Timestamp> holidays) {
-                holidayList.putAll(holidays);
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                Log.e(TAG, errorMessage);
-            }
-        });
-    }
-
-
 
     private void setupDatePicker() {
         pickDateButton.setOnClickListener(v -> {
