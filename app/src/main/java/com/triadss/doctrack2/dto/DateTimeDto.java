@@ -37,7 +37,7 @@ public class DateTimeDto {
 
     public Timestamp ToTimestamp() {
         Date extractedDate = new Date(date.getYear() - 1900,
-                date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute());
+                date.getMonth(), date.getDay(), time.getHour(), time.getMinute());
         return new Timestamp(extractedDate);
     }
 
@@ -91,17 +91,23 @@ public class DateTimeDto {
     public static DateTimeDto ToDateTimeDto(LocalDateTime localDateTime) {
         DateTimeDto converted = new DateTimeDto();
         converted.setDate(
-                new DateDto(localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth()));
+                new DateDto(localDateTime.getYear(),
+                        localDateTime.getMonthValue() - 1, localDateTime.getDayOfMonth()));
         converted.setTime(new TimeDto(localDateTime.getHour(), localDateTime.getMinute()));
         return converted;
     }
 
     public static Timestamp GetCurrentTimeStamp() {
-        LocalDateTime currentDate = LocalDateTime.now();
-
-        Timestamp currentTimeStamp = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
+        Timestamp currentTimeStamp = GetCurrentDateTimeDto().ToTimestamp();
 
         return currentTimeStamp;
+    }
+
+    public static DateTimeDto GetCurrentDateTimeDto() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        DateTimeDto output = DateTimeDto.ToDateTimeDto(currentDate);
+        String test = output.ToString();
+        return output;
     }
 
     public static long GetTimestampDiffInSeconds(Timestamp futureTime) {
