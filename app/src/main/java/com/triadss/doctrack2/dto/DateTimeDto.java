@@ -13,12 +13,11 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateTimeDto {
-    public DateTimeDto()
-    {
+    public DateTimeDto() {
     }
 
-    private static DateDto date;
-    private static TimeDto time;
+    private DateDto date;
+    private TimeDto time;
 
     public DateDto getDate() {
         return date;
@@ -36,30 +35,30 @@ public class DateTimeDto {
         this.time = time;
     }
 
-    public Timestamp ToTimestamp()
-    {
-         Date extractedDate = new Date(date.getYear() - 1900,
-                date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute());
-        return new Timestamp(extractedDate);
-    }
-
-    public Timestamp ToTimestampForTimePicker()
-    {
+    public Timestamp ToTimestamp() {
         Date extractedDate = new Date(date.getYear() - 1900,
                 date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute());
         return new Timestamp(extractedDate);
     }
+
+    public Timestamp ToTimestampForTimePicker() {
+        Date extractedDate = new Date(date.getYear() - 1900,
+                date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute());
+        return new Timestamp(extractedDate);
+    }
+
     public String ToString() {
         return date.ToString() + " " + ToAMPMString(time.ToString());
     }
-    public String ToAMPMString(String time){
-        try{
+
+    public String ToAMPMString(String time) {
+        try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm");
             SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a");
 
             Date date = inputFormat.parse(time);
             return outputFormat.format(date);
-        } catch(Exception e){
+        } catch (Exception e) {
             return "";
         }
     }
@@ -71,29 +70,28 @@ public class DateTimeDto {
         return newDateTimeDto;
     }
 
-    public static DateTimeDto ToDateTimeDto(Timestamp timestamp)
-    {
+    public static DateTimeDto ToDateTimeDto(Timestamp timestamp) {
         Date date = timestamp.toDate();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
         DateTimeDto converted = new DateTimeDto();
-        converted.setDate(new DateDto(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)));
+        converted.setDate(new DateDto(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)));
         converted.setTime(new TimeDto(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
 
         return converted;
     }
 
-    public Timestamp ReschedToTimestamp()
-    {
+    public Timestamp ReschedToTimestamp() {
         return new Timestamp(
                 new Date(date.getYear() - 1900, date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute()));
     }
 
-    public static DateTimeDto ToDateTimeDto(LocalDateTime localDateTime)
-    {
+    public static DateTimeDto ToDateTimeDto(LocalDateTime localDateTime) {
         DateTimeDto converted = new DateTimeDto();
-        converted.setDate(new DateDto(localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth()));
+        converted.setDate(
+                new DateDto(localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth()));
         converted.setTime(new TimeDto(localDateTime.getHour(), localDateTime.getMinute()));
         return converted;
     }
@@ -101,7 +99,7 @@ public class DateTimeDto {
     public static Timestamp GetCurrentTimeStamp() {
         LocalDateTime currentDate = LocalDateTime.now();
 
-        Timestamp currentTimeStamp  = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
+        Timestamp currentTimeStamp = DateTimeDto.ToDateTimeDto(currentDate).ToTimestamp();
 
         return currentTimeStamp;
     }
@@ -129,4 +127,19 @@ public class DateTimeDto {
 
         return formattedDateTime;
     }
+
+    public static boolean isToday(Timestamp timestamp) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate appointmentDate = timestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        return currentDate.equals(appointmentDate);
+    }
+
+    public static boolean isCurrentTimeInRange(Timestamp currentTimeStamp, Timestamp appointmentTimeStamp) {
+        int currentHour = currentTimeStamp.toDate().toInstant().atZone(ZoneId.systemDefault()).getHour();
+        int appointmentHour = appointmentTimeStamp.toDate().toInstant().atZone(ZoneId.systemDefault()).getHour();
+
+        return currentHour == appointmentHour || currentHour == (appointmentHour + 1);
+    }
+
 }

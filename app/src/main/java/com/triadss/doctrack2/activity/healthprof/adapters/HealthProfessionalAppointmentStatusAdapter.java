@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
+import com.triadss.doctrack2.dto.TimeDto;
 
 import java.util.ArrayList;
 
@@ -74,7 +75,11 @@ public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Ada
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
-            time.setText(dateTime.getTime().ToString());
+
+            TimeDto startTime = dateTime.getTime();
+            TimeDto rangeEnd = new TimeDto(startTime.getHour() + 1, startTime.getMinute());
+
+            time.setText(String.format("%s - %s", dateTime.getTime().ToString(), rangeEnd.ToString()));
 
             status.setText(appointment.getStatus());
         }

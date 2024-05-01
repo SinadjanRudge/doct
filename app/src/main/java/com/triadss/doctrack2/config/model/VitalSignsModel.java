@@ -14,4 +14,5 @@ public class VitalSignsModel extends AuditModel {
     public static final String weight = "weight";
     public static final String height = "height";
     public static final String BMI = "BMI";
+    public static final String createdAt = "createdAt";
 }

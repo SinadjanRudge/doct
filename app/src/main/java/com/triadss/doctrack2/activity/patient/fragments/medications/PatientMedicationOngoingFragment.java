@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.patient.PatientHome;
 import com.triadss.doctrack2.activity.patient.adapters.PatientMedicationOngoingAdapter;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.contracts.IListView;
@@ -29,14 +30,6 @@ import java.util.List;
 public class PatientMedicationOngoingFragment extends Fragment implements IListView {
     private static final String TAG = "PatientMedicationOngoingFragment";
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     ArrayList<MedicationDto> Time = new ArrayList<MedicationDto>();
     RecyclerView recyclerView;
     private MedicationRepository medicationRepository = new MedicationRepository();;
@@ -50,16 +43,12 @@ public class PatientMedicationOngoingFragment extends Fragment implements IListV
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment PatientMedicationOngoingCompleted.
      */
     // TODO: Rename and change types and number of parameters
-    public static PatientMedicationOngoingFragment newInstance(String param1, String param2) {
+    public static PatientMedicationOngoingFragment newInstance() {
         PatientMedicationOngoingFragment fragment = new PatientMedicationOngoingFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,10 +56,6 @@ public class PatientMedicationOngoingFragment extends Fragment implements IListV
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -85,6 +70,9 @@ public class PatientMedicationOngoingFragment extends Fragment implements IListV
     }
 
     public void ReloadList() {
+        PatientHome homeActivity = (PatientHome) getContext();
+        homeActivity.setupNotifications();
+
         medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING,
                 new MedicationRepository.MedicationFetchCallback() {
                     @Override
@@ -93,6 +81,7 @@ public class PatientMedicationOngoingFragment extends Fragment implements IListV
                         recyclerView.setLayoutManager(linearLayoutManager);
                         PatientMedicationOngoingAdapter adapter = new PatientMedicationOngoingAdapter(getContext(),
                                 (ArrayList<MedicationDto>) medications);
+
                         recyclerView.setAdapter(adapter);
                     }
 

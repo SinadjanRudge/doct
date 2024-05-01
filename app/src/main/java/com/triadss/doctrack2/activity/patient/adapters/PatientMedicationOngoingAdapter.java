@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.patient.PatientHome;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
@@ -155,7 +156,7 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                     inputInvalid = true;
                 }
 
-                if (selectedDateTime.getTime() == null || AppointmentFunctions.IsValidHour(selectedDateTime.getTime())) {
+                if (selectedDateTime.getTime() == null) {
                     Toast.makeText(context, "Please select a valid time", Toast.LENGTH_SHORT).show();
                     timeErrorText.setVisibility(View.VISIBLE);
                     inputInvalid = true;
@@ -165,7 +166,6 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                 {
                     return;
                 }
-
                 medicationDto.setTimestamp(selectedDateTime.ToTimestamp());
 
                 ButtonManager.disableButton(updateBtn);
@@ -177,6 +177,10 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                             public void onReportAddedSuccessfully() {
                                 updateMedicationsList(medicationDto);
                                 Toast.makeText(context, mediId + " updated", Toast.LENGTH_SHORT).show();
+
+                                PatientHome homeActivity = (PatientHome) context;
+                                homeActivity.setupNotifications();
+
                                 dialog.dismiss();
                             }
 
@@ -185,7 +189,6 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                                 ButtonManager.enableButton(updateBtn);
                             }
                         });
-
                     }
 
                     @Override
@@ -194,7 +197,6 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                         ButtonManager.enableButton(updateBtn);
                     }
                 });
-
             });
 
             dialog.show();
@@ -225,7 +227,6 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                     public void onError(String errorMessage) {
                         Log.e(TAG, "Error updating medication status: " + errorMessage);
                         ButtonManager.enableButton(complete);
-
                     }
                 });
                 Toast.makeText(context, medicine.getText() + " has been completed.", Toast.LENGTH_SHORT).show();
