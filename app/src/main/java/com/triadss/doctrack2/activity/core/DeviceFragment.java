@@ -378,7 +378,6 @@ public class DeviceFragment extends Fragment {
         }
     }
 
-
     private boolean isValidSync(){
         if (!wearableDeviceDto.getIsNearby()) {
             Toast.makeText(getContext(), "Can't sync. No Device Nearby Found.", Toast.LENGTH_SHORT).show();

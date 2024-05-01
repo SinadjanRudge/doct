@@ -15,6 +15,7 @@ import com.triadss.doctrack2.config.model.AppointmentsModel;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.AppointmentDto;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +46,6 @@ public class AppointmentRepository {
 
     public void addAppointment(AppointmentDto appointment, AppointmentAddCallback callback) {
         if (user != null) {
-
 
             appointment.setPatientId(user.getUid());
 
@@ -92,10 +92,8 @@ public class AppointmentRepository {
 
             @Override
             public void onSuccess(List<AddPatientDto> patients) {
-                Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
-
+                Timestamp currentTimestamp = DateTimeDto.GetCurrentTimeStamp();
                 appointmentsCollection.orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
-                        .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
                         .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
                         .whereEqualTo(AppointmentsModel.patientId, patientUid)
                         .get()
@@ -104,47 +102,8 @@ public class AppointmentRepository {
                                 List<AppointmentDto> appointments = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     AppointmentDto appointment = document.toObject(AppointmentDto.class);
-                                    appointment.setDocumentId(document.getId().toString());
-                                    appointment.setUid(document.getId().toString());
-                                    String idNumber = patients
-                                            .stream()
-                                            .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
-                                            .findFirst().orElse(null).getIdNumber();
-                                    appointment.setPatientIdNumber(idNumber);
-                                    appointments.add(appointment);
-                                }
-                                callback.onSuccess(appointments);
-                            } else {
-                                Log.e(TAG, "Error getting appointments", task.getException());
-                                callback.onError(task.getException().getMessage());
-                            }
-                        });
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-
-            }
-        });
-    }
-
-    public void getAllPatientPendingAppointmentsFiltered(String patientUid, String find, AppointmentPatientPendingFetchCallback callback) {
-        patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
-            @Override
-            public void onSuccess(List<AddPatientDto> patients) {
-                Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
-
-                appointmentsCollection.orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
-                        .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
-                        .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
-                        .whereEqualTo(AppointmentsModel.patientId, patientUid)
-                        .get()
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                List<AppointmentDto> appointments = new ArrayList<>();
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    if(IsStringFilterAccepted(document, find)){
-                                        AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                                    if(IsLessThanTimestampEndRange(appointment.getDateOfAppointment(), currentTimestamp))
+                                    {
                                         appointment.setDocumentId(document.getId().toString());
                                         appointment.setUid(document.getId().toString());
                                         String idNumber = patients
@@ -170,17 +129,60 @@ public class AppointmentRepository {
         });
     }
 
+    public void getAllPatientPendingAppointmentsFiltered(String patientUid, String find, AppointmentPatientPendingFetchCallback callback) {
+        patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
+            @Override
+            public void onSuccess(List<AddPatientDto> patients) {
+                Timestamp currentTimestamp = DateTimeDto.GetCurrentTimeStamp();
+
+                appointmentsCollection.orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
+                        .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
+                        .whereEqualTo(AppointmentsModel.patientId, patientUid)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                List<AppointmentDto> appointments = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if(IsStringFilterAccepted(document, find)){
+                                        AppointmentDto appointment = document.toObject(AppointmentDto.class);
+                                        if(IsLessThanTimestampEndRange(appointment.getDateOfAppointment(), currentTimestamp))
+                                        {
+                                            appointment.setDocumentId(document.getId().toString());
+                                            appointment.setUid(document.getId().toString());
+                                            String idNumber = patients
+                                                    .stream()
+                                                    .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
+                                                    .findFirst().orElse(null).getIdNumber();
+                                            appointment.setPatientIdNumber(idNumber);
+                                            appointments.add(appointment);
+                                        }
+                                    }
+                                }
+                                callback.onSuccess(appointments);
+                            } else {
+                                Log.e(TAG, "Error getting appointments", task.getException());
+                                callback.onError(task.getException().getMessage());
+                            }
+                        });
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+
+            }
+        });
+    }
+
     public void getAllPatientPendingAppointmentsRecent(String patientUid, int count, AppointmentPatientPendingFetchCallback callback) {
         patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
             @Override
             public void onSuccess(List<AddPatientDto> patients) {
-                Timestamp currentTime = DateTimeDto.GetCurrentTimeStamp();
+                Timestamp currentTimestamp = DateTimeDto.GetCurrentTimeStamp();
 
                 appointmentsCollection
-                        .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
                         .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
                         .whereEqualTo(AppointmentsModel.patientId, patientUid)
-                        .orderBy(AppointmentsModel.createdAt, Query.Direction.ASCENDING)
+                        .orderBy(AppointmentsModel.dateOfAppointment, Query.Direction.ASCENDING)
                         .limit(count)
                         .get()
                         .addOnCompleteListener(task -> {
@@ -188,14 +190,17 @@ public class AppointmentRepository {
                                 List<AppointmentDto> appointments = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     AppointmentDto appointment = document.toObject(AppointmentDto.class);
-                                    appointment.setDocumentId(document.getId().toString());
-                                    appointment.setUid(document.getId().toString());
-                                    String idNumber = patients
-                                            .stream()
-                                            .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
-                                            .findFirst().orElse(null).getIdNumber();
-                                    appointment.setPatientIdNumber(idNumber);
-                                    appointments.add(appointment);
+                                    if(IsLessThanTimestampEndRange(appointment.getDateOfAppointment(), currentTimestamp))
+                                    {
+                                        appointment.setDocumentId(document.getId().toString());
+                                        appointment.setUid(document.getId().toString());
+                                        String idNumber = patients
+                                                .stream()
+                                                .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
+                                                .findFirst().orElse(null).getIdNumber();
+                                        appointment.setPatientIdNumber(idNumber);
+                                        appointments.add(appointment);
+                                    }
                                 }
                                 callback.onSuccess(appointments);
                             } else {
@@ -216,6 +221,8 @@ public class AppointmentRepository {
         patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
             @Override
             public void onSuccess(List<AddPatientDto> patients) {
+                Timestamp currentTimestamp = DateTimeDto.GetCurrentTimeStamp();
+
                 appointmentsCollection.orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
                         .whereEqualTo(AppointmentsModel.patientId, patientUid)
                         .get()
@@ -230,7 +237,9 @@ public class AppointmentRepository {
                                             .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
                                             .findFirst().orElse(null).getIdNumber();
                                     appointment.setPatientIdNumber(idNumber);
-                                    if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) && appointment.getDateOfAppointment().compareTo(DateTimeDto.GetCurrentTimeStamp()) < 0)
+                                    if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) &&
+                                            GetCurrentTimestampEndRange(appointment.getDateOfAppointment())
+                                                    .compareTo(currentTimestamp) < 0)
                                     {
                                         appointment.setStatus(AppointmentTypeConstants.COMPLETED);
                                     }
@@ -260,6 +269,8 @@ public class AppointmentRepository {
         patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
             @Override
             public void onSuccess(List<AddPatientDto> patients) {
+                Timestamp currentTimestamp = DateTimeDto.GetCurrentTimeStamp();
+
                 appointmentsCollection.orderBy(AppointmentsModel.createdAt, Query.Direction.DESCENDING)
                         .whereEqualTo(AppointmentsModel.patientId, patientUid)
                         .get()
@@ -269,16 +280,18 @@ public class AppointmentRepository {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     if(IsStringFilterAccepted(document, find)) {
                                         AppointmentDto appointment = document.toObject(AppointmentDto.class);
+
                                         appointment.setDocumentId(document.getId().toString());
                                         String idNumber = patients
                                                 .stream()
                                                 .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
                                                 .findFirst().orElse(null).getIdNumber();
-                                        appointment.setPatientIdNumber(idNumber);
-                                        if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) && appointment.getDateOfAppointment().compareTo(DateTimeDto.GetCurrentTimeStamp()) < 0)
+                                        if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) &&
+                                                GetCurrentTimestampEndRange(appointment.getDateOfAppointment()).compareTo(currentTimestamp) < 0)
                                         {
                                             appointment.setStatus(AppointmentTypeConstants.COMPLETED);
                                         }
+                                        appointment.setPatientIdNumber(idNumber);
                                         if(appointment.getStatus().equals(AppointmentTypeConstants.CANCELLED)
                                                 || appointment.getStatus().equals(AppointmentTypeConstants.COMPLETED)
                                                 || appointment.getStatus().equals(AppointmentTypeConstants.REJECTED)) {
@@ -306,6 +319,8 @@ public class AppointmentRepository {
         patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
             @Override
             public void onSuccess(List<AddPatientDto> patients) {
+                Timestamp currentTimestamp = DateTimeDto.GetCurrentTimeStamp();
+
                 appointmentsCollection
                         .where(Filter.or(
                                 Filter.equalTo(AppointmentsModel.healthProfId, healthProfId),
@@ -324,7 +339,8 @@ public class AppointmentRepository {
                                             .findFirst().orElse(null).getIdNumber();
                                     appointment.setPatientIdNumber(idNumber);
 
-                                    if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) && appointment.getDateOfAppointment().compareTo(DateTimeDto.GetCurrentTimeStamp()) == -1)
+                                    if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) &&
+                                            GetCurrentTimestampEndRange(appointment.getDateOfAppointment()).compareTo(currentTimestamp) == -1)
                                     {
                                         appointment.setStatus(AppointmentTypeConstants.COMPLETED);
                                     }
@@ -350,6 +366,8 @@ public class AppointmentRepository {
         patientRepository.getPatientList(new PatientRepository.PatientListCallback() {
             @Override
             public void onSuccess(List<AddPatientDto> patients) {
+                Timestamp currentTimestamp = DateTimeDto.GetCurrentTimeStamp();
+
                 appointmentsCollection
                         .where(Filter.or(
                                 Filter.equalTo(AppointmentsModel.healthProfId, healthProfId),
@@ -370,7 +388,8 @@ public class AppointmentRepository {
                                                 .findFirst().orElse(null).getIdNumber();
                                         appointment.setPatientIdNumber(idNumber);
 
-                                        if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) && appointment.getDateOfAppointment().compareTo(DateTimeDto.GetCurrentTimeStamp()) == -1)
+                                        if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) &&
+                                                GetCurrentTimestampEndRange(appointment.getDateOfAppointment()).compareTo(currentTimestamp) == -1)
                                         {
                                             appointment.setStatus(AppointmentTypeConstants.COMPLETED);
                                         }
@@ -625,15 +644,18 @@ public class AppointmentRepository {
                                     if(IsStringFilterAccepted(document, find))
                                     {
                                         AppointmentDto appointment = document.toObject(AppointmentDto.class);
-                                        appointment.setUid(document.getId());
-                                        appointment.setDocumentId(document.getId());
-                                        String idNumber = patients
-                                                .stream()
-                                                .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
-                                                .findFirst().orElse(null).getIdNumber();
-                                        appointment.setPatientIdNumber(idNumber);
+                                        if(IsLessThanTimestampEndRange(appointment.getDateOfAppointment(), currentTime))
+                                        {
+                                            appointment.setUid(document.getId());
+                                            appointment.setDocumentId(document.getId());
+                                            String idNumber = patients
+                                                    .stream()
+                                                    .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
+                                                    .findFirst().orElse(null).getIdNumber();
+                                            appointment.setPatientIdNumber(idNumber);
 
-                                        appointments.add(appointment);
+                                            appointments.add(appointment);
+                                        }
                                     }
                                 }
                                 callback.onSuccess(appointments);
@@ -667,7 +689,6 @@ public class AppointmentRepository {
                     appointmentsCollection
                             .whereEqualTo(AppointmentsModel.healthProfId, healthProfId)
                             .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
-                            .whereGreaterThanOrEqualTo(AppointmentsModel.dateOfAppointment, currentTime)
                             .orderBy(AppointmentsModel.dateOfAppointment, Query.Direction.ASCENDING)
                             .limit(count)
                             .get()
@@ -675,15 +696,18 @@ public class AppointmentRepository {
                                 List<AppointmentDto> appointments = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                     AppointmentDto appointment = document.toObject(AppointmentDto.class);
-                                    appointment.setUid(document.getId());
-                                    appointment.setDocumentId(document.getId());
-                                    String idNumber = patients
-                                            .stream()
-                                            .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
-                                            .findFirst().orElse(null).getIdNumber();
-                                    appointment.setPatientIdNumber(idNumber);
+                                    if(IsLessThanTimestampEndRange(appointment.getDateOfAppointment(), currentTime))
+                                    {
+                                        appointment.setUid(document.getId());
+                                        appointment.setDocumentId(document.getId());
+                                        String idNumber = patients
+                                                .stream()
+                                                .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
+                                                .findFirst().orElse(null).getIdNumber();
+                                        appointment.setPatientIdNumber(idNumber);
 
-                                    appointments.add(appointment);
+                                        appointments.add(appointment);
+                                    }
                                 }
                                 callback.onSuccess(appointments);
                             })
@@ -1028,6 +1052,21 @@ public class AppointmentRepository {
                 Objects.requireNonNull(document.get(AppointmentsModel.status)).toString().toLowerCase().contains(find.toLowerCase()) ||
                 Objects.requireNonNull(document.get(AppointmentsModel.purpose)).toString().toLowerCase().contains(find.toLowerCase()) ||
                 Objects.requireNonNull(document.get(AppointmentsModel.nameOfRequester)).toString().toLowerCase().contains(find.toLowerCase());
+    }
+
+    private boolean IsLessThanTimestampEndRange(Timestamp timestampWithEndRange, Timestamp currentTimestamp) {
+        Timestamp endRange = GetCurrentTimestampEndRange(timestampWithEndRange);
+        boolean currentTimestampLessThanEndRange = currentTimestamp.compareTo(endRange) < 0;
+        return currentTimestampLessThanEndRange;
+    }
+
+    private Timestamp GetCurrentTimestampEndRange(Timestamp timestamp) {
+        DateTimeDto currentDateTime = DateTimeDto.ToDateTimeDto(timestamp);
+        TimeDto currentTime = currentDateTime.getTime();
+        currentDateTime.setTime(new TimeDto(currentTime.getHour() + 1, currentTime.getMinute()));
+        Timestamp currentTimestamp = currentDateTime.ToTimestamp();
+
+        return  currentTimestamp;
     }
 
     public interface AppointmentCancelCallback {
