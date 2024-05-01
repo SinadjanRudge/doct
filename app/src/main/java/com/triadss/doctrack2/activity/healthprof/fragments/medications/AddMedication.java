@@ -211,7 +211,7 @@ public class AddMedication extends Fragment {
     private void showVitalSigns() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, AddVitalSigns.newInstance(patientUid));
+        transaction.replace(R.id.frame_layout, AddVitalSigns.newInstance(patientUid, vitalsignsUid));
         transaction.addToBackStack(null);
         transaction.commit();
     }
