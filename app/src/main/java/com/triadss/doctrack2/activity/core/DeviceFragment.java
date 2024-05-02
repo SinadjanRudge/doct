@@ -470,7 +470,6 @@ public class DeviceFragment extends Fragment {
         Task<DataItem> putDataTask = Wearable.getDataClient(requireContext()).putDataItem(request);
 
         putDataTask.addOnSuccessListener(dataItem -> count++)
-                .addOnFailureListener(e -> Log.e(TAG, "Failed to send data", e))
-                .addOnSuccessListener(e -> Toast.makeText(getContext(), "Data sent successfully", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to send data", e));
     }
 }
