@@ -91,6 +91,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
+            android:background="@drawable/ggreen"
             android:scrollbars="vertical">
 
         </androidx.recyclerview.widget.RecyclerView>

@@ -25,13 +25,17 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.records.AddMedicalHistory;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.DocTrackErrorMessage;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateDto;
+import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.helper.ButtonManager;
+import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
 import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
+import com.triadss.doctrack2.repoositories.VitalSignsRepository;
 
 import java.util.Calendar;
 import java.util.function.Function;
@@ -57,6 +61,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
     String loggedInUserId;
     PatientRepository _patientRepository;
     ReportsRepository _reportsRepository = new ReportsRepository();
+    MedicalHistoryRepository _medicalHistoryRepository = new MedicalHistoryRepository();
+    VitalSignsRepository _vitalSignsRepository = new VitalSignsRepository();
 
     public AddPatientFragment() {
         // Required empty public constructor
@@ -282,7 +288,9 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setCourse(String.valueOf(input_course.getSelectedItem()).trim());
         patientDto.setIdNumber(String.valueOf(editTextIdNumber.getText()).trim());
         patientDto.setDateOfBirth(birthDate.ToStartDateTimestamp());
-        patientDto.setYear(Integer.parseInt(String.valueOf(input_Year.getSelectedItem())));
+        Integer year = input_Year.getSelectedItem().equals(DocTrackConstant.NOT_APPLICABLE) ? null :
+                Integer.parseInt(String.valueOf(input_Year.getSelectedItem()));
+        patientDto.setYear(year);
         patientDto.setStatus(String.valueOf(input_Status.getSelectedItem()).trim());
         patientDto.setGender(String.valueOf(input_Gender.getSelectedItem()).trim());
 
@@ -302,27 +310,48 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             _patientRepository.addPatientCallback(patientDto, new PatientRepository.PatientAddUpdateCallback() {
                                 @Override
                                 public void onSuccess(String patientId) {
-
                                     _reportsRepository.addHealthProfPatientInfoReport(loggedInUserId, patientDto, new ReportsRepository.ReportCallback() {
                                         @Override
                                         public void onReportAddedSuccessfully() {
 
-                                            newAuth.signOut();
+                                            //Create default Medical History
+                                            _medicalHistoryRepository.createDefaultMedicalHistoryForPatient(userId, new MedicalHistoryRepository.AddUpdateCallback() {
+                                                @Override
+                                                public void onSuccess(String medHistoryUid) {
+                                                    _vitalSignsRepository.createDefaultVitalSignsForPatient(userId, new VitalSignsRepository.AddUpdateCallback() {
+                                                        @Override
+                                                        public void onSuccess(String vitalSignsId) {
+                                                            Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
+                                                            newAuth.signOut();
 
-                                            // Sign in the old user
-                                            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                                                    .addOnCompleteListener(signInTask -> {
-                                                        if (signInTask.isSuccessful()) {
-                                                            FirebaseUser oldUser = signInTask.getResult().getUser();
-                                                            if (oldUser != null) {
-                                                                // Old user signed in successfully, do something
-                                                            }
-                                                        } else {
-                                                            // Handle sign-in failure
+                                                            // Sign in the old user
+                                                            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                                                                    .addOnCompleteListener(signInTask -> {
+                                                                        if (signInTask.isSuccessful()) {
+                                                                            FirebaseUser oldUser = signInTask.getResult().getUser();
+                                                                            if (oldUser != null) {
+                                                                                // Old user signed in successfully, do something
+                                                                            }
+                                                                        } else {
+                                                                            // Handle sign-in failure
+                                                                        }
+                                                                    });
+
+                                                            showMedicalHistory(patientId, medHistoryUid, vitalSignsId);
+                                                        }
+
+                                                        @Override
+                                                        public void onError(String errorMessage) {
+                                                            System.out.println();
                                                         }
                                                     });
-                                            showMedicalHistory(patientId);
+                                                }
 
+                                                @Override
+                                                public void onError(String errorMessage) {
+                                                    System.out.println();
+                                                }
+                                            });
                                         }
 
                                         @Override
@@ -330,7 +359,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                                             ButtonManager.enableButton(nextButton);
                                         }
                                     });
-
                                 }
 
                                 @Override
@@ -338,7 +366,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                                     ButtonManager.enableButton(nextButton);
                                 }
                             });
-                            Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
 
                         }
                     } catch (Exception e) {
@@ -348,7 +375,6 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                             Toast.makeText(getContext(), "Failed to create user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                         ButtonManager.enableButton(nextButton);
-
                     }
                 } else {
                     FirebaseAuthException e = (FirebaseAuthException) task.getException();
@@ -364,10 +390,10 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void showMedicalHistory(String patientUId) {
+    private void showMedicalHistory(String patientUId, String medHistoryUid, String vitalSignsUid) {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, AddMedicalHistory.newInstance(patientUId));
+        transaction.replace(R.id.frame_layout, AddMedicalHistory.newInstance(patientUId, medHistoryUid, vitalSignsUid));
         transaction.addToBackStack(null);
         transaction.commit();
     }
