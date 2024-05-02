@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.repoositories.PatientRepository;
@@ -109,7 +110,9 @@ public class RecordPersonalInfo extends Fragment {
                 patientGender.setText(patient.getGender());
                 patientDateOfBirth.setText(DateTimeDto.ToDateTimeDto(patient.getDateOfBirth()).ToString());
                 patientStatus.setText(patient.getStatus());
-                patientYear.setText(String.valueOf(patient.getYear()));
+                String yearVal = patient.getYear() == null ? DocTrackConstant.NOT_APPLICABLE :
+                        String.valueOf(patient.getYear());
+                patientYear.setText(yearVal);
             }
 
             @Override

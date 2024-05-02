@@ -30,15 +30,15 @@ public class AddPatientDto implements Parcelable {
         this.uid = uid;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return Year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         Year = year;
     }
 
-    private int Year;
+    private Integer Year;
     private String course;
     private Timestamp dateOfBirth;
     private String gender;

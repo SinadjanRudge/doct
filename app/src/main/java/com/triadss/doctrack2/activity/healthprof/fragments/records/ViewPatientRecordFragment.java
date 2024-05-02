@@ -19,6 +19,7 @@ import com.google.type.DateTime;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.ViewMedicationAdapter;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
@@ -129,7 +130,9 @@ public class ViewPatientRecordFragment extends Fragment {
                     patientAddress.setText(patient.getAddress());
                     patientPhone.setText(patient.getPhone());
                     patientCourse.setText(patient.getCourse());
-                    patientYear.setText(String.valueOf(patient.getYear()));
+                    String yearVal = patient.getYear() == null ? DocTrackConstant.NOT_APPLICABLE :
+                            String.valueOf(patient.getYear());
+                    patientYear.setText(yearVal);
                     patientGender.setText(patient.getGender());
                     patientStatus.setText(patient.getGender());
                     patientdateofBirth.setText(DateTimeDto.ToDateTimeDto(patient.getDateOfBirth()).ToString());
