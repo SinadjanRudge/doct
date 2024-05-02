@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.records.AddMedicalHistory;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.DocTrackErrorMessage;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
@@ -287,7 +288,9 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
         patientDto.setCourse(String.valueOf(input_course.getSelectedItem()).trim());
         patientDto.setIdNumber(String.valueOf(editTextIdNumber.getText()).trim());
         patientDto.setDateOfBirth(birthDate.ToStartDateTimestamp());
-        patientDto.setYear(Integer.parseInt(String.valueOf(input_Year.getSelectedItem())));
+        Integer year = input_Year.getSelectedItem().equals(DocTrackConstant.NOT_APPLICABLE) ? null :
+                Integer.parseInt(String.valueOf(input_Year.getSelectedItem()));
+        patientDto.setYear(year);
         patientDto.setStatus(String.valueOf(input_Status.getSelectedItem()).trim());
         patientDto.setGender(String.valueOf(input_Gender.getSelectedItem()).trim());
 
