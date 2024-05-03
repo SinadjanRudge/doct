@@ -48,8 +48,7 @@
         <activity
             android:name=".activity.LoginActivity"
             android:windowSoftInputMode="adjustResize"
-            android:exported="true"
-            android:theme="@style/Theme.Material3.Light.NoActionBar">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
