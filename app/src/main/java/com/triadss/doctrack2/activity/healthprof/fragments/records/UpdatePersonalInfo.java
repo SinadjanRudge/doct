@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.helper.ButtonManager;
@@ -43,8 +44,8 @@ public class UpdatePersonalInfo extends Fragment {
     EditText editTextPhone,
         editTextEmail, editTextFullname, editTextIdNumber;
     AutoCompleteTextView editTextAddress;
-    Spinner edit_course;
-    ArrayAdapter<CharSequence> courseAdapter;
+    Spinner edit_course, input_Year;
+    ArrayAdapter<CharSequence> courseAdapter, yearAdapter;
     TextView errorAddress, errorPhone;
     PatientRepository patientRepository = new PatientRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
@@ -101,6 +102,14 @@ public class UpdatePersonalInfo extends Fragment {
         );
         courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         edit_course.setAdapter(courseAdapter);
+
+        input_Year = rootView.findViewById(R.id.input_Year);
+        yearAdapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.year,
+                android.R.layout.simple_spinner_item
+        );
+        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        input_Year.setAdapter(yearAdapter);
 
         editTextEmail = rootView.findViewById(R.id.email);
         editTextFullname = rootView.findViewById(R.id.name);
@@ -172,6 +181,15 @@ public class UpdatePersonalInfo extends Fragment {
                 editTextPhone.setText(patient.getPhone());
                 int coursePosition = courseAdapter.getPosition(patient.getCourse());
                 edit_course.setSelection(coursePosition);
+
+                if(patient.getYear() == null) {
+                    int yearNAPosition = yearAdapter.getPosition(DocTrackConstant.NOT_APPLICABLE);
+                    input_Year.setSelection(yearNAPosition);
+                } else {
+                    int yearPosition = yearAdapter.getPosition(String.valueOf(patient.getYear()));
+                    input_Year.setSelection(yearPosition);
+                }
+
                 editTextIdNumber.setText(patient.getIdNumber());
             }
 
@@ -190,7 +208,10 @@ public class UpdatePersonalInfo extends Fragment {
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
         patientDto.setCourse(String.valueOf(edit_course.getSelectedItem()).trim());
-        
+        Integer year = input_Year.getSelectedItem().equals(DocTrackConstant.NOT_APPLICABLE) ? null :
+                Integer.parseInt(String.valueOf(input_Year.getSelectedItem()));
+        patientDto.setYear(year);
+
         ButtonManager.disableButton(nextButton);
 
         patientRepository.updatePatient(patientDto, new PatientRepository.PatientAddUpdateCallback() {
