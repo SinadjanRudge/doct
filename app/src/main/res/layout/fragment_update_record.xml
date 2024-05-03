@@ -172,35 +172,6 @@
 
             </LinearLayout>
 
-            <!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:id="@+id/courseInputLayout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginHorizontal="20sp"-->
-<!--                android:layout_marginTop="5sp">-->
-
-
-
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/input_course"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="36dp"-->
-<!--                    android:hint="@string/course"-->
-<!--                    android:inputType="text" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/errorCourse"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="20dp"-->
-<!--                    android:layout_marginTop="0dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:text="Course is Blank"-->
-<!--                    android:textColor="#FF0000"-->
-<!--                    android:textSize="13sp" />-->
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/idNumberInputLayout"
                 android:layout_width="match_parent"
