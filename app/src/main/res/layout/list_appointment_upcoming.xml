@@ -11,7 +11,7 @@
 
     <RelativeLayout
         android:layout_width="404dp"
-        android:layout_height="410dp"
+        android:layout_height="wrap_content"
         android:padding="15dp">
 
         <TextView
@@ -56,20 +56,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/PURPOSEtext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/BIRTHDAYtext"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:text="Purpose:"
-            android:textColor="#000"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
             android:id="@+id/agetext"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
@@ -82,6 +68,39 @@
             android:text="TextView Age"
             android:textColor="#000"
             android:textSize="16sp" />
+
+        <RelativeLayout
+            android:id="@+id/purposeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/birthdaytext">
+
+            <TextView
+                android:id="@+id/PURPOSEtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Purpose:"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/purposetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="25dp"
+                android:layout_toEndOf="@+id/PURPOSEtext"
+                android:text="TextView Purpose TextView Purpose TextView Purpose TextView Purpose"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/BIRTHDAYtext"
@@ -115,7 +134,7 @@
             android:id="@+id/calendar"
             android:layout_width="40dp"
             android:layout_height="45dp"
-            android:layout_below="@+id/PURPOSEtext"
+            android:layout_below="@+id/purposeContainer"
             android:layout_alignParentStart="true"
             android:layout_marginStart="25dp"
             android:layout_marginTop="15dp"
@@ -126,7 +145,7 @@
             android:id="@+id/appointment_date"
             android:layout_width="140dp"
             android:layout_height="45dp"
-            android:layout_below="@+id/purposetext"
+            android:layout_below="@+id/purposeContainer"
             android:layout_marginStart="88dp"
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@+id/calendar"
@@ -201,20 +220,6 @@
             android:layout_marginEnd="25dp"
             android:layout_toEndOf="@+id/NAMEtext"
             android:text="TextView Name"
-            android:textColor="#000"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/purposetext"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_below="@+id/birthdaytext"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="64dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="25dp"
-            android:layout_toEndOf="@+id/PURPOSEtext"
-            android:text="TextView Purpose"
             android:textColor="#000"
             android:textSize="16sp" />
 
