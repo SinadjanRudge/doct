@@ -41,9 +41,13 @@ public class AddMedicalHistory extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PATIENT_UID = "patientUid";
+    private static final String MEDHISTORY_UID = "medHistoryUid";
+    private static final String VITALSIGNS_UID = "vitalSignsUid";
 
     // TODO: Rename and change types of parameters
     String patientUid;
+    String vitalsignsUid;
+    String medicalHistoryUid;
     String loggedInUserId;
     ReportsRepository _reportsRepository = new ReportsRepository();
     private Button nextButton;
@@ -60,10 +64,12 @@ public class AddMedicalHistory extends Fragment {
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddMedicalHistory newInstance(String patientUid) {
+    public static AddMedicalHistory newInstance(String patientUid, String medicalHistoryId, String vitalSignsId) {
         AddMedicalHistory fragment = new AddMedicalHistory();
         Bundle args = new Bundle();
         args.putString(PATIENT_UID, patientUid);
+        args.putString(MEDHISTORY_UID, medicalHistoryId);
+        args.putString(VITALSIGNS_UID, vitalSignsId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,6 +79,8 @@ public class AddMedicalHistory extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             patientUid = getArguments().getString(PATIENT_UID);
+            medicalHistoryUid = getArguments().getString(MEDHISTORY_UID);
+            vitalsignsUid = getArguments().getString(VITALSIGNS_UID);
         }
 
     }
@@ -177,10 +185,12 @@ public class AddMedicalHistory extends Fragment {
         String obgyneHistory = obgyneHistoryProcessor.getString();
         medicalHistoryDto.setObgyneHist(obgyneHistory);
 
+        medicalHistoryDto.setUid(medicalHistoryUid);
+
         MedicalHistoryRepository medicalHistoryRepo = new MedicalHistoryRepository();
         ButtonManager.disableButton(nextButton);
 
-        medicalHistoryRepo.AddMedicalHistory(userId, medicalHistoryDto, new MedicalHistoryRepository.AddUpdateCallback() {
+        medicalHistoryRepo.updateMedicalHistory(medicalHistoryDto, new MedicalHistoryRepository.AddUpdateCallback() {
             @Override
             public void onSuccess(String medicalHistoryId) {
                 _reportsRepository.addHealthProfPatientMedHistoryReport(loggedInUserId, userId, new ReportsRepository.ReportCallback() {
@@ -207,7 +217,7 @@ public class AddMedicalHistory extends Fragment {
     private void showMedication() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, AddMedication.newInstance(patientUid));
+        transaction.replace(R.id.frame_layout, AddMedication.newInstance(patientUid, vitalsignsUid));
         transaction.commit();
     }
 }

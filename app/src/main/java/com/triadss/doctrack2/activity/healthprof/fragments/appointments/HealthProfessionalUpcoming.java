@@ -43,7 +43,7 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
     String loggedInUserId;
 
     TextInputEditText searchAppointment;
-
+    NotificationRepository notificationRepository = new NotificationRepository();
     public HealthProfessionalUpcoming() {
         // Required empty public constructor
     }
@@ -102,8 +102,6 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
     public void ReloadList() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = auth.getCurrentUser();
-
-        NotificationRepository notificationRepository = new NotificationRepository();
 
         String filter = searchAppointment.getText().toString();
 
@@ -172,6 +170,28 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                                 }
                             });
                         }
+
+                        @Override
+                        public void onRejectBulk(List<AppointmentDto> rejectedAppointments) {
+                            for(AppointmentDto appointment: rejectedAppointments) {
+                                reportsRepository.addHealthProfRejectedAppointmentReport(loggedInUserId, appointment.getUid(), new ReportsRepository.ReportCallback() {
+                                    @Override
+                                    public void onReportAddedSuccessfully() {
+                                        notificationRepository.NotifyRejectedAppointment(appointment.getUid(), new NotificationRepository.NotificationPushedCallback() {
+                                            @Override
+                                            public void onNotificationDone() {
+
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onReportFailed(String errorMessage) {
+                                        System.out.println();
+                                    }
+                                });
+                            }
+                        }
                     });
 
                 recyclerView.setAdapter(adapter);
@@ -180,6 +200,36 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
             @Override
             public void onError(String errorMessage) {
 
+            }
+        });
+    }
+
+    private void rejectAppointment(String appointmentUid)
+    {
+        reportsRepository.addHealthProfRejectedAppointmentReport(loggedInUserId, appointmentUid, new ReportsRepository.ReportCallback() {
+            @Override
+            public void onReportAddedSuccessfully() {
+                notificationRepository.NotifyRejectedAppointment(appointmentUid, new NotificationRepository.NotificationPushedCallback() {
+                    @Override
+                    public void onNotificationDone() {
+                        appointmentRepository.rejectAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
+                            @Override
+                            public void onSuccess(String appointmentId) {
+                                ReloadList();
+                            }
+
+                            @Override
+                            public void onError(String errorMessage) {
+                                System.out.println();
+                            }
+                        });
+                    }
+                });
+            }
+
+            @Override
+            public void onReportFailed(String errorMessage) {
+                System.out.println();
             }
         });
     }

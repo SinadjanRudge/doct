@@ -14,6 +14,7 @@ import com.google.firebase.firestore.SetOptions;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.FireStoreCollection;
 import com.triadss.doctrack2.config.model.VitalSignsModel;
+import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.dto.WearableDeviceDto;
 
@@ -103,6 +104,20 @@ public class VitalSignsRepository {
         {
             callback.onError(ex.getMessage());
         }
+    }
+
+    public void createDefaultVitalSignsForPatient(String patientUid, AddUpdateCallback callback) {
+        VitalSignsDto vitalSignsDto = new VitalSignsDto();
+        vitalSignsDto.setPatientId(patientUid);
+        vitalSignsDto.setBloodPressure("0");
+        vitalSignsDto.setTemperature(0);
+        vitalSignsDto.setPulseRate(0);
+        vitalSignsDto.setOxygenLevel(0);
+        vitalSignsDto.setWeight(0);
+        vitalSignsDto.setHeight(0);
+        vitalSignsDto.setBMI(0);
+
+        AddVitalSignsCallback(vitalSignsDto, callback);
     }
 
     public boolean updateVitalSigns(VitalSignsDto vitalSignsDto, AddUpdateCallback callback)

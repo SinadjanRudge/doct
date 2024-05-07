@@ -41,9 +41,12 @@ public class AddMedication extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PATIENT_UID = "patientUid";
+    private static final String VITALSIGNS_UID = "vitalSignsUid";
 
     // TODO: Rename and change types of parameters
     String patientUid;
+    String vitalsignsUid;
+
     String loggedInUserId;
     RecyclerView recyclerView;
     MedicationRepository repository;
@@ -61,10 +64,11 @@ public class AddMedication extends Fragment {
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddMedication newInstance(String userId) {
+    public static AddMedication newInstance(String userId, String vitalsignsUid) {
         AddMedication fragment = new AddMedication();
         Bundle args = new Bundle();
         args.putString(PATIENT_UID, userId);
+        args.putString(VITALSIGNS_UID, vitalsignsUid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,6 +78,7 @@ public class AddMedication extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             patientUid = getArguments().getString(PATIENT_UID);
+            vitalsignsUid = getArguments().getString(VITALSIGNS_UID);
         }
     }
 
@@ -206,7 +211,7 @@ public class AddMedication extends Fragment {
     private void showVitalSigns() {
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         // TODO: Create View Record Fragment for Patient then remove // of the nextline code to use it
-        transaction.replace(R.id.frame_layout, AddVitalSigns.newInstance(patientUid));
+        transaction.replace(R.id.frame_layout, AddVitalSigns.newInstance(patientUid, vitalsignsUid));
         transaction.addToBackStack(null);
         transaction.commit();
     }
