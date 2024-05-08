@@ -17,10 +17,10 @@
         android:title="Reports" />
 
     <!-- TODO:: THIS LOGOUT IS TEMPORARY FOR TESTING ONLY    -->
-    <item
-        android:id="@+id/temp_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:icon="@drawable/logout_icon"
-        android:title="Logout" />
+<!--    <item-->
+<!--        android:id="@+id/temp_logout"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:icon="@drawable/logout_icon"-->
+<!--        android:title="Logout" />-->
 </menu>

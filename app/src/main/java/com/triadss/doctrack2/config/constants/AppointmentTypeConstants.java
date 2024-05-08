@@ -5,4 +5,5 @@ public class AppointmentTypeConstants {
     public static String ONGOING = "Ongoing";
     public static String COMPLETED = "Completed";
     public static String CANCELLED = "Canceled";
+    public static String REJECTED = "Rejected";
 }

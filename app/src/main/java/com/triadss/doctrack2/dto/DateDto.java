@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 public class DateDto {
     public DateDto(int year, int month, int day)
@@ -36,6 +37,10 @@ public class DateDto {
 
     public int getDay() {
         return day;
+    }
+
+    public DateDto Clone() {
+        return new DateDto(year, month, day);
     }
 
     public String ToString(boolean isMonth0Index)
@@ -78,5 +83,32 @@ public class DateDto {
     {
         DateDto extractedDate = new DateDto(datepicker.getYear(), datepicker.getMonth() + 1, datepicker.getDayOfMonth());
         return extractedDate;
+    }
+
+    public static boolean isDayWeekend(DateDto dateDto){
+        return isDayWeekend(dateDto.getYear(), dateDto.getMonth() - 1, dateDto.getDay());
+    }
+
+    public static boolean isDayWeekend(int year, int month, int day){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
+    }
+
+    public static boolean checkDayIfHoliday(Map<String, Timestamp> holidayList, int year, int month, int day) {
+        boolean isHoliday = false;
+
+        for (Timestamp holidayTimestamp : holidayList.values()) {
+            LocalDate holidayDate = holidayTimestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            isHoliday = (holidayDate.getMonthValue() == month + 1 && holidayDate.getDayOfMonth() == day);
+            if(isHoliday)
+            {
+                return isHoliday;
+            }
+        }
+        return isHoliday;
     }
 }

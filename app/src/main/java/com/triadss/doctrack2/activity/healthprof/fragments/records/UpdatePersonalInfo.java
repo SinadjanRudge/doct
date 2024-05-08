@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.helper.ButtonManager;
@@ -37,9 +41,12 @@ public class UpdatePersonalInfo extends Fragment {
     // TODO: Rename and change types of parameters
     private String patientUid;
 
-    EditText editTextAddress, editTextPhone, editTextAge, editTextCourse,
+    EditText editTextPhone,
         editTextEmail, editTextFullname, editTextIdNumber;
-    TextView errorAddress, errorPhone, errorAge, errorCourse;
+    AutoCompleteTextView editTextAddress;
+    Spinner edit_course, input_Year;
+    ArrayAdapter<CharSequence> courseAdapter, yearAdapter;
+    TextView errorAddress, errorPhone;
     PatientRepository patientRepository = new PatientRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
     String loggedInUserId;
@@ -81,34 +88,48 @@ public class UpdatePersonalInfo extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_record, container, false);
         editTextAddress = rootView.findViewById(R.id.input_address);
+        ArrayAdapter<CharSequence> addressAdapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.address,
+                android.R.layout.simple_dropdown_item_1line
+        );
+        editTextAddress.setAdapter(addressAdapter);
+
         editTextPhone = rootView.findViewById(R.id.input_contactNo);
-        editTextAge = rootView.findViewById(R.id.input_Age);
-        editTextCourse = rootView.findViewById(R.id.input_course);
+        edit_course = rootView.findViewById(R.id.input_course);
+        courseAdapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.course,
+                android.R.layout.simple_spinner_item
+        );
+        courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        edit_course.setAdapter(courseAdapter);
+
+        input_Year = rootView.findViewById(R.id.input_Year);
+        yearAdapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.year,
+                android.R.layout.simple_spinner_item
+        );
+        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        input_Year.setAdapter(yearAdapter);
+
         editTextEmail = rootView.findViewById(R.id.email);
         editTextFullname = rootView.findViewById(R.id.name);
         editTextIdNumber = rootView.findViewById(R.id.idNumber);
 
         errorAddress = rootView.findViewById(R.id.errorAddress);
         errorPhone = rootView.findViewById(R.id.errorPhone);
-        errorAge  = rootView.findViewById(R.id.errorAge);
-        errorCourse  = rootView.findViewById(R.id.errorCourse);
 
         errorAddress.setVisibility(rootView.INVISIBLE);
         errorPhone.setVisibility(rootView.INVISIBLE);
-        errorAge.setVisibility(rootView.INVISIBLE);
-        errorCourse.setVisibility(rootView.INVISIBLE);
 
         populatePersonalInfo();
 
-        Button nextButton = rootView.findViewById(R.id.nxtButton);
+        nextButton = rootView.findViewById(R.id.nxtButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Function<String, Boolean> isNotEmptyPredicate = (val) -> !val.isEmpty();
                 if(widgetPredicate(editTextAddress, isNotEmptyPredicate)
                 && widgetPredicate(editTextPhone, isNotEmptyPredicate)
-                && widgetPredicate(editTextAge, isNotEmptyPredicate)
-                && widgetPredicate(editTextCourse, isNotEmptyPredicate)
                 )
                 {
                     updatePersonalInfo();
@@ -117,8 +138,6 @@ public class UpdatePersonalInfo extends Fragment {
                 {
                     showTextViewWhenTrue(editTextAddress, (value) -> value.isEmpty(), errorAddress);
                     showTextViewWhenTrue(editTextPhone, (value) -> value.isEmpty(), errorPhone);
-                    showTextViewWhenTrue(editTextAge, (value) -> value.isEmpty(), errorAge);
-                    showTextViewWhenTrue(editTextCourse, (value) -> value.isEmpty(), errorCourse);
                 }
             }
         });
@@ -160,8 +179,17 @@ public class UpdatePersonalInfo extends Fragment {
                 editTextFullname.setText(patient.getFullName());
                 editTextAddress.setText(patient.getAddress());
                 editTextPhone.setText(patient.getPhone());
-                editTextAge.setText(String.valueOf(patient.getAge()));
-                editTextCourse.setText(patient.getCourse());
+                int coursePosition = courseAdapter.getPosition(patient.getCourse());
+                edit_course.setSelection(coursePosition);
+
+                if(patient.getYear() == null) {
+                    int yearNAPosition = yearAdapter.getPosition(DocTrackConstant.NOT_APPLICABLE);
+                    input_Year.setSelection(yearNAPosition);
+                } else {
+                    int yearPosition = yearAdapter.getPosition(String.valueOf(patient.getYear()));
+                    input_Year.setSelection(yearPosition);
+                }
+
                 editTextIdNumber.setText(patient.getIdNumber());
             }
 
@@ -179,9 +207,11 @@ public class UpdatePersonalInfo extends Fragment {
         patientDto.setFullName(editTextFullname.getText().toString());
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
-        patientDto.setAge(Integer.parseInt(String.valueOf(editTextAge.getText())));
-        patientDto.setCourse(String.valueOf(editTextCourse.getText()).trim());
-        
+        patientDto.setCourse(String.valueOf(edit_course.getSelectedItem()).trim());
+        Integer year = input_Year.getSelectedItem().equals(DocTrackConstant.NOT_APPLICABLE) ? null :
+                Integer.parseInt(String.valueOf(input_Year.getSelectedItem()));
+        patientDto.setYear(year);
+
         ButtonManager.disableButton(nextButton);
 
         patientRepository.updatePatient(patientDto, new PatientRepository.PatientAddUpdateCallback() {

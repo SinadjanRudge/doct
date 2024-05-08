@@ -58,7 +58,7 @@ public class HealthProfessionalReportAdapter extends RecyclerView.Adapter<Health
             action.setText(reportDto.getAction());
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(reportDto.getCreatedDate());
-            date.setText(dateTime.ToString());
+            date.setText(dateTime.formatDateTime());
         }
     }
 }

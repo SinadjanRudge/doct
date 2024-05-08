@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F2FAFFFA"
     tools:context=".activity.core.DeviceFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:background="@drawable/btn_green"
         android:orientation="vertical">
 
         <TextView
@@ -17,14 +18,17 @@
             android:layout_height="50dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="Device Registered"
-            android:textStyle="bold"
             android:textAlignment="gravity"
-            android:textSize="22sp" />
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
             android:id="@+id/NoDeviceFound"
+            android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:background="#E9FFFFFF"
             android:gravity="center_horizontal|center_vertical"
             android:text="No Wearable Device Found."
             android:textAlignment="gravity"
@@ -33,9 +37,9 @@
 
         <TableLayout
             android:id="@+id/DeviceTable"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
 
             <TableRow
@@ -76,6 +80,7 @@
                     android:layout_weight="1"
                     android:text="Sample Device Name" />
             </TableRow>
+
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -94,6 +99,7 @@
                     android:layout_weight="1"
                     android:text="Sample Device ID" />
             </TableRow>
+
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -118,15 +124,20 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="#E9FFFFFF"
             android:gravity="center_horizontal|center_vertical"
             android:text="Vital Signs"
-            android:textStyle="bold"
             android:textAlignment="gravity"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="#E9FFFFFF">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -311,8 +322,9 @@
             android:id="@+id/SyncDeviceBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sync Device To Smartwatch"
-            android:layout_margin="20dp"/>
+            android:layout_margin="20dp"
+            android:backgroundTint="#2D8F31"
+            android:text="Sync Device To Smartwatch" />
 
         <Button
             android:id="@+id/RemoveDeviceBtn"

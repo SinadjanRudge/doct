@@ -74,6 +74,15 @@ public class MedicalHistoryRepository {
         return true;
     }
 
+    public void createDefaultMedicalHistoryForPatient(String patientId, AddUpdateCallback callback) {
+        MedicalHistoryDto medicalHistoryDto = new MedicalHistoryDto();
+        medicalHistoryDto.setPastIllness("");
+        medicalHistoryDto.setPrevOperation("");
+        medicalHistoryDto.setFamilyHist("");
+        medicalHistoryDto.setObgyneHist("Para:|Menopause:|Gravida:|Menarche:|PAP Smear:|Abortion:|LMP:");
+        AddMedicalHistory(patientId, medicalHistoryDto, callback);
+    }
+
     public void getMedicalHistoryOfPatient(String patientUid, FetchCallback callback) {
         medHistoryCollection.whereEqualTo(MedicalHistoryModel.patientId, patientUid)
                 .get()

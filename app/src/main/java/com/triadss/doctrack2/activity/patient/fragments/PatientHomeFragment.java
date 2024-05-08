@@ -1,7 +1,10 @@
 package com.triadss.doctrack2.activity.patient.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,22 +15,35 @@ import android.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.LoginActivity;
+import com.triadss.doctrack2.activity.patient.PatientHome;
 import com.triadss.doctrack2.activity.patient.adapters.PatientHomeAppointmentAdapter;
 import com.triadss.doctrack2.activity.patient.adapters.PatientHomeMedicationAdapter;
 import com.triadss.doctrack2.activity.patient.fragments.records.RecordFragment;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.config.constants.NotificationConstants;
+import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
+import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
+import com.triadss.doctrack2.notification.NotificationBackgroundWorker;
+import com.triadss.doctrack2.notification.NotificationMedicationScheduleWorker;
 import com.triadss.doctrack2.repoositories.AppointmentRepository;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +66,7 @@ public class PatientHomeFragment extends Fragment{
 
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
 
     public PatientHomeFragment(){
         //Required empty constructor
@@ -84,6 +101,7 @@ public class PatientHomeFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_patient_home_page, container, false);
 
@@ -95,6 +113,8 @@ public class PatientHomeFragment extends Fragment{
 
         loadMedications();
         loadAppointments();
+        PatientHome homeActivity = (PatientHome) getContext();
+        homeActivity.setupNotifications();
 
         return rootview;
     }
@@ -117,8 +137,6 @@ public class PatientHomeFragment extends Fragment{
         popupMenu.show();
     }
 
-
-
     public void loadMedications()
     {
         medicationRepository.getAllMedications(MedicationTypeConstants.ONGOING, new MedicationRepository.MedicationFetchCallback() {
@@ -128,6 +146,7 @@ public class PatientHomeFragment extends Fragment{
                 medicationRecyclerView.setLayoutManager(linearLayoutManager);
 
                 PatientHomeMedicationAdapter adapter = new PatientHomeMedicationAdapter(getContext(), (ArrayList)medications);
+
                 medicationRecyclerView.setAdapter(adapter);
             }
 

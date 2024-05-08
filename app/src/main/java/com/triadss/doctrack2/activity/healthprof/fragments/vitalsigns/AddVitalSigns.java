@@ -40,9 +40,11 @@ public class AddVitalSigns extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PATIENT_UID = "patientUid";
+    private static final String VITALSIGNS_UID = "vitalSignsUid";
 
     // TODO: Rename and change types of parameters
     String PatientUid;
+    String vitalsignsUid;
     String loggedInUserId;
     ReportsRepository _reportsRepository = new ReportsRepository();
     private Button submit;
@@ -59,10 +61,11 @@ public class AddVitalSigns extends Fragment {
      * @return A new instance of fragment addMedicalRecord.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddVitalSigns newInstance(String patientUid) {
+    public static AddVitalSigns newInstance(String patientUid, String vitalsignsUid) {
         AddVitalSigns fragment = new AddVitalSigns();
         Bundle args = new Bundle();
         args.putString(PATIENT_UID, patientUid);
+        args.putString(VITALSIGNS_UID, vitalsignsUid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +75,7 @@ public class AddVitalSigns extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             PatientUid = getArguments().getString(PATIENT_UID);
+            vitalsignsUid = getArguments().getString(VITALSIGNS_UID);
         }
     }
 
@@ -210,8 +214,9 @@ public class AddVitalSigns extends Fragment {
 
         ButtonManager.disableButton(submit);
 
+        vitalSignsDto.setUid(vitalsignsUid);
         VitalSignsRepository vitalSignsRepo = new VitalSignsRepository();
-        vitalSignsRepo.AddVitalSignsCallback(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
+        vitalSignsRepo.updateVitalSigns(vitalSignsDto, new VitalSignsRepository.AddUpdateCallback() {
             @Override
             public void onSuccess(String vitalSignsId) {
                 _reportsRepository.addHealthProfPatientVitalSignReport(loggedInUserId, PatientUid, new ReportsRepository.ReportCallback() {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -108,20 +109,58 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString(SessionConstants.Email, email);
                         editor.apply();
 
-                        Toast.makeText(LoginActivity.this, "Login Successfully",
-                                Toast.LENGTH_SHORT).show();
-
                         if (user != null) {
-                            fetchUserRole(user.getUid());
+                            ButtonManager.enableButton(buttonLogin);
+                            if (user.isEmailVerified()) {
+                                //Email is verified
+                                fetchUserRole(user.getUid());
+                                Toast.makeText(LoginActivity.this, "Login Successfully",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Email is not verified, prompt user to verify email
+                                Toast.makeText(LoginActivity.this, "Please verify your email before logging in.", Toast.LENGTH_SHORT).show();
+                                sendEmailVerification(user);
+                            }
                         }
 
                     } else {
                         FirebaseAuthException e = (FirebaseAuthException) task.getException();
-                        Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT)
-                                .show();
+                        if (e != null) {
+                            // Get the error code
+                            String errorCode = e.getErrorCode();
+                            // Check the error code for specific cases
+                            if (errorCode != null) {
+                                switch (errorCode) {
+                                        //User not found
+                                    case "ERROR_USER_NOT_FOUND":
+                                        // Incorrect email format
+                                        Toast.makeText(LoginActivity.this, "Email is incorrect.", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case "ERROR_INVALID_EMAIL":
+                                        // Incorrect email format
+                                        Toast.makeText(LoginActivity.this, "Email is incorrect.", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case "ERROR_WRONG_PASSWORD":
+                                        // Incorrect password
+                                        Toast.makeText(LoginActivity.this, "Password is incorrect.", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    default:
+                                        // Other errors
+                                        Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        break;
+                                }
+                            } else {
+                                // Unknown error
+                                Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                            ButtonManager.enableButton(buttonLogin);
+                        }
                     }
 
+                }).addOnFailureListener(e -> {
+                    Log.e("ERROR TAG", e.getMessage());
                     ButtonManager.enableButton(buttonLogin);
+
                 });
         });
     }
@@ -191,4 +230,16 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void sendEmailVerification(FirebaseUser user) {
+        if (user != null) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Failed to send verification email", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
 }

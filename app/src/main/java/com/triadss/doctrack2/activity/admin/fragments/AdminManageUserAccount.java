@@ -14,10 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.admin.adapters.HealthProfessionalAdapter;
 import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;
+import com.triadss.doctrack2.utils.FragmentFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +82,11 @@ public class AdminManageUserAccount extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_admin_manage_user_account, container, false);
         Button addHealthProfBtn = rootView.findViewById(R.id.addHealthProfBtn);
+
+        FloatingActionButton homeBtn = rootView.findViewById(R.id.homeButton);
+        homeBtn.setOnClickListener(view -> {
+            FragmentFunctions.ChangeFragmentNoStack(requireActivity(), new AdminHomeFragment());
+        });
 
         addHealthProfBtn.setOnClickListener(new View.OnClickListener() {
             @Override

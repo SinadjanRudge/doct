@@ -11,4 +11,5 @@ public class FireStoreCollection {
     public static final String REPORTS_TABLE = "reports";
     public static final String MEDICATIONS_TABLE = "medications";
     public static final String NOTIFICATION_TABLE = "notifications";
+    public static final String CONSTANT_TABLE = "constants";
 }

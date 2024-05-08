@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
+import com.triadss.doctrack2.dto.TimeDto;
 
 import java.util.ArrayList;
 
@@ -63,7 +64,10 @@ public class PatientHomeAppointmentAdapter extends RecyclerView.Adapter<PatientH
             purpose.setText(appointment.getPurpose());
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
-            this.time.setText(dateTime.ToString());
+            TimeDto startTime = dateTime.getTime().Clone();
+            TimeDto endTime = new TimeDto(startTime.getHour() + 1, startTime.getMinute());
+
+            this.time.setText(String.format("%s - %s ", dateTime.ToString(), endTime.ToAMPMString()));
         }
     }
 }
