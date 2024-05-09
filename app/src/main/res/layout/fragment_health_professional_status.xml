@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.patient.fragments.AppointmentStatus">
+    tools:context=".activity.patient.fragments.AppointmentStatus"
+    android:id="@+id/fragment_status">
 
     <LinearLayout
         android:layout_width="match_parent"

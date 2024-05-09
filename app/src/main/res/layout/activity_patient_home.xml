@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.patient.PatientHome">
+    tools:context=".activity.patient.PatientHome"
+    android:id="@+id/activity_patient_home">
 
     <LinearLayout
         android:id="@+id/linearLayout2"

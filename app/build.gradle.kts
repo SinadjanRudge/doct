@@ -68,6 +68,7 @@ dependencies {
     implementation(files("libs/samsung-health-sdk-for-android-20201103/data-v1.5.0/libs/samsung-health-data-1.5.0.aar"))
 
     implementation("androidx.recyclerview:recyclerview:1.3.0")
+    implementation("androidx.test.espresso:espresso-intents:3.5.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
