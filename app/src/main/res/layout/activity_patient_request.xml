@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activity.patient.fragments.appointments.PatientAppointmentRequest"
-    tools:ignore="HardcodedText">
+    tools:ignore="HardcodedText"
+    android:id="@+id/activity_patient_request">
 
     <LinearLayout
         android:layout_width="match_parent"

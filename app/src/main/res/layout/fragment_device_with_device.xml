@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2FAFFFA"
-    tools:context=".activity.core.DeviceFragment">
+    tools:context=".activity.core.DeviceFragment"
+    android:id="@+id/fragment_device">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
