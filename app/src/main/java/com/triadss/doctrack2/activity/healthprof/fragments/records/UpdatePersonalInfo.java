@@ -50,6 +50,7 @@ public class UpdatePersonalInfo extends Fragment {
     PatientRepository patientRepository = new PatientRepository();
     ReportsRepository _reportsRepository = new ReportsRepository();
     String loggedInUserId;
+    Spinner input_Status;
     private Button nextButton;
     public UpdatePersonalInfo() {
         // Required empty public constructor
@@ -87,6 +88,15 @@ public class UpdatePersonalInfo extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_record, container, false);
+
+        input_Status = rootView.findViewById(R.id.input_Status);
+        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.civilStatus,
+                android.R.layout.simple_spinner_item
+        );
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        input_Status.setAdapter(statusAdapter);
+
         editTextAddress = rootView.findViewById(R.id.input_address);
         ArrayAdapter<CharSequence> addressAdapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.address,
@@ -208,6 +218,7 @@ public class UpdatePersonalInfo extends Fragment {
         patientDto.setAddress(String.valueOf(editTextAddress.getText()).trim());
         patientDto.setPhone(String.valueOf(editTextPhone.getText()).trim());
         patientDto.setCourse(String.valueOf(edit_course.getSelectedItem()).trim());
+        patientDto.setStatus(String.valueOf(input_Status.getSelectedItem()).trim());
         Integer year = input_Year.getSelectedItem().equals(DocTrackConstant.NOT_APPLICABLE) ? null :
                 Integer.parseInt(String.valueOf(input_Year.getSelectedItem()));
         patientDto.setYear(year);

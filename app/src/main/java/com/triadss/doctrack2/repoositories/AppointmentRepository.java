@@ -19,6 +19,7 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import android.util.Log;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 public class AppointmentRepository {
     private static final String TAG = "AppointmentRepository";
@@ -690,7 +692,6 @@ public class AppointmentRepository {
                             .whereEqualTo(AppointmentsModel.healthProfId, healthProfId)
                             .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
                             .orderBy(AppointmentsModel.dateOfAppointment, Query.Direction.ASCENDING)
-                            .limit(count)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 List<AppointmentDto> appointments = new ArrayList<>();
@@ -709,7 +710,13 @@ public class AppointmentRepository {
                                         appointments.add(appointment);
                                     }
                                 }
-                                callback.onSuccess(appointments);
+
+                                List<AppointmentDto> sorted = appointments.stream()
+                                        .sorted(Comparator.comparing(AppointmentDto::getDateOfAppointment))
+                                        .limit(count)
+                                        .collect(Collectors.toList());
+
+                                callback.onSuccess(sorted);
                             })
                             .addOnFailureListener(e -> {
                                 Log.e(TAG, "Error fetching medicines", e);

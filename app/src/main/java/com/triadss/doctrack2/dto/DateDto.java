@@ -94,7 +94,7 @@ public class DateDto {
         calendar.set(year, month, day);
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-        return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
+        return dayOfWeek == Calendar.SUNDAY;
     }
 
     public static boolean checkDayIfHoliday(Map<String, Timestamp> holidayList, int year, int month, int day) {

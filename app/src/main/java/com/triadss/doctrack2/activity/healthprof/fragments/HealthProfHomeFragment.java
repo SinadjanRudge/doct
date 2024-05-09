@@ -117,7 +117,7 @@ public class HealthProfHomeFragment extends Fragment {
     }
 
     public void ReloadList() {
-        appointmentRepository.getPendingAppointmentsForHealthProfRecent(currentUser.getUid(),  DocTrackConstant.HOME_PAGE_APPOINTMENT_COUNT, new AppointmentRepository.AppointmentFetchCallback() {
+        appointmentRepository.getPendingAppointmentsForHealthProfRecent(loggedInUserId,  DocTrackConstant.HOME_PAGE_APPOINTMENT_COUNT, new AppointmentRepository.AppointmentFetchCallback() {
             @Override
             public void onSuccess(List<AppointmentDto> appointments) {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

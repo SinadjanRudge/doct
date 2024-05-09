@@ -134,8 +134,8 @@ public class ViewPatientRecordFragment extends Fragment {
                             String.valueOf(patient.getYear());
                     patientYear.setText(yearVal);
                     patientGender.setText(patient.getGender());
-                    patientStatus.setText(patient.getGender());
-                    patientdateofBirth.setText(DateTimeDto.ToDateTimeDto(patient.getDateOfBirth()).ToString());
+                    patientStatus.setText(patient.getStatus());
+                    patientdateofBirth.setText(DateTimeDto.ToDateTimeDto(patient.getDateOfBirth()).getDate().ToString());
                 }
 
                 @Override
