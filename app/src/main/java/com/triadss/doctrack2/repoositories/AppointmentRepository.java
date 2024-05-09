@@ -185,7 +185,6 @@ public class AppointmentRepository {
                         .whereEqualTo(AppointmentsModel.status, AppointmentTypeConstants.PENDING)
                         .whereEqualTo(AppointmentsModel.patientId, patientUid)
                         .orderBy(AppointmentsModel.dateOfAppointment, Query.Direction.ASCENDING)
-                        .limit(count)
                         .get()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -204,7 +203,13 @@ public class AppointmentRepository {
                                         appointments.add(appointment);
                                     }
                                 }
-                                callback.onSuccess(appointments);
+
+                                List<AppointmentDto> sorted = appointments.stream()
+                                        .sorted(Comparator.comparing(AppointmentDto::getDateOfAppointment))
+                                        .limit(count)
+                                        .collect(Collectors.toList());
+
+                                callback.onSuccess(sorted);
                             } else {
                                 Log.e(TAG, "Error getting appointments", task.getException());
                                 callback.onError(task.getException().getMessage());

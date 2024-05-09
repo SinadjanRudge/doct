@@ -464,7 +464,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:minWidth="50dp"
-                        android:text="Blood Pressure:" />
+                        android:text="Blood Pressure(mmHg):" />
 
                     <TextView
                         android:id="@+id/value_bp1"
@@ -519,7 +519,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:minWidth="50dp"
-                        android:text="Temperature:" />
+                        android:text="Temperature(°C):" />
 
                     <TextView
                         android:id="@+id/value_temp1"
@@ -575,7 +575,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:minWidth="50dp"
-                        android:text="Sp02" />
+                        android:text="Sp02(%)" />
 
                     <TextView
                         android:id="@+id/value_spo2_1"
@@ -627,7 +627,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:minWidth="50dp"
-                        android:text="Pulse Rate:" />
+                        android:text="Pulse Rate(bpm):" />
 
                     <TextView
                         android:id="@+id/value_pulseRate1"
@@ -683,7 +683,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:minWidth="50dp"
-                        android:text="Height:" />
+                        android:text="Height(cm):" />
 
                     <TextView
                         android:id="@+id/value_height1"
@@ -738,7 +738,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:minWidth="50dp"
-                        android:text="Weight:" />
+                        android:text="Weight(kg):" />
 
                     <TextView
                         android:id="@+id/value_weight1"
@@ -792,7 +792,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:minWidth="50dp"
-                        android:text="BMI:" />
+                        android:text="BMI(kg/m²):" />
 
                     <TextView
                         android:id="@+id/value_BMI1"

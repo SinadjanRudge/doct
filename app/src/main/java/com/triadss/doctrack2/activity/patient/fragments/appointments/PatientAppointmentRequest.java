@@ -322,7 +322,7 @@ public class PatientAppointmentRequest extends Fragment {
                         textInputPurpose.setText("");
                         pickTimeBtn.setText("Pick Time");
                         pickDateButton.setText("Select Date");
-                        Toast.makeText(getContext(), appointmentId + " added", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),"request added", Toast.LENGTH_SHORT).show();
 
                         ButtonManager.enableButton(confirmButton);
                     }
