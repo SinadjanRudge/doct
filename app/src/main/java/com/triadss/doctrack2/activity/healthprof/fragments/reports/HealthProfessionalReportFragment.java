@@ -1,7 +1,15 @@
 package com.triadss.doctrack2.activity.healthprof.fragments.reports;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import static com.triadss.doctrack2.config.constants.PdfConstants.PERMISSION_REQUEST_CODE;
+
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,11 +18,16 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +39,15 @@ import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalReportAdapter;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.adapters.PatientReportAdapter;
+import com.triadss.doctrack2.config.constants.PdfConstants;
 import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.ReportDto;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.FragmentFunctions;
+import com.triadss.doctrack2.utils.PdfHelper;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +69,7 @@ public class HealthProfessionalReportFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    Button exportButton;
     String loggedInUserId;
     RadioGroup radioGroup;
 
@@ -99,6 +116,9 @@ public class HealthProfessionalReportFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_healthprof_reports_list, container, false);
+
+        exportButton = rootView.findViewById(R.id.exportReportsBtn);
+
         recyclerView = rootView.findViewById(R.id.recyclerViewReports);
         search = (EditText) rootView.findViewById(R.id.search_bar);
 
@@ -130,20 +150,30 @@ public class HealthProfessionalReportFragment extends Fragment {
 
         repository = new ReportsRepository();
 
-        repository.getReportsFromUser(loggedInUserId, new ReportsRepository.ReportsFetchCallback() {
-            @Override
-            public void onSuccess(List<ReportDto> reports) {
-                HealthProfessionalReportAdapter pageAdapter = new HealthProfessionalReportAdapter(getContext(), (ArrayList)reports);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-                recyclerView.setLayoutManager(linearLayoutManager);
-                recyclerView.setAdapter(pageAdapter);
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-
-            }
-        });
+        reloadList();
+//        repository.getReportsFromUser(loggedInUserId, new ReportsRepository.ReportsFetchCallback() {
+//            @Override
+//            public void onSuccess(List<ReportDto> reports) {
+//                HealthProfessionalReportAdapter pageAdapter = new HealthProfessionalReportAdapter(getContext(), (ArrayList)reports);
+//                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+//                recyclerView.setLayoutManager(linearLayoutManager);
+//                recyclerView.setAdapter(pageAdapter);
+//
+//                exportButton.setOnClickListener(v -> {
+//                    if(reports.isEmpty()) {
+//                        Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
+//                        PdfHelper.GeneratePdfFromReports(requireContext(), reports);
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onError(String errorMessage) {
+//
+//            }
+//        });
         search.addTextChangedListener(inputTextWatcher);
         return rootView;
     }
@@ -197,6 +227,22 @@ public class HealthProfessionalReportFragment extends Fragment {
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                         recyclerView.setLayoutManager(linearLayoutManager);
                         recyclerView.setAdapter(pageAdapter);
+
+                        exportButton.setOnClickListener(v -> {
+                            if(reports.isEmpty()) {
+                                Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
+                            } else {
+//                                ActivityCompat.requestPermissions(requireActivity(), new String[]{WRITE_EXTERNAL_STORAGE}, PdfConstants.PERMISSION_REQUEST_CODE);
+
+                                Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
+                                PdfHelper.GeneratePdfFromReports(requireContext(), reports, pdfFile -> {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                    startActivity(intent);
+                                });
+                            }
+                        });
                     }
 
                     @Override
@@ -209,6 +255,10 @@ public class HealthProfessionalReportFragment extends Fragment {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setAdapter(pageAdapter);
+
+            exportButton.setOnClickListener(v -> {
+                Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
+            });
         }
     }
 }
