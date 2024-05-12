@@ -6,13 +6,21 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.triadss.doctrack2.config.constants.PdfConstants.READ_PERMISSION_REQUEST_CODE;
 import static com.triadss.doctrack2.config.constants.PdfConstants.WRITE_PERMISSION_REQUEST_CODE;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
@@ -33,6 +41,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -41,8 +50,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.ListItem;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalReportAdapter;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
@@ -59,11 +75,18 @@ import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.FragmentFunctions;
 import com.triadss.doctrack2.utils.PdfHelper;
 
+
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -84,6 +107,13 @@ public class HealthProfessionalReportFragment extends Fragment {
     Button exportButton;
     String loggedInUserId;
     RadioGroup radioGroup;
+
+    private float columnwidth[] = {100f,100f,200f};
+
+
+
+    // constant code for runtime permissions
+    private static final int PERMISSION_REQUEST_CODE = 200;
 
     public HealthProfessionalReportFragment() {
         // Required empty public constructor
@@ -209,6 +239,7 @@ public class HealthProfessionalReportFragment extends Fragment {
         }
 
         if(checkedId!=R.id.radioAll || checkedId!=R.id.radioAppointments || checkedId!=R.id.radioPatients){
+
             repository.getReportsFromUserFilter(user.getUid(),
                     search.getText().toString().toLowerCase(),
                     list,
@@ -240,29 +271,32 @@ public class HealthProfessionalReportFragment extends Fragment {
                                         return;
                                     }
 
-                                    if(reports.isEmpty()) {
-                                        Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        DateTimeDto dateTimeDto = DateTimeDto.GetCurrentDateTimeDto();
-                                        String filename = String.format("%s Reports %s", healthProfName, dateTimeDto.formatDateTime());
-                                        filename = filename.replace(":", "_");
-                                        Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
-                                        ButtonManager.disableButton(exportButton);
-
-                                        PdfHelper.GeneratePdfFromReports(requireContext(), filename, reports, pdfFile -> {
-                                            ButtonManager.enableButton(exportButton);
-                                            try {
-                                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                                intent.setDataAndType( getUriFromFile(pdfFile), "application/pdf");
-                                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|
-                                                        Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                                // start activity
-                                                startActivity(intent);
-                                            } catch (Exception e) {
-                                                System.out.println();
-                                            }
-                                        });
-                                    }
+//
+//                                    if(reports.isEmpty()) {
+//                                        Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
+//                                    } else {
+//                                        DateTimeDto dateTimeDto = DateTimeDto.GetCurrentDateTimeDto();
+//                                        String filename = String.format("%s Reports %s", healthProfName, dateTimeDto.formatDateTime());
+//                                        filename = filename.replace(":", "_");
+//
+//                                        Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
+//                                        ButtonManager.disableButton(exportButton);
+//
+//                                        PdfHelper.GeneratePdfFromReports(requireContext(), filename, reports, pdfFile -> {
+//                                            ButtonManager.enableButton(exportButton);
+//                                            try {
+//                                                Intent intent = new Intent(Intent.ACTION_VIEW);
+//                                                intent.setDataAndType( getUriFromFile(pdfFile), "application/pdf");
+//                                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|
+//                                                        Intent.FLAG_ACTIVITY_NO_HISTORY);
+//                                                // start activity
+//                                                startActivity(intent);
+//                                            } catch (Exception e) {
+//                                                System.out.println();
+//                                            }
+//                                        });
+//                                    }
+                                    generatePDF(user.getUid());
                                 });
                             }
 
@@ -293,4 +327,62 @@ public class HealthProfessionalReportFragment extends Fragment {
     private Uri getUriFromFile(File file){
         return FileProvider.getUriForFile(requireContext(), requireContext().getApplicationContext().getPackageName() + ".provider", file);
     }
+
+    private void generatePDF(String user) {
+
+        repository.getReportsFromUserForPdf(user, new ReportsRepository.ReportsForPdfFetchCallback() {
+            @Override
+            public void onSuccess(List<String> action,List<String> message,List<String> date) {
+
+                DateTimeDto dateTimeDto = DateTimeDto.GetCurrentDateTimeDto();
+                String filename = String.format("%s Reports %s", healthProfName, dateTimeDto.formatDateTime());
+                filename = filename.replace(":", "_");
+                File file = new File(Environment.getExternalStorageDirectory(), filename + ".pdf");
+
+                String toFile = file.toString();
+                try {
+
+                    PdfDocument pdfDoc
+                            = new PdfDocument(new PdfWriter(toFile));
+
+
+                    Document doc = new Document(pdfDoc);
+
+                    Paragraph User = new Paragraph(healthProfName);
+                    Table table = new Table(columnwidth);
+
+                    // Step-4 Adding cells to the table
+                    table.addCell("Message");
+                    table.addCell("Date");
+                    table.addCell("Description");
+
+                    for(int i = 0; i  < action.size() - 1; i++) {
+
+                        table.addCell(action.get(i));
+                        table.addCell(date.get(i));
+                        table.addCell(message.get(i));
+                    }
+
+                    // Step-6 Adding Table to document
+                    doc.add(User);
+                    doc.add(table);
+
+                    // Step-7 Closing the document
+                    doc.close();
+
+                    Toast.makeText(requireContext(), toFile, Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        });
+
+    }
+
 }

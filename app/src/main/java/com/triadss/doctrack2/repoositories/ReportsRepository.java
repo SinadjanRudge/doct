@@ -18,13 +18,17 @@ import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.dto.ReportDto;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TimeZone;
 
 public class ReportsRepository {
     private final String TAG = "Reports Repository";
@@ -451,6 +455,46 @@ public class ReportsRepository {
         }
     }
 
+    public void getReportsFromUserForPdf(String uid, ReportsForPdfFetchCallback callback) {
+        if (user != null) {
+            reportsCollection
+                    .whereEqualTo(ReportModel.createdBy, uid)
+                    .orderBy(ReportModel.createdDate, Query.Direction.DESCENDING)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        List<String> action = new ArrayList<>();
+                        List<String> message = new ArrayList<>();
+                        List<String> date = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+
+                            long tempDate = document.getTimestamp("createdDate").getSeconds();
+                            Date Chrono = (new Date(tempDate));
+
+                            DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(document.getTimestamp("createdDate"));
+//                            SimpleDateFormat dateYear = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
+//                            TimeZone tz = TimeZone.getDefault();
+//                            dateYear.setTimeZone(tz);
+//
+//
+//                              String ChronoDate = dateYear.format(dateTime.getDate().ToString());
+//
+                            action.add(String.valueOf(document.get("action")));
+                            message.add(String.valueOf(document.get("message")));
+                            //date.add(ChronoMonth + " " + ChronoDay + ", " + ChronoYear + " " + ChronoHour);
+                            date.add(dateTime.formatDateTime().toString());
+                        }
+                        callback.onSuccess(action,message,date);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching reports", e);
+                        callback.onError(e.getMessage());
+                    });
+        } else {
+            Log.e(TAG, "User is null");
+            callback.onError("User is null");
+        }
+    }
+
     public interface ReportsFetchCallback {
         void onSuccess(List<ReportDto> reports);
 
@@ -458,6 +502,12 @@ public class ReportsRepository {
     }
     public interface ReportsFilterCallback {
         void onSuccess(List<ReportDto> reports);
+
+        void onError(String errorMessage);
+    }
+
+    public interface ReportsForPdfFetchCallback {
+        void onSuccess(List<String> action,List<String> message,List<String> date);
 
         void onError(String errorMessage);
     }

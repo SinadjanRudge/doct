@@ -389,11 +389,14 @@ public class AppointmentRepository {
                                     if(IsStringFilterAccepted(document, find))
                                     {
                                         AppointmentDto appointment = document.toObject(AppointmentDto.class);
-                                        String idNumber = patients
+                                        AddPatientDto patientDto = patients
                                                 .stream()
                                                 .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
-                                                .findFirst().orElse(null).getIdNumber();
-                                        appointment.setPatientIdNumber(idNumber);
+                                                .findFirst().orElse(null);
+                                        appointment.setPatientIdNumber(patientDto.getIdNumber());
+                                        Timestamp patientBirthday = patientDto.getDateOfBirth();
+                                        appointment.setPatientBirthday(patientBirthday);
+                                        appointment.setPatientAge(DateTimeDto.ComputeAge(patientBirthday));
 
                                         if(appointment.getStatus().equals(AppointmentTypeConstants.PENDING) &&
                                                 GetCurrentTimestampEndRange(appointment.getDateOfAppointment()).compareTo(currentTimestamp) == -1)

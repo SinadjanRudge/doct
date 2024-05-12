@@ -55,7 +55,7 @@ public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Ada
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView purpose,date,time,status,identification,name;
+        private TextView purpose,date,time,status,identification,name, age, birthday;
 
         public ViewHolder(View view) {
             super(view);
@@ -65,6 +65,8 @@ public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Ada
             status = (TextView) view.findViewById(R.id.statustext);
             identification = (TextView) view.findViewById(R.id.IDtext);
             name = (TextView) view.findViewById(R.id.nametext);
+            age = view.findViewById(R.id.agetext);
+            birthday = view.findViewById(R.id.birthdaytext);
         }
 
         public void update(AppointmentDto appointment)
@@ -72,6 +74,8 @@ public class HealthProfessionalAppointmentStatusAdapter extends RecyclerView.Ada
             purpose.setText(appointment.getPurpose());
             identification.setText(appointment.getPatientIdNumber());
             name.setText(appointment.getNameOfRequester());
+            birthday.setText(DateTimeDto.ToDateTimeDto(appointment.getPatientBirthday()).getDate().ToString());
+            age.setText(String.valueOf(appointment.getPatientAge()));
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
