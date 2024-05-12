@@ -14,13 +14,14 @@ import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.ReportDto;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HealthProfessionalReportAdapter extends RecyclerView.Adapter<HealthProfessionalReportAdapter.ViewHolder> {
     private final String TAG = "HealthProfessionalReportAdapter";
-    private ArrayList<ReportDto> reports;
+    private List<ReportDto> reports;
     private Context context;
 
-    public HealthProfessionalReportAdapter(Context context, ArrayList<ReportDto> reports) {
+    public HealthProfessionalReportAdapter(Context context, List<ReportDto> reports) {
         this.context = context;
         this.reports = reports;
     }

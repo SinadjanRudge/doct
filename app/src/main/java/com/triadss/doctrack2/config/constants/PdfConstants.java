@@ -2,7 +2,7 @@ package com.triadss.doctrack2.config.constants;
 
 public class PdfConstants {
 
-    public static int REPORTS_PER_PAGE = 25;
+    public static int REPORTS_PER_PAGE = 15;
 
     // constant code for runtime permissions
     public static final int PERMISSION_REQUEST_CODE = 200;

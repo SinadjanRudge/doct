@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,6 +19,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -28,6 +34,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,7 +49,10 @@ import com.triadss.doctrack2.activity.patient.adapters.PatientReportAdapter;
 import com.triadss.doctrack2.config.constants.PdfConstants;
 import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.dto.DateTimeDto;
+import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.dto.ReportDto;
+import com.triadss.doctrack2.repoositories.HealthProfRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.FragmentFunctions;
 import com.triadss.doctrack2.utils.PdfHelper;
@@ -105,7 +115,9 @@ public class HealthProfessionalReportFragment extends Fragment {
     }
 
     RecyclerView recyclerView;
+    String healthProfName;
     private ReportsRepository repository;
+    private HealthProfRepository healthProfRepository = new HealthProfRepository();
     private EditText search;
 
     @Override
@@ -151,29 +163,7 @@ public class HealthProfessionalReportFragment extends Fragment {
         repository = new ReportsRepository();
 
         reloadList();
-//        repository.getReportsFromUser(loggedInUserId, new ReportsRepository.ReportsFetchCallback() {
-//            @Override
-//            public void onSuccess(List<ReportDto> reports) {
-//                HealthProfessionalReportAdapter pageAdapter = new HealthProfessionalReportAdapter(getContext(), (ArrayList)reports);
-//                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//                recyclerView.setLayoutManager(linearLayoutManager);
-//                recyclerView.setAdapter(pageAdapter);
-//
-//                exportButton.setOnClickListener(v -> {
-//                    if(reports.isEmpty()) {
-//                        Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
-//                        PdfHelper.GeneratePdfFromReports(requireContext(), reports);
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onError(String errorMessage) {
-//
-//            }
-//        });
+
         search.addTextChangedListener(inputTextWatcher);
         return rootView;
     }
@@ -228,19 +218,43 @@ public class HealthProfessionalReportFragment extends Fragment {
                         recyclerView.setLayoutManager(linearLayoutManager);
                         recyclerView.setAdapter(pageAdapter);
 
-                        exportButton.setOnClickListener(v -> {
-                            if(reports.isEmpty()) {
-                                Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
-                            } else {
-//                                ActivityCompat.requestPermissions(requireActivity(), new String[]{WRITE_EXTERNAL_STORAGE}, PdfConstants.PERMISSION_REQUEST_CODE);
+                        healthProfRepository.getHealthProfessional(loggedInUserId, new HealthProfRepository.HealthProGetCallback() {
+                            @Override
+                            public void onSuccess(HealthProfDto dto) {
+                                healthProfName = dto.getFullName();
+                                exportButton.setOnClickListener(v -> {
+                                    if (ContextCompat.checkSelfPermission(requireContext(), READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat.requestPermissions(requireActivity(), new String[]{READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                                        return;
+                                    }
 
-                                Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
-                                PdfHelper.GeneratePdfFromReports(requireContext(), reports, pdfFile -> {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                                    intent.setDataAndType(Uri.fromFile(pdfFile), "application/pdf");
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                    startActivity(intent);
+                                    if(reports.isEmpty()) {
+                                        Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        DateTimeDto dateTimeDto = DateTimeDto.GetCurrentDateTimeDto();
+                                        String filename = String.format("%s Reports %s", healthProfName, dateTimeDto.formatDateTime());
+                                        filename = filename.replace(":", "_");
+                                        Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
+                                        PdfHelper.GeneratePdfFromReports(requireContext(), filename, reports, pdfFile -> {
+                                            try {
+                                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                intent.setDataAndType( getUriFromFile(pdfFile), "application/pdf");
+                                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|
+                                                        Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                                // start activity
+                                                startActivity(intent);
+                                            } catch (Exception e) {
+                                                System.out.println();
+                                            }
+
+                                        });
+                                    }
                                 });
+                            }
+
+                            @Override
+                            public void onFailure(String errorMessage) {
+
                             }
                         });
                     }
@@ -260,5 +274,9 @@ public class HealthProfessionalReportFragment extends Fragment {
                 Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
             });
         }
+    }
+
+    private Uri getUriFromFile(File file){
+        return FileProvider.getUriForFile(requireContext(), requireContext().getApplicationContext().getPackageName() + ".provider", file);
     }
 }

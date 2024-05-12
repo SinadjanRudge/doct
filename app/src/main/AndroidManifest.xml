@@ -30,6 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DocTrack2"
         android:enableOnBackInvokedCallback="true"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="34">
         <activity
             android:name=".activity.healthprof.fragments.records.ListHealthprofPatientActivity"
@@ -83,6 +84,16 @@
                 <data android:scheme="wear" android:host="*" android:pathPrefix="/my_path" />
             </intent-filter>
         </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
         <receiver android:name="com.triadss.doctrack2.notification.NotificationService" />
     </application>
 
