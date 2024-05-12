@@ -52,6 +52,7 @@ import com.triadss.doctrack2.config.constants.SessionConstants;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.dto.ReportDto;
+import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.FragmentFunctions;
@@ -235,7 +236,10 @@ public class HealthProfessionalReportFragment extends Fragment {
                                         String filename = String.format("%s Reports %s", healthProfName, dateTimeDto.formatDateTime());
                                         filename = filename.replace(":", "_");
                                         Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
+                                        ButtonManager.disableButton(exportButton);
+
                                         PdfHelper.GeneratePdfFromReports(requireContext(), filename, reports, pdfFile -> {
+                                            ButtonManager.enableButton(exportButton);
                                             try {
                                                 Intent intent = new Intent(Intent.ACTION_VIEW);
                                                 intent.setDataAndType( getUriFromFile(pdfFile), "application/pdf");
@@ -246,7 +250,6 @@ public class HealthProfessionalReportFragment extends Fragment {
                                             } catch (Exception e) {
                                                 System.out.println();
                                             }
-
                                         });
                                     }
                                 });
