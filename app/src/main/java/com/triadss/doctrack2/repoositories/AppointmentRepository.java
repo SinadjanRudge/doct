@@ -655,11 +655,14 @@ public class AppointmentRepository {
                                         {
                                             appointment.setUid(document.getId());
                                             appointment.setDocumentId(document.getId());
-                                            String idNumber = patients
+                                            AddPatientDto patientDto = patients
                                                     .stream()
                                                     .filter(patient -> patient.getUid().equals(appointment.getPatientId()))
-                                                    .findFirst().orElse(null).getIdNumber();
-                                            appointment.setPatientIdNumber(idNumber);
+                                                    .findFirst().orElse(null);
+                                            appointment.setPatientIdNumber(patientDto.getIdNumber());
+                                            Timestamp patientBirthday = patientDto.getDateOfBirth();
+                                            appointment.setPatientBirthday(patientBirthday);
+                                            appointment.setPatientAge(DateTimeDto.ComputeAge(patientBirthday));
 
                                             appointments.add(appointment);
                                         }

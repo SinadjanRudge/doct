@@ -117,7 +117,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView purpose, date, time, identification, name, documentId,patientName,  DocId;
+        private TextView purpose, date, time, identification, name, documentId,patientName,  DocId, age, birthday;
         private Button reschedule, cancel, info;
 
         public ViewHolder(View view) {
@@ -131,6 +131,8 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             reschedule = (Button) itemView.findViewById(R.id.reschedule_button);
             documentId = (TextView) view.findViewById(R.id.IDtext);
             patientName = view.findViewById(R.id.nametext);
+            age = view.findViewById(R.id.agetext);
+            birthday = view.findViewById(R.id.birthdaytext);
 
             DocId = (TextView) view.findViewById(R.id.DocumentID);
         }
@@ -139,6 +141,8 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
             purpose.setText(appointment.getPurpose());
             identification.setText(appointment.getPatientIdNumber());
             name.setText(appointment.getNameOfRequester());
+            birthday.setText(DateTimeDto.ToDateTimeDto(appointment.getPatientBirthday()).getDate().ToString());
+            age.setText(String.valueOf(appointment.getPatientAge()));
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
