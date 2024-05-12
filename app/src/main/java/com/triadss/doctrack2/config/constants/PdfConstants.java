@@ -5,7 +5,9 @@ public class PdfConstants {
     public static int REPORTS_PER_PAGE = 15;
 
     // constant code for runtime permissions
-    public static final int PERMISSION_REQUEST_CODE = 200;
+    public static final int READ_PERMISSION_REQUEST_CODE = 200;
+
+    public static final int WRITE_PERMISSION_REQUEST_CODE = 201;
 
     /**Dimension For A4 Size Paper (1 inch = 72 points)**/
     public static int A4_PAGE_WIDTH = 595; //8.26 Inch

@@ -3,7 +3,8 @@ package com.triadss.doctrack2.activity.healthprof.fragments.reports;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-import static com.triadss.doctrack2.config.constants.PdfConstants.PERMISSION_REQUEST_CODE;
+import static com.triadss.doctrack2.config.constants.PdfConstants.READ_PERMISSION_REQUEST_CODE;
+import static com.triadss.doctrack2.config.constants.PdfConstants.WRITE_PERMISSION_REQUEST_CODE;
 
 import android.content.Context;
 import android.content.Intent;
@@ -224,8 +225,18 @@ public class HealthProfessionalReportFragment extends Fragment {
                             public void onSuccess(HealthProfDto dto) {
                                 healthProfName = dto.getFullName();
                                 exportButton.setOnClickListener(v -> {
+                                    boolean hasPermissions = true;
                                     if (ContextCompat.checkSelfPermission(requireContext(), READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-                                        ActivityCompat.requestPermissions(requireActivity(), new String[]{READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                                        ActivityCompat.requestPermissions(requireActivity(), new String[]{READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST_CODE);
+                                        hasPermissions = false;
+                                    }
+
+                                    if (ContextCompat.checkSelfPermission(requireContext(), WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat.requestPermissions(requireActivity(), new String[]{WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSION_REQUEST_CODE);
+                                        hasPermissions = false;
+                                    }
+
+                                    if(!hasPermissions) {
                                         return;
                                     }
 
