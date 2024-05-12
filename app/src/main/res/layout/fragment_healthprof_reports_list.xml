@@ -29,6 +29,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
                 android:background="@drawable/green_stroke"
                 android:hint=" Search Reports"
                 android:singleLine="true"
@@ -38,6 +39,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.1" />
+
+            <Button
+                android:id="@+id/exportReportsBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Export" />
 
         </LinearLayout>
 
