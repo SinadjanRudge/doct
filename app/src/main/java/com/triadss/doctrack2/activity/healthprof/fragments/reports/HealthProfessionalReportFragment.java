@@ -371,6 +371,16 @@ public class HealthProfessionalReportFragment extends Fragment {
                     doc.close();
 
                     Toast.makeText(requireContext(), toFile, Toast.LENGTH_LONG).show();
+                    try {
+                                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                intent.setDataAndType( getUriFromFile(file), "application/pdf");
+                                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|
+                                                        Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                                // start activity
+                                                startActivity(intent);
+                                            } catch (Exception e) {
+                                                System.out.println();
+                                            }
                 } catch (IOException e) {
 
                     e.printStackTrace();
