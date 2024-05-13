@@ -193,7 +193,13 @@ public class AddMedicalHistory extends Fragment {
         medicalHistoryRepo.updateMedicalHistory(medicalHistoryDto, new MedicalHistoryRepository.AddUpdateCallback() {
             @Override
             public void onSuccess(String medicalHistoryId) {
-                _reportsRepository.addHealthProfPatientMedHistoryReport(loggedInUserId, userId, new ReportsRepository.ReportCallback() {
+                // Construct the message to include in the report
+                String message = "\n" + "\n" +
+                        "Past Illness: " + pastIllness + "\n" +
+                        "Previous Hospitalization: " + medicalHistoryDto.getPrevOperation() + "\n" +
+                        "Family History: " + familyHistory + "\n" +
+                        "ObGyne History: " + obgyneHistory;
+                _reportsRepository.addHealthProfPatientMedHistoryReport(loggedInUserId, userId, message, new ReportsRepository.ReportCallback() {
                     @Override
                     public void onReportAddedSuccessfully() {
                         showMedication();

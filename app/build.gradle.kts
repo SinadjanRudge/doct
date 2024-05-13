@@ -76,4 +76,9 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.42")
     kapt("com.google.dagger:hilt-android-compiler:2.42")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
+
+    implementation ("com.itextpdf:itextpdf:5.0.6")
+    implementation ("com.itextpdf:kernel:7.1.8")
+    implementation ("com.itextpdf:layout:7.1.8")
+    implementation ("com.itextpdf:io:7.1.8")
 }

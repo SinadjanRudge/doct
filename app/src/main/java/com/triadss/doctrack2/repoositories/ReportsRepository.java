@@ -134,7 +134,7 @@ public class ReportsRepository {
                 callback);
     }
 
-    public void addHealthProfPatientMedHistoryReport(String createdBy, String patientUid, ReportCallback callback)
+    public void addHealthProfPatientMedHistoryReport(String createdBy, String patientUid, String message, ReportCallback callback)
     {
         patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
             @Override
@@ -235,7 +235,7 @@ public class ReportsRepository {
                 callback);
     }
 
-    public void addHealthProfUpdatePatientMedHistoryReport(String createdBy, String patientUid, ReportCallback callback)
+    public void addHealthProfUpdatePatientMedHistoryReport(String createdBy, String patientUid, String message, ReportCallback callback)
     {
         patientRepository.getPatient(patientUid, new PatientRepository.PatientFetchCallback() {
             @Override
@@ -243,7 +243,7 @@ public class ReportsRepository {
                 addReport(createdBy,
                         ReportConstants.UPDATED_PATIENT_MEDICAL_HISTORY,
                         String.format("Updated patient medical history of %s",
-                                patient.getFullName()),
+                                patient.getFullName() + message),
                         callback);
             }
 

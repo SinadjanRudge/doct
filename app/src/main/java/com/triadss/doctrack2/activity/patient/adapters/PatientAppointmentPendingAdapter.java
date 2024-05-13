@@ -121,7 +121,7 @@ public class PatientAppointmentPendingAdapter
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView purpose, date, time, documentId, patientName,  DocId;
+        private TextView purpose, date, time, documentId, patientName, age,birthday, DocId;
         private Button reschedule, cancel, info;
 
         public ViewHolder(View view) {
@@ -133,6 +133,8 @@ public class PatientAppointmentPendingAdapter
             reschedule = (Button) itemView.findViewById(R.id.reschedule_button);
             documentId = (TextView) view.findViewById(R.id.IDtext);
             patientName = view.findViewById(R.id.nametext);
+            age = view.findViewById(R.id.agetext);
+            birthday = view.findViewById(R.id.birthdaytext);
 
             DocId = (TextView) view.findViewById(R.id.DocumentID);
         }
@@ -149,6 +151,9 @@ public class PatientAppointmentPendingAdapter
             time.setText(String.format("%s - %s", dateTimeDto.getTime().ToString(), rangeEnd.getTime().ToString()));
             documentId.setText(appointment.getPatientIdNumber());
             patientName.setText(appointment.getNameOfRequester());
+            birthday.setText(DateTimeDto.ToDateTimeDto(appointment.getPatientBirthday()).getDate().ToString());
+            age.setText(String.valueOf(appointment.getPatientAge()));
+
             DocId.setText(appointment.getDocumentId());
 
             reschedule.setOnClickListener(new View.OnClickListener() {

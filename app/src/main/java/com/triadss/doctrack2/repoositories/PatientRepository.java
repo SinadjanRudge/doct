@@ -158,6 +158,37 @@ public class PatientRepository {
                 });
     }
 
+    public void searchPatientsByName(String nameQuery, PatientSearchCallback callback) {
+        // Retrieve the list of patients from the data source
+        getPatientList(new PatientListCallback() {
+            @Override
+            public void onSuccess(List<AddPatientDto> patients) {
+                // Filter patients whose name contains the query string
+                List<AddPatientDto> searchResult = new ArrayList<>();
+                for (AddPatientDto patient : patients) {
+                    if (patient.getFullName().toLowerCase().contains(nameQuery.toLowerCase())) {
+                        searchResult.add(patient);
+                    }
+                }
+                // Invoke the callback with the search result
+                callback.onSuccess(searchResult);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                // Handle failure to retrieve patient list
+                callback.onError(errorMessage);
+            }
+        });
+    }
+    // Callback interface for patient search
+    public interface PatientSearchCallback {
+        void onSuccess(List<AddPatientDto> patients);
+
+        void onError(String errorMessage);
+    }
+
+
     public interface PatientAddUpdateCallback {
         void onSuccess(String patientId);
         void onError(String errorMessage);

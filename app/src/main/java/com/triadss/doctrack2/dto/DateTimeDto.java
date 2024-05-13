@@ -134,6 +134,17 @@ public class DateTimeDto {
         return formattedDateTime;
     }
 
+    public String formatDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(date.getYear(), date.getMonth(), date.getDay());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH);
+
+        String formattedDate = dateFormat.format(calendar.getTime());
+
+        return formattedDate;
+    }
+
     public static boolean isToday(Timestamp timestamp) {
         LocalDate currentDate = LocalDate.now();
         LocalDate appointmentDate = timestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

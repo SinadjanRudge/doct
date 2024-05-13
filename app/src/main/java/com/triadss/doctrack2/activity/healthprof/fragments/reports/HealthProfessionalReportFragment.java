@@ -11,28 +11,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -46,21 +36,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalReportAdapter;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
-import com.triadss.doctrack2.activity.patient.adapters.PatientReportAdapter;
-import com.triadss.doctrack2.config.constants.PdfConstants;
 import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.HealthProfDto;
 import com.triadss.doctrack2.dto.ReportDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.HealthProfRepository;
+import com.triadss.doctrack2.repoositories.PatientRepository;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
 import com.triadss.doctrack2.utils.FragmentFunctions;
 import com.triadss.doctrack2.utils.PdfHelper;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -120,6 +109,7 @@ public class HealthProfessionalReportFragment extends Fragment {
     String healthProfName;
     private ReportsRepository repository;
     private HealthProfRepository healthProfRepository = new HealthProfRepository();
+    private PatientRepository patientRepository = new PatientRepository();
     private EditText search;
 
     @Override
@@ -243,41 +233,45 @@ public class HealthProfessionalReportFragment extends Fragment {
                                     if(reports.isEmpty()) {
                                         Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        DateTimeDto dateTimeDto = DateTimeDto.GetCurrentDateTimeDto();
-                                        String filename = String.format("%s Reports %s", healthProfName, dateTimeDto.formatDateTime());
-                                        filename = filename.replace(":", "_");
-                                        Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
-                                        ButtonManager.disableButton(exportButton);
 
-                                        PdfHelper.GeneratePdfFromReports(requireContext(), filename, reports, pdfFile -> {
-                                            ButtonManager.enableButton(exportButton);
-                                            try {
-                                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                                intent.setDataAndType( getUriFromFile(pdfFile), "application/pdf");
-                                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|
-                                                        Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                                // start activity
-                                                startActivity(intent);
-                                            } catch (Exception e) {
-                                                System.out.println();
-                                            }
-                                        });
+                                        // Search for patients based on input text
+                                        String searchText = search.getText().toString().trim().toLowerCase();
+                                        if (!searchText.isEmpty()) {
+                                            // If search text is not empty, search patients based on input text
+                                            patientRepository.searchPatientsByName(searchText, new PatientRepository.PatientSearchCallback() {
+                                                @Override
+                                                public void onSuccess(List<AddPatientDto> patients) {
+                                                    exportReports(reports, patients);
+                                                }
+
+                                                @Override
+                                                public void onError(String errorMessage) {
+                                                    // Handle error
+                                                }
+                                            });
+                                        } else {
+                                            // If search text is empty, export reports without patient information
+                                            exportReports(reports, null);
+                                        }
+
+
+
                                     }
                                 });
                             }
 
                             @Override
                             public void onFailure(String errorMessage) {
-
+                                // Handle failure
                             }
                         });
                     }
 
-                    @Override
-                    public void onError(String errorMessage) {
-                        // Handle error
-                    }
-            });
+                        @Override
+                        public void onError(String errorMessage) {
+                            // Handle error
+                        }
+                    });
         } else {
             HealthProfessionalReportAdapter pageAdapter = new HealthProfessionalReportAdapter(getContext(), new ArrayList<ReportDto>());
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -290,7 +284,43 @@ public class HealthProfessionalReportFragment extends Fragment {
         }
     }
 
+    private void exportReports(List<ReportDto> reports, List<AddPatientDto> patients) {
+        DateTimeDto dateTimeDto = DateTimeDto.GetCurrentDateTimeDto();
+        String filename = String.format("%s Reports %s", healthProfName, dateTimeDto.formatDateTime());
+        filename = filename.replace(":", "_");
+        Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
+        ButtonManager.disableButton(exportButton);
+
+        // Include patient information in the PDF if patients are available
+        String patientInfo = (patients != null && !patients.isEmpty()) ? getPatientInfo(patients) : "N/A";
+        PdfHelper.GeneratePdfFromReports(requireContext(), filename, reports, patientInfo, pdfFile -> {
+            ButtonManager.enableButton(exportButton);
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(getUriFromFile(pdfFile), "application/pdf");
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                // Start activity
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    // Method to generate patient information from the list of patients
+    private String getPatientInfo(List<AddPatientDto> patients) {
+        StringBuilder patientInfo = new StringBuilder();
+        for (AddPatientDto patient : patients) {
+            DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(patient.getDateOfBirth());
+            patientInfo.append("Patient Name: ").append(patient.getFullName()).append("\n")
+                    .append("Age: ").append(DateTimeDto.ComputeAge(patient.getDateOfBirth())).append("\n")
+                    .append("Date of Birth: ").append(dateTime.formatDate()).append("\n")
+                    .append("Gender: ").append(patient.getGender()).append("\n\n");
+        }
+        return patientInfo.toString();
+    }
     private Uri getUriFromFile(File file){
         return FileProvider.getUriForFile(requireContext(), requireContext().getApplicationContext().getPackageName() + ".provider", file);
     }
+
 }

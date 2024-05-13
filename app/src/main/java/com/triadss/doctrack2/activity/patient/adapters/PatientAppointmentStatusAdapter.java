@@ -52,7 +52,7 @@ public class PatientAppointmentStatusAdapter extends RecyclerView.Adapter<Patien
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView purpose,date,time,status, idText, nameText;
+        private TextView purpose,date,time,status, idText, nameText, age, birthday;
 
         public ViewHolder(View view) {
             super(view);
@@ -63,6 +63,8 @@ public class PatientAppointmentStatusAdapter extends RecyclerView.Adapter<Patien
             status = (TextView) view.findViewById(R.id.statustext);
             idText = view.findViewById(R.id.IDtext);
             nameText = view.findViewById(R.id.nametext);
+            age = view.findViewById(R.id.agetext);
+            birthday = view.findViewById(R.id.birthdaytext);
         }
 
         public void update(AppointmentDto appointment)
@@ -71,6 +73,9 @@ public class PatientAppointmentStatusAdapter extends RecyclerView.Adapter<Patien
             status.setText(appointment.getStatus());
             idText.setText(appointment.getPatientIdNumber());
             nameText.setText(appointment.getNameOfRequester());
+            birthday.setText(DateTimeDto.ToDateTimeDto(appointment.getPatientBirthday()).getDate().ToString());
+            age.setText(String.valueOf(appointment.getPatientAge()));
+
 
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(appointment.getDateOfAppointment());
             date.setText(dateTime.getDate().ToString());
