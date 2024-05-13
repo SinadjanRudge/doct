@@ -8,6 +8,7 @@ public class PdfConstants {
     public static final int READ_PERMISSION_REQUEST_CODE = 200;
 
     public static final int WRITE_PERMISSION_REQUEST_CODE = 201;
+    public static final int READ_WRITE_PERMISSION_REQUEST_CODE = 202;
 
     /**Dimension For A4 Size Paper (1 inch = 72 points)**/
     public static int A4_PAGE_WIDTH = 595; //8.26 Inch

@@ -4,10 +4,13 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 import static com.triadss.doctrack2.config.constants.PdfConstants.READ_PERMISSION_REQUEST_CODE;
+import static com.triadss.doctrack2.config.constants.PdfConstants.READ_WRITE_PERMISSION_REQUEST_CODE;
 import static com.triadss.doctrack2.config.constants.PdfConstants.WRITE_PERMISSION_REQUEST_CODE;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -23,6 +26,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -63,9 +67,11 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 
 import com.triadss.doctrack2.R;
+import com.triadss.doctrack2.activity.MainActivity;
 import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalReportAdapter;
 import com.triadss.doctrack2.activity.healthprof.fragments.HealthProfHomeFragment;
 import com.triadss.doctrack2.activity.patient.adapters.PatientReportAdapter;
+import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.PdfConstants;
 import com.triadss.doctrack2.config.constants.ReportConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
@@ -214,20 +220,16 @@ public class HealthProfessionalReportFragment extends Fragment {
         }
     };
 
-    private void reloadList() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        ReportsRepository repository = new ReportsRepository();
-
+    private String[] getActions() {
         String[] list = new String[0];
         int checkedId = radioGroup.getCheckedRadioButtonId();
 
         if (checkedId==R.id.radioAll) {
             //* Merge all report lists into 'list'
             list = Stream.concat(
-                    Arrays.stream(ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS),
+                            Arrays.stream(ReportConstants.HEALTHPROF_APPOINTMENT_REPORTS),
                             Arrays.stream(ReportConstants.HEALTHPROF_PATIENT_REPORTS))
-                            .toArray(String[]::new);
+                    .toArray(String[]::new);
         } else {
             //* Handle individual toggle button states
             if (checkedId==R.id.radioAppointments) {
@@ -240,10 +242,19 @@ public class HealthProfessionalReportFragment extends Fragment {
                         .toArray(String[]::new);
             }
         }
+        return list;
+    }
+
+    private void reloadList() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        ReportsRepository repository = new ReportsRepository();
+
+        String[] list = getActions();
+        int checkedId = radioGroup.getCheckedRadioButtonId();
 
         if(checkedId!=R.id.radioAll || checkedId!=R.id.radioAppointments || checkedId!=R.id.radioPatients){
 
-            String[] finalList = list; //Bubble for filter
             repository.getReportsFromUserFilter(user.getUid(),
                     search.getText().toString().toLowerCase(),
                     list,
@@ -261,22 +272,7 @@ public class HealthProfessionalReportFragment extends Fragment {
                                 healthProfName = dto.getFullName();
 
                                 exportButton.setOnClickListener(v -> {
-                                    boolean hasPermissions = true;
-                                    if (ContextCompat.checkSelfPermission(requireContext(), READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-                                        ActivityCompat.requestPermissions(requireActivity(), new String[]{READ_EXTERNAL_STORAGE}, READ_PERMISSION_REQUEST_CODE);
-                                        hasPermissions = false;
-                                    }
-
-                                    if (ContextCompat.checkSelfPermission(requireContext(), WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-                                        ActivityCompat.requestPermissions(requireActivity(), new String[]{WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSION_REQUEST_CODE);
-                                        hasPermissions = false;
-                                    }
-
-                                    if(!hasPermissions) {
-                                        return;
-                                    }
-
-                                    generatePDF(user.getUid(), search.getText().toString().toLowerCase(), finalList);
+                                    requestRuntimePermission();
                                 });
                             }
 
@@ -306,6 +302,67 @@ public class HealthProfessionalReportFragment extends Fragment {
 
     private Uri getUriFromFile(File file){
         return FileProvider.getUriForFile(requireContext(), requireContext().getApplicationContext().getPackageName() + ".provider", file);
+    }
+
+    private final ActivityResultLauncher<String[]> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            new ActivityResultCallback<Map<String, Boolean>>() {
+                @Override
+                public void onActivityResult(Map<String, Boolean> o) {
+                    if(!o.containsValue(false)) {
+                        generatePDF(loggedInUserId, search.getText().toString().toLowerCase(), getActions());
+                    } else if(o.entrySet()
+                        .stream()
+                        .anyMatch(entry ->
+                            !ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), entry.getKey()))) {
+                       AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                        builder.setMessage("The permission READ_EXTERNAL_STORAGE and WRITE_EXTERNAL_STORAGE has been denied, please allow in Settings")
+                                .setTitle(DocTrackConstant.PERMISSION_REQUIRED)
+                                .setCancelable(false)
+                                .setNegativeButton(DocTrackConstant.CANCEL, (dialog, which) -> dialog.dismiss())
+                                .setPositiveButton(DocTrackConstant.SETTINGS, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                        Uri uri = Uri.fromParts("package", requireActivity().getPackageName(), null);
+                                        intent.setData(uri);
+                                        startActivity(intent);
+
+                                        dialog.dismiss();
+                                    }
+                                });
+                        builder.show();
+                    } else {
+                        requestRuntimePermission();
+                    }
+                }
+            }
+    );
+
+    private void requestRuntimePermission() {
+        if(ActivityCompat.checkSelfPermission(requireContext(), READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        && ActivityCompat.checkSelfPermission(requireContext(), WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+            generatePDF(loggedInUserId, search.getText().toString().toLowerCase(), getActions());
+
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), READ_EXTERNAL_STORAGE)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setMessage("This app requires READ_EXTERNAL_STORAGE permission for export")
+                    .setTitle(DocTrackConstant.PERMISSION_REQUIRED)
+                    .setCancelable(true)
+                    .setPositiveButton(DocTrackConstant.OK, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            requestPermissionLauncher.launch(new String[] {READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE});
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(DocTrackConstant.CANCEL, (dialog, which) -> dialog.dismiss());
+
+            builder.show();
+        } else {
+            requestPermissionLauncher.launch(new String[] {READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE});
+        }
     }
 
     private void generatePDF(String user, String filterString, String[] actions) {
