@@ -455,7 +455,7 @@ public class ReportsRepository {
         }
     }
 
-    public void getReportsFromUserForPdf(String uid, ReportsForPdfFetchCallback callback) {
+    public void getReportsFromUserForPdf(String uid, String find, String[] actions, ReportsForPdfFetchCallback callback) {
         if (user != null) {
             reportsCollection
                     .whereEqualTo(ReportModel.createdBy, uid)
@@ -466,22 +466,19 @@ public class ReportsRepository {
                         List<String> message = new ArrayList<>();
                         List<String> date = new ArrayList<>();
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-
                             long tempDate = document.getTimestamp("createdDate").getSeconds();
-                            Date Chrono = (new Date(tempDate));
 
-                            DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(document.getTimestamp("createdDate"));
-//                            SimpleDateFormat dateYear = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
-//                            TimeZone tz = TimeZone.getDefault();
-//                            dateYear.setTimeZone(tz);
-//
-//
-//                              String ChronoDate = dateYear.format(dateTime.getDate().ToString());
-//
-                            action.add(String.valueOf(document.get("action")));
-                            message.add(String.valueOf(document.get("message")));
-                            //date.add(ChronoMonth + " " + ChronoDay + ", " + ChronoYear + " " + ChronoHour);
-                            date.add(dateTime.formatDateTime().toString());
+                            if((find.toLowerCase().equals("") ||
+                                    Objects.requireNonNull(document.get("message")).toString().toLowerCase().contains(find.toLowerCase()) ||
+                                    Objects.requireNonNull(document.get("action")).toString().toLowerCase().contains(find.toLowerCase())) &&
+                                    (actions.length == 0 ||
+                                            Arrays.stream(actions).anyMatch(x -> Objects.requireNonNull(document.get("action")).toString().equals(x)))
+                            ) {
+                                DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(document.getTimestamp("createdDate"));
+                                action.add(String.valueOf(document.get("action")));
+                                message.add(String.valueOf(document.get("message")));
+                                date.add(dateTime.formatDateTime().toString());
+                            }
                         }
                         callback.onSuccess(action,message,date);
                     })

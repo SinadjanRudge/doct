@@ -40,6 +40,9 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -111,7 +114,6 @@ public class HealthProfessionalReportFragment extends Fragment {
     private float columnwidth[] = {100f,100f,200f};
 
 
-
     // constant code for runtime permissions
     private static final int PERMISSION_REQUEST_CODE = 200;
 
@@ -155,6 +157,7 @@ public class HealthProfessionalReportFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         SharedPreferences sharedPref = getContext().getSharedPreferences(SessionConstants.SessionPreferenceKey, Context.MODE_PRIVATE);
         loggedInUserId = sharedPref.getString(SessionConstants.LoggedInUid, "");
 
@@ -240,6 +243,7 @@ public class HealthProfessionalReportFragment extends Fragment {
 
         if(checkedId!=R.id.radioAll || checkedId!=R.id.radioAppointments || checkedId!=R.id.radioPatients){
 
+            String[] finalList = list; //Bubble for filter
             repository.getReportsFromUserFilter(user.getUid(),
                     search.getText().toString().toLowerCase(),
                     list,
@@ -255,6 +259,7 @@ public class HealthProfessionalReportFragment extends Fragment {
                             @Override
                             public void onSuccess(HealthProfDto dto) {
                                 healthProfName = dto.getFullName();
+
                                 exportButton.setOnClickListener(v -> {
                                     boolean hasPermissions = true;
                                     if (ContextCompat.checkSelfPermission(requireContext(), READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
@@ -271,32 +276,7 @@ public class HealthProfessionalReportFragment extends Fragment {
                                         return;
                                     }
 
-//
-//                                    if(reports.isEmpty()) {
-//                                        Toast.makeText(requireContext(), "Nothing to Export", Toast.LENGTH_SHORT).show();
-//                                    } else {
-//                                        DateTimeDto dateTimeDto = DateTimeDto.GetCurrentDateTimeDto();
-//                                        String filename = String.format("%s Reports %s", healthProfName, dateTimeDto.formatDateTime());
-//                                        filename = filename.replace(":", "_");
-//
-//                                        Toast.makeText(requireContext(), "Ongoing Export", Toast.LENGTH_SHORT).show();
-//                                        ButtonManager.disableButton(exportButton);
-//
-//                                        PdfHelper.GeneratePdfFromReports(requireContext(), filename, reports, pdfFile -> {
-//                                            ButtonManager.enableButton(exportButton);
-//                                            try {
-//                                                Intent intent = new Intent(Intent.ACTION_VIEW);
-//                                                intent.setDataAndType( getUriFromFile(pdfFile), "application/pdf");
-//                                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|
-//                                                        Intent.FLAG_ACTIVITY_NO_HISTORY);
-//                                                // start activity
-//                                                startActivity(intent);
-//                                            } catch (Exception e) {
-//                                                System.out.println();
-//                                            }
-//                                        });
-//                                    }
-                                    generatePDF(user.getUid());
+                                    generatePDF(user.getUid(), search.getText().toString().toLowerCase(), finalList);
                                 });
                             }
 
@@ -328,23 +308,25 @@ public class HealthProfessionalReportFragment extends Fragment {
         return FileProvider.getUriForFile(requireContext(), requireContext().getApplicationContext().getPackageName() + ".provider", file);
     }
 
-    private void generatePDF(String user) {
+    private void generatePDF(String user, String filterString, String[] actions) {
 
-        repository.getReportsFromUserForPdf(user, new ReportsRepository.ReportsForPdfFetchCallback() {
+        repository.getReportsFromUserForPdf(user,
+                filterString,
+                actions,
+                new ReportsRepository.ReportsForPdfFetchCallback() {
             @Override
             public void onSuccess(List<String> action,List<String> message,List<String> date) {
 
                 DateTimeDto dateTimeDto = DateTimeDto.GetCurrentDateTimeDto();
                 String filename = String.format("%s Reports %s", healthProfName, dateTimeDto.formatDateTime());
                 filename = filename.replace(":", "_");
-                File file = new File(Environment.getExternalStorageDirectory(), filename + ".pdf");
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename + ".pdf");
 
                 String toFile = file.toString();
                 try {
 
                     PdfDocument pdfDoc
                             = new PdfDocument(new PdfWriter(toFile));
-
 
                     Document doc = new Document(pdfDoc);
 
@@ -372,15 +354,15 @@ public class HealthProfessionalReportFragment extends Fragment {
 
                     Toast.makeText(requireContext(), toFile, Toast.LENGTH_LONG).show();
                     try {
-                                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                                intent.setDataAndType( getUriFromFile(file), "application/pdf");
-                                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|
-                                                        Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                                // start activity
-                                                startActivity(intent);
-                                            } catch (Exception e) {
-                                                System.out.println();
-                                            }
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType( getUriFromFile(file), "application/pdf");
+                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|
+                                Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        // start activity
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        System.out.println();
+                    }
                 } catch (IOException e) {
 
                     e.printStackTrace();
