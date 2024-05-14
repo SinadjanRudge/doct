@@ -234,14 +234,14 @@ public class PdfHelper {
             Document document = new Document(pdf, PageSize.LETTER);
 
             // Add patient information
-            document.add(new Paragraph("Patient Information:").setBold());
+            document.add(new Paragraph("Patient Information").setBold());
             document.add(new Paragraph(patientInfo));
 
             // Add table headers
             Table table = new Table(new float[]{1, 1, 1}).useAllAvailableWidth();
             table.addCell(new Cell().add(new Paragraph("Action").setBold()));
             table.addCell(new Cell().add(new Paragraph("Date").setBold()));
-            table.addCell(new Cell().add(new Paragraph("Message").setBold()));
+            table.addCell(new Cell().add(new Paragraph("Details").setBold()));
 
             // Add data to the table
             for (ReportDto reportDto : reportList) {

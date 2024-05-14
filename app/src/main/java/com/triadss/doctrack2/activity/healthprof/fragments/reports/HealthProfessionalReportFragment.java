@@ -312,10 +312,13 @@ public class HealthProfessionalReportFragment extends Fragment {
         StringBuilder patientInfo = new StringBuilder();
         for (AddPatientDto patient : patients) {
             DateTimeDto dateTime = DateTimeDto.ToDateTimeDto(patient.getDateOfBirth());
-            patientInfo.append("Patient Name: ").append(patient.getFullName()).append("\n")
+            patientInfo.append("Patient ID: ").append(patient.getIdNumber()).append("\n")
+                    .append("Patient Name: ").append(patient.getFullName()).append("\n")
                     .append("Age: ").append(DateTimeDto.ComputeAge(patient.getDateOfBirth())).append("\n")
                     .append("Date of Birth: ").append(dateTime.formatDate()).append("\n")
-                    .append("Gender: ").append(patient.getGender()).append("\n\n");
+                    .append("Gender: ").append(patient.getGender()).append("\n")
+                    .append("Address ").append(patient.getAddress()).append("\n")
+                    .append("Contact No.: ").append(patient.getPhone()).append("\n\n");
         }
         return patientInfo.toString();
     }

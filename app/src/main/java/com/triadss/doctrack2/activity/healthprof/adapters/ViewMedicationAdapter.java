@@ -50,17 +50,20 @@ public class ViewMedicationAdapter
 
     // Initializing the Views
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView medicine, note;
+        TextView medicine, note, date;
         public ViewHolder(View view) {
             super(view);
             medicine = (TextView) view.findViewById(R.id.input_medicineName);
             note = (TextView) view.findViewById(R.id.input_note);
+            date = (TextView) view.findViewById(R.id.input_dateGivin);
         }
 
         public void update(MedicationDto medication)
         {
             medicine.setText(medication.getMedicine());
             note.setText(medication.getNote());
+            DateTimeDto datetime = DateTimeDto.ToDateTimeDto(medication.getTimestamp());
+            date.setText(datetime.formatDate());
         }
     }
 }
