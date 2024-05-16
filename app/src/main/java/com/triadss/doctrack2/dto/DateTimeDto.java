@@ -1,5 +1,7 @@
 package com.triadss.doctrack2.dto;
 
+import androidx.test.espresso.ViewAction;
+
 import com.google.firebase.Timestamp;
 import com.google.type.DateTime;
 
@@ -148,4 +150,7 @@ public class DateTimeDto {
         return currentHour == appointmentHour || currentHour == (appointmentHour + 1);
     }
 
+    public ViewAction setDate(int i, int i1, int i2) {
+        return null;
+    }
 }
