@@ -35,23 +35,29 @@ public class LoginActivityTest {
             new ActivityScenarioRule<>(MainActivity.class);
     @Test
     public void invalidEntries(){
-        onView(withId(R.id.email)).perform(typeText("testpatient198@gmail.com"));
-        onView(withId(R.id.password)).perform((typeText("123457")), closeSoftKeyboard());
+        onView(withId(R.id.logout_btn)).perform(click());
+        SystemClock.sleep(5000);
+        onView(withId(R.id.email)).perform((typeText("testpatient198@gmail.com")),closeSoftKeyboard());
+        onView(withId(R.id.password)).perform((typeText("123456")), closeSoftKeyboard());
         onView(withId(R.id.btn_login)).perform(click());
         SystemClock.sleep(5000);
-        onView(withId(R.id.activity_login)).check(matches(isDisplayed()));
+        onView(withText("Email is incorrect.")).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
     }
     @Test
     public void invalidAccount(){
-        onView(withId(R.id.email)).perform(typeText("testpatient198@gmail.com"));
-        onView(withId(R.id.password)).perform((typeText("123457")), closeSoftKeyboard());
+        onView(withId(R.id.logout_btn)).perform(click());
+        SystemClock.sleep(5000);
+        onView(withId(R.id.email)).perform((typeText("iwjshshsuej@gmail.com")), closeSoftKeyboard());
+        onView(withId(R.id.password)).perform((typeText("28627383")), closeSoftKeyboard());
         onView(withId(R.id.btn_login)).perform(click());
         SystemClock.sleep(5000);
-        onView(withId(R.id.activity_login)).check(matches(isDisplayed()));
+        onView(withText("Please verify your email before logging in.")).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
     }
     @Test
     public void validAccount(){
-        onView(withId(R.id.email)).perform(typeText("testpatient198@gmail.com"));
+        onView(withId(R.id.email)).perform((typeText("testpatient198@gmail.com")), closeSoftKeyboard());;
         onView(withId(R.id.password)).perform((typeText("123456")), closeSoftKeyboard());
         onView(withId(R.id.btn_login)).perform(click());
         SystemClock.sleep(5000);
@@ -59,7 +65,8 @@ public class LoginActivityTest {
     }
     @Test
     public void validEntries(){
-        onView(withId(R.id.email)).perform(typeText("testpatient198@gmail.com"));
+        onView(withId(R.id.logout_btn)).perform(click());
+        onView(withId(R.id.email)).perform((typeText("testpatient198@gmail.com")),closeSoftKeyboard());;
         onView(withId(R.id.password)).perform((typeText("123456")), closeSoftKeyboard());
         onView(withId(R.id.btn_login)).perform(click());
         SystemClock.sleep(5000);
