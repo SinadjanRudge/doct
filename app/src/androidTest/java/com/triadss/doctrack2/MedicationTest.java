@@ -8,6 +8,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import android.os.SystemClock;
 
@@ -47,26 +48,28 @@ public class MedicationTest {
     }
     @Test
     public void viewCompletedMedication(){
-        //login();
-        SystemClock.sleep(5000);
         onView(withId(R.id.medication_menu)).perform(click());
-        SystemClock.sleep(5000);
+        SystemClock.sleep(50000);
         onView(withId(R.id.fragment_patient_medication_completed)).check(matches(isDisplayed()));
     }
     @Test
     public void viewOngoingMedication(){
-        login();
-        SystemClock.sleep(5000);
         onView(withId(R.id.medication_menu)).perform(click());
         onView(withId(R.id.fragment_patient_medication_completed)).perform(swipeLeft());
-        SystemClock.sleep(5000);
+        SystemClock.sleep(10000);
         onView(withId(R.id.fragment_patient_medication_ongoing)).check(matches(isDisplayed()));
+
     }
     @Test
     public void updateOngoingMedication(){
         viewOngoingMedication();
         SystemClock.sleep(5000);
-        onView(withId(R.id.fragment_patient_medication_ongoing)).check(matches(isDisplayed()));
+        onView(withId(R.id.medicationUpdate)).perform(click());
+        onView(withId(R.id.dateBtn)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.timeBtn)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.updateBtn)).perform(click());
     }
 
 }
