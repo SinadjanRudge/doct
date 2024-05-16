@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.records.ViewPatientRecordFragment;
 import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
@@ -240,6 +241,8 @@ public class UpdateVitalSigns extends Fragment {
 
             @Override
             public void onSuccess(String vitalSignsId) {
+                Toast.makeText(requireContext(), ToastConstants.UPDATED_VITAL_SIGNS, Toast.LENGTH_SHORT).show();
+
                 showViewPatient();
             }
 

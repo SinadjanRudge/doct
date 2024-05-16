@@ -23,6 +23,7 @@ import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.ErrorMessageConstants;
 import com.triadss.doctrack2.config.constants.ReportConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
@@ -191,13 +192,8 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                                         public void onSuccess(String appointmentId) {
                                             notificationRepository
                                                 .NotifyCancelledAppointmentToHealthProf(appointmentId);
+                                            Toast.makeText(context, ToastConstants.CANCELLED, Toast.LENGTH_SHORT).show();
 
-                                            android.app.AlertDialog.Builder progressDialog = new AlertDialog.Builder(
-                                                itemView.getContext());
-
-                                            progressDialog.setTitle("Canceled");
-                                            progressDialog.setMessage("appointment was canceled");
-                                            progressDialog.show();
                                             myEdit.putInt("PatientPending", Integer.parseInt("10"));
                                             myEdit.putInt("PatientStatus", Integer.parseInt("10"));
                                             myEdit.apply();
@@ -213,8 +209,6 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                                 new AppointmentRepository.ReportCallback() {
                                     @Override
                                     public void onSuccess(String appointmentId) {
-                                        Toast.makeText(itemView.getContext(), appointmentId + " updated",
-                                            Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override
@@ -419,8 +413,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
 
                                                 @Override
                                                 public void onSuccess(String appointmentId) {
-                                                    Toast.makeText(itemView.getContext(),
-                                                    appointmentId + " updated", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(context, ToastConstants.RESCHEDULED, Toast.LENGTH_SHORT).show();
                                                     dialog.dismiss();
 
                                                     myEdit.putInt("PatientPending", Integer.parseInt("10"));
@@ -440,8 +433,7 @@ public class HealthProfessionalAppointmentPendingAdapter extends RecyclerView.Ad
                             new AppointmentRepository.ReportCallback() {
                                 @Override
                                 public void onSuccess(String appointmentId) {
-                                    Toast.makeText(itemView.getContext(), appointmentId + " updated",
-                                            Toast.LENGTH_SHORT).show();
+
                                 }
 
                                 @Override

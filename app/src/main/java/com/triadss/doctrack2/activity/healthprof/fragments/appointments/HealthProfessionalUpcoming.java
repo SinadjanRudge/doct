@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.triadss.doctrack2.activity.healthprof.adapters.HealthProfessionalAppointmentUpcomingAdapter;
 import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.contracts.IListView;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.helper.ButtonManager;
@@ -124,6 +126,8 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                                     reportsRepository.addHealthProfAcceptedAppointmentReport(loggedInUserId, appointmentId, new ReportsRepository.ReportCallback() {
                                         @Override
                                         public void onReportAddedSuccessfully() {
+                                            Toast.makeText(requireContext(), ToastConstants.ACCEPTED, Toast.LENGTH_SHORT).show();
+
                                             ReloadList();
                                         }
 
@@ -152,6 +156,8 @@ public class HealthProfessionalUpcoming extends Fragment implements IListView {
                                             appointmentRepository.rejectAppointment(appointmentUid, new AppointmentRepository.AppointmentAddCallback() {
                                                 @Override
                                                 public void onSuccess(String appointmentId) {
+                                                    Toast.makeText(requireContext(), ToastConstants.REJECTED, Toast.LENGTH_SHORT).show();
+
                                                     ReloadList();
                                                 }
 

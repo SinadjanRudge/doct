@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.medications.UpdateMedications;
 import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
@@ -221,6 +222,8 @@ public class UpdateMedicalHistory extends Fragment {
                         _reportsRepository.addHealthProfUpdatePatientMedHistoryReport(loggedInUserId, patientUid, new ReportsRepository.ReportCallback() {
                             @Override
                             public void onReportAddedSuccessfully() {
+                                Toast.makeText(requireContext(), ToastConstants.UPDATED_MEDICAL_HISTORY, Toast.LENGTH_SHORT).show();
+
                                 showMedications();
                             }
 

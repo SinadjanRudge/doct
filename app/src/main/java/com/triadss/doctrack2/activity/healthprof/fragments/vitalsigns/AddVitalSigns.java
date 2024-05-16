@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.patient.PatientFragment;
 import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.dto.VitalSignsDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.ReportsRepository;
@@ -222,6 +224,8 @@ public class AddVitalSigns extends Fragment {
                 _reportsRepository.addHealthProfPatientVitalSignReport(loggedInUserId, PatientUid, new ReportsRepository.ReportCallback() {
                     @Override
                     public void onReportAddedSuccessfully() {
+                        Toast.makeText(requireContext(), ToastConstants.ADDED_VITAL_SIGNS, Toast.LENGTH_SHORT).show();
+
                         backToPatientList();
                     }
 

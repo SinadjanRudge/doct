@@ -22,6 +22,7 @@ import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.ErrorMessageConstants;
 import com.triadss.doctrack2.config.constants.ReportConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.dto.AppointmentDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
@@ -189,12 +190,10 @@ public class PatientAppointmentPendingAdapter
                                             notificationRepository
                                                     .NotifyCancelledAppointmentToHealthProf(appointmentId);
 
-                                            android.app.AlertDialog.Builder progressDialog = new AlertDialog.Builder(
-                                                    itemView.getContext());
-
-                                            progressDialog.setTitle("Canceled");
-                                            progressDialog.setMessage("appointment was canceled");
-                                            progressDialog.show();
+                                            Toast.makeText(context, ToastConstants.CANCELLED, Toast.LENGTH_SHORT).show();
+                                            myEdit.putInt("PatientPending", Integer.parseInt("10"));
+                                            myEdit.putInt("PatientStatus", Integer.parseInt("10"));
+                                            myEdit.apply();
                                         }
 
                                         @Override
@@ -207,8 +206,7 @@ public class PatientAppointmentPendingAdapter
                                     new AppointmentRepository.ReportCallback() {
                                         @Override
                                         public void onSuccess(String appointmentId) {
-                                            Toast.makeText(itemView.getContext(), appointmentId + " updated",
-                                                    Toast.LENGTH_SHORT).show();
+
                                         }
 
                                         @Override
@@ -216,9 +214,6 @@ public class PatientAppointmentPendingAdapter
 
                                         }
                                     });
-                            myEdit.putInt("PatientPending", Integer.parseInt("10"));
-                            myEdit.putInt("PatientStatus", Integer.parseInt("10"));
-                            myEdit.apply();
                         }
                     });
                     alertDialog.show();
@@ -411,15 +406,13 @@ public class PatientAppointmentPendingAdapter
 
                                                     @Override
                                                     public void onSuccess(String appointmentId) {
-                                                        Toast.makeText(itemView.getContext(),
-                                                                appointmentId + " updated", Toast.LENGTH_SHORT).show();
                                                         appointmentRepository.changeToOngoingAppointment(dto.getDocumentId(),
                                                                 new AppointmentRepository.ChangeToOngoingAppointmentCallback() {
 
                                                                     @Override
                                                                     public void onSuccess(String appointmentId) {
-                                                                        Toast.makeText(itemView.getContext(),
-                                                                                appointmentId + " changed to Ongoing", Toast.LENGTH_SHORT).show();
+                                                                        Toast.makeText(context, ToastConstants.RESCHEDULED, Toast.LENGTH_SHORT).show();
+
                                                                         dialog.dismiss();
                                                                         myEdit.putInt("PatientPending", Integer.parseInt("10"));
                                                                         myEdit.putInt("PatientStatus", Integer.parseInt("10"));
@@ -446,8 +439,6 @@ public class PatientAppointmentPendingAdapter
                                 new AppointmentRepository.ReportCallback() {
                                     @Override
                                     public void onSuccess(String appointmentId) {
-                                        Toast.makeText(itemView.getContext(), appointmentId + " updated",
-                                                Toast.LENGTH_SHORT).show();
 
                                     }
 
@@ -456,7 +447,6 @@ public class PatientAppointmentPendingAdapter
 
                                     }
                                 });
-
                 }
             });
             dialog.show();
