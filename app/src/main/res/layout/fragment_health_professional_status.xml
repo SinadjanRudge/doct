@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.patient.fragments.AppointmentStatus"
-    android:id="@+id/fragment_status">
+    android:id="@+id/fragment_health_professional_status">
 
     <LinearLayout
         android:layout_width="match_parent"

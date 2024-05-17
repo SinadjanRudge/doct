@@ -34,5 +34,5 @@
     <string name="search_appointment_hint">Search Appointment</string>
     <string name="top_5_pending_appointments">Top 5 Pending Appointment(s)</string>
     <string name="total_appointment_s">Total Appointment(s) :</string>
-
+    <string name="ToastMessage">Email or Password is incorrect.</string>
 </resources>

@@ -1,14 +1,19 @@
 package com.triadss.doctrack2.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +25,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
 
     TextInputEditText editTextPassword;
 
+    TextView loginToYourAccount;
+
     Button buttonLogin;
 
     FirebaseAuth mAuth;
@@ -63,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +82,27 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.password);
         buttonLogin = findViewById(R.id.btn_login);
         progressBar = findViewById(R.id.progressBar);
+        loginToYourAccount  = findViewById(R.id.logToyourAccount);
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // this function is called before text is edited
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // this function is called when text is edited
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                loginToYourAccount.setText("Login to your account");
+            }
+        };
+        editTextEmail.addTextChangedListener(textWatcher);
+        editTextPassword.addTextChangedListener(textWatcher);
 
         buttonLogin.setOnClickListener(v -> {
             progressBar.setVisibility(View.VISIBLE);
@@ -81,13 +111,15 @@ public class LoginActivity extends AppCompatActivity {
             password = String.valueOf(editTextPassword.getText());
 
             if (TextUtils.isEmpty(email)) {
-                Toast.makeText(LoginActivity.this, "Enter Email", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(LoginActivity.this, "Enter Email", Toast.LENGTH_SHORT).show();
+                loginToYourAccount.setText("Enter Email");
                 progressBar.setVisibility(View.GONE);
                 return;
             }
 
             if (TextUtils.isEmpty(password)) {
-                Toast.makeText(LoginActivity.this, "Enter Password", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(LoginActivity.this, "Enter Password", Toast.LENGTH_SHORT).show();
+                loginToYourAccount.setText("Enter Password");
                 progressBar.setVisibility(View.GONE);
                 return;
             }
@@ -114,11 +146,13 @@ public class LoginActivity extends AppCompatActivity {
                             if (user.isEmailVerified()) {
                                 //Email is verified
                                 fetchUserRole(user.getUid());
-                                Toast.makeText(LoginActivity.this, "Login Successfully",
-                                        Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(LoginActivity.this, "Login Successfully",
+//                                        Toast.LENGTH_SHORT).show();
+                                loginToYourAccount.setText("Login Successfully");
                             } else {
                                 // Email is not verified, prompt user to verify email
-                                Toast.makeText(LoginActivity.this, "Please verify your email before logging in.", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(LoginActivity.this, "Please verify your email before logging in.", Toast.LENGTH_SHORT).show();
+                                loginToYourAccount.setText("Please verify your email before logging in.");
                                 sendEmailVerification(user);
                             }
                         }
@@ -133,20 +167,24 @@ public class LoginActivity extends AppCompatActivity {
                                 switch (errorCode) {
                                     case "ERROR_INVALID_EMAIL":
                                         // Incorrect email format
-                                        Toast.makeText(LoginActivity.this, "Email is incorrect.", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(LoginActivity.this, "Email is incorrect.", Toast.LENGTH_SHORT).show();
+                                        loginToYourAccount.setText("Email is incorrect.");
                                         break;
                                     case "ERROR_INVALID_CREDENTIAL":
                                         // Incorrect password
-                                        Toast.makeText(LoginActivity.this, "Email or Password is incorrect.", Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(LoginActivity.this, R.string.ToastMessage, Toast.LENGTH_LONG).show();
+                                          loginToYourAccount.setText("Email is incorrect.");
                                         break;
                                     default:
                                         // Other errors
-                                        Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        loginToYourAccount.setText("Failed To Login: ");
                                         break;
                                 }
                             } else {
                                 // Unknown error
-                                Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(LoginActivity.this, "Failed To Login: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                loginToYourAccount.setText("Failed To Login: ");
                             }
                             ButtonManager.enableButton(buttonLogin);
                         }
@@ -197,8 +235,9 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     } else {
-                        Toast.makeText(LoginActivity.this, "Error fetching user role.",
-                                Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(LoginActivity.this, "Error fetching user role.",
+//                                Toast.LENGTH_SHORT).show();
+                        loginToYourAccount.setText("Failed To Login: ");
                     }
                 });
     }
@@ -220,8 +259,9 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(userIntent);
                 break;
             default:
-                Toast.makeText(LoginActivity.this, "Unknown or invalid user role.",
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(LoginActivity.this, "Unknown or invalid user role.",
+//                        Toast.LENGTH_SHORT).show();
+                loginToYourAccount.setText("Unknown or invalid user role.");
         }
     }
 
@@ -231,8 +271,10 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                          //  loginToYourAccount.setText("Verification email sent to ");
                         } else {
                             Toast.makeText(LoginActivity.this, "Failed to send verification email", Toast.LENGTH_SHORT).show();
+                          //  loginToYourAccount.setText("Failed to send verification email");
                         }
                     });
         }

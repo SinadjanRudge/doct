@@ -1,30 +1,25 @@
 package com.triadss.doctrack2;
 
+import android.os.IBinder;
 import android.view.WindowManager;
 import androidx.test.espresso.Root;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 public class ToastMatcher extends TypeSafeMatcher<Root> {
-
-    @Override
-    public void describeTo(Description description) {
+    @Override public void describeTo(Description description) {
         description.appendText("is toast");
     }
 
-    @Override
-    protected boolean matchesSafely(Root root) {
+    @Override public boolean matchesSafely(Root root) {
         int type = root.getWindowLayoutParams().get().type;
-        if (type == WindowManager.LayoutParams.TYPE_TOAST) {
-            // Check if Toast message matches the expected message
-            // Replace "expectedMessage" with your expected message
-            return true; // Return true if it matches
+        if ((type == WindowManager.LayoutParams.TYPE_TOAST)) {
+            IBinder windowToken = root.getDecorView().getWindowToken();
+            IBinder appToken = root.getDecorView().getApplicationWindowToken();
+            if (windowToken == appToken) {
+                //means this window isn't contained by any other windows.
+            }
         }
         return false;
-    }
-
-    // Custom matcher for checking Toast messages
-    public static ToastMatcher isToast() {
-        return new ToastMatcher();
     }
 }

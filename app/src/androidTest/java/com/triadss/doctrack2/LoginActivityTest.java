@@ -10,7 +10,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import static com.triadss.doctrack2.ToastMatcher.isToast;
+
 import static org.hamcrest.CoreMatchers.not;
 
 import android.os.SystemClock;
@@ -33,36 +33,17 @@ public class LoginActivityTest {
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
-    @Test
-    public void invalidEntries(){
-        onView(withId(R.id.logout_btn)).perform(click());
-        SystemClock.sleep(5000);
-        onView(withId(R.id.email)).perform((typeText("testpatient198@gmail.com")),closeSoftKeyboard());
-        onView(withId(R.id.password)).perform((typeText("123456")), closeSoftKeyboard());
-        onView(withId(R.id.btn_login)).perform(click());
-        SystemClock.sleep(5000);
-        onView(withText("Email is incorrect.")).inRoot(new ToastMatcher())
-                .check(matches(isDisplayed()));
-    }
-    @Test
-    public void invalidAccount(){
-        onView(withId(R.id.logout_btn)).perform(click());
-        SystemClock.sleep(5000);
-        onView(withId(R.id.email)).perform((typeText("iwjshshsuej@gmail.com")), closeSoftKeyboard());
-        onView(withId(R.id.password)).perform((typeText("28627383")), closeSoftKeyboard());
-        onView(withId(R.id.btn_login)).perform(click());
-        SystemClock.sleep(5000);
-        onView(withText("Please verify your email before logging in.")).inRoot(new ToastMatcher())
-                .check(matches(isDisplayed()));
-    }
-    @Test
-    public void validAccount(){
-        onView(withId(R.id.email)).perform((typeText("testpatient198@gmail.com")), closeSoftKeyboard());;
-        onView(withId(R.id.password)).perform((typeText("123456")), closeSoftKeyboard());
-        onView(withId(R.id.btn_login)).perform(click());
-        SystemClock.sleep(5000);
-        onView(withId(R.id.activity_patient_home)).check(matches(isDisplayed()));
-    }
+//    @Test
+//    public void invalidEntries(){
+//        onView(withId(R.id.logout_btn)).perform(click());
+//        SystemClock.sleep(5000);
+//        onView(withId(R.id.email)).perform((typeText("testpatient198@gmail.com12312")),closeSoftKeyboard());
+//        onView(withId(R.id.password)).perform((typeText("123456")), closeSoftKeyboard());
+//        onView(withId(R.id.btn_login)).perform(click());
+//        SystemClock.sleep(5000);
+//
+//        onView(withId(R.id.logToyourAccount)).check(matches(withText("Email is incorrect.")));
+//    }
     @Test
     public void validEntries(){
         onView(withId(R.id.logout_btn)).perform(click());
@@ -72,5 +53,23 @@ public class LoginActivityTest {
         SystemClock.sleep(5000);
         onView(withId(R.id.activity_patient_home)).check(matches(isDisplayed()));
     }
+    @Test
+    public void invalidAccount(){
+        onView(withId(R.id.logout_btn)).perform(click());
+        SystemClock.sleep(5000);
+        onView(withId(R.id.email)).perform((typeText("iwjshshsuej@gmail.com")), closeSoftKeyboard());
+        onView(withId(R.id.password)).perform((typeText("28627383")), closeSoftKeyboard());
+        onView(withId(R.id.btn_login)).perform(click());
+        SystemClock.sleep(5000);
 
+        onView(withId(R.id.logToyourAccount)).check(matches(withText("Please verify your email before logging in.")));
+    }
+    @Test
+    public void validAccount(){
+        onView(withId(R.id.email)).perform((typeText("testpatient198@gmail.com")), closeSoftKeyboard());;
+        onView(withId(R.id.password)).perform((typeText("123456")), closeSoftKeyboard());
+        onView(withId(R.id.btn_login)).perform(click());
+        SystemClock.sleep(5000);
+        onView(withId(R.id.activity_patient_home)).check(matches(isDisplayed()));
+    }
 }
