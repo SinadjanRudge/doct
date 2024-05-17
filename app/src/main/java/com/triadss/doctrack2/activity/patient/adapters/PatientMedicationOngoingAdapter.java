@@ -20,6 +20,7 @@ import com.google.firebase.Timestamp;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.patient.PatientHome;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.dto.MedicationDto;
@@ -176,7 +177,7 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                             @Override
                             public void onReportAddedSuccessfully() {
                                 updateMedicationsList(medicationDto);
-                                Toast.makeText(context, mediId + " updated", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, ToastConstants.UPDATED_MEDICATION, Toast.LENGTH_SHORT).show();
 
                                 PatientHome homeActivity = (PatientHome) context;
                                 homeActivity.setupNotifications();
@@ -212,8 +213,10 @@ public class PatientMedicationOngoingAdapter extends RecyclerView.Adapter<Patien
                         _reportsRepository.addPatientCompletedMedicationReport(medication, new ReportsRepository.ReportCallback() {
                             @Override
                             public void onReportAddedSuccessfully() {
-                                removeItem(mediId);
+                                Toast.makeText(context, ToastConstants.COMPLETED_MEDICATION, Toast.LENGTH_SHORT).show();
                                 Log.d(TAG, "Medication status updated successfully");
+
+                                removeItem(mediId);
                             }
 
                             @Override

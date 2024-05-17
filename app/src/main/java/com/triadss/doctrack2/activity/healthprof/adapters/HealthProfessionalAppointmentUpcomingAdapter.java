@@ -201,7 +201,6 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                       yes.setOnClickListener(new View.OnClickListener() {
                           @Override
                           public void onClick(View v) {
-                              Toast.makeText(itemView.getContext(), purpose.getText(), Toast.LENGTH_SHORT).show();
                               callback.onAccept(dto.getUid());
                               dialog.dismiss();
                           }
@@ -236,8 +235,7 @@ public class HealthProfessionalAppointmentUpcomingAdapter extends RecyclerView.A
                                   new AppointmentRepository.BatchRejectCallback() {
                                       @Override
                                       public void onSuccess(List<AppointmentDto> rejectedAppointments) {
-                                          Toast.makeText(itemView.getContext(), dto.getUid() + " updated",
-                                                  Toast.LENGTH_SHORT).show();
+
                                           callback.onRejectBulk(rejectedAppointments);
                                       }
 

@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.PatientRepository;
@@ -231,7 +232,7 @@ public class UpdatePersonalInfo extends Fragment {
                 _reportsRepository.addHealthProfUpdatePatientInfoReport(loggedInUserId, patientDto, new ReportsRepository.ReportCallback() {
                     @Override
                     public void onReportAddedSuccessfully() {
-                        Toast.makeText(requireContext(), "Patient information updated successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), ToastConstants.UPDATED_PATIENT, Toast.LENGTH_SHORT).show();
                         showMedicalHistory();
                     }
 

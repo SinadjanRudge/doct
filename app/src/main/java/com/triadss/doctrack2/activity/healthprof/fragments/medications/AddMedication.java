@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,6 +22,7 @@ import com.triadss.doctrack2.activity.healthprof.adapters.AddMedicationAdapter;
 import com.triadss.doctrack2.activity.healthprof.fragments.vitalsigns.AddVitalSigns;
 import com.triadss.doctrack2.config.constants.MedicationTypeConstants;
 import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.dto.MedicationDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.MedicationRepository;
@@ -125,6 +127,8 @@ public class AddMedication extends Fragment {
 
                                 @Override
                                 public void onReportAddedSuccessfully() {
+                                    Toast.makeText(requireContext(), ToastConstants.ADDED_MEDICATION, Toast.LENGTH_SHORT).show();
+
                                     updateMedicationList();
                                     ButtonManager.enableButton(addMedication);
                                 }
@@ -179,6 +183,7 @@ public class AddMedication extends Fragment {
                                 repository.deleteMedication(medicationId, new MedicationRepository.MedicationUpdateCallback() {
                                     @Override
                                     public void onSuccess() {
+                                        Toast.makeText(requireContext(), ToastConstants.REMOVED_MEDICATION, Toast.LENGTH_SHORT).show();
                                         updateMedicationList();
                                     }
 
