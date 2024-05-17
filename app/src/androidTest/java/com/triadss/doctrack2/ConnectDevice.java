@@ -7,6 +7,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import android.os.SystemClock;
 
@@ -33,26 +34,24 @@ public class ConnectDevice {
         onView(withId(R.id.btn_login)).perform(click());
         SystemClock.sleep(5000);
     }
+
     @Test
     public void checkpaired(){
-        //login();
         onView(withId(R.id.device_menu)).perform(click());
         SystemClock.sleep(5000);
         onView(withId(R.id.fragment_device)).check(matches(isDisplayed()));
+        onView(withId(R.id.DeviceNameValue)).check(matches(withText("Galaxy Watch4 (7Y4V)")));
+        onView(withId(R.id.DeviceIDValue)).check(matches(withText("5d18ad22")));
+        onView(withId(R.id.IsNearbyValue)).check(matches(withText("true")));
     }
 
     @Test
     public void sync(){
-        login();
         onView(withId(R.id.device_menu)).perform(click());
         SystemClock.sleep(5000);
         onView(withId(R.id.fragment_device)).check(matches(isDisplayed()));
-    }
-    //@Test
-    public void updateUserAccount(){
-
-        onView(withId(R.id.patient_menu)).perform(click());
-        onView(withId(R.id.fragment_patient)).check(matches(isDisplayed()));
+        onView(withId(R.id.SyncDeviceBtn)).perform(click());
+        onView(withText("Sync successful")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
 }
