@@ -190,6 +190,8 @@ package com.triadss.doctrack2.utils;
 //    }
 //}
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.widget.Toast;
 import com.itextpdf.io.image.ImageData;
@@ -204,11 +206,15 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.property.TextAlignment;
+import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.config.constants.PdfConstants;
 import com.triadss.doctrack2.dto.ReportDto;
 import com.triadss.doctrack2.dto.DateTimeDto;
 import com.triadss.doctrack2.types.Vector2i;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -232,6 +238,22 @@ public class PdfHelper {
 
             // Initialize document
             Document document = new Document(pdf, PageSize.LETTER);
+            // Get the image from drawable and convert it to a byte array
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.logoo);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            ImageData imageData = ImageDataFactory.create(byteArray);
+            Image pdfImage = new Image(imageData);
+
+            // Adjust image size (optional)
+            float imageWidth = 50; // Example width
+            float imageHeight = 50; // Example height
+            pdfImage.scaleToFit(imageWidth, imageHeight);
+
+            document.add((pdfImage).setHorizontalAlignment(HorizontalAlignment.CENTER));
+
+            document.add(new Paragraph("Reports").setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER));
 
             // Add patient information
             document.add(new Paragraph("Patient Information").setBold());
