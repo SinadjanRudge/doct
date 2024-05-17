@@ -28,6 +28,7 @@ import com.triadss.doctrack2.activity.healthprof.fragments.records.AddMedicalHis
 import com.triadss.doctrack2.config.constants.DocTrackConstant;
 import com.triadss.doctrack2.config.constants.DocTrackErrorMessage;
 import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.dto.AddPatientDto;
 import com.triadss.doctrack2.dto.DateDto;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
@@ -321,7 +322,8 @@ public class AddPatientFragment extends Fragment implements View.OnClickListener
                                                     _vitalSignsRepository.createDefaultVitalSignsForPatient(userId, new VitalSignsRepository.AddUpdateCallback() {
                                                         @Override
                                                         public void onSuccess(String vitalSignsId) {
-                                                            Toast.makeText(getContext(), "Patient Created", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(requireContext(), ToastConstants.ADDED_PATIENT, Toast.LENGTH_SHORT).show();
+
                                                             newAuth.signOut();
 
                                                             // Sign in the old user

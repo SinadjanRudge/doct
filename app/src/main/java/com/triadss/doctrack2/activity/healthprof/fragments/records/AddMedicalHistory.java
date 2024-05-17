@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.triadss.doctrack2.R;
 import com.triadss.doctrack2.activity.healthprof.fragments.medications.AddMedication;
 import com.triadss.doctrack2.config.constants.SessionConstants;
+import com.triadss.doctrack2.config.constants.ToastConstants;
 import com.triadss.doctrack2.dto.MedicalHistoryDto;
 import com.triadss.doctrack2.helper.ButtonManager;
 import com.triadss.doctrack2.repoositories.MedicalHistoryRepository;
@@ -202,6 +204,7 @@ public class AddMedicalHistory extends Fragment {
                 _reportsRepository.addHealthProfPatientMedHistoryReport(loggedInUserId, userId, message, new ReportsRepository.ReportCallback() {
                     @Override
                     public void onReportAddedSuccessfully() {
+                        Toast.makeText(requireContext(), ToastConstants.ADDED_MEDICAL_HISTORY, Toast.LENGTH_SHORT).show();
                         showMedication();
                     }
 
