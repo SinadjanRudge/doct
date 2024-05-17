@@ -234,8 +234,10 @@ public class PdfHelper {
             Document document = new Document(pdf, PageSize.LETTER);
 
             // Add patient information
-            document.add(new Paragraph("Patient Information").setBold());
-            document.add(new Paragraph(patientInfo));
+//            document.add(new Paragraph("Patient Information").setBold());
+//            document.add(new Paragraph(patientInfo));
+
+            int count = 0;
 
             // Add table headers
             Table table = new Table(new float[]{1, 1, 1}).useAllAvailableWidth();
@@ -249,11 +251,14 @@ public class PdfHelper {
                 table.addCell(new Cell().add(new Paragraph(reportDto.getAction())));
                 table.addCell(new Cell().add(new Paragraph(dateTime.formatDateTime())));
                 table.addCell(new Cell().add(new Paragraph(reportDto.getMessage())));
+                count = count + 1;
             }
 
+            document.add(new Paragraph("Patient Information").setBold());
+            document.add(new Paragraph(patientInfo));
             // Add table to the document
             document.add(table);
-
+            document.add(new Paragraph("number of reports: " + String.valueOf(count)));
             // Close document
             document.close();
 
