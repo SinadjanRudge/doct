@@ -280,7 +280,7 @@ public class PdfHelper {
             document.add(new Paragraph(patientInfo));
             // Add table to the document
             document.add(table);
-            document.add(new Paragraph("number of reports: " + String.valueOf(count)));
+            document.add(new Paragraph("Total Number Of Reports: " + String.valueOf(count)).setBold());
             // Close document
             document.close();
 
